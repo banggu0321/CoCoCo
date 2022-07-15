@@ -2,14 +2,41 @@ package com.kos.CoCoCo.vo;
 
 import java.sql.Timestamp;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "users")
 public class UserVO {
 	
-	 private String user_id;
-	 private String pw;
-	 private String name;
-	 private String company;
-	 private String image;
-	 private Timestamp reg_date;
-	 private String status;
+	@Id
+	private String userId;
+	
+	private String pw;
+	
+	private String name;
+	
+	private String company;
+	
+	private String image;
+	
+	@CreationTimestamp
+	private Timestamp regDate;
+	
+	private String status;
 	
 }

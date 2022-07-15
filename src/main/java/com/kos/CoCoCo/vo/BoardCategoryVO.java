@@ -19,6 +19,8 @@ import lombok.NoArgsConstructor;
 @Table(name = "boardCategory")
 public class BoardCategoryVO {
 
+	//주석 테스트입니다.
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long categoryId;

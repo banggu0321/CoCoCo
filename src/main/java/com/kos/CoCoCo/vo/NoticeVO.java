@@ -6,6 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -28,13 +30,15 @@ public class NoticeVO {
     @GeneratedValue(strategy = GenerationType.AUTO)
 	private Long noticeId;
 	
-	private Long teamId;
+	@ManyToOne
+	TeamVO team;
 	
 	private String noticeTitle;
 	
 	private String noticeText;
 	
-	private String userId;
+	@ManyToOne
+	UserVO user;
 	
 	@CreationTimestamp
 	private Timestamp noticeRegDate;

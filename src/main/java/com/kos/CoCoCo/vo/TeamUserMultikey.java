@@ -1,15 +1,12 @@
 package com.kos.CoCoCo.vo;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -23,24 +20,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "users")
-public class UserVO {
+public class TeamUserMultikey implements Serializable{ 
+	private static final long serialVersionUID = 1L;
 	
-	@Id
-	private String userId;
-	
-	private String pw;
-	
-	private String name;
-	
-	private String company;
-	
-	private String image;
-	
-	@CreationTimestamp
-	private Timestamp regDate;
-	
-	private String status;
-
+	TeamVO team;
+	UserVO user;
 }

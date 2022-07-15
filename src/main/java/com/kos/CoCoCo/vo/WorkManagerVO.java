@@ -2,6 +2,9 @@ package com.kos.CoCoCo.vo;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -15,11 +18,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name = "workManager")
+@IdClass(WorkManagerMultikey.class)
 public class WorkManagerVO {
 
 	@Id
-	private Long workId;
+	@ManyToOne
+	WorkVO work;
 	
 	@Id
-	private String userId;
+	@ManyToOne
+	UserVO user;
 }

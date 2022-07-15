@@ -3,9 +3,10 @@ package com.kos.CoCoCo.vo;
 import java.sql.Timestamp;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -21,13 +22,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name = "teamUser")
+@IdClass(TeamUserMultikey.class)
 public class TeamUserVO {
 	
 	@Id
-	private Long teamId;
+	@ManyToOne
+	TeamVO team;
 	
 	@Id
-	private String userId;
+	@ManyToOne
+	UserVO user;
 	
 	@CreationTimestamp
 	private Timestamp joinDate;

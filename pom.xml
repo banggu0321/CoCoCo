@@ -86,8 +86,13 @@
 			<groupId>com.oracle.database.jdbc</groupId>
 			<artifactId>ojdbc8</artifactId>
 			<scope>runtime</scope>
+<<<<<<< HEAD
 		</dependency>
  -->
+=======
+		</dependency> -->
+
+>>>>>>> branch 'master' of https://github.com/banggu0321/CoCoCo.git
 
 
 		<dependency>

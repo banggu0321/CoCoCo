@@ -6,6 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -27,9 +29,11 @@ public class ChattingVO {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long chatId;
 	
-	private Long teamId;
+	@ManyToOne
+	TeamVO team;
 	
-	private String userId;
+	@ManyToOne
+	UserVO user;
 	
 	private String chatText;
 	

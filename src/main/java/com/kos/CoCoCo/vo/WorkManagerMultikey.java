@@ -1,9 +1,6 @@
 package com.kos.CoCoCo.vo;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.Table;
+import java.io.Serializable;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,14 +11,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "workManager")
-@IdClass(WorkManagerMultikey.class)
-public class WorkManagerVO {
+public class WorkManagerMultikey implements Serializable{
+	private static final long serialVersionUID = 1L;
 
-	@Id
 	private Long workId;
-	
-	@Id
 	private String userId;
 }

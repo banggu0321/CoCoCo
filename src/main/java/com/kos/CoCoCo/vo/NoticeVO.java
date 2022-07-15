@@ -1,15 +1,46 @@
 package com.kos.CoCoCo.vo;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "notice")
 public class NoticeVO {
 
-	private Long notice_id;
-	private Long team_id;
-	private String notice_title;
-	private String notice_text;
-	private String user_id;
-	private Date notice_reg_date;
-	private Date notice_update;
-	private String fixed_yn;
+	@Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+	private Long noticeId;
+	
+	private Long teamId;
+	
+	private String noticeTitle;
+	
+	private String noticeText;
+	
+	private String userId;
+	
+	@CreationTimestamp
+	private Timestamp noticeRegDate;
+	
+	@UpdateTimestamp
+	private Timestamp noticeUpdate;
+	
+	private String fixedYN;
 }

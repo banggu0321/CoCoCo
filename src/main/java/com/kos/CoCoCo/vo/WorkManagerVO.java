@@ -23,11 +23,9 @@ public class WorkManagerVO {
 
 	@Id
 	@ManyToOne
-	@JoinColumn(name = "works_work_id")
 	WorkVO work;
 	
 	@Id
 	@ManyToOne
-	@JoinColumn(name = "users_user_id")
 	UserVO user;
 }

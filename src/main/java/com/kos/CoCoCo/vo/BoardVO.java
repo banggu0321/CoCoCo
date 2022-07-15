@@ -42,7 +42,6 @@ public class BoardVO {
 	private String boardText;
 	
 	@ManyToOne
-	@JoinColumn(name = "users_user_id")
 	UserVO user;
 	
 	@CreationTimestamp
@@ -54,8 +53,6 @@ public class BoardVO {
 	private String boardFile;
 	
 	@ManyToOne
-	@JoinColumn(name = "category_id")
-	@JoinColumn(name = "team_id")
 	BoardCategoryVO category;
 
 }

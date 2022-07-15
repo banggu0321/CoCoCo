@@ -29,7 +29,6 @@ public class VacationVO {
 	private Long vacationId;
 	
 	@ManyToOne
-	@JoinColumn(name = "users_user_id")
 	UserVO user;
 	
 	private Date vacationStart;

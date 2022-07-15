@@ -30,11 +30,9 @@ public class ChattingVO {
 	private Long chatId;
 	
 	@ManyToOne
-	@JoinColumn(name = "teams_team_id")
 	TeamVO team;
 	
 	@ManyToOne
-	@JoinColumn(name = "users_user_id")
 	UserVO user;
 	
 	private String chatText;

@@ -31,11 +31,9 @@ public class ReplyVO {
 	private Long replyId;
 	
 	@ManyToOne
-	@JoinColumn(name = "boards_board_id")
 	BoardVO board;
 	
 	@ManyToOne
-	@JoinColumn(name = "users_user_id")
 	UserVO user;
 	
 	private String replyText;

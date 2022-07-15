@@ -13,7 +13,7 @@ public class testDBconnet {
 	@Autowired
 	MemberRepository member;
 	
-	@Test
+	//@Test
 	public void f1Beta() {
 		//select all
 		List<MemberVO> mlist = (List<MemberVO>)member.findAll();

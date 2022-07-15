@@ -33,7 +33,6 @@ public class WorkVO {
 	private Long workId;
 	
 	@ManyToOne
-	@JoinColumn(name = "teams_team_id")
 	TeamVO team;
 	
 	private String workTitle;

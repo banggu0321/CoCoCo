@@ -39,7 +39,6 @@ public class TeamVO {
 	
 	//만든사람
 	@ManyToOne
-	@JoinColumn(name = "users_user_id")
 	UserVO user;
 	
 	@CreationTimestamp

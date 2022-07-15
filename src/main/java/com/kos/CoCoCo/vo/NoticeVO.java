@@ -31,7 +31,6 @@ public class NoticeVO {
 	private Long noticeId;
 	
 	@ManyToOne
-	@JoinColumn(name = "teams_team_id")
 	TeamVO team;
 	
 	private String noticeTitle;
@@ -39,7 +38,6 @@ public class NoticeVO {
 	private String noticeText;
 	
 	@ManyToOne
-	@JoinColumn(name = "users_user_id")
 	UserVO user;
 	
 	@CreationTimestamp

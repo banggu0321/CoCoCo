@@ -27,12 +27,10 @@ public class TeamUserVO {
 	
 	@Id
 	@ManyToOne
-	@JoinColumn(name = "teams_team_id")
 	TeamVO team;
 	
 	@Id
 	@ManyToOne
-	@JoinColumn(name = "users_user_id")
 	UserVO user;
 	
 	@CreationTimestamp

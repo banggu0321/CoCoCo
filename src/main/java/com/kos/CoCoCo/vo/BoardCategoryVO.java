@@ -31,7 +31,6 @@ public class BoardCategoryVO {
 	
 	@Id
 	@ManyToOne
-	@JoinColumn(name = "teams_team_id")
 	TeamVO team;
 	
 	private String categoryName;

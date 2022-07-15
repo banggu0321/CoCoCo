@@ -24,12 +24,12 @@ public class testDBconnet {
 //		});
 //	}
 	
-	@Test
-	public void f1Beta() {
-		//select all
-		List<MemberVO> mlist = (List<MemberVO>)member.findAll();
-		mlist.forEach(a->{
-			System.out.println(a);
-		});
-	}
+//	@Test
+//	public void f1Beta() {
+//		//select all
+//		List<MemberVO> mlist = (List<MemberVO>)member.findAll();
+//		mlist.forEach(a->{
+//			System.out.println(a);
+//		});
+//	}
 }

@@ -14,6 +14,6 @@ import lombok.NoArgsConstructor;
 public class WorkManagerMultikey implements Serializable{
 	private static final long serialVersionUID = 1L;
 
-	private Long workId;
-	private String userId;
+	WorkVO work;
+	UserVO user;
 }

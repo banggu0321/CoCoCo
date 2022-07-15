@@ -16,5 +16,5 @@ public class BoardCategoryMultikey implements Serializable{ //Composite-id class
 	private static final long serialVersionUID = 1L;
 
 	private Long categoryId;
-	private Long teamId;
+	TeamVO team;
 }

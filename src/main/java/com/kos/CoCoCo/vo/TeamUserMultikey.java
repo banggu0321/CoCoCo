@@ -23,6 +23,6 @@ import lombok.NoArgsConstructor;
 public class TeamUserMultikey implements Serializable{ 
 	private static final long serialVersionUID = 1L;
 	
-	private Long teamId;
-	private String userId;
+	TeamVO team;
+	UserVO user;
 }

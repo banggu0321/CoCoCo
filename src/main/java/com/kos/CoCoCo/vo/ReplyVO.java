@@ -6,6 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -28,9 +30,13 @@ public class ReplyVO {
     @GeneratedValue(strategy = GenerationType.AUTO)
 	private Long replyId;
 	
-	private Long boardId;
+	@ManyToOne
+	@JoinColumn(name = "boards_board_id")
+	BoardVO board;
 	
-	private String userId;
+	@ManyToOne
+	@JoinColumn(name = "users_user_id")
+	UserVO user;
 	
 	private String replyText;
 	

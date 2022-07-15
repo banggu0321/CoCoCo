@@ -5,6 +5,8 @@ import java.sql.Timestamp;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -24,10 +26,14 @@ import lombok.NoArgsConstructor;
 public class TeamUserVO {
 	
 	@Id
-	private Long teamId;
+	@ManyToOne
+	@JoinColumn(name = "teams_team_id")
+	TeamVO team;
 	
 	@Id
-	private String userId;
+	@ManyToOne
+	@JoinColumn(name = "users_user_id")
+	UserVO user;
 	
 	@CreationTimestamp
 	private Timestamp joinDate;

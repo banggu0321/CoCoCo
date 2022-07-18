@@ -29,9 +29,13 @@ public class BoardCategoryVO {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long categoryId;
 	
+//	@Id
+//	private Long teamId;	
+	
 	@Id
 	@ManyToOne
-	TeamVO team;
+	TeamVO team;  //error composite key not allow TeamVO type
+	
 	
 	private String categoryName;
 

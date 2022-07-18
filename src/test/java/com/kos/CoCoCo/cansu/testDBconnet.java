@@ -7,6 +7,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.kos.CoCoCo.cansu.test.MemberRepository;
+import com.kos.CoCoCo.cansu.test.MemberVO;
+
 @SpringBootTest
 public class testDBconnet {
 	

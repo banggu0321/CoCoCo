@@ -17,8 +17,6 @@ import javax.persistence.Table;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.kos.CoCoCo.cansu.MemberVO;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

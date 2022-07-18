@@ -1,4 +1,4 @@
-package com.kos.CoCoCo.cansu;
+package com.kos.CoCoCo.cansu.test;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

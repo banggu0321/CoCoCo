@@ -7,6 +7,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class sampleController {
 
+	@GetMapping("/boardUDsample")
+	public String boardUD() {
+		return "su/boardUpdateAndDelete";
+	}
+	
 	@GetMapping("/boardSample")
 	public String boardlist() {
 		return "su/boardMain";

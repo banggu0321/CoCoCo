@@ -36,6 +36,8 @@ public class TeamVO {
 	private String teamName;
 	
 	private String teamInfo;
+
+	private String teamImg;
 	
 	//만든사람
 	@ManyToOne

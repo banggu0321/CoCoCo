@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{/admin/layoutAdmin.html}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+#teamInfo, div img {
+	float: left;
+	font-size: 16px;
+}
+
+#teamInfo label {
+	font-size: 18px;
+}
+
+div img {
+	margin-right: 30px;
+}
+
+#adminTeam {
+	color: #FF7F27;
+	font-weight: bold;
+}
+
+.content {
+	border: 2px solid #FF7F27;
+	border-radius: 1em;
+	padding: 20px 70px;
+}
+
+#info {
+	white-space: pre-wrap;
+}
+
+/* .btn{
+	color: #FF7F27;
+	background-color: white;
+	border: 3px solid #FF7F27;
+}
+
+.btn:hover{
+	background-color: #FF7F27;
+	border-color: #FF7F27;
+} */
+</style>
+</head>
+<body>
+<div layout:fragment="content">
+	<div class="content">
+		<div id="box">
+			<img th:if="${team.teamImg!=null}" th:src="@{/images/}+${team.teamImg}" th:alt="${team.teamImg}" width="250px" height="100%">
+			<img th:if="${team.teamImg==null}" th:src="@{/images/teamImg.png}" alt="null" width="250px" height="250px">
+			<div id="teamInfo">
+				<label>WORKSPACE NAME</label>
+					<p>[[${team.teamName}]]</p>
+				<label>WORKSPACE INFO</label>
+					<p id="info">[[${team.teamInfo}]]</p>
+				<label>CREATED DATE</label>
+					<p>[[${#dates.format(team.createDate,'yyyy-MM-dd')}]]</p>
+				<label>CREATOR</label>
+					<p>[[${team.user.name}]] ([[${team.user.userId}]])</p>
+			<button class="btn btn-primary" id="modifyForm">수정</button>
+			<button class="btn btn-primary" id="deleteBtn">워크스페이스 삭제</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<th:block layout:fragment="script">
+<script>
+//수정 form 보여주기
+$("#modifyForm").click(function() {
+	$.ajax({
+		type:"get",
+		url:"/admin/modify/[[${team.teamId}]]",
+		success: function(resData) {
+			$("#box").html(resData);
+		}
+	})
+});
+
+$("#deleteBtn").click(function() {
+	if(confirm("워크스페이스를 삭제하시겠습니까?")) {
+		location.href="/admin/delete/[[${team.teamId}]]";
+	}
+});
+
+</script>
+</th:block>
+</body>
+</html>

@@ -1,0 +1,27 @@
+
+<div id="box">
+	<img th:if="${team.teamImg!=null}" th:src="@{/images/}+${team.teamImg}" th:alt="${team.teamImg}" width="250px" height="100%">
+	<img th:if="${team.teamImg==null}" th:src="@{/images/teamImg.png}" alt="null" width="250px" height="250px">
+	<div id="teamInfo">
+	<form id="modifyForm" action="/admin/modify" method="post">
+		<input type="hidden" name="teamId" th:value="${team.teamId}">
+		<div class="form-group">
+			<label>WORKSPACE NAME</label>
+			<input type="text" name="teamName" class="form-control" th:value="${team.teamName}">
+		</div>
+		
+		<div class="form-group">
+			<label>WORKSPACE INFO</label>
+			<textarea class="form-control" name="teamInfo" rows="2">[[${team.teamInfo}]]</textarea>
+		</div>
+		
+		<div class="form-group">
+			<label>WORKSPACE IMAGE</label>
+			<input type="text" name="teamImg" class="form-control" th:value="${team.teamImg}">
+		</div>
+
+		<input type="submit" class="btn btn-primary" value="수정">
+		<input type="reset" class="btn btn-primary" value="취소">
+	</form>
+	</div>
+</div>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{/main/layoutTeam.html}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+.box, .addTeam {
+	float: left;
+	width: 250px;
+	height: 320px;
+	text-align: center;
+	padding: 20px;
+	margin: 20px;
+	background-color: #eee;
+	border-radius: 1em;
+	cursor: pointer;
+}
+
+.box:hover, .addTeam:hover {
+	background-color: rgba(255, 127, 39, 0.2);
+}
+
+.info {
+	white-space: pre-wrap;
+}
+
+.name {
+	font-size: 18px;
+	font-weight: bold;
+	padding-top: 10px;
+}
+
+.addTeam {
+	font-size: 35px;
+	background-color: white;
+	border: 2px solid #FF7F27;
+	border-radius: 0.5em;
+	padding: 130px 10px;
+}
+
+.box img{
+	width: 150px;
+	height: 150px;
+}
+.box .delBtn {
+	width: 40px;
+	height: 40px;
+}
+</style>
+</head>
+<body>
+<div layout:fragment="content" class="content">
+	<h1>프로젝트 리스트</h1>
+	<button>초대코드</button>
+	<p>[[${user}]]</p>
+	<p th:each="team:${teamList}" th:text="${team.teamUserId.team}"></p>
+	
+	<div th:each="team:${teamList}">
+		<div class="box" th:team-data="${team.teamUserId.team.teamId}">
+			<img th:src="@{/images/deleteImg.svg}" class="delBtn" th:team-data="${team.teamUserId.team.teamId}">
+			<img th:if="${team.teamUserId.team.teamImg!=null}" th:src="@{/images/}+${team.teamUserId.team.teamImg}" th:alt="${team.teamUserId.team.teamImg}">
+			<img th:if="${team.teamUserId.team.teamImg==null}" th:src="@{/images/teamImg.png}" alt="null">
+			<p class="name">[[${team.teamUserId.team.teamName}]]</p>
+			<p>[[${#dates.format(team.teamUserId.team.createDate,'yyyy-MM-dd')}]]</p>
+			<p class="info">[[${team.teamUserId.team.teamInfo}]]</p>
+			
+		</div>
+	</div>
+		<div class="addTeam" data-toggle="modal" data-target="#myModal">
+			+
+		</div>
+	
+	<!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+		<div class="model_dialog">
+	        <!-- Modal content -->
+	        <div class="modal-content">
+	        	<div class="modal-body">
+					<label>WORKSPACE IMG</label> 
+					<input type="text" name="teamImg" id="teamImg" class="form-control">
+					
+		        	<label>WORKSPACE NAME</label>
+		        	<input type="text" name="teamName" id="teamName" class="form-control">
+		        	
+		         	<label>WORKSPACE INFO</label>
+		        	<input type="text" name="teamInfo" id="teamInfo" class="form-control">
+		        </div>
+			
+				<div class="modal-footer">
+			    	<button id = "addTeamBtn" class="btn btn-default">워크스페이스 만들기</button>
+			    	<button type="button" class="btn btn-default" data-dismiss="modal" >취소</button>
+	        	</div>
+	        </div>
+    	</div>
+    </div> <!-- Modal --> 
+    
+</div>
+
+<th:block layout:fragment="script">
+	<script>
+		$(".box").click(function() {
+			var teamId = $(".box").attr("team-data");
+			alert(teamId);
+			location.href="/main/"+teamId;
+		});
+		
+		$(".delBtn").click(function(e) {
+			e.stopPropagation();
+			var teamId = $(".delBtn").attr("team-data");
+			alert("내가 자식?"+teamId);
+			
+		});
+		
+		$("#addTeamBtn").click(function() {
+			var obj = {
+				"teamName" : $("#teamName").val(),
+				"teamInfo" : $("#teamInfo").val(),
+				"teamImg" : $("#teamImg").val()
+			};
+			console.log(obj);
+			
+			$.ajax({
+				type:"post",
+				url:"/main/addTeam/[[${user.userId}]]",
+				data: JSON.stringify(obj),
+				dataType:"json",
+				contentType:"application/json",
+				success: function() {
+					alert("갔다옴");
+					location.reload();
+					
+				}
+			});
+		});
+	</script>
+</th:block>
+</body>
+</html>

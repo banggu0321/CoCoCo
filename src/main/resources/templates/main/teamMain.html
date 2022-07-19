@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{/main/layoutMain.html}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+.content {
+	width: 800px;
+}
+</style>
+</head>
+<body>
+<div layout:fragment="content">
+	<div class="content">
+		[[${team}]] <br>
+		<button class="adminBtn">관리자</button>
+	</div>
+</div>
+<th:block layout:fragment="script">
+	<script>
+	$(".adminBtn").click(function() {
+		location.href="/admin/team/[[${team.teamId}]]";
+	});
+	</script>
+</th:block>
+</body>
+</html>

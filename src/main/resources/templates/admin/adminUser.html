@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{/admin/layoutAdmin.html}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+table{
+	background-color: white;
+	text-align: center;
+}
+
+tr:first-child {
+	background-color: #FF7F27;
+	color:white;
+	font-weight: bold;
+}
+
+#adminUser {
+	color: #FF7F27;
+	font-weight: bold;
+}
+
+.content{
+	width: 800px;
+}
+
+.delUser:hover {
+	cursor: pointer;
+}
+#myModal {
+	width: 800px;
+}
+</style>
+</head>
+<body>
+[[${userList}]]
+<div layout:fragment="content" class="content">
+	<div>
+		<table id="userList" class="table">
+			<tr>
+				<td></td>
+				<td>이름</td>
+				<td>이메일</td>
+				<td>참여일자</td>
+				<td>권한</td>
+				<td></td>
+			</tr>
+			
+			<tr th:each="user, rowStatus:${userList}">
+				<td th:text="${rowStatus.count}">순서</td>
+				<td th:text="${user.teamUserId.user.name}">이름</td>
+				<td th:text="${user.teamUserId.user.userId}">이메일</td>
+				<td th:text="${#dates.format(user.joinDate,'yyyy-MM-dd')}">참여일자</td>
+				<td data-toggle="modal" data-target="#myModal"
+					class="roleModel" th:text="${user.userRole}">권한</td>
+				
+				<td th:if="${user.teamUserId.user.userId == user.teamUserId.team.user.userId}"></td>
+				<td th:if="${user.teamUserId.user.userId != user.teamUserId.team.user.userId}">
+					<img th:src="@{/images/deleteImg.svg}" class="delUser" th:user-data="${user.teamUserId.user.userId}" alt="delete" width="25px" height="25px">
+				</td>
+			</tr>
+		</table>
+	</div>
+	
+	<!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+		<div class="model_dialog">
+	        Modal content
+	        <div class="modal-content">
+	        	<div class="modal-body">
+					<label>USER ID</label> 
+					<input type="text" name="userId" class="form-control" readonly="readonly">
+					
+		        	<label>USER ROLE</label>
+		        	<input type="text" name="replyText" class="form-control">
+		        </div>
+			
+				<div class="modal-footer">
+			    	<button id = "modalSaveBtn" class="btn btn-info">Save</button>
+			    	<button type="button" class="btn btn-default"   data-dismiss="modal" >Close</button>
+	        	</div>
+	        </div>
+    	</div>
+    </div> <!-- 모달끝  -->
+</div>
+
+<th:block layout:fragment="script">
+	<script>
+		$(".delUser").click(function() {
+			var userId = $(".delUser").attr("user-data");
+			var teamId = "[[${teamId}]]";
+	
+			if(confirm("해당 사용자를 삭제하시겠습니까?")) {
+				location.href="/admin/deleteUser/"+teamId+"/"+userId;
+			}
+		});
+		
+	</script>
+</th:block>
+</body>
+</html>

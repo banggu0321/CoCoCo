@@ -1,0 +1,80 @@
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<script>
+	
+</script>
+
+<style>
+.sideMenu, .side, .content{
+	float: left;
+	height: 100%;
+}
+
+.side{
+	width: 80px;
+}
+
+.sideMenu{
+	width: 300px;
+}
+
+.sideMenu a {
+	color: black;
+	font-size: 20px;
+}
+
+.sideMenu a:hover {
+	color: black;
+	text-decoration: none;
+	font-size: 23px;
+}
+
+.contentBody {
+	padding-top: 30px;
+	
+}
+
+.content{
+	background-color: #eee;
+}
+
+</style>
+<!-- 하위 HTML에서 CSS 재정의할 예정 -->
+<th:block layout:fragment="style"></th:block>
+</head>
+
+<body>
+
+<!-- fragment 삽입하기 -->
+<!-- <header th:replace="~{/fragments/header :: header}"></header> -->
+<header>
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+</header>
+
+<div class="container-fluid contentBody">
+	<div class="side">
+			<a href="#">team1</a> <br>
+			<a href="#">team2</a> <br>
+			<a href="/main/teamList">HOME</a>
+	</div>
+		
+	<div class="sideMenu">
+		<p>워크스페이스 맴버 리스트</p>
+	</div>
+		
+	<!-- 하위 HTML에서 content 재정의할 예정 -->
+	<div layout:fragment="content"></div>
+</div>
+
+<!-- 하위 HTML에서 javascript 재정의할 예정   th:block 은 없어지는 태그이다 -->
+<th:block layout:fragment="script">
+
+</th:block>
+</body>
+</html>

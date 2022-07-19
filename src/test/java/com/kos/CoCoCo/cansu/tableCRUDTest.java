@@ -10,7 +10,7 @@ import com.kos.CoCoCo.cansu.test.BoardCategoryRepository;
 import com.kos.CoCoCo.cansu.test.BoardRepository;
 import com.kos.CoCoCo.cansu.test.TeamRepository;
 import com.kos.CoCoCo.cansu.test.TeamUserRepository;
-import com.kos.CoCoCo.cansu.test.UserRepository;
+import com.kos.CoCoCo.cansu.test.UserRepositoryTestSu;
 import com.kos.CoCoCo.vo.BoardCategoryVO;
 import com.kos.CoCoCo.vo.BoardVO;
 import com.kos.CoCoCo.vo.TeamUserVO;
@@ -21,7 +21,7 @@ import com.kos.CoCoCo.vo.UserVO;
 public class tableCRUDTest {
 
 	@Autowired
-	UserRepository userRP;
+	UserRepositoryTestSu userRP;
 	
 	@Autowired
 	TeamRepository teamRP;
@@ -38,13 +38,13 @@ public class tableCRUDTest {
 		UserVO user = userRP.findById("0718").get();
 		
 		TeamVO team = teamRP.findById(1L).get();
-		BoardCategoryVO bcTemp = boardcateRP.findByTeam(team);
+//		BoardCategoryVO bcTemp = boardcateRP.findByTeam(team);
 		
 		BoardVO boardTeamp = boardRP.findById(5L).get();
 		
 		System.out.println("user: "+user);
 		System.out.println("team: "+team);
-		System.out.println("baord-category: "+bcTemp);
+//		System.out.println("baord-category: "+bcTemp);
 		System.out.println("board: "+boardTeamp);
 	}
 	

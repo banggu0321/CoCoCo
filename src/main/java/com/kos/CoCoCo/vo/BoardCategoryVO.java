@@ -1,6 +1,6 @@
 package com.kos.CoCoCo.vo;
 
-import javax.persistence.Embedded;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "boardCategory")
 public class BoardCategoryVO {
 
-	@Embedded
+	@EmbeddedId
 	BoardCategoryMultikey boardCategoryId;
 	
 	private String categoryName;

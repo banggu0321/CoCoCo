@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -76,6 +77,12 @@ public class GyWorkController {
         log.info("jsonArrCheck: {}", jsonArr);
         System.out.println(jsonArr);
         return jsonArr;
+	}
+	
+	@PostMapping("/worklist.go")
+	public String addWork() {
+		
+		return "ex/ex";
 	}
 	@GetMapping("/work/layout")
 	public String layout() {

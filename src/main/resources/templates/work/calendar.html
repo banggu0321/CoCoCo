@@ -29,11 +29,11 @@
 			dataType:"json"
 		});
 		request.done(function(responseData){
-			console.log(responseData);
+			//console.log(responseData);
 			var events = [];
 			console.log(responseData);
 			$.each(responseData, function(index,data){
-				console.log(data);
+				//console.log(data);
 				if(data.status == 'finish'){
 					events.push({
 						title : data.title,
@@ -74,10 +74,12 @@
 								var start_date = $("#calendar_start_date").val();
 								var end_date = $("#calendar_end_date").val();
 								var status = $("#calendar_status").val();
-								var manager = $("#calendar_manager").val();
+								//var manager = $("#calendar_manager").val();
 
 								//내용 입력 여부 확인
-								if (content == null || content == "") {
+								if (title == null || title == "") {
+									alert("제목을 입력하세요.");
+								} else if (content == null || content == "") {
 									alert("내용을 입력하세요.");
 								} else if (start_date == "" || end_date == "") {
 									alert("날짜를 입력하세요.");
@@ -90,10 +92,10 @@
 										"start" : start_date,
 										"end" : end_date,
 										"status" : status,
-										"manager" : manager
+										//"manager" : manager
 									}//전송할 객체 생성
-
 									console.log(obj); //서버로 해당 객체를 전달해서 DB 연동 가능
+									
 								}
 							});
 						}
@@ -114,146 +116,6 @@
 			});
 		
 	});
-	
-	/*
-	document.addEventListener('DOMContentLoaded', function() {
-		var calendarEl = document.getElementById('calendar');
-		var calendar = new FullCalendar.Calendar(calendarEl, {
-			//schedulerLicenseKey : 'CC-Attribution-NonCommercial-NoDerivatives',
-			timeZone : 'UTC+9',
-			initialView : 'dayGridMonth', // 홈페이지에서 다른 형태의 view를 확인할  수 있다.
-			events : [ // 일정 데이터 추가 , DB의 event를 가져오려면 JSON 형식으로 변환해 events에 넣어주면된다.
-				$.ajax({
-					type:"GET",
-					url:"/work/worklist.go",
-					//data : {"team_id" : '1000L'},
-					data:{},
-					success:function(response){
-						result = response.result;
-						console.log("result: "+result);
-						for(i=0;i<result.length;i++){
-							calendar.addEvent({
-								title:result[i]['workTitle'],
-								start:result[i]['workStart'],
-								end:result[i]['workEnd']
-								
-							})
-						}
-					}
-					
-				})
-			/* {
-				title : '7월업무',
-				content : '업무내용',
-				start : '2022-07-20 00:00:00',
-				end : '2022-07-22 06:00:00',
-				status : 'plan',
-				manager : '방',
-				backgroundColor : 'red'
-			// color 값을 추가해 색상도 변경 가능 자세한 내용은 하단의 사이트 참조
-			},{
-				title : '7월업무',
-				content : '업무내용',
-				start : '2022-07-20 00:00:00',
-				end : '2022-07-22 06:00:00',
-				status : 'plan',
-				manager : '방'
-			},{
-				title : '7월업무',
-				content : '업무내용',
-				start : '2022-07-20 00:00:00',
-				end : '2022-07-22 06:00:00',
-				status : 'plan',
-				manager : '방'
-			} ],
-			headerToolbar: {
-			      left: 'today',//dayGridMonth,timeGridWeek,timeGridDay,list
-			      center: 'prev,title,next',
-			      right: 'addEventButton'
-			    },
-			customButtons : {
-				addEventButton : { // 추가한 버튼 설정
-					text : "일정 추가", // 버튼 내용
-					color: 'yellow', 
-					click : function() { // 버튼 클릭 시 이벤트 추가
-						$("#calendarModal").modal("show"); // modal 나타내기
-
-						$("#addCalendar").on("click", function() { // modal의 추가 버튼 클릭 시
-							var title = $("#calendar_title").val();
-							var content = $("#calendar_content").val();
-							var start_date = $("#calendar_start_date").val();
-							var end_date = $("#calendar_end_date").val();
-							var status = $("#calendar_status").val();
-							var manager = $("#calendar_manager").val();
-
-							//내용 입력 여부 확인
-							if (content == null || content == "") {
-								alert("내용을 입력하세요.");
-							} else if (start_date == "" || end_date == "") {
-								alert("날짜를 입력하세요.");
-							} else if (new Date(end_date) - new Date(start_date) < 0) { // date 타입으로 변경 후 확인
-								alert("종료일이 시작일보다 먼저입니다.");
-							} else { // 정상적인 입력 시
-								var obj = {
-									"title" : title,
-									"content": content,
-									"start" : start_date,
-									"end" : end_date,
-									"status" : status,
-									"manager" : manager
-								}//전송할 객체 생성
-
-								console.log(obj); //서버로 해당 객체를 전달해서 DB 연동 가능
-							}
-						});
-					}
-				}
-			},
-			editable : false, // false로 변경 시 draggable 작동 x 
-			displayEventTime : false, // 시간 표시 x
-			//navLinks : true, //달력상의 날짜를 클릭할 수 있는지 여부, 클릭시 일달력/주달력으로 넘어감
-			selectable: true, //선택 가능
-			dayMaxEventRows: true, // for all non-TimeGrid views(more)
-			contentHeight: 800 //행 길이
-			
-		});
-		calendar.render(); //다시 렌더링
-	});
-	
-	/* $(function() {
-		$("#addCalendar").click(function() {
-			$("#calendarModal").modal("show"); // modal 나타내기
-
-			$("#addCalendar").on("click", function() { // modal의 추가 버튼 클릭 시
-				var title = $("#calendar_title").val();
-				var content = $("#calendar_content").val();
-				var start_date = $("#calendar_start_date").val();
-				var end_date = $("#calendar_end_date").val();
-				var status = $("#calendar_status").val();
-				var manager = $("#calendar_manager").val();
-
-				//내용 입력 여부 확인
-				if (content == null || content == "") {
-					alert("내용을 입력하세요.");
-				} else if (start_date == "" || end_date == "") {
-					alert("날짜를 입력하세요.");
-				} else if (new Date(end_date) - new Date(start_date) < 0) { // date 타입으로 변경 후 확인
-					alert("종료일이 시작일보다 먼저입니다.");
-				} else { // 정상적인 입력 시
-					var obj = {
-						"title" : title,
-						"content": content,
-						"start" : start_date,
-						"end" : end_date,
-						"status" : status,
-						"manager" : manager
-					}//전송할 객체 생성
-
-					console.log(obj); //서버로 해당 객체를 전달해서 DB 연동 가능
-				}
-			});
-		});
-	}); */
 </script>
 <style>
 #calendarBox {
@@ -287,15 +149,15 @@ float : left;}
 					</button>
 				</div>
 				<div class="modal-body">
-					<div class="form-group">
+					<div action="worklist.go" method="post" class="form-group">
 						<label for="taskId" class="col-form-label">일정 제목</label> 
-						<input type="text" class="form-control" id="calendar_title" name="calendar_title"> 
+						<input type="text" class="form-control" id="calendar_title" name="calendar_title" value="제목"> 
 						<label for="taskId" class="col-form-label">일정 내용</label> 
-						<input type="text" class="form-control" id="calendar_content" name="calendar_content"> 
+						<input type="text" class="form-control" id="calendar_content" name="calendar_content" value="내용"> 
 						<label for="taskId" class="col-form-label">시작 날짜</label> 
-						<input type="date" class="form-control" id="calendar_start_date" name="calendar_start_date"> 
+						<input type="date" class="form-control" id="calendar_start_date" name="calendar_start_date" value="2022-07-20"> 
 						<label for="taskId" class="col-form-label">종료 날짜</label> 
-						<input type="date" class="form-control" id="calendar_end_date" name="calendar_end_date">
+						<input type="date" class="form-control" id="calendar_end_date" name="calendar_end_date" value="2022-07-23">
 						<label for="taskId" class="col-form-label">일정 상태</label> 
 						<select class="form-control" id="calendar_status" name="calendar_status">
 							<option class="form-control">대기</option>

@@ -67,7 +67,7 @@
 <div layout:fragment="content">
 	<h1>프로젝트 리스트</h1>
 	<button data-toggle="modal" data-target="#myModal2" class="btn btn-primary">초대코드</button>
-	<p>[[${user}]]</p>
+	<p>[[${session.user}]]</p>
 	<p th:each="team:${teamList}" th:text="${team}"></p>
 	
 	<div class="content" th:each="team:${teamList}">
@@ -142,7 +142,7 @@
 			
 			$.ajax({
 				type:"post",
-				url:"/main/findTeam/[[${user.userId}]]/"+code,
+				url:"/main/findTeam/[[${session.user.userId}]]/"+code,
 				success: function(resData) {
 					if(resData != 0) {
 						location.href = "/main/"+resData;
@@ -156,10 +156,10 @@
 		$(".delBtn").click(function(e) {
 			e.stopPropagation();
 			var teamId = $(".delBtn").attr("data2");
-			if(confirm(teamId + "해당 워크스페이스를 삭제하시겠습니까?")) {
+			if(confirm(teamId + " 해당 워크스페이스를 삭제하시겠습니까?")) {
 				$.ajax({
 					type:"post",
-					url:"/main/deleteTeam/[[${user.userId}]]/"+teamId,
+					url:"/main/deleteTeam/[[${session.user.userId}]]/"+teamId,
 					success: function() {
 						location.reload();
 					}
@@ -177,7 +177,7 @@
 			
 			$.ajax({
 				type:"post",
-				url:"/main/addTeam/[[${user.userId}]]",
+				url:"/main/addTeam/[[${session.user.userId}]]",
 				data: JSON.stringify(obj),
 				dataType:"json",
 				contentType:"application/json",

@@ -85,7 +85,7 @@
 	<div class="sideMenu">
 		<h4>팀원</h4>
 		<div th:each="tu:${userList}">
-			<img th:if="${tu.teamUserId.user.image == null}" th:src="@{/images/defaultImg.png}" width="40px" class="img-circle">
+			<img th:if="${tu.teamUserId.user.image == null}" th:src="@{/images/userImg.svg}" width="40px" class="img-circle">
 			<img th:if="${tu.teamUserId.user.image != null}" th:src="@{/images/}+${tu.teamUserId.user.image}" width="40px" class="img-circle">
 			[[${tu.teamUserId.user.name}]] ([[${tu.teamUserId.user.userId}]])</div>
 	</div>

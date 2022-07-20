@@ -2,6 +2,7 @@ package com.kos.CoCoCo.ja0.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +37,9 @@ public class AdminController {
 	UserRepository uRepo;
 
 	@GetMapping("/user/{teamId}")
-	public String userList(@PathVariable@ModelAttribute Long teamId, Model model) {
+	public String userList(@PathVariable@ModelAttribute Long teamId, HttpSession session, Model model) {
 		UserVO user = uRepo.findById("2ja0@naver.com").get();
-		model.addAttribute("user", user);
+		session.setAttribute("user", user);
 		model.addAttribute("userList", tuRepo.findByTeamId(teamId));
 		model.addAttribute("teamList", tuRepo.findByUserId(user.getUserId()));
 		
@@ -55,9 +56,8 @@ public class AdminController {
 	}
 	
 	@GetMapping("/team/{teamId}")
-	public String team(@PathVariable Long teamId, Model model) {
-		UserVO user = uRepo.findById("2ja0@naver.com").get();
-		model.addAttribute("user", user);
+	public String team(@PathVariable Long teamId, HttpSession session, Model model) {
+		UserVO user = (UserVO)session.getAttribute("user");
 		model.addAttribute("team", tRepo.findById(teamId).get());
 		model.addAttribute("teamList", tuRepo.findByUserId(user.getUserId()));
 		return "admin/adminTeam";

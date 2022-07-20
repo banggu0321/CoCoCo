@@ -15,14 +15,27 @@
 <body>
 <div layout:fragment="content">
 	<div class="content">
+		<p>[[${session.user}]]</p>
 		<p>[[${team}]]</p>
-		<button class="adminBtn">관리자</button>
+		<button class="btn btn-primary adminBtn">관리자</button>
+		<button class="btn btn-primary copyBtn">초대코드</button>
 	</div>
 </div>
 <th:block layout:fragment="script">
 	<script>
 	$(".adminBtn").click(function() {
 		location.href="/admin/team/[[${team.teamId}]]";
+	});
+	
+	$(".copyBtn").click(function() {
+		var copyText = "[[${team.inviteCode}]]";
+		const t = document.createElement("textarea");
+		document.body.appendChild(t);
+		t.value = copyText;
+		t.select();
+		document.execCommand('copy');
+		document.body.removeChild(t);
+		alert("초대코드가 복사되었습니다.");
 	});
 	</script>
 </th:block>

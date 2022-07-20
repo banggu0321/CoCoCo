@@ -37,16 +37,14 @@ public class TeamController {
 	UserRepository uRepo;
 	
 	@GetMapping("/teamList")
-	public void teamList(Model model) {
-		UserVO user = uRepo.findById("2ja0@naver.com").get();
-		model.addAttribute("user", user);
+	public void teamList(HttpSession session, Model model) {
+		UserVO user = (UserVO)session.getAttribute("user");
 		model.addAttribute("teamList", tuRepo.findByUserId(user.getUserId()));
 	}
 	
 	@GetMapping("/{teamId}")
-	public String teamMain(@PathVariable Long teamId, Model model) {
-		UserVO user = uRepo.findById("2ja0@naver.com").get();
-		model.addAttribute("user", user);
+	public String teamMain(@PathVariable Long teamId, HttpSession session, Model model) {
+		UserVO user = (UserVO)session.getAttribute("user");
 		model.addAttribute("team", tRepo.findById(teamId).get());
 		model.addAttribute("userList", tuRepo.findByTeamId(teamId));
 		model.addAttribute("teamList", tuRepo.findByUserId(user.getUserId()));

@@ -49,6 +49,7 @@ div img {
 </head>
 <body>
 <div layout:fragment="content">
+[[${session.user}]]
 	<div class="content">
 		<div id="box">
 			<img th:if="${team.teamImg!=null}" th:src="@{/images/}+${team.teamImg}" th:alt="${team.teamImg}" width="250px" height="100%">

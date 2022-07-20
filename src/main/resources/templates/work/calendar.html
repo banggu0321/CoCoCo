@@ -29,29 +29,93 @@
 			events : [ // 일정 데이터 추가 , DB의 event를 가져오려면 JSON 형식으로 변환해 events에 넣어주면된다.
 			{
 				title : '7월업무',
+				content : '업무내용',
 				start : '2022-07-20 00:00:00',
-				end : '2022-07-22 06:00:00'
+				end : '2022-07-22 06:00:00',
+				status : 'plan',
+				manager : '방',
+				backgroundColor : 'red'
 			// color 값을 추가해 색상도 변경 가능 자세한 내용은 하단의 사이트 참조
-			} ],
-			 headerToolbar: {
-			      left: 'prev,next today',
-			      center: 'title',
-			      right: 'dayGridMonth,timeGridWeek,timeGridDay'
+			},{
+				title : '7월업무',
+				content : '업무내용',
+				start : '2022-07-20 00:00:00',
+				end : '2022-07-22 06:00:00',
+				status : 'plan',
+				manager : '방'
+			},{
+				title : '7월업무',
+				content : '업무내용',
+				start : '2022-07-20 00:00:00',
+				end : '2022-07-22 06:00:00',
+				status : 'plan',
+				manager : '방'
+			}],
+			headerToolbar: {
+			      left: 'today',//dayGridMonth,timeGridWeek,timeGridDay,list
+			      center: 'prev,title,next',
+			      right: 'addEventButton'
 			    },
-			editable : true, // false로 변경 시 draggable 작동 x 
-			displayEventTime : false // 시간 표시 x
+			customButtons : {
+				addEventButton : { // 추가한 버튼 설정
+					text : "일정 추가", // 버튼 내용
+					color: 'yellow', 
+					click : function() { // 버튼 클릭 시 이벤트 추가
+						$("#calendarModal").modal("show"); // modal 나타내기
+
+						$("#addCalendar").on("click", function() { // modal의 추가 버튼 클릭 시
+							var title = $("#calendar_title").val();
+							var content = $("#calendar_content").val();
+							var start_date = $("#calendar_start_date").val();
+							var end_date = $("#calendar_end_date").val();
+							var status = $("#calendar_status").val();
+							var manager = $("#calendar_manager").val();
+
+							//내용 입력 여부 확인
+							if (content == null || content == "") {
+								alert("내용을 입력하세요.");
+							} else if (start_date == "" || end_date == "") {
+								alert("날짜를 입력하세요.");
+							} else if (new Date(end_date) - new Date(start_date) < 0) { // date 타입으로 변경 후 확인
+								alert("종료일이 시작일보다 먼저입니다.");
+							} else { // 정상적인 입력 시
+								var obj = {
+									"title" : title,
+									"content": content,
+									"start" : start_date,
+									"end" : end_date,
+									"status" : status,
+									"manager" : manager
+								}//전송할 객체 생성
+
+								console.log(obj); //서버로 해당 객체를 전달해서 DB 연동 가능
+							}
+						});
+					}
+				}
+			},
+			editable : false, // false로 변경 시 draggable 작동 x 
+			displayEventTime : false, // 시간 표시 x
+			//navLinks : true, //달력상의 날짜를 클릭할 수 있는지 여부, 클릭시 일달력/주달력으로 넘어감
+			selectable: true, //선택 가능
+			dayMaxEventRows: true, // for all non-TimeGrid views(more)
+			contentHeight: 800 //행 길이
+			
 		});
-		calendar.render();
+		calendar.render(); //다시 렌더링
 	});
 	
-	$(function() {
+	/* $(function() {
 		$("#addCalendar").click(function() {
 			$("#calendarModal").modal("show"); // modal 나타내기
 
 			$("#addCalendar").on("click", function() { // modal의 추가 버튼 클릭 시
+				var title = $("#calendar_title").val();
 				var content = $("#calendar_content").val();
 				var start_date = $("#calendar_start_date").val();
 				var end_date = $("#calendar_end_date").val();
+				var status = $("#calendar_status").val();
+				var manager = $("#calendar_manager").val();
 
 				//내용 입력 여부 확인
 				if (content == null || content == "") {
@@ -62,28 +126,36 @@
 					alert("종료일이 시작일보다 먼저입니다.");
 				} else { // 정상적인 입력 시
 					var obj = {
-						"title" : content,
+						"title" : title,
+						"content": content,
 						"start" : start_date,
-						"end" : end_date
+						"end" : end_date,
+						"status" : status,
+						"manager" : manager
 					}//전송할 객체 생성
 
 					console.log(obj); //서버로 해당 객체를 전달해서 DB 연동 가능
 				}
 			});
 		});
-	});
+	}); */
 </script>
 <style>
 #calendarBox {
 	width: 70%;
 	padding-left: 15%;
 }
+.fc-toolbar-title{
+float : left;
+}
+.fc-button{
+float : left;}
 </style>
 </head>
 <body>
-	<div id="addButton">
+	<!-- <div id="addButton">
 		<input type="button" id="addCalendar" value="업무추가" class="btn btn-warning">
-	</div>
+	</div> -->
 	<div id="calendarBox">
 		<div id="calendar"></div>
 	</div>
@@ -95,18 +167,32 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title" id="exampleModalLabel">일정을 입력하세요.</h5>
-					<button type="button" class="close" data-dismiss="modal"aria-label="Close">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body">
 					<div class="form-group">
-						<label for="taskId" class="col-form-label">일정 내용</label> '
+						<label for="taskId" class="col-form-label">일정 제목</label> 
+						<input type="text" class="form-control" id="calendar_title" name="calendar_title"> 
+						<label for="taskId" class="col-form-label">일정 내용</label> 
 						<input type="text" class="form-control" id="calendar_content" name="calendar_content"> 
 						<label for="taskId" class="col-form-label">시작 날짜</label> 
 						<input type="date" class="form-control" id="calendar_start_date" name="calendar_start_date"> 
 						<label for="taskId" class="col-form-label">종료 날짜</label> 
 						<input type="date" class="form-control" id="calendar_end_date" name="calendar_end_date">
+						<label for="taskId" class="col-form-label">일정 상태</label> 
+						<select class="form-control" id="calendar_status" name="calendar_status">
+							<option class="form-control">대기</option>
+							<option class="form-control">진행</option>
+							<option class="form-control">완료</option>
+						</select>
+						<label for="taskId" class="col-form-label">일정 담당자</label> 
+						<select class="form-control" id="calendar_manager" name="calendar_manager" multiple="multiple" size="1">
+							<option class="form-control">방</option>
+							<option class="form-control">방2</option>
+							<option class="form-control">방3</option>
+						</select>
 					</div>
 				</div>
 				<div class="modal-footer">

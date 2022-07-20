@@ -44,6 +44,14 @@
 	background-color: #eee;
 }
 
+.myMenu{
+	bottom: 20%;
+    position: absolute;
+}
+
+.teamList a img, .myMenu a img, .sideMenu div img {
+	margin: 10px;
+}
 </style>
 <!-- 하위 HTML에서 CSS 재정의할 예정 -->
 <th:block layout:fragment="style"></th:block>
@@ -59,18 +67,36 @@
 
 <div class="container-fluid contentBody">
 	<div class="side">
-			<a href="#">team1</a> <br>
-			<a href="#">team2</a> <br>
-			<a href="/main/teamList">HOME</a>
+		<div class="teamList">
+			<a th:href="@{/main/}+${tu.teamUserId.team.teamId}" th:each="tu:${teamList}">
+				<img th:if="${tu.teamUserId.team.teamImg!=null}" th:src="@{/images/}+${tu.teamUserId.team.teamImg}" 
+					data-toggle="tooltip" data-placement="right" th:title="${tu.teamUserId.team.teamName}" width="50px" class="img-rounded">
+				<img th:if="${tu.teamUserId.team.teamImg==null}" th:src="@{/images/teamImg.png}" alt="null"
+					data-toggle="tooltip" data-placement="right" th:title="${tu.teamUserId.team.teamName}" width="50px" class="img-rounded">
+			</a>
+		</div>
+		<div class="myMenu">
+			<a href="/main/teamList">
+				<img th:src="@{/images/home.svg}" alt="home" width="50px">
+			</a>
+		</div>
 	</div>
 		
 	<div class="sideMenu">
-		<p>워크스페이스 맴버 리스트</p>
+		<h4>팀원</h4>
+		<div th:each="tu:${userList}">
+			<img th:if="${tu.teamUserId.user.image == null}" th:src="@{/images/defaultImg.png}" width="40px" class="img-circle">
+			<img th:if="${tu.teamUserId.user.image != null}" th:src="@{/images/}+${tu.teamUserId.user.image}" width="40px" class="img-circle">
+			[[${tu.teamUserId.user.name}]] ([[${tu.teamUserId.user.userId}]])</div>
 	</div>
 		
 	<!-- 하위 HTML에서 content 재정의할 예정 -->
 	<div layout:fragment="content"></div>
 </div>
+
+<script>
+$('[data-toggle="tooltip"]').tooltip();
+</script>
 
 <!-- 하위 HTML에서 javascript 재정의할 예정   th:block 은 없어지는 태그이다 -->
 <th:block layout:fragment="script">

@@ -44,6 +44,7 @@ tr:first-child {
 				<td></td>
 				<td>이름</td>
 				<td>이메일</td>
+				<td>소속</td>
 				<td>참여일자</td>
 				<td>권한</td>
 				<td></td>
@@ -53,6 +54,7 @@ tr:first-child {
 				<td th:text="${rowStatus.count}">순서</td>
 				<td th:text="${user.teamUserId.user.name}">이름</td>
 				<td th:text="${user.teamUserId.user.userId}">이메일</td>
+				<td th:text="${user.teamUserId.user.company}">소속</td>
 				<td th:text="${#dates.format(user.joinDate,'yyyy-MM-dd')}">참여일자</td>
 				<td data-toggle="modal" data-target="#myModal"
 					class="roleModel" th:text="${user.userRole}">권한</td>

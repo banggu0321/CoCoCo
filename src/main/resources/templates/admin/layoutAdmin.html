@@ -6,10 +6,6 @@
 <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
-<script>
-	
-</script>
-
 <style>
 .sideMenu, .side, .content{
 	float: left;
@@ -44,6 +40,14 @@
 	background-color: #eee;
 }
 
+.myMenu{
+	bottom: 20%;
+    position: absolute;
+}
+
+.teamList a img, .myMenu a img {
+	margin: 10px;
+}
 </style>
 <!-- 하위 HTML에서 CSS 재정의할 예정 -->
 <th:block layout:fragment="style"></th:block>
@@ -59,9 +63,19 @@
 
 <div class="container-fluid contentBody">
 	<div class="side">
-			<a href="#">team1</a> <br>
-			<a href="#">team2</a> <br>
-			<a href="/main/teamList">HOME</a>
+		<div class="teamList">
+			<a th:href="@{/main/}+${tu.teamUserId.team.teamId}" th:each="tu:${teamList}">
+				<img th:if="${tu.teamUserId.team.teamImg!=null}" th:src="@{/images/}+${tu.teamUserId.team.teamImg}" 
+					data-toggle="tooltip" data-placement="right" th:title="${tu.teamUserId.team.teamName}" width="50px" class="img-rounded">
+				<img th:if="${tu.teamUserId.team.teamImg==null}" th:src="@{/images/teamImg.png}" alt="null"
+					data-toggle="tooltip" data-placement="right" th:title="${tu.teamUserId.team.teamName}" width="50px" class="img-rounded">
+			</a>
+		</div>
+		<div class="myMenu">
+			<a href="/main/teamList">
+				<img th:src="@{/images/home.svg}" alt="home" width="50px">
+			</a>
+		</div>
 	</div>
 		
 	<div class="sideMenu">
@@ -72,6 +86,10 @@
 	<!-- 하위 HTML에서 content 재정의할 예정 -->
 	<div layout:fragment="content"></div>
 </div>
+
+<script>
+$('[data-toggle="tooltip"]').tooltip();
+</script>
 
 <!-- 하위 HTML에서 javascript 재정의할 예정   th:block 은 없어지는 태그이다 -->
 <th:block layout:fragment="script">

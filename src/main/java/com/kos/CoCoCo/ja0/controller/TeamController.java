@@ -37,16 +37,19 @@ public class TeamController {
 	UserRepository uRepo;
 	
 	@GetMapping("/teamList")
-	public void teamList(HttpSession session, Model model) {
-		UserVO user = uRepo.findById("ja0@naver.com").get();
-		session.setAttribute("user", user);
+	public void teamList(Model model) {
+		UserVO user = uRepo.findById("2ja0@naver.com").get();
 		model.addAttribute("user", user);
 		model.addAttribute("teamList", tuRepo.findByUserId(user.getUserId()));
 	}
 	
 	@GetMapping("/{teamId}")
 	public String teamMain(@PathVariable Long teamId, Model model) {
+		UserVO user = uRepo.findById("2ja0@naver.com").get();
+		model.addAttribute("user", user);
 		model.addAttribute("team", tRepo.findById(teamId).get());
+		model.addAttribute("userList", tuRepo.findByTeamId(teamId));
+		model.addAttribute("teamList", tuRepo.findByUserId(user.getUserId()));
 		return "main/teamMain";
 	}
 	
@@ -55,7 +58,7 @@ public class TeamController {
 	public List<TeamUserVO> addTeam(@RequestBody TeamVO team, @PathVariable String userId) {
 		UserVO user = uRepo.findById(userId).get();
 		
-		team.setUser(user);
+		team.setUser(user); 
 		team.setInviteCode(makeTeamCode());
 		TeamVO newTeam =  tRepo.save(team);
 		TeamUserMultikey teamUserId = new TeamUserMultikey(newTeam, user);
@@ -68,8 +71,8 @@ public class TeamController {
 	
 	//초대코드 만들기
 	public String makeTeamCode() {
-		int leftLimit = 48; // numeral '0'
-		int rightLimit = 122; // letter 'z'
+		int leftLimit = 48;
+		int rightLimit = 122;
 		int targetStringLength = 20;
 		Random random = new Random();
 		String teamCode = random.ints(leftLimit, rightLimit + 1)
@@ -78,5 +81,38 @@ public class TeamController {
 		                                   .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
 		                                   .toString();
 		return teamCode;
+	}
+	
+	@ResponseBody
+	@PostMapping("/deleteTeam/{userId}/{teamId}")
+	public String deleteTeam(@PathVariable Long teamId, @PathVariable String userId) {
+		TeamVO team = tRepo.findById(teamId).get();
+		UserVO user = uRepo.findById(userId).get();
+		TeamUserMultikey teamUserId = new TeamUserMultikey(team, user);
+		
+		tuRepo.deleteById(teamUserId);
+		
+		return "success";
+	}
+	
+	@ResponseBody
+	@PostMapping("/findTeam/{userId}/{code}")
+	public Long findTeam(@PathVariable String code, @PathVariable String userId, Model model) {
+		List<TeamVO> team = tRepo.findByInviteCode(code);
+
+		if(team.isEmpty()) return 0L;
+		
+		TeamVO t = team.get(0);
+		UserVO user = uRepo.findById(userId).get();
+		TeamUserMultikey id = new TeamUserMultikey(t, user);
+		tuRepo.findById(id).ifPresentOrElse(i->{
+			
+		}, ()->{
+			TeamUserVO teamUser = TeamUserVO.builder().teamUserId(new TeamUserMultikey(t, user))
+					.userRole("USER").build();
+			tuRepo.save(teamUser);
+		});
+		
+		return t.getTeamId();
 	}
 }

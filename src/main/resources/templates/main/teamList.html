@@ -2,17 +2,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	  xmlns:th="http://www.thymeleaf.org"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{/main/layoutTeam.html}">
+	  layout:decorate="~{/main/layoutTeamList.html}">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
 .box, .addTeam {
+	position: relative;
 	float: left;
 	width: 250px;
 	height: 320px;
 	text-align: center;
-	padding: 20px;
+	padding: 30px 20px;
 	margin: 20px;
 	background-color: #eee;
 	border-radius: 1em;
@@ -21,6 +22,7 @@
 
 .box:hover, .addTeam:hover {
 	background-color: rgba(255, 127, 39, 0.2);
+	border: none;
 }
 
 .info {
@@ -46,38 +48,49 @@
 	height: 150px;
 }
 .box .delBtn {
-	width: 40px;
-	height: 40px;
+	position: absolute;
+	top: 85%;
+	left: 85%;
+	width: 30px;
+	height: 30px;
+}
+
+#myModal, #myModal2 {
+	position: absolute;
+	top: 30%;
+	left: 20%;
+	right: 20%;
 }
 </style>
 </head>
 <body>
-<div layout:fragment="content" class="content">
+<div layout:fragment="content">
 	<h1>프로젝트 리스트</h1>
-	<button>초대코드</button>
+	<button data-toggle="modal" data-target="#myModal2" class="btn btn-primary">초대코드</button>
 	<p>[[${user}]]</p>
-	<p th:each="team:${teamList}" th:text="${team.teamUserId.team}"></p>
+	<p th:each="team:${teamList}" th:text="${team}"></p>
 	
-	<div th:each="team:${teamList}">
+	<div class="content" th:each="team:${teamList}">
 		<div class="box" th:team-data="${team.teamUserId.team.teamId}">
-			<img th:src="@{/images/deleteImg.svg}" class="delBtn" th:team-data="${team.teamUserId.team.teamId}">
+			<img th:src="@{/images/deleteImg.svg}" class="delBtn" th:data2="${team.teamUserId.team.teamId}">
 			<img th:if="${team.teamUserId.team.teamImg!=null}" th:src="@{/images/}+${team.teamUserId.team.teamImg}" th:alt="${team.teamUserId.team.teamImg}">
 			<img th:if="${team.teamUserId.team.teamImg==null}" th:src="@{/images/teamImg.png}" alt="null">
 			<p class="name">[[${team.teamUserId.team.teamName}]]</p>
 			<p>[[${#dates.format(team.teamUserId.team.createDate,'yyyy-MM-dd')}]]</p>
-			<p class="info">[[${team.teamUserId.team.teamInfo}]]</p>
-			
+			<p class="info">[[${team.teamUserId.team.teamInfo}]]</p>	
 		</div>
 	</div>
-		<div class="addTeam" data-toggle="modal" data-target="#myModal">
-			+
-		</div>
+	<div class="addTeam" data-toggle="modal" data-target="#myModal">+</div>
 	
-	<!-- Modal -->
+	<!-- 워크스페이스 등록 모달 -->
     <div id="myModal" class="modal fade" role="dialog">
 		<div class="model_dialog">
 	        <!-- Modal content -->
 	        <div class="modal-content">
+	        	<div class="modal-header">
+	           		<h4 class="modal-title">NEW WORKSPACE</h4>
+	       		</div>
+	       		
 	        	<div class="modal-body">
 					<label>WORKSPACE IMG</label> 
 					<input type="text" name="teamImg" id="teamImg" class="form-control">
@@ -86,12 +99,29 @@
 		        	<input type="text" name="teamName" id="teamName" class="form-control">
 		        	
 		         	<label>WORKSPACE INFO</label>
-		        	<input type="text" name="teamInfo" id="teamInfo" class="form-control">
+		         	<textarea class="form-control" name="teamInfo" id="teamInfo" rows="2"></textarea>
 		        </div>
 			
 				<div class="modal-footer">
-			    	<button id = "addTeamBtn" class="btn btn-default">워크스페이스 만들기</button>
-			    	<button type="button" class="btn btn-default" data-dismiss="modal" >취소</button>
+			    	<button id = "addTeamBtn" class="btn btn-primary">워크스페이스 만들기</button>
+			    	<button type="button" class="btn btn-primary" data-dismiss="modal" >취소</button>
+	        	</div>
+	        </div>
+    	</div>
+    </div> <!-- Modal --> 
+    
+	<!-- 초대코드 입력 모달 -->
+    <div id="myModal2" class="modal fade" role="dialog">
+		<div class="model_dialog">
+	        <!-- Modal content -->
+	        <div class="modal-content">
+	        	<div class="modal-body">
+					<label>초대코드 입력</label> 
+					<input type="text" id="code" class="form-control">
+		        </div>
+				<div class="modal-footer">
+			    	<button id = "enterBtn" class="btn btn-primary">워크스페이스 입장</button>
+			    	<button type="button" class="btn btn-primary" data-dismiss="modal" >취소</button>
 	        	</div>
 	        </div>
     	</div>
@@ -104,14 +134,37 @@
 		$(".box").click(function() {
 			var teamId = $(".box").attr("team-data");
 			alert(teamId);
-			location.href="/main/"+teamId;
+			//location.href="/main/"+teamId;
+		});
+		
+		$("#enterBtn").click(function() {
+			var code = $("#code").val();
+			
+			$.ajax({
+				type:"post",
+				url:"/main/findTeam/[[${user.userId}]]/"+code,
+				success: function(resData) {
+					if(resData != 0) {
+						location.href = "/main/"+resData;
+						return;
+					}
+					alert("초대코드를 확인해주세요!");
+				}
+			});
 		});
 		
 		$(".delBtn").click(function(e) {
 			e.stopPropagation();
-			var teamId = $(".delBtn").attr("team-data");
-			alert("내가 자식?"+teamId);
-			
+			var teamId = $(".delBtn").attr("data2");
+			if(confirm(teamId + "해당 워크스페이스를 삭제하시겠습니까?")) {
+				$.ajax({
+					type:"post",
+					url:"/main/deleteTeam/[[${user.userId}]]/"+teamId,
+					success: function() {
+						location.reload();
+					}
+				});
+			}
 		});
 		
 		$("#addTeamBtn").click(function() {
@@ -129,9 +182,7 @@
 				dataType:"json",
 				contentType:"application/json",
 				success: function() {
-					alert("갔다옴");
 					location.reload();
-					
 				}
 			});
 		});

@@ -2,6 +2,8 @@ package com.kos.CoCoCo.ja0.controller;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +20,7 @@ import com.kos.CoCoCo.ja0.repository.UserRepository;
 import com.kos.CoCoCo.vo.TeamUserMultikey;
 import com.kos.CoCoCo.vo.TeamUserVO;
 import com.kos.CoCoCo.vo.TeamVO;
+import com.kos.CoCoCo.vo.UserVO;
 
 @Controller
 @RequestMapping("/admin/*")
@@ -34,7 +37,10 @@ public class AdminController {
 
 	@GetMapping("/user/{teamId}")
 	public String userList(@PathVariable@ModelAttribute Long teamId, Model model) {
+		UserVO user = uRepo.findById("2ja0@naver.com").get();
+		model.addAttribute("user", user);
 		model.addAttribute("userList", tuRepo.findByTeamId(teamId));
+		model.addAttribute("teamList", tuRepo.findByUserId(user.getUserId()));
 		
 		return "admin/adminUser";
 	}
@@ -50,7 +56,10 @@ public class AdminController {
 	
 	@GetMapping("/team/{teamId}")
 	public String team(@PathVariable Long teamId, Model model) {
+		UserVO user = uRepo.findById("2ja0@naver.com").get();
+		model.addAttribute("user", user);
 		model.addAttribute("team", tRepo.findById(teamId).get());
+		model.addAttribute("teamList", tuRepo.findByUserId(user.getUserId()));
 		return "admin/adminTeam";
 	}
 	
@@ -73,11 +82,13 @@ public class AdminController {
 		return "redirect:/admin/team/"+team.getTeamId();
 	}
 	
+	@Transactional
 	@GetMapping("/delete/{teamId}")
 	public String deleteTeam(@PathVariable Long teamId, RedirectAttributes attr) {
 		List<TeamUserVO> teamUser = tuRepo.findByTeamId(teamId);
 		
-		if(teamUser.isEmpty()) {
+		if(teamUser.size() <= 1) {
+			tuRepo.deleteByTeamId(teamId);
 			tRepo.deleteById(teamId);
 			//attr.addFlashAttribute("msg", "워크스페이스가 삭제되었습니다.");			
 			return "redirect:/main/teamList";

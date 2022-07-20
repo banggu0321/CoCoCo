@@ -1,6 +1,7 @@
 package com.kos.CoCoCo.gy.repo;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

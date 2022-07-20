@@ -1,20 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="www.thymeleaf.org">
 <head>
 <meta charset="EUC-KR">
 <title>board update and delete page</title>
 </head>
 <body>
 
-<form>
-title:<input type="text"><br>
-content:<textarea></textarea><br>
-<input type="button" value="file"><br>
-delete:<input type="button" value="delete">
-<hr>
-<input type="submit" value="submit">
-<input type="reset" value="reset">
-</form>
+	<form method="post" action="postBoardUpdate">
+		<input name="boardID" type="hidden" th:value="${boardDetail.boardId}">
+		title:<input name="boardTitle" type="text" th:value="${boardDetail.boardTitle}"><br> 
+		content:<textarea name="boardText" th:text="${boardDetail.boardText}"></textarea><br> 
+		<input type="button" value="file"><br> 
+		<button type="button">delete</button>
+	<hr>
+		<input type="submit" value="update"> 
+		<input type="reset" value="reset">
+	</form>
+
+	<hr>
+	<table>
+		<tr>
+			<th>replyID</th>
+			<th>regDate</th>
+			<th>text</th>
+			<th>update</th>
+			<th>boardID</th>
+			<th>userID</th>
+		</tr>
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+	</table>
 
 </body>
 </html>

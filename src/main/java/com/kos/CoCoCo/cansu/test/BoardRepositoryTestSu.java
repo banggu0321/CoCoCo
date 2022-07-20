@@ -4,6 +4,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.kos.CoCoCo.vo.BoardVO;
 
-public interface BoardRepository extends CrudRepository<BoardVO, Long> {
+public interface BoardRepositoryTestSu extends CrudRepository<BoardVO, Long> {
 
 }

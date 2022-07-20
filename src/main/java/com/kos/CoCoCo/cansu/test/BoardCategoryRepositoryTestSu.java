@@ -6,8 +6,6 @@ import com.kos.CoCoCo.vo.BoardCategoryMultikey;
 import com.kos.CoCoCo.vo.BoardCategoryVO;
 import com.kos.CoCoCo.vo.TeamVO;
 
-public interface BoardCategoryRepository extends CrudRepository<BoardCategoryVO, BoardCategoryMultikey> {
+public interface BoardCategoryRepositoryTestSu extends CrudRepository<BoardCategoryVO, BoardCategoryMultikey> {
 
-	//query method
-//	BoardCategoryVO findByTeam(TeamVO team);
 }

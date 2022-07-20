@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="www.thymeleaf.org">
 <head>
 <style>
 table, th, td {
@@ -14,7 +14,7 @@ table, th, td {
 	<hr>
 
 	<div id="boardMain1">
-		<form method="post" action="/boardInsertSample">
+		<form method="get" action="/boardInsertSample">
 			<input type="submit" value="insert board">
 		</form>
 	</div>
@@ -28,12 +28,12 @@ table, th, td {
 				<th>regDate</th>
 				<th>updateDate</th>
 			</tr>
-			<tr>
-				<td>sample</td>
-				<td>sample</td>
-				<td>sample</td>
-				<td>sample</td>
-				<td>sample</td>
+			<tr th:each="blist: ${board}">
+				<td><a th:href="@{/boardUDsample(id=${blist.boardId})}">[[${blist.boardTitle}]]</a></td>
+				<td th:text="${blist.user.userId}"></td>
+				<td th:text="${blist.category.boardCategoryId.categoryId}"></td>
+				<td th:text="${#dates.format(blist.boardRegDate, 'yyyy-MM-dd')}"></td>
+				<td th:text="${#dates.format(blist.boardUpdate,'yyyy-MM-dd')}"></td>
 			</tr>
 		</table>
 	</div>

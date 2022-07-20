@@ -1,18 +1,23 @@
 package com.kos.CoCoCo.cansu;
 
 import java.util.List;
+import java.util.Random;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.kos.CoCoCo.cansu.test.BoardCategoryRepository;
-import com.kos.CoCoCo.cansu.test.BoardRepository;
-import com.kos.CoCoCo.cansu.test.TeamRepository;
-import com.kos.CoCoCo.cansu.test.TeamUserRepository;
+import com.kos.CoCoCo.cansu.test.BoardCategoryRepositoryTestSu;
+import com.kos.CoCoCo.cansu.test.BoardRepositoryTestSu;
+import com.kos.CoCoCo.cansu.test.ReplyRepositoryTestSu;
+import com.kos.CoCoCo.cansu.test.TeamRepositoryTestSu;
+import com.kos.CoCoCo.cansu.test.TeamUserRepositoryTestSu;
 import com.kos.CoCoCo.cansu.test.UserRepositoryTestSu;
+import com.kos.CoCoCo.vo.BoardCategoryMultikey;
 import com.kos.CoCoCo.vo.BoardCategoryVO;
 import com.kos.CoCoCo.vo.BoardVO;
+import com.kos.CoCoCo.vo.ReplyVO;
+import com.kos.CoCoCo.vo.TeamUserMultikey;
 import com.kos.CoCoCo.vo.TeamUserVO;
 import com.kos.CoCoCo.vo.TeamVO;
 import com.kos.CoCoCo.vo.UserVO;
@@ -24,63 +29,116 @@ public class tableCRUDTest {
 	UserRepositoryTestSu userRP;
 	
 	@Autowired
-	TeamRepository teamRP;
+	TeamRepositoryTestSu teamRP;
 	
 	@Autowired
-	BoardCategoryRepository boardcateRP;
+	TeamUserRepositoryTestSu teamUserRP;
 	
 	@Autowired
-	BoardRepository boardRP;
+	BoardCategoryRepositoryTestSu boardcateRP;
+	
+	@Autowired
+	BoardRepositoryTestSu boardRP;
+	
+	@Autowired
+	ReplyRepositoryTestSu replyRP;
 
-	
 	@Test
-	public void boardTest0718() {
-		UserVO user = userRP.findById("0718").get();
+	public void replyDelete() {
+//		UserVO uservo = userRP.findById("0720").get();  //log in info check delete able
 		
-		TeamVO team = teamRP.findById(1L).get();
-//		BoardCategoryVO bcTemp = boardcateRP.findByTeam(team);
-		
-		BoardVO boardTeamp = boardRP.findById(5L).get();
-		
-		System.out.println("user: "+user);
-		System.out.println("team: "+team);
-//		System.out.println("baord-category: "+bcTemp);
-		System.out.println("board: "+boardTeamp);
+		ReplyVO reply = replyRP.findById(47L).get();  //selected reply
+		replyRP.delete(reply);		
 	}
 	
 //	@Test
-//	public void boardInsert() {
-//		TeamVO team = teamRP.findById(1L).get();
-//		BoardCategoryVO bcTemp = boardcateRP.findByTeam(team);
-//		System.out.println(bcTemp);
+//	public void boardUpdate() {
 //		
-//		UserVO user = userRP.findById("0718").get();
+////		UserVO uservo = userRP.findById("0720").get();  //log in info check board update able
+//		BoardVO boardTemp = boardRP.findById(46L).get();  //selected board
+//
+//		boardTemp.setBoardTitle("updateTitle");
+//		boardTemp.setBoardText("updateText");
+//		boardRP.save(boardTemp);
+//	}
+	
+//	@Test
+//	public void repliesInsert() {
 //		
-//		BoardVO boardTemp = BoardVO.builder().category(bcTemp).user(user).boardTitle("20220718")
-//				.build(); 
+//		UserVO uservo = userRP.findById("0720").get();  //log in
+//		BoardVO boardTemp = boardRP.findById(46L).get();  //selected board
+//		System.out.println(uservo);
+//		System.out.println(boardTemp);
+//		
+//		ReplyVO rvo = ReplyVO.builder().board(boardTemp).user(uservo).replyText("0720").build();
+//		replyRP.save(rvo);
+//	}
+	
+	
+//	@Test
+//	public void boardInsert() {	
+//		// board category insert + board insert
+//		long gnrTemp =  new Random().nextLong();
+//		if(gnrTemp <0) {
+//			gnrTemp = -1*gnrTemp;
+//		}
+//		long gnrValue = Long.valueOf(String.valueOf(gnrTemp).substring(0, 6));
+////		System.out.println(gnrValue);
+//		
+//		UserVO uservo = userRP.findById("0720").get();
+//		TeamVO teamvo =  teamRP.selectByUserID(uservo.getUserId());
+//		System.out.println(teamvo);
+//		
+//		//error(not one row)
+////		BoardCategoryMultikey bcMultikey = BoardCategoryMultikey.builder().categoryId(244050L).team(teamvo).build();
+////		BoardCategoryVO bcvo = boardcateRP.findById(bcMultikey).get();
+////		System.out.println(bcvo);
+//		
+//		BoardCategoryMultikey bctemp = BoardCategoryMultikey.builder().categoryId(gnrValue).team(teamvo).build();
+//		BoardCategoryVO bcvotemp = BoardCategoryVO.builder().boardCategoryId(bctemp).categoryName("sample3").build();
+////		System.out.println(bcvotemp);
+//		boardcateRP.save(bcvotemp);
+//
+//		
+//		BoardVO boardTemp = BoardVO.builder().category(bcvotemp).user(uservo).boardTitle("sample0720").build(); 
 //		boardRP.save(boardTemp);
 //	}
 	
 //	@Test
 //	public void boardCategoryInsert() {
-//		TeamVO teamvo = teamRP.findById(1L).get();
+//		//BoardCategoryMultikey -> generateValue not work
+//		long gnrTemp =  new Random().nextLong();
+//		if(gnrTemp <0) {
+//			gnrTemp = -1*gnrTemp;
+//		}
+//		long gnrValue = Long.valueOf(String.valueOf(gnrTemp).substring(0, 6));
+////		System.out.println(gnrValue);
+//		
+//		UserVO uservo = userRP.findById("0720").get();
+//		TeamVO teamvo =  teamRP.selectByUserID(uservo.getUserId());
 //		System.out.println(teamvo);
 //		
-////		BoardCategoryVO bcTemp = BoardCategoryVO.builder().teamId(teamvo.getTeamId()).team(teamvo).categoryName("sample").build();
-////		System.out.println(bcTemp);
-////		boardcateRP.save(bcTemp);
+//		BoardCategoryMultikey bcMultikey = BoardCategoryMultikey.builder().categoryId(gnrValue).team(teamvo).build();
+//		BoardCategoryVO bcTemp = BoardCategoryVO.builder().boardCategoryId(bcMultikey).categoryName("sample0720").build();
+//		boardcateRP.save(bcTemp);
+//		
+////		System.out.println(bcMultikey);
 //	}
 	
 //	@Test
 //	public void teamInsert() {
-//		UserVO uservo = userRP.findById("0718").get();
-//		TeamVO teamvo = TeamVO.builder().teamName("0718sample").user(uservo)
-//				.build();
+////		UserVO uservo = userRP.findById("0720").get();
+////		TeamVO teamvo = TeamVO.builder().teamName("0720sample").user(uservo)
+////				.build();
+////		teamRP.save(teamvo);
 //		
-//		//error (insert team_user table)
-////		TeamUserVO temp = TeamUserVO.builder().team(teamvo).user(uservo).build(); 
-//		
-//		teamRP.save(teamvo);
+//		// (insert team_user table)
+////		UserVO uservo = userRP.findById("0720").get();
+////		TeamVO teamteamp = teamRP.selectByUserID(uservo.getUserId());
+////		
+////		TeamUserMultikey tuMultikey = TeamUserMultikey.builder().team(teamteamp).user(uservo).build();
+////		TeamUserVO temp = TeamUserVO.builder().teamUserId(tuMultikey).userRole("sample").build(); 
+////		
 ////		teamUserRP.save(temp);
 //	}
 	
@@ -95,7 +153,7 @@ public class tableCRUDTest {
 	
 //	@Test
 //	public void userInsert() {
-//		UserVO temp = UserVO.builder().userId("0718").pw("0718").name("kosta")
+//		UserVO temp = UserVO.builder().userId("0720").pw("0720").name("kosta")
 //				.build();
 //		userRP.save(temp);
 //	}

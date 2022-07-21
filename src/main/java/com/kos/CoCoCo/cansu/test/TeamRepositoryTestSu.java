@@ -9,7 +9,7 @@ public interface TeamRepositoryTestSu extends CrudRepository<TeamVO, Long> {
 	
 	
 	//query
-	@Query(value="select*from teams where user_user_id=0720", nativeQuery = true)
+	@Query(value="select*from teams where user_user_id=?1", nativeQuery = true)
 	TeamVO selectByUserID(String userid);
 
 }

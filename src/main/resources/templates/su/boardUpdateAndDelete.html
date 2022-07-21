@@ -3,37 +3,60 @@
 <head>
 <meta charset="EUC-KR">
 <title>board update and delete page</title>
+<script type="text/javascript">
+	window.onload = function() {
+		document.getElementById("boardDeleteBtn").addEventListener('click', hello);
+	}
+
+	function hello() {		
+		var boardID = document.getElementById("bid").value;
+		window.location.href="/boardDelete?bid="+boardID;
+	}
+</script>
 </head>
 <body>
 
-	<form method="post" action="postBoardUpdate">
-		<input name="boardID" type="hidden" th:value="${boardDetail.boardId}">
-		title:<input name="boardTitle" type="text" th:value="${boardDetail.boardTitle}"><br> 
-		content:<textarea name="boardText" th:text="${boardDetail.boardText}"></textarea><br> 
-		<input type="button" value="file"><br> 
-		<button type="button">delete</button>
+	<form method="post" action="/postBoardUpdate">
+		<input id="bid" name="boardID" type="hidden" th:value="${boardDetail.boardId}">
+		title:<input name="boardTitle" type="text"
+			th:value="${boardDetail.boardTitle}"><br> content:
+		<textarea name="boardText" th:text="${boardDetail.boardText}"></textarea>
+		<br> <input type="button" value="file">
+		<hr>
+		<button type="button" id="boardDeleteBtn">delete</button>
+		<br> <input type="submit" value="update"> <input
+			type="reset" value="reset">
+	</form>
 	<hr>
-		<input type="submit" value="update"> 
-		<input type="reset" value="reset">
+
+	<br>
+	<br>
+	<br>
+	<br>
+	<form method="post" action="/postReplyInsert">
+		<input name="replyBid" type="hidden" th:value="${boardDetail.boardId}">
+		text:
+		<textarea name="replyText"></textarea>
+		<input type="submit" value="reply insert">
 	</form>
 
 	<hr>
 	<table>
 		<tr>
 			<th>replyID</th>
-			<th>regDate</th>
 			<th>text</th>
-			<th>update</th>
 			<th>boardID</th>
 			<th>userID</th>
+			<th>regDate</th>
+			<th>update</th>
 		</tr>
-		<tr>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+		<tr th:each="rlist:${replyList}">
+			<td><a th:href="@{/replyDeleteSample(rid=${rlist.replyId})}">[[${rlist.replyId}]]</a></td>
+			<td th:text="${rlist.replyText}"></td>
+			<td th:text="${rlist.board.boardId}"></td>
+			<td th:text="${rlist.user.userId}"></td>
+			<td th:text="${#dates.format(rlist.replyRegDate,'yyyy-MM-dd')}"></td>
+			<td th:text="${#dates.format(rlist.replyUpdate,'yyyy-MM-dd')}"></td>
 		</tr>
 	</table>
 

@@ -13,16 +13,21 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.kos.CoCoCo.cansu.test.BoardCategoryRepositoryTestSu;
 import com.kos.CoCoCo.cansu.test.BoardRepositoryTestSu;
+import com.kos.CoCoCo.cansu.test.ReplyRepositoryTestSu;
 import com.kos.CoCoCo.cansu.test.TeamRepositoryTestSu;
 import com.kos.CoCoCo.cansu.test.UserRepositoryTestSu;
 import com.kos.CoCoCo.vo.BoardCategoryMultikey;
 import com.kos.CoCoCo.vo.BoardCategoryVO;
 import com.kos.CoCoCo.vo.BoardVO;
+import com.kos.CoCoCo.vo.ReplyVO;
 import com.kos.CoCoCo.vo.TeamVO;
 import com.kos.CoCoCo.vo.UserVO;
 
 @Controller
 public class sampleController {
+	
+	@Autowired
+	ReplyRepositoryTestSu replyRP;
 
 	@Autowired
 	BoardRepositoryTestSu boardRP;
@@ -36,6 +41,65 @@ public class sampleController {
 	@Autowired
 	BoardCategoryRepositoryTestSu boardcateRP;
 	
+	@GetMapping("/replyDeleteSample")
+	public String replyDelete(HttpServletRequest request) {
+		
+		String replyID = request.getParameter("rid");
+//		System.out.println(replyID);
+		
+		replyRP.deleteById(Long.valueOf(replyID));
+		
+		return "redirect:/boardSample";
+	}
+	
+	@GetMapping("/boardDelete")
+	public String boardDelete(HttpServletRequest request) {
+		
+		String boardID = request.getParameter("bid");
+		
+		List<ReplyVO> rlist = replyRP.selectByboardID(Integer.valueOf(boardID));
+		if(rlist.isEmpty())
+		{
+			boardRP.deleteById(Long.valueOf(boardID));			
+		}
+		
+		return "redirect:/boardSample";
+	}
+	
+	@PostMapping("/postReplyInsert")
+	public String replyInsert(HttpServletRequest request) {
+		
+		String text = request.getParameter("replyText");		
+		String boardID = request.getParameter("replyBid");
+//		System.out.println(boardID);
+//		System.out.println(text);
+		
+		UserVO uservo = userRP.findById("0720").get();  //log in
+		BoardVO boardTemp = boardRP.findById(Long.valueOf(boardID)).get();  //selected board
+		
+		ReplyVO rvo = ReplyVO.builder().board(boardTemp).user(uservo).replyText(text).build();
+		replyRP.save(rvo);
+		
+		return "redirect:/boardSample";
+	}
+	
+	@GetMapping("/boardUDsample")
+	public String boardUD(HttpServletRequest request, Model model) {
+		
+		//main list selected board get -> error
+		String boardID = request.getParameter("id");
+//		System.out.println(boardID);
+		
+		BoardVO bvo = boardRP.findById(Long.valueOf(boardID)).get();
+		model.addAttribute("boardDetail", bvo);
+		
+		List<ReplyVO> rlist = replyRP.selectByboardID(Integer.valueOf(boardID));
+		model.addAttribute("replyList", rlist);		
+//		System.out.println(bvo.getBoardText());
+		
+		return "su/boardUpdateAndDelete";
+	}
+	
 	@PostMapping("/postBoardUpdate")
 	public String boardUpdate(HttpServletRequest request){
 		
@@ -43,9 +107,9 @@ public class sampleController {
 		String text = request.getParameter("boardText");
 		String id = request.getParameter("boardID");
 		
-		System.out.println("post title: "+title);
-		System.out.println("post text: "+text);
-		System.out.println("post id: "+id);
+//		System.out.println("post title: "+title);
+//		System.out.println("post text: "+text);
+//		System.out.println("post id: "+id);
 		
 		BoardVO bvo = boardRP.findById(Long.valueOf(id)).get();
 		bvo.setBoardTitle(title);
@@ -53,20 +117,6 @@ public class sampleController {
 		boardRP.save(bvo);
 		
 		return "redirect:/boardSample";
-	}
-
-
-	@GetMapping("/boardUDsample")
-	public String boardUD(HttpServletRequest request, Model model) {
-		String boardID = request.getParameter("id");
-//		System.out.println(boardID);
-		
-		BoardVO bvo = boardRP.findById(Long.valueOf(boardID)).get();
-		model.addAttribute("boardDetail", bvo);
-		
-//		System.out.println(bvo.getBoardText());
-		
-		return "su/boardUpdateAndDelete";
 	}
 
 	@GetMapping("/boardSample")

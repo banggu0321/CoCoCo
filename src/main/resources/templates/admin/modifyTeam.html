@@ -23,7 +23,13 @@
 			</div>
 	
 			<input type="submit" class="btn btn-primary" value="수정">
-			<input type="button" class="btn btn-primary" value="취소">
+			<input type="button" class="btn btn-primary reloadBtn" value="취소">
 		</form>
 	</div>
 </div>
+
+<script>
+	$(".reloadBtn").click(function() {
+		location.reload();
+	});
+</script>

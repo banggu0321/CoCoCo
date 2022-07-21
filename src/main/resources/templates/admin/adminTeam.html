@@ -72,22 +72,23 @@ div img {
 
 <th:block layout:fragment="script">
 <script>
-//수정 form 보여주기
-$("#modifyForm").click(function() {
-	$.ajax({
-		type:"get",
-		url:"/admin/modify/[[${team.teamId}]]",
-		success: function(resData) {
-			$("#box").html(resData);
+	//수정 form 보여주기
+	$("#modifyForm").click(function() {
+		$.ajax({
+			type:"get",
+			url:"/admin/modify/[[${team.teamId}]]",
+			success: function(resData) {
+				$("#box").html(resData);
+			}
+		})
+	});
+	
+	$("#deleteBtn").click(function() {
+		if(confirm("워크스페이스를 삭제하시겠습니까?")) {
+			location.href="/admin/delete/[[${team.teamId}]]";
 		}
-	})
-});
-
-$("#deleteBtn").click(function() {
-	if(confirm("워크스페이스를 삭제하시겠습니까?")) {
-		location.href="/admin/delete/[[${team.teamId}]]";
-	}
-});
+	});
+	
 
 </script>
 </th:block>

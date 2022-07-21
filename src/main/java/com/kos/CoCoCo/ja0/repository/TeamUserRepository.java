@@ -12,7 +12,7 @@ import com.kos.CoCoCo.vo.TeamUserVO;
 
 public interface TeamUserRepository extends CrudRepository<TeamUserVO, TeamUserMultikey>{
 
-	@Query(value = "select * from team_user where team_team_id = ?1 order by user_role",
+	@Query(value = "select * from team_user where team_team_id = ?1 order by user_role, join_date",
 		nativeQuery = true)
 	List<TeamUserVO> findByTeamId(Long teamId);
 	

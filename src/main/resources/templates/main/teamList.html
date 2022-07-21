@@ -55,24 +55,27 @@
 	height: 30px;
 }
 
-/* #myModal, #myModal2 {
+.inviteBtn {
+	float: right;
+}
+
+#myModal, #myModal2 {
 	position: absolute;
 	top: 30%;
 	left: 20%;
 	right: 20%;
-} */
+}
 </style>
 </head>
 <body>
 <div layout:fragment="content">
 	<h1>프로젝트 리스트</h1>
-	<button data-toggle="modal" data-target="#myModal2" class="btn btn-primary">초대코드</button>
+	<button data-toggle="modal" data-target="#myModal2" class="btn btn-primary inviteBtn">초대코드</button>
 	<p>[[${session.user}]]</p>
-	<p th:each="team:${teamList}" th:text="${team}"></p>
 	
 	<div class="content" th:each="team:${teamList}">
 		<div class="box" th:team-data="${team.teamUserId.team.teamId}">
-			<img th:src="@{/images/deleteImg.svg}" class="delBtn" th:data2="${team.teamUserId.team.teamId}">
+			<img th:src="@{/images/deleteImg.svg}" class="delBtn" th:team-data="${team.teamUserId.team.teamId}">
 			<img th:if="${team.teamUserId.team.teamImg!=null}" th:src="@{/uploads/}+${team.teamUserId.team.teamImg}" th:alt="${team.teamUserId.team.teamImg}">
 			<img th:if="${team.teamUserId.team.teamImg==null}" th:src="@{/images/teamImg.png}" alt="null">
 			<p class="name">[[${team.teamUserId.team.teamName}]]</p>
@@ -93,17 +96,17 @@
 	       		
 	        	<div class="modal-body">
 	        		<form id="addTeamForm" method="post" enctype="multipart/form-data">
-						<div>
-							<label>WORKSPACE IMG</label> 
-							<input type="file" name="teamPhoto" class="form-control custom-file-input">
-				         	<label class="custom-file-label">CHOOSE FILE</label>
-						</div>
-						
 			        	<label>WORKSPACE NAME</label>
 			        	<input type="text" name="teamName" class="form-control">
 			        	
 			         	<label>WORKSPACE INFO</label>
 			         	<textarea class="form-control" name="teamInfo" rows="2"></textarea>
+						
+						<div>
+							<label>WORKSPACE IMG</label> 
+							<input type="file" name="teamPhoto" class="form-control custom-file-input">
+				         	<label class="custom-file-label">CHOOSE FILE</label>
+						</div>
 		        	</form>
 		        </div>
 			
@@ -137,9 +140,8 @@
 <th:block layout:fragment="script">
 	<script>
 		$(".box").click(function() {
-			var teamId = $(".box").attr("team-data");
-			alert(teamId);
-			//location.href="/main/"+teamId;
+			var teamId = $(this).attr("team-data");
+			location.href="/main/"+teamId;
 		});
 		
 		$("#enterBtn").click(function() {
@@ -160,28 +162,21 @@
 		
 		$(".delBtn").click(function(e) {
 			e.stopPropagation();
-			var teamId = $(".delBtn").attr("data2");
-			if(confirm(teamId + " 해당 워크스페이스를 삭제하시겠습니까?")) {
-				$.ajax({
-					type:"post",
-					url:"/main/deleteTeam/[[${session.user.userId}]]/"+teamId,
-					success: function() {
-						location.reload();
-					}
-				});
+			var teamId = $(this).attr("team-data");
+			if(confirm("해당 워크스페이스를 삭제하시겠습니까?")) {
+				location.href = "/main/deleteTeam/[[${session.user.userId}]]/"+teamId;
 			}
 		});
 		
 		$("#addTeamBtn").click(function() {
 			var addForm = $("#addTeamForm");
-			//console.log(addForm[0]);
 			addForm.attr("action","/main/addTeam/[[${session.user.userId}]]");
 			addForm.submit();
 		});
 		
 		$(".custom-file-input").on("change",function() {
 			var fileName = $(this).val().split("\\").pop();
-			$(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+			$(this).siblings(".custom-file-label").html(fileName);
 		});
 	</script>
 </th:block>

@@ -61,8 +61,9 @@ public class TeamController {
 	public String addTeam(TeamVO team, MultipartFile teamPhoto, @PathVariable String userId, HttpServletRequest request){
 		if (!teamPhoto.isEmpty()) {
 			String path = "E:\\sts-workspace\\CoCoCo\\src\\main\\resources\\static\\uploads\\";
+			//아마존 s3로 경로 설정
 		    String fullPath = path + teamPhoto.getOriginalFilename();
-		    //System.out.println("경로 : "+ fullPath);
+		    System.out.println("경로 : "+ path);
 		    try {
 				teamPhoto.transferTo(new File(fullPath));
 				team.setTeamImg(teamPhoto.getOriginalFilename());
@@ -100,8 +101,7 @@ public class TeamController {
 		return teamCode;
 	}
 	
-	@ResponseBody
-	@PostMapping("/deleteTeam/{userId}/{teamId}")
+	@GetMapping("/deleteTeam/{userId}/{teamId}")
 	public String deleteTeam(@PathVariable Long teamId, @PathVariable String userId) {
 		TeamVO team = tRepo.findById(teamId).get();
 		UserVO user = uRepo.findById(userId).get();
@@ -109,7 +109,7 @@ public class TeamController {
 		
 		tuRepo.deleteById(teamUserId);
 		
-		return "success";
+		return "redirect:/main/teamList";
 	}
 	
 	@ResponseBody

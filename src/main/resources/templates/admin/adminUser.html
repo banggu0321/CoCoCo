@@ -27,12 +27,16 @@ tr:first-child {
 	width: 800px;
 }
 
-.delUser:hover {
+.delUser:hover, .updateUser:hover {
 	cursor: pointer;
 }
 #myModal {
-	width: 800px;
+	position: absolute;
+	top: 30%;
+	left: 20%;
+	right: 20%;
 }
+
 </style>
 </head>
 <body>
@@ -49,6 +53,7 @@ tr:first-child {
 				<td>참여일자</td>
 				<td>권한</td>
 				<td></td>
+				<td></td>
 			</tr>
 			
 			<tr th:each="user, rowStatus:${userList}">
@@ -57,8 +62,12 @@ tr:first-child {
 				<td th:text="${user.teamUserId.user.userId}">이메일</td>
 				<td th:text="${user.teamUserId.user.company}">소속</td>
 				<td th:text="${#dates.format(user.joinDate,'yyyy-MM-dd')}">참여일자</td>
-				<td data-toggle="modal" data-target="#myModal"
-					class="roleModel" th:text="${user.userRole}">권한</td>
+				<td th:text="${user.userRole}">권한</td>
+				
+				<td th:if="${user.teamUserId.user.userId == user.teamUserId.team.user.userId}"></td>
+				<td th:if="${user.teamUserId.user.userId != user.teamUserId.team.user.userId}" data-toggle="modal" data-target="#myModal" class="roleModel">
+					<img th:src="@{/images/updateRole.svg}" class="updateUser" th:user-data="${user.teamUserId.user.userId}" alt="update" width="25px" height="25px">
+				</td>
 				
 				<td th:if="${user.teamUserId.user.userId == user.teamUserId.team.user.userId}"></td>
 				<td th:if="${user.teamUserId.user.userId != user.teamUserId.team.user.userId}">
@@ -71,18 +80,24 @@ tr:first-child {
 	<!-- Modal -->
     <div id="myModal" class="modal fade" role="dialog">
 		<div class="model_dialog">
-	        Modal content
 	        <div class="modal-content">
+	        	<div class="modal-header">
+	           		<h4 class="modal-title">권한 변경하기</h4>
+	       		</div>
+	       		
 	        	<div class="modal-body">
 					<label>USER ID</label> 
 					<input type="text" name="userId" class="form-control" readonly="readonly">
 					
 		        	<label>USER ROLE</label>
-		        	<input type="text" name="replyText" class="form-control">
+		        	<select class="form-control" name="userRole">
+		        		<option>ADMIN</option>
+		        		<option>USER</option>
+		        	</select>
 		        </div>
 			
 				<div class="modal-footer">
-			    	<button id = "modalSaveBtn" class="btn btn-info">Save</button>
+			    	<button id = "updateBtn" class="btn btn-info">Save</button>
 			    	<button type="button" class="btn btn-default"   data-dismiss="modal" >Close</button>
 	        	</div>
 	        </div>
@@ -93,7 +108,7 @@ tr:first-child {
 <th:block layout:fragment="script">
 	<script>
 		$(".delUser").click(function() {
-			var userId = $(".delUser").attr("user-data");
+			var userId = $(this).attr("user-data");
 			var teamId = "[[${teamId}]]";
 	
 			if(confirm("해당 사용자를 삭제하시겠습니까?")) {
@@ -101,6 +116,28 @@ tr:first-child {
 			}
 		});
 		
+		$(".updateUser").click(function() {
+			var userId = $(this).attr("user-data");
+			var teamId = "[[${teamId}]]";
+			
+			$.ajax({
+				type:"post",
+				url: "/admin/findUser/"+teamId+"/"+userId,
+				success:function(resData) {
+					console.log(resData);
+					$("input[name='userId']").val(resData.teamUserId.user.userId);
+					$("select[name='userRole']").val(resData.userRole);
+				}
+			});
+		});
+		
+		$("#updateBtn").click(function() {
+			var newRole = $("select[name='userRole']").val();
+			var userId = $("input[name='userId']").val();
+			var teamId = "[[${teamId}]]";
+			
+			location.href="/admin/updateUser/"+teamId+"/"+userId+"/"+newRole;
+		});
 	</script>
 </th:block>
 </body>

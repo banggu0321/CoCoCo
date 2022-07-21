@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -73,22 +74,22 @@ public class AdminController {
 	
 	@PostMapping("/modify")
 	public String modifyTeam(TeamVO team, MultipartFile newPhoto, RedirectAttributes attr) {
-		if (!newPhoto.isEmpty()) {
-			String path = "E:\\sts-workspace\\CoCoCo\\src\\main\\resources\\static\\uploads\\";
-		    String fullPath = path + newPhoto.getOriginalFilename();
-		    //System.out.println("경로 : "+ fullPath);
-		    try {
-		    	newPhoto.transferTo(new File(fullPath));
-				team.setTeamImg(newPhoto.getOriginalFilename());
-			} catch (IllegalStateException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-	    }
-
 		tRepo.findById(team.getTeamId()).ifPresent(i->{		
-			i.setTeamImg(team.getTeamImg());
+			if (!newPhoto.isEmpty()) {
+				String path = "E:\\sts-workspace\\CoCoCo\\src\\main\\resources\\static\\uploads\\";
+				String fullPath = path + newPhoto.getOriginalFilename();
+				//System.out.println("경로 : "+ fullPath);
+				
+				try {
+					newPhoto.transferTo(new File(fullPath));
+					i.setTeamImg(newPhoto.getOriginalFilename());
+				} catch (IllegalStateException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
 			i.setTeamInfo(team.getTeamInfo());
 			i.setTeamName(team.getTeamName());
 			
@@ -112,5 +113,22 @@ public class AdminController {
 		
 		//attr.addFlashAttribute("msg", "워크스페이스를 삭제할 수 없습니다.");	
 		return "redirect:/admin/team/"+teamId;
+	}
+	
+	@ResponseBody
+	@PostMapping("/findUser/{teamId}/{userId}")
+	public TeamUserVO findUser(@PathVariable Long teamId, @PathVariable String userId) {
+		TeamUserMultikey id = new TeamUserMultikey(tRepo.findById(teamId).get(), uRepo.findById(userId).get());
+		return tuRepo.findById(id).get();
+	}
+	
+	@GetMapping("/updateUser/{teamId}/{userId}/{newRole}")
+	public String updateUser(@PathVariable Long teamId, @PathVariable String userId, @PathVariable String newRole) {
+		TeamUserMultikey id = new TeamUserMultikey(tRepo.findById(teamId).get(), uRepo.findById(userId).get());
+		tuRepo.findById(id).ifPresent(i->{
+			i.setUserRole(newRole);
+			tuRepo.save(i);
+		});
+		return "redirect:/admin/user/"+teamId;
 	}
 }

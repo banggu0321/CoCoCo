@@ -1,8 +1,11 @@
 package com.kos.CoCoCo.ja0.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +14,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+
 
 import com.kos.CoCoCo.ja0.repository.TeamRepository;
 import com.kos.CoCoCo.ja0.repository.TeamUserRepository;
@@ -38,7 +42,9 @@ public class TeamController {
 	
 	@GetMapping("/teamList")
 	public void teamList(HttpSession session, Model model) {
-		UserVO user = (UserVO)session.getAttribute("user");
+		UserVO user = uRepo.findById("2ja0@naver.com").get();
+		session.setAttribute("user", user);
+		
 		model.addAttribute("teamList", tuRepo.findByUserId(user.getUserId()));
 	}
 	
@@ -51,9 +57,22 @@ public class TeamController {
 		return "main/teamMain";
 	}
 	
-	@ResponseBody
 	@PostMapping("/addTeam/{userId}")
-	public List<TeamUserVO> addTeam(@RequestBody TeamVO team, @PathVariable String userId) {
+	public String addTeam(TeamVO team, MultipartFile teamPhoto, @PathVariable String userId, HttpServletRequest request){
+		if (!teamPhoto.isEmpty()) {
+			String path = "E:\\sts-workspace\\CoCoCo\\src\\main\\resources\\static\\uploads\\";
+		    String fullPath = path + teamPhoto.getOriginalFilename();
+		    //System.out.println("경로 : "+ fullPath);
+		    try {
+				teamPhoto.transferTo(new File(fullPath));
+				team.setTeamImg(teamPhoto.getOriginalFilename());
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	    }
+		
 		UserVO user = uRepo.findById(userId).get();
 		
 		team.setUser(user); 
@@ -64,7 +83,7 @@ public class TeamController {
 		TeamUserVO teamUser = TeamUserVO.builder().teamUserId(teamUserId).userRole("ADMIN").build();
 		tuRepo.save(teamUser);
 		
-		return tuRepo.findByUserId(userId);
+		return "redirect:/main/teamList";
 	}
 	
 	//초대코드 만들기

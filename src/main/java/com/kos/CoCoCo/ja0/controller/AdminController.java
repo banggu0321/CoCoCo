@@ -1,5 +1,7 @@
 package com.kos.CoCoCo.ja0.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kos.CoCoCo.ja0.repository.TeamRepository;
@@ -38,8 +41,7 @@ public class AdminController {
 
 	@GetMapping("/user/{teamId}")
 	public String userList(@PathVariable@ModelAttribute Long teamId, HttpSession session, Model model) {
-		UserVO user = uRepo.findById("2ja0@naver.com").get();
-		session.setAttribute("user", user);
+		UserVO user = (UserVO)session.getAttribute("user");
 		model.addAttribute("userList", tuRepo.findByTeamId(teamId));
 		model.addAttribute("teamList", tuRepo.findByUserId(user.getUserId()));
 		
@@ -70,8 +72,22 @@ public class AdminController {
 	}
 	
 	@PostMapping("/modify")
-	public String modifyTeam(TeamVO team, RedirectAttributes attr) {
-		tRepo.findById(team.getTeamId()).ifPresent(i->{
+	public String modifyTeam(TeamVO team, MultipartFile newPhoto, RedirectAttributes attr) {
+		if (!newPhoto.isEmpty()) {
+			String path = "E:\\sts-workspace\\CoCoCo\\src\\main\\resources\\static\\uploads\\";
+		    String fullPath = path + newPhoto.getOriginalFilename();
+		    //System.out.println("경로 : "+ fullPath);
+		    try {
+		    	newPhoto.transferTo(new File(fullPath));
+				team.setTeamImg(newPhoto.getOriginalFilename());
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	    }
+
+		tRepo.findById(team.getTeamId()).ifPresent(i->{		
 			i.setTeamImg(team.getTeamImg());
 			i.setTeamInfo(team.getTeamInfo());
 			i.setTeamName(team.getTeamName());

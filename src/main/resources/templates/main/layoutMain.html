@@ -69,7 +69,7 @@
 	<div class="side">
 		<div class="teamList">
 			<a th:href="@{/main/}+${tu.teamUserId.team.teamId}" th:each="tu:${teamList}">
-				<img th:if="${tu.teamUserId.team.teamImg!=null}" th:src="@{/images/}+${tu.teamUserId.team.teamImg}" 
+				<img th:if="${tu.teamUserId.team.teamImg!=null}" th:src="@{/uploads/}+${tu.teamUserId.team.teamImg}" 
 					data-toggle="tooltip" data-placement="right" th:title="${tu.teamUserId.team.teamName}" width="50px" class="img-rounded">
 				<img th:if="${tu.teamUserId.team.teamImg==null}" th:src="@{/images/teamImg.png}" alt="null"
 					data-toggle="tooltip" data-placement="right" th:title="${tu.teamUserId.team.teamName}" width="50px" class="img-rounded">
@@ -86,7 +86,7 @@
 		<h4>팀원</h4>
 		<div th:each="tu:${userList}">
 			<img th:if="${tu.teamUserId.user.image == null}" th:src="@{/images/userImg.svg}" width="40px" class="img-circle">
-			<img th:if="${tu.teamUserId.user.image != null}" th:src="@{/images/}+${tu.teamUserId.user.image}" width="40px" class="img-circle">
+			<img th:if="${tu.teamUserId.user.image != null}" th:src="@{/uploads/}+${tu.teamUserId.user.image}" width="40px" class="img-circle">
 			[[${tu.teamUserId.user.name}]] ([[${tu.teamUserId.user.userId}]])</div>
 	</div>
 		

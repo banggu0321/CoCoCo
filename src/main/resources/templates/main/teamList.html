@@ -55,12 +55,12 @@
 	height: 30px;
 }
 
-#myModal, #myModal2 {
+/* #myModal, #myModal2 {
 	position: absolute;
 	top: 30%;
 	left: 20%;
 	right: 20%;
-}
+} */
 </style>
 </head>
 <body>
@@ -73,7 +73,7 @@
 	<div class="content" th:each="team:${teamList}">
 		<div class="box" th:team-data="${team.teamUserId.team.teamId}">
 			<img th:src="@{/images/deleteImg.svg}" class="delBtn" th:data2="${team.teamUserId.team.teamId}">
-			<img th:if="${team.teamUserId.team.teamImg!=null}" th:src="@{/images/}+${team.teamUserId.team.teamImg}" th:alt="${team.teamUserId.team.teamImg}">
+			<img th:if="${team.teamUserId.team.teamImg!=null}" th:src="@{/uploads/}+${team.teamUserId.team.teamImg}" th:alt="${team.teamUserId.team.teamImg}">
 			<img th:if="${team.teamUserId.team.teamImg==null}" th:src="@{/images/teamImg.png}" alt="null">
 			<p class="name">[[${team.teamUserId.team.teamName}]]</p>
 			<p>[[${#dates.format(team.teamUserId.team.createDate,'yyyy-MM-dd')}]]</p>
@@ -92,14 +92,19 @@
 	       		</div>
 	       		
 	        	<div class="modal-body">
-					<label>WORKSPACE IMG</label> 
-					<input type="text" name="teamImg" id="teamImg" class="form-control">
-					
-		        	<label>WORKSPACE NAME</label>
-		        	<input type="text" name="teamName" id="teamName" class="form-control">
-		        	
-		         	<label>WORKSPACE INFO</label>
-		         	<textarea class="form-control" name="teamInfo" id="teamInfo" rows="2"></textarea>
+	        		<form id="addTeamForm" method="post" enctype="multipart/form-data">
+						<div>
+							<label>WORKSPACE IMG</label> 
+							<input type="file" name="teamPhoto" class="form-control custom-file-input">
+				         	<label class="custom-file-label">CHOOSE FILE</label>
+						</div>
+						
+			        	<label>WORKSPACE NAME</label>
+			        	<input type="text" name="teamName" class="form-control">
+			        	
+			         	<label>WORKSPACE INFO</label>
+			         	<textarea class="form-control" name="teamInfo" rows="2"></textarea>
+		        	</form>
 		        </div>
 			
 				<div class="modal-footer">
@@ -168,23 +173,15 @@
 		});
 		
 		$("#addTeamBtn").click(function() {
-			var obj = {
-				"teamName" : $("#teamName").val(),
-				"teamInfo" : $("#teamInfo").val(),
-				"teamImg" : $("#teamImg").val()
-			};
-			console.log(obj);
-			
-			$.ajax({
-				type:"post",
-				url:"/main/addTeam/[[${session.user.userId}]]",
-				data: JSON.stringify(obj),
-				dataType:"json",
-				contentType:"application/json",
-				success: function() {
-					location.reload();
-				}
-			});
+			var addForm = $("#addTeamForm");
+			//console.log(addForm[0]);
+			addForm.attr("action","/main/addTeam/[[${session.user.userId}]]");
+			addForm.submit();
+		});
+		
+		$(".custom-file-input").on("change",function() {
+			var fileName = $(this).val().split("\\").pop();
+			$(this).siblings(".custom-file-label").addClass("selected").html(fileName);
 		});
 	</script>
 </th:block>

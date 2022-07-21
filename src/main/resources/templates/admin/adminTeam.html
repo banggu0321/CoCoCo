@@ -52,7 +52,7 @@ div img {
 [[${session.user}]]
 	<div class="content">
 		<div id="box">
-			<img th:if="${team.teamImg!=null}" th:src="@{/images/}+${team.teamImg}" th:alt="${team.teamImg}" width="250px" height="100%">
+			<img th:if="${team.teamImg!=null}" th:src="@{/uploads/}+${team.teamImg}" th:alt="${team.teamImg}" width="250px" height="100%">
 			<img th:if="${team.teamImg==null}" th:src="@{/images/teamImg.png}" alt="null" width="250px" height="250px">
 			<div id="teamInfo">
 				<label>WORKSPACE NAME</label>

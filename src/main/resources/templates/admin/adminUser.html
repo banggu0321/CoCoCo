@@ -86,8 +86,11 @@ tr:first-child {
 	       		</div>
 	       		
 	        	<div class="modal-body">
-					<label>USER ID</label> 
+					<label>EMAIL</label> 
 					<input type="text" name="userId" class="form-control" readonly="readonly">
+					
+					<label>NAME</label> 
+					<input type="text" name="name" class="form-control" readonly="readonly">
 					
 		        	<label>USER ROLE</label>
 		        	<select class="form-control" name="userRole">
@@ -126,6 +129,7 @@ tr:first-child {
 				success:function(resData) {
 					console.log(resData);
 					$("input[name='userId']").val(resData.teamUserId.user.userId);
+					$("input[name='name']").val(resData.teamUserId.user.name);
 					$("select[name='userRole']").val(resData.userRole);
 				}
 			});

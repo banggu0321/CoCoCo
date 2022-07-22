@@ -52,6 +52,18 @@
 .teamList a img, .myMenu a img, .sideMenu div img {
 	margin: 10px;
 }
+
+#myProfile {
+	text-align: center;
+}
+
+#myInfo {
+	font-weight: bold;
+}
+
+#myName {
+	font-size: 17px;
+}
 </style>
 <!-- 하위 HTML에서 CSS 재정의할 예정 -->
 <th:block layout:fragment="style"></th:block>
@@ -83,11 +95,22 @@
 	</div>
 		
 	<div class="sideMenu">
+		<div id="myProfile">
+			<img th:if="${session.user.image == null}" th:src="@{/images/userImg.svg}" width="100px" class="img-circle">
+			<img th:if="${session.user.image != null}" th:src="@{/uploads/}+${session.user.image}" width="100px" class="img-circle">
+			<div id="myInfo">
+				<p id="myName">[[${session.user.name}]]<br>([[${session.user.userId}]]) <br></p>
+				
+				[[${session.user.company}]]
+			</div>
+		</div>
+		<hr>
 		<h4>팀원</h4>
-		<div th:each="tu:${userList}">
+		<div th:each="tu:${userList}" th:if="${tu.teamUserId.user.userId != session.user.userId}">
 			<img th:if="${tu.teamUserId.user.image == null}" th:src="@{/images/userImg.svg}" width="40px" class="img-circle">
 			<img th:if="${tu.teamUserId.user.image != null}" th:src="@{/uploads/}+${tu.teamUserId.user.image}" width="40px" class="img-circle">
-			[[${tu.teamUserId.user.name}]] ([[${tu.teamUserId.user.userId}]])</div>
+			[[${tu.teamUserId.user.name}]] ([[${tu.teamUserId.user.userId}]])
+		</div>
 	</div>
 		
 	<!-- 하위 HTML에서 content 재정의할 예정 -->

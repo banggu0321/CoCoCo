@@ -27,14 +27,13 @@ public class S3Uploader {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public String upload(MultipartFile multipartFile, String dirName) throws IOException {
+    public String upload(MultipartFile multipartFile) throws IOException {
         File uploadFile = convert(multipartFile).orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
-
-        return upload(uploadFile, dirName);
+        return upload(uploadFile);
     }
 
-    private String upload(File uploadFile, String dirName) {
-        String fileName = dirName + "/" + uploadFile.getName();
+    private String upload(File uploadFile) {
+        String fileName = "static/uploads/" + uploadFile.getName();
         String uploadImageUrl = putS3(uploadFile, fileName);
         removeNewFile(uploadFile);
         return uploadImageUrl;
@@ -47,14 +46,15 @@ public class S3Uploader {
 
     private void removeNewFile(File targetFile) {
         if (targetFile.delete()) {
-            log.info("파일이 삭제되었습니다.");
+            log.info(targetFile+" 파일이 삭제되었습니다.");
         } else {
-            log.info("파일이 삭제되지 못했습니다.");
+            log.info(targetFile+" 파일이 삭제되지 못했습니다.");
         }
     }
 
     private Optional<File> convert(MultipartFile file) throws IOException {
         File convertFile = new File(file.getOriginalFilename());
+        
         if(convertFile.createNewFile()) {
             try (FileOutputStream fos = new FileOutputStream(convertFile)) {
                 fos.write(file.getBytes());

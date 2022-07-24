@@ -20,9 +20,9 @@ public class S3Controller {
         return "/admin/fileUploadTest";
     }
 
-    @PostMapping("/upload")
     @ResponseBody
+    @PostMapping("/upload")
     public String upload(@RequestParam("data") MultipartFile multipartFile) throws IOException {
-        return s3Uploader.upload(multipartFile, "static");
+        return s3Uploader.upload(multipartFile);
     }
 }

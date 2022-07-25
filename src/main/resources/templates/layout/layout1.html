@@ -1,0 +1,39 @@
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script> 
+  //alert("부모가 만든 자바스크립트");
+</script>
+
+<style>
+  h1 { background-color: lightgreen;}
+</style>
+
+<!-- 하위 HTML에서 CSS 재정의할 예정 -->
+<th:block layout:fragment="style1">
+
+</th:block>
+</head>
+<body>
+	<!-- fragment 삽입하기 -->
+	<header th:insert="~{/fragments/header::header1}"></header>
+
+
+	<!-- 하위 HTML에서 content 재정의할 예정 -->
+	<div class="panel panel-default" layout:fragment="content">!!!!!!</div>
+
+
+	<!-- <footer th:insert="~{/fragments/footer::footer1}"></footer> -->
+
+
+	<!-- 하위 HTML에서 javascript 재정의할 예정   th:block 은 없어지는 태그이다 -->
+	<th:block layout:fragment="script1">
+
+	</th:block>
+</body>
+</html>

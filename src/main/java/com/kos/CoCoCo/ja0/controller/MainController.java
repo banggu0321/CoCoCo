@@ -1,6 +1,7 @@
 package com.kos.CoCoCo.ja0.controller;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
 import java.util.Random;
 
@@ -43,10 +44,10 @@ public class MainController {
 	S3Uploader uploader;
 	
 	@GetMapping("/teamList")
-	public void teamList(HttpSession session, Model model) {
-		UserVO user = uRepo.findById("3ja0@naver.com").get();
+	public void teamList(HttpSession session, Model model, Principal principal) {
+		UserVO user = uRepo.findById("ja0@naver.com").get();
 		session.setAttribute("user", user);
-		
+		//UserVO user = (UserVO) session.getAttribute("user");
 		model.addAttribute("teamList", tuRepo.findByUserId(user.getUserId()));
 	}
 	

@@ -23,33 +23,35 @@
 	$(function(){
 		var request = $.ajax({
 			type:"GET",
-			url:"/work/worklist.go",
-			//data : {"team_id" : '1000L'},
-			data:{},
+			url:"/work/worklist.go/1000",
+			//data : {"team_id" : '1000'},
 			dataType:"json"
 		});
+		
+		//응답시
 		request.done(function(responseData){
-			//console.log(responseData);
+			console.log("OK", responseData);
 			var events = [];
-			console.log(responseData);
 			$.each(responseData, function(index,data){
 				//console.log(data);
-				if(data.status == 'finish'){
+				if(data.workStatus == 'finish'){
 					events.push({
-						title : data.title,
-						start : data.start,
-						end : data.end,
+						title : data.workTitle,
+						start : data.workStart,
+						end : data.workEnd,
 						color : 'red'
 					});
 				}else{
 					events.push({
-						title : data.title,
-						start : data.start,
-						end : data.end
+						title : data.workTitle,
+						start : data.workStart,
+						end : data.workEnd
 					});
 				}
 			})
 			console.log(events);
+			
+			//캘린더 만들기
 			var calendarEl = document.getElementById('calendar');
 			var calendar = new FullCalendar.Calendar(calendarEl, {
 				//schedulerLicenseKey : 'CC-Attribution-NonCommercial-NoDerivatives',
@@ -67,14 +69,34 @@
 						color: 'yellow', 
 						click : function() { // 버튼 클릭 시 이벤트 추가
 							$("#calendarModal").modal("show"); // modal 나타내기
-
+							
+							//담당자 정보 가져오기
+							$.ajax({
+									url:"/work/workmanagerlist.go/1000",
+									type:"get",
+									//data : {"team_id" : '1000'},
+									success:function(responseData){
+										console.log(responseData);
+										$.each(responseData,function(index, data){
+											console.log(data);
+											var option = document.createElement('option');
+											option.value = data;
+											option.className = "form-control";
+											option.innerText = data;
+											$("#calendar_manager").append(option);
+											//$("#calendar_manager").appendChild("<option class=\"form-control\">"+data+"</option>");
+											
+										});
+									}
+								});
+							
 							$("#addCalendar").on("click", function() { // modal의 추가 버튼 클릭 시
 								var title = $("#calendar_title").val();
 								var content = $("#calendar_content").val();
 								var start_date = $("#calendar_start_date").val();
 								var end_date = $("#calendar_end_date").val();
 								var status = $("#calendar_status").val();
-								//var manager = $("#calendar_manager").val();
+								var manager = $("#calendar_manager").val();
 
 								//내용 입력 여부 확인
 								if (title == null || title == "") {
@@ -85,17 +107,33 @@
 									alert("날짜를 입력하세요.");
 								} else if (new Date(end_date) - new Date(start_date) < 0) { // date 타입으로 변경 후 확인
 									alert("종료일이 시작일보다 먼저입니다.");
+								}  else if (manager == "") { // date 타입으로 변경 후 확인
+									alert("업무 담당자를 입력하세요");
 								} else { // 정상적인 입력 시
 									var obj = {
-										"title" : title,
-										"content": content,
-										"start" : start_date,
-										"end" : end_date,
-										"status" : status,
-										//"manager" : manager
+										"workTitle" : title,
+										"workText": content,
+										"workStart" : start_date,
+										"workEnd" : end_date,
+										"workStatus" : status,
+										"manager" :manager
 									}//전송할 객체 생성
 									console.log(obj); //서버로 해당 객체를 전달해서 DB 연동 가능
 									
+									//let sendData = "username="+$('input[name=username]').val();   //폼의 이름 값을 변수 안에 담아줌
+									
+									$.ajax({
+										type:'post',   //post 방식으로 전송
+										url:'/work/worklist.go/1000',   //데이터를 주고받을 파일 주소
+										data:JSON.stringify( obj),   //위의 변수에 담긴 데이터를 전송해준다.
+										//dataType:'application/json',   //html 파일 형식으로 값을 담아온다.
+										contentType: "application/json; charset=utf-8",
+										success : function(data){   //파일 주고받기가 성공했을 경우. data 변수 안에 값을 담아온다.
+											//console.log(data);
+											alert("업무가 등록되었습니다.");  //현재 화면 위 id="message" 영역 안에 data안에 담긴 html 코드를 넣어준다.
+											location.reload();
+										}
+									});
 								}
 							});
 						}
@@ -106,15 +144,17 @@
 				//navLinks : true, //달력상의 날짜를 클릭할 수 있는지 여부, 클릭시 일달력/주달력으로 넘어감
 				selectable: true, //선택 가능
 				dayMaxEventRows: true, // for all non-TimeGrid views(more)
-				contentHeight: 800 //행 길이
+				contentHeight: 800, //행 길이
+				//locale: 'ko' //한국어
 				
 			});
 			calendar.render(); //다시 렌더링
 		});
+		
+		//응답실패시
 		request.fail(function( jqXHR, textStatus ) {
 			  alert( "Request failed: " + textStatus );
-			});
-		
+		});
 	});
 </script>
 <style>
@@ -149,7 +189,7 @@ float : left;}
 					</button>
 				</div>
 				<div class="modal-body">
-					<div action="worklist.go" method="post" class="form-group">
+					<div class="form-group">
 						<label for="taskId" class="col-form-label">일정 제목</label> 
 						<input type="text" class="form-control" id="calendar_title" name="calendar_title" value="제목"> 
 						<label for="taskId" class="col-form-label">일정 내용</label> 
@@ -160,16 +200,18 @@ float : left;}
 						<input type="date" class="form-control" id="calendar_end_date" name="calendar_end_date" value="2022-07-23">
 						<label for="taskId" class="col-form-label">일정 상태</label> 
 						<select class="form-control" id="calendar_status" name="calendar_status">
-							<option class="form-control">대기</option>
-							<option class="form-control">진행</option>
-							<option class="form-control">완료</option>
+							<option class="form-control" value="plan">대기</option>
+							<option class="form-control" >진행</option>
+							<option class="form-control" value="finish">완료</option>
 						</select>
-						<label for="taskId" class="col-form-label">일정 담당자</label> 
-						<select class="form-control" id="calendar_manager" name="calendar_manager" multiple="multiple" size="1">
-							<option class="form-control">방</option>
-							<option class="form-control">방2</option>
-							<option class="form-control">방3</option>
-						</select>
+						<label for="taskId" class="col-form-label">일정 담당자(Ctrl클릭 후 중복선택가능)</label> 
+						<div class="workManager">
+							<select class="form-control" id="calendar_manager" name="calendar_manager" multiple="multiple" size="2">
+								<!-- <option class="form-control managers">선택하세요</option>
+								<option class="form-control">방근영2</option>
+								<option class="form-control">방3</option> -->
+							</select>
+						</div>
 					</div>
 				</div>
 				<div class="modal-footer">

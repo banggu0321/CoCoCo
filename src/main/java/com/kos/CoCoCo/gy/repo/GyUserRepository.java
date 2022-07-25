@@ -6,4 +6,5 @@ import com.kos.CoCoCo.vo.UserVO;
 
 public interface GyUserRepository extends CrudRepository<UserVO, String>{
 
+	public UserVO findByName(String name);
 }

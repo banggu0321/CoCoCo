@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	  xmlns:th="http://www.thymeleaf.org"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{/admin/layoutAdmin.html}">
+	  layout:decorate="~{/layoutJY/layoutAdmin.html}">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -42,7 +42,6 @@ tr:first-child {
 <body>
 [[${userList}]]
 <div layout:fragment="content" class="content">
-[[${session.user}]]
 	<div>
 		<table id="userList" class="table">
 			<tr>
@@ -86,10 +85,9 @@ tr:first-child {
 	       		</div>
 	       		
 	        	<div class="modal-body">
-					<label>EMAIL</label> 
-					<input type="text" name="userId" class="form-control" readonly="readonly">
+					<input type="hidden" name="userId">
 					
-					<label>NAME</label> 
+					<label>USER</label> 
 					<input type="text" name="name" class="form-control" readonly="readonly">
 					
 		        	<label>USER ROLE</label>
@@ -127,9 +125,11 @@ tr:first-child {
 				type:"post",
 				url: "/admin/findUser/"+teamId+"/"+userId,
 				success:function(resData) {
-					console.log(resData);
-					$("input[name='userId']").val(resData.teamUserId.user.userId);
-					$("input[name='name']").val(resData.teamUserId.user.name);
+					var id = resData.teamUserId.user.userId;
+					var name = resData.teamUserId.user.name+" ("+id+")";
+					
+					$("input[name='userId']").val(id);
+					$("input[name='name']").val(name);
 					$("select[name='userRole']").val(resData.userRole);
 				}
 			});

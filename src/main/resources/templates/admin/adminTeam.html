@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	  xmlns:th="http://www.thymeleaf.org"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{/admin/layoutAdmin.html}">
+	  layout:decorate="~{/layoutJY/layoutAdmin.html}">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
-#teamInfo, div img {
+#teamInfo, #teamImg, div img {
 	float: left;
 	font-size: 16px;
 }
@@ -17,7 +17,7 @@
 }
 
 div img {
-	margin-right: 30px;
+	margin: 15px 30px 0px 0px;
 }
 
 #adminTeam {
@@ -49,10 +49,9 @@ div img {
 </head>
 <body>
 <div layout:fragment="content">
-[[${session.user}]]
 	<div class="content">
 		<div id="box">
-			<img th:if="${team.teamImg!=null}" th:src="@{/uploads/}+${team.teamImg}" th:alt="${team.teamImg}" width="250px" height="100%">
+			<img th:if="${team.teamImg!=null}" th:src="${team.teamImg}" th:alt="${team.teamImg}" width="250px" height="100%">
 			<img th:if="${team.teamImg==null}" th:src="@{/images/teamImg.png}" alt="null" width="250px" height="250px">
 			<div id="teamInfo">
 				<label>WORKSPACE NAME</label>

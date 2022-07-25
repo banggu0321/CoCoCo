@@ -1,4 +1,4 @@
-package com.kos.CoCoCo.ja0.fileUpload;
+package com.kos.CoCoCo.ja0.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	  xmlns:th="http://www.thymeleaf.org"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{/main/layoutTeamList.html}">
+	  layout:decorate="~{/layoutJY/layoutTeamList.html}">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -71,12 +71,11 @@
 <div layout:fragment="content">
 	<h1>프로젝트 리스트</h1>
 	<button data-toggle="modal" data-target="#myModal2" class="btn btn-primary inviteBtn">초대코드</button>
-	<p>[[${session.user}]]</p>
 	
 	<div class="content" th:each="team:${teamList}">
 		<div class="box" th:team-data="${team.teamUserId.team.teamId}">
 			<img th:src="@{/images/deleteImg.svg}" class="delBtn" th:team-data="${team.teamUserId.team.teamId}">
-			<img th:if="${team.teamUserId.team.teamImg!=null}" th:src="@{/uploads/}+${team.teamUserId.team.teamImg}" th:alt="${team.teamUserId.team.teamImg}">
+			<img th:if="${team.teamUserId.team.teamImg!=null}" th:src="${team.teamUserId.team.teamImg}" th:alt="${team.teamUserId.team.teamImg}">
 			<img th:if="${team.teamUserId.team.teamImg==null}" th:src="@{/images/teamImg.png}" alt="null">
 			<p class="name">[[${team.teamUserId.team.teamName}]]</p>
 			<p>[[${#dates.format(team.teamUserId.team.createDate,'yyyy-MM-dd')}]]</p>

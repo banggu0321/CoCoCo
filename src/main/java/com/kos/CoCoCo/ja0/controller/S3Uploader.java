@@ -1,5 +1,4 @@
-package com.kos.CoCoCo.ja0.fileUpload;
-
+package com.kos.CoCoCo.ja0.controller;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -46,9 +45,9 @@ public class S3Uploader {
 
     private void removeNewFile(File targetFile) {
         if (targetFile.delete()) {
-            log.info(targetFile+" 파일이 삭제되었습니다.");
+            //log.info(targetFile+" 파일이 삭제되었습니다.");
         } else {
-            log.info(targetFile+" 파일이 삭제되지 못했습니다.");
+            log.info(targetFile+" 파일이 삭제 실패하였습니다.");
         }
     }
 

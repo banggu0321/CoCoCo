@@ -1,6 +1,5 @@
 package com.kos.CoCoCo.ja0.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -39,6 +38,9 @@ public class AdminController {
 	
 	@Autowired
 	UserRepository uRepo;
+	
+	@Autowired
+	S3Uploader uploader;
 
 	@GetMapping("/user/{teamId}")
 	public String userList(@PathVariable@ModelAttribute Long teamId, HttpSession session, Model model) {
@@ -72,19 +74,24 @@ public class AdminController {
 		return "admin/modifyTeam";
 	}
 	
+	@ResponseBody
+	@PostMapping("/deleteImg/{teamId}")
+	public String deleteImg(@PathVariable Long teamId, Model model) {
+		tRepo.findById(teamId).ifPresent(i->{
+			i.setTeamImg("");
+			tRepo.save(i);
+		});
+		model.addAttribute("team", tRepo.findById(teamId).get());
+		return "delete";
+	}
+	
 	@PostMapping("/modify")
 	public String modifyTeam(TeamVO team, MultipartFile newPhoto, RedirectAttributes attr) {
 		tRepo.findById(team.getTeamId()).ifPresent(i->{		
 			if (!newPhoto.isEmpty()) {
-				String path = "E:\\sts-workspace\\CoCoCo\\src\\main\\resources\\static\\uploads\\";
-				String fullPath = path + newPhoto.getOriginalFilename();
-				//System.out.println("경로 : "+ fullPath);
-				
 				try {
-					newPhoto.transferTo(new File(fullPath));
-					i.setTeamImg(newPhoto.getOriginalFilename());
-				} catch (IllegalStateException e) {
-					e.printStackTrace();
+					String img = uploader.upload(newPhoto);
+					i.setTeamImg(img);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

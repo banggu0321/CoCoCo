@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment = "side" class="side">
+	<div class="teamList">
+		<a th:href="@{/main/}+${tu.teamUserId.team.teamId}" th:each="tu:${teamList}">
+			<img th:if="${tu.teamUserId.team.teamImg!=null}" th:src="${tu.teamUserId.team.teamImg}" 
+				data-toggle="tooltip" data-placement="right" th:title="${tu.teamUserId.team.teamName}" width="40px" class="img-rounded">
+			<img th:if="${tu.teamUserId.team.teamImg==null}" th:src="@{/images/teamImg.png}" alt="null"
+				data-toggle="tooltip" data-placement="right" th:title="${tu.teamUserId.team.teamName}" width="40px" class="img-rounded">
+		</a>
+	</div>
+	<div class="myMenu">
+		<a href="/main/teamList">
+			<img th:src="@{/images/home.svg}" alt="home" width="30px">
+		</a>
+	</div>
+</div>
+
+</html>

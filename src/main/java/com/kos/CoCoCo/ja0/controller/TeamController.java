@@ -1,6 +1,5 @@
 package com.kos.CoCoCo.ja0.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
@@ -40,6 +39,9 @@ public class TeamController {
 	@Autowired
 	UserRepository uRepo;
 	
+	@Autowired
+	S3Uploader uploader;
+	
 	@GetMapping("/teamList")
 	public void teamList(HttpSession session, Model model) {
 		UserVO user = uRepo.findById("2ja0@naver.com").get();
@@ -58,20 +60,10 @@ public class TeamController {
 	}
 	
 	@PostMapping("/addTeam/{userId}")
-	public String addTeam(TeamVO team, MultipartFile teamPhoto, @PathVariable String userId, HttpServletRequest request){
+	public String addTeam(TeamVO team, MultipartFile teamPhoto, @PathVariable String userId, HttpServletRequest request) throws IOException{
 		if (!teamPhoto.isEmpty()) {
-			String path = "E:\\sts-workspace\\CoCoCo\\src\\main\\resources\\static\\uploads\\";
-			//아마존 s3로 경로 설정
-		    String fullPath = path + teamPhoto.getOriginalFilename();
-		    System.out.println("경로 : "+ path);
-		    try {
-				teamPhoto.transferTo(new File(fullPath));
-				team.setTeamImg(teamPhoto.getOriginalFilename());
-			} catch (IllegalStateException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			String img = uploader.upload(teamPhoto);
+			team.setTeamImg(img);
 	    }
 		
 		UserVO user = uRepo.findById(userId).get();

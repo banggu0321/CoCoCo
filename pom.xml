@@ -96,7 +96,7 @@
 	</dependencies>
 
 	<!-- 자영 aws -->
-	<dependencyManagement>
+	<!-- <dependencyManagement>
 		<dependencies>
 			<dependency>
 			    <groupId>org.springframework.cloud</groupId>
@@ -104,8 +104,9 @@
 			    <version>2.2.1.RELEASE</version>
 			</dependency>
 		</dependencies>
-	</dependencyManagement>
+	</dependencyManagement> -->
 	
+    <!-- 자영 aws -->
     <repositories>
         <repository>
             <id>spring-milestone</id>
@@ -113,7 +114,6 @@
             <url>http://repo.spring.io/libs-milestone</url>
         </repository>
     </repositories>
-    <!-- 자영 aws -->
     
 	<build>
 		<plugins>

@@ -43,6 +43,7 @@
 .myMenu{
 	bottom: 20%;
     position: absolute;
+    text-align: center;
 }
 
 .teamList a img, .myMenu a img {
@@ -57,26 +58,10 @@
 
 <!-- fragment 삽입하기 -->
 <!-- <header th:replace="~{/fragments/header :: header}"></header> -->
-<header>
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-</header>
+<header th:replace="~{/layoutJY/header :: header}"></header>
 
 <div class="container-fluid contentBody">
-	<div class="side">
-		<div class="teamList">
-			<a th:href="@{/main/}+${tu.teamUserId.team.teamId}" th:each="tu:${teamList}">
-				<img th:if="${tu.teamUserId.team.teamImg!=null}" th:src="@{/uploads/}+${tu.teamUserId.team.teamImg}" 
-					data-toggle="tooltip" data-placement="right" th:title="${tu.teamUserId.team.teamName}" width="50px" class="img-rounded">
-				<img th:if="${tu.teamUserId.team.teamImg==null}" th:src="@{/images/teamImg.png}" alt="null"
-					data-toggle="tooltip" data-placement="right" th:title="${tu.teamUserId.team.teamName}" width="50px" class="img-rounded">
-			</a>
-		</div>
-		<div class="myMenu">
-			<a href="/main/teamList">
-				<img th:src="@{/images/home.svg}" alt="home" width="50px">
-			</a>
-		</div>
-	</div>
+	<div th:replace="~{/layoutJY/side :: side}"></div>
 		
 	<div class="sideMenu">
 		<a th:href="@{/admin/team/}+${teamId}" id="adminTeam">워크스페이스 관리</a> <br>

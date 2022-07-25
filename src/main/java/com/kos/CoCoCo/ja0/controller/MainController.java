@@ -28,7 +28,7 @@ import com.kos.CoCoCo.vo.UserVO;
 
 @Controller
 @RequestMapping("/main/*")
-public class TeamController {
+public class MainController {
 
 	@Autowired
 	TeamRepository tRepo;
@@ -44,7 +44,7 @@ public class TeamController {
 	
 	@GetMapping("/teamList")
 	public void teamList(HttpSession session, Model model) {
-		UserVO user = uRepo.findById("2ja0@naver.com").get();
+		UserVO user = uRepo.findById("3ja0@naver.com").get();
 		session.setAttribute("user", user);
 		
 		model.addAttribute("teamList", tuRepo.findByUserId(user.getUserId()));
@@ -62,7 +62,7 @@ public class TeamController {
 	@PostMapping("/addTeam/{userId}")
 	public String addTeam(TeamVO team, MultipartFile teamPhoto, @PathVariable String userId, HttpServletRequest request) throws IOException{
 		if (!teamPhoto.isEmpty()) {
-			String img = uploader.upload(teamPhoto);
+			String img = uploader.upload(teamPhoto, "uploads/teamImages/");
 			team.setTeamImg(img);
 	    }
 		

@@ -2,8 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <div id="box">
-	<img th:if="${team.teamImg!=null}" class="showImg" th:src="${team.teamImg}" th:alt="${team.teamImg}" width="250px" height="100%">
-	<img th:if="${team.teamImg==null}" class="showImg" th:src="@{/images/teamImg.png}" alt="null" width="250px" height="250px">
+	<img th:if="${team.teamImg!=null}" class="showImg img-rounded" th:src="${team.teamImg}" th:alt="${team.teamImg}">
+	<img th:if="${team.teamImg==null}" class="showImg img-rounded" th:src="@{/images/teamImg.png}" alt="null">
 	
 	<div id="teamInfo">
 		<form id="modifyForm" action="/admin/modify" method="post" enctype="multipart/form-data">
@@ -20,10 +20,6 @@
 			
 			<div class="form-group">
 				<label>WORKSPACE IMAGE</label> <br>
-				<p th:if="${team.teamImg!=null}" id="imgInfo">
-					[[${#strings.substring(team.teamImg,69)}]]
-					<input type="button" id="delBtn" class="btn btn-primary btn-sm" value="삭제">
-				</p>
 				<input type="file" name="newPhoto" id="img" class="form-control" accept="image/*">
 			</div>
 	
@@ -36,19 +32,6 @@
 <script>
 	$(".reloadBtn").click(function() {
 		location.reload();
-	});
-	
-	$("#delBtn").click(function() {
-		var teamId = $("input[name='teamId']").val();
-		$.ajax({
-			type:"post",
-			url:"/admin/deleteImg/"+teamId,
-			success: function(resData) {
-				$(".showImg").attr("src","@{/images/teamImg.png}");
-	        	$("#imgInfo").hide();
-				
-			}
-		});
 	});
 	
 	$("#img").change(function(event) {

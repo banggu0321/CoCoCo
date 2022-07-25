@@ -37,24 +37,29 @@
 
 .contentBody {
 	padding-top: 30px;
-	
+	align-content: center;
 }
 
 .content{
 	background-color: #eee;
 }
 
-.myMenu{
+#myMenu{
 	bottom: 20%;
     position: absolute;
 }
 
-.teamList a img, .myMenu a img, .sideMenu div img {
+#teamList a img, #myMenu a img, .sideMenu div img {
 	margin: 10px;
 }
 
 #myProfile {
 	text-align: center;
+}
+
+#myProfile img{
+	width: 100px;
+	height: 100px;
 }
 
 #myInfo {
@@ -63,6 +68,40 @@
 
 #myName {
 	font-size: 17px;
+}
+
+#myModal {
+	position: fixed;
+	top: 30%;
+	left: 20%;
+	right: 20%;
+}
+
+img#status {
+	width: 20px;
+	height: 20px;
+}
+
+.profileImg .img, #teamList img{
+	width: 40px;
+	height: 40px;
+}
+
+#myMenu img {
+	width: 30px;
+	height: 30px;
+}
+
+.profileImg {
+	position: relative;
+}
+
+.admin {
+	width: 15px;
+	height: 15px;
+	position: absolute;
+	left: 10%;
+    top: -15%;
 }
 </style>
 <!-- 하위 HTML에서 CSS 재정의할 예정 -->
@@ -80,29 +119,68 @@
 		
 	<div class="sideMenu">
 		<div id="myProfile">
-			<img th:if="${session.user.image == null}" th:src="@{/images/userImg.svg}" width="100px" class="img-circle">
-			<img th:if="${session.user.image != null}" th:src="@{/images/}+${session.user.image}" width="100px" class="img-circle">
+			<img th:if="${session.user.image == null}" th:src="@{/images/userImg.svg}" class="img-circle">
+			<img th:if="${session.user.image != null}" th:src="${session.user.image}" class="img-circle">
 			<div id="myInfo">
-				<p id="myName">[[${session.user.name}]]<br>([[${session.user.userId}]]) <br></p>
-				
+				<div id="myName">[[${session.user.name}]]<img id="status" th:src="@{/images/status.svg}" data-toggle="modal" data-target="#myModal">
+					<br>([[${session.user.userId}]])
+				</div>
 				[[${session.user.company}]]
 			</div>
 		</div>
 		<hr>
 		<h4>팀원</h4>
 		<div th:each="tu:${userList}" th:if="${tu.teamUserId.user.userId != session.user.userId}">
-			<img th:if="${tu.teamUserId.user.image == null}" th:src="@{/images/userImg.svg}" width="40px" class="img-circle">
-			<img th:if="${tu.teamUserId.user.image != null}" th:src="@{/uploads/}+${tu.teamUserId.user.image}" width="40px" class="img-circle">
+		<div class="profileImg">
+			<img th:if="${tu.teamUserId.user.image == null}" th:src="@{/images/userImg.svg}" class="img-circle img">
+			<img th:if="${tu.teamUserId.user.image != null}" th:src="${tu.teamUserId.user.image}" class="img-circle img">
+			<img class="admin" th:if="${tu.userRole == 'ADMIN'}" th:src="@{/images/crown.svg}">
 			[[${tu.teamUserId.user.name}]] ([[${tu.teamUserId.user.userId}]])
+		</div>
 		</div>
 	</div>
 		
+	<!-- 상태변경 모달 -->
+    <div id="myModal" class="modal fade" role="dialog">
+		<div class="model_dialog">
+	        <!-- Modal content -->
+	        <div class="modal-content">
+	        	<div class="modal-body">
+					<label>상태변경</label> 
+					<select class="form-control" name="status">
+						<option>출근</option>
+						<option>퇴근</option>
+						<option>외근</option>
+						<option>휴가</option>
+					</select>
+		        </div>
+				<div class="modal-footer">
+			    	<button id = "statusUpdate" class="btn btn-primary">수정</button>
+			    	<button type="button" class="btn btn-primary" data-dismiss="modal">취소</button>
+	        	</div>
+	        </div>
+    	</div>
+    </div> <!-- Modal --> 
+    
 	<!-- 하위 HTML에서 content 재정의할 예정 -->
 	<div layout:fragment="content"></div>
 </div>
 
 <script>
-$('[data-toggle="tooltip"]').tooltip();
+$("#status").click(function () {
+	var status = "[[${session.user.status}]]";
+	
+	if(status != null || status != '') {
+		$("select[name='status']").val(status);
+		return;
+	}
+	alert("null!");
+})
+
+$("#statusUpdate").click(function () {
+	var status = $("select[name='status']").val();
+	alert(status);
+})
 </script>
 
 <!-- 하위 HTML에서 javascript 재정의할 예정   th:block 은 없어지는 태그이다 -->

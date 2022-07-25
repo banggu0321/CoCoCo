@@ -40,15 +40,26 @@
 	background-color: #eee;
 }
 
-.myMenu{
+#myMenu{
 	bottom: 20%;
     position: absolute;
     text-align: center;
 }
 
-.teamList a img, .myMenu a img {
+#teamList a img, #myMenu a img {
 	margin: 10px;
 }
+
+#teamList img{
+	width: 40px;
+	height: 40px;
+}
+
+#myMenu img {
+	width: 30px;
+	height: 30px;
+}
+
 </style>
 <!-- 하위 HTML에서 CSS 재정의할 예정 -->
 <th:block layout:fragment="style"></th:block>
@@ -71,10 +82,6 @@
 	<!-- 하위 HTML에서 content 재정의할 예정 -->
 	<div layout:fragment="content"></div>
 </div>
-
-<script>
-$('[data-toggle="tooltip"]').tooltip();
-</script>
 
 <!-- 하위 HTML에서 javascript 재정의할 예정   th:block 은 없어지는 태그이다 -->
 <th:block layout:fragment="script">

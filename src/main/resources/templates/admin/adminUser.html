@@ -30,8 +30,14 @@ tr:first-child {
 .delUser:hover, .updateUser:hover {
 	cursor: pointer;
 }
+
+.delUser, .updateUser {
+	width: 25px;
+	height: 25px;
+}
+
 #myModal {
-	position: absolute;
+	position: fixed;
 	top: 30%;
 	left: 20%;
 	right: 20%;
@@ -65,12 +71,12 @@ tr:first-child {
 				
 				<td th:if="${user.teamUserId.user.userId == user.teamUserId.team.user.userId}"></td>
 				<td th:if="${user.teamUserId.user.userId != user.teamUserId.team.user.userId}" data-toggle="modal" data-target="#myModal" class="roleModel">
-					<img th:src="@{/images/updateRole.svg}" class="updateUser" th:user-data="${user.teamUserId.user.userId}" alt="update" width="25px" height="25px">
+					<img th:src="@{/images/updateRole.svg}" class="updateUser" th:user-data="${user.teamUserId.user.userId}" alt="update">
 				</td>
 				
 				<td th:if="${user.teamUserId.user.userId == user.teamUserId.team.user.userId}"></td>
 				<td th:if="${user.teamUserId.user.userId != user.teamUserId.team.user.userId}">
-					<img th:src="@{/images/deleteImg.svg}" class="delUser" th:user-data="${user.teamUserId.user.userId}" alt="delete" width="25px" height="25px">
+					<img th:src="@{/images/deleteImg.svg}" class="delUser" th:user-data="${user.teamUserId.user.userId}" alt="delete">
 				</td>
 			</tr>
 		</table>

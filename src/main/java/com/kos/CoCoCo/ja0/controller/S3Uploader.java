@@ -3,6 +3,7 @@ package com.kos.CoCoCo.ja0.controller;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -26,14 +27,13 @@ public class S3Uploader {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public String upload(MultipartFile multipartFile) throws IOException {
-        File uploadFile = convert(multipartFile).orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
-        return upload(uploadFile);
-    }
-
-    private String upload(File uploadFile) {
-        String fileName = "static/uploads/" + uploadFile.getName();
+    public String upload(MultipartFile multipartFile, String dir) throws IOException {
+        File uploadFile = convert(multipartFile).orElseThrow(() -> 
+        						new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
+       
+        String fileName = dir + uploadFile.getName();
         String uploadImageUrl = putS3(uploadFile, fileName);
+
         removeNewFile(uploadFile);
         return uploadImageUrl;
     }
@@ -47,7 +47,7 @@ public class S3Uploader {
         if (targetFile.delete()) {
             //log.info(targetFile+" 파일이 삭제되었습니다.");
         } else {
-            log.info(targetFile+" 파일이 삭제 실패하였습니다.");
+            //log.info(targetFile+" 파일이 삭제 실패하였습니다.");
         }
     }
 

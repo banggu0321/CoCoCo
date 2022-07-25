@@ -23,6 +23,6 @@ public class S3Controller {
     @ResponseBody
     @PostMapping("/upload")
     public String upload(@RequestParam("data") MultipartFile multipartFile) throws IOException {
-        return s3Uploader.upload(multipartFile);
+        return s3Uploader.upload(multipartFile, "uploadTest/");
     }
 }

@@ -74,15 +74,14 @@ public class AdminController {
 		return "admin/modifyTeam";
 	}
 	
-	@ResponseBody
-	@PostMapping("/deleteImg/{teamId}")
+	@GetMapping("/deleteImg/{teamId}")
 	public String deleteImg(@PathVariable Long teamId, Model model) {
 		tRepo.findById(teamId).ifPresent(i->{
 			i.setTeamImg("");
 			tRepo.save(i);
 		});
-		model.addAttribute("team", tRepo.findById(teamId).get());
-		return "delete";
+		
+		return "redirect:/admin/team/"+teamId;
 	}
 	
 	@PostMapping("/modify")
@@ -90,7 +89,7 @@ public class AdminController {
 		tRepo.findById(team.getTeamId()).ifPresent(i->{		
 			if (!newPhoto.isEmpty()) {
 				try {
-					String img = uploader.upload(newPhoto);
+					String img = uploader.upload(newPhoto, "uploads/teamImages/");
 					i.setTeamImg(img);
 				} catch (IOException e) {
 					e.printStackTrace();

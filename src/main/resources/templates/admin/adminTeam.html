@@ -16,8 +16,9 @@
 	font-size: 18px;
 }
 
-div img {
+.showImg {
 	margin: 15px 30px 0px 0px;
+	width: 250px;
 }
 
 #adminTeam {
@@ -33,6 +34,21 @@ div img {
 
 #info {
 	white-space: pre-wrap;
+}
+
+#teamImg {
+	position: relative;
+}
+
+#delImg {
+	width: 30px;
+	position: absolute;
+	bottom: -10%;
+    left: 80%;
+}
+
+#delImg:hover {
+	cursor: pointer;
 }
 
 /* .btn{
@@ -51,8 +67,11 @@ div img {
 <div layout:fragment="content">
 	<div class="content">
 		<div id="box">
-			<img th:if="${team.teamImg!=null}" th:src="${team.teamImg}" th:alt="${team.teamImg}" width="250px" height="100%">
-			<img th:if="${team.teamImg==null}" th:src="@{/images/teamImg.png}" alt="null" width="250px" height="250px">
+			<div id="teamImg" th:if="${team.teamImg!=null}">
+				<img th:src="${team.teamImg}" th:alt="${team.teamImg}" class="showImg img-rounded">
+				<img id="delImg" th:src="@{/images/deleteTeamImg.svg}">
+			</div>
+			<img th:if="${team.teamImg==null}" th:src="@{/images/teamImg.png}" alt="null" class="showImg img-rounded">
 			<div id="teamInfo">
 				<label>WORKSPACE NAME</label>
 					<p>[[${team.teamName}]]</p>
@@ -80,6 +99,12 @@ div img {
 				$("#box").html(resData);
 			}
 		})
+	});
+	
+	$("#delImg").click(function() {
+		if(confirm("이미지를 삭제하시겠습니까?")) {
+			location.href="/admin/deleteImg/[[${team.teamId}]]";
+		}
 	});
 	
 	$("#deleteBtn").click(function() {

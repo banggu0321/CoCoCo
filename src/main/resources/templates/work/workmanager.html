@@ -1,22 +1,23 @@
+<div class="form-group">
+	<label for="taskId" class="col-form-label">업무번호</label> 
+	<input type="text" class="form-control detail_workId" id="calendar_workId" name="calendar_workId" readonly="readonly"> 
+	<label for="taskId" class="col-form-label">업무명</label> 
+	<input type="text" class="form-control detail_workTitle" id="calendar_workTitle" name="calendar_workTitle" readonly="readonly"> 
+	<label for="taskId" class="col-form-label">업무내용</label> 
+	<input type="text" class="form-control detail_workText" id="calendar_workText" name="calendar_workText" readonly="readonly"> 
+	<label for="taskId" class="col-form-label">업무기간</label> 
+	<input type="date" class="form-control detail_workDate" id="calendar_workDate" name="calendar_workDate" readonly="readonly">
+	<label for="taskId" class="col-form-label">업무상태</label> 
+	<input type="text" class="form-control detail_workStatus" id="calendar_workStatus" name="calendar_workStatus" readonly="readonly"> 
+	<label for="taskId" class="col-form-label">담당자</label> 
+	<input type="text" class="form-control detail_workMannager" id="calendar_workMannager" name="calendar_workMannager" readonly="readonly"> 
+</div>
 
-
-
-//담당자 정보 가져오기
-	$.ajax({
-			url:"/work/workmanagerlist.go/1000",
-			type:"get",
-			//data : {"team_id" : '1000'},
-			success:function(responseData){
-				//$(".workManager").html(responseData);
-			}
-		});
-		
-		<!-- <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-	
-<select class="form-control" id="therter_num" name="theater_num">
-	<c:forEach items="${tlist}" var="t">
-		<option value="${t.theater_num}">${t.theater_num}</option>
-	</c:forEach>
-</select> -->
+id: data.workId,
+title : data.workTitle,
+content : data.workText,
+start : data.workStart,
+end : data.workEnd,
+status : data.workStatus,
+manager : data.manager,
+color : 'red'

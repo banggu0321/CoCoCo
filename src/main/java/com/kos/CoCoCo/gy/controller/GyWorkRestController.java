@@ -3,6 +3,8 @@ package com.kos.CoCoCo.gy.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Transient;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,8 @@ import com.kos.CoCoCo.vo.UserVO;
 import com.kos.CoCoCo.vo.WorkManagerMultikey;
 import com.kos.CoCoCo.vo.WorkManagerVO;
 import com.kos.CoCoCo.vo.WorkVO;
+
+import javassist.expr.NewArray;
 
 @RestController
 @RequestMapping("/work/*")
@@ -103,5 +107,31 @@ public class GyWorkRestController {
 		}
 		System.out.println(teamusernamelist);
 		return teamusernamelist;
+	}
+	@GetMapping(value="/workdetail.go/{work_id}")
+	public WorkVO workdetaillist(Model model, @PathVariable Long work_id) {
+		WorkVO work = workRepo.findByWorkId(work_id);
+		List<WorkManagerVO> workmanagerlist = workManagerRepo.findByWork(work_id);
+		List<String> list = new ArrayList();
+		for(WorkManagerVO w:workmanagerlist) {
+			
+			String managerName = w.getWorkManagerId().getUser().getName(); 
+			list.add(managerName);
+			//work.setManager(list); 여기부터 고쳐야함 
+			//work.manager값이 없음 string[] -> @Transient라서 문제인듯 
+			// Create list
+			//var myList = new List<string>();
+
+			// Add items to the list
+			//myList.Add("item1");
+			//myList.Add("item2");
+
+			// Convert to array
+			//var myArray = myList.ToArray();
+			System.out.println(w.getWorkManagerId().getUser().getName());
+		}
+		//System.out.println(workmanagerlist);
+		
+		return work;
 	}
 }

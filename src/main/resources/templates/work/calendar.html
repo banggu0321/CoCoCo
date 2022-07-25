@@ -36,18 +36,30 @@
 				//console.log(data);
 				if(data.workStatus == 'finish'){
 					events.push({
+						id: data.workId,
 						title : data.workTitle,
 						start : data.workStart,
 						end : data.workEnd,
+						//extendedProps: {
+						//	content : data.workText,
+						//	status : data.workStatus,
+						//	manager : data.manager
+						//},
 						color : 'red'
+						
 					});
 				}else{
 					events.push({
+						id: data.workId,
 						title : data.workTitle,
+						//content : data.workText,
 						start : data.workStart,
-						end : data.workEnd
+						end : data.workEnd,
+						//status : data.workStatus,
+						//manager : data.manager,
 					});
 				}
+				
 			})
 			console.log(events);
 			
@@ -68,7 +80,7 @@
 						text : "일정 추가", // 버튼 내용
 						color: 'yellow', 
 						click : function() { // 버튼 클릭 시 이벤트 추가
-							$("#calendarModal").modal("show"); // modal 나타내기
+							$("#calendarAddModal").modal("show"); // modal 나타내기
 							
 							//담당자 정보 가져오기
 							$.ajax({
@@ -147,6 +159,41 @@
 				contentHeight: 800, //행 길이
 				//locale: 'ko' //한국어
 				
+				//이벤트 클릭시
+				eventClick : function(info){
+					var eventObj = info.event;
+					//console.log(events);
+					
+					$.ajax({
+						type:"GET",
+						url:"/work/workdetail.go/"+eventObj.id,
+						//data : {"team_id" : '1000'},
+						dataType:"json",
+						success:function(responseData){
+							$("#calendarDetailModal").modal("show"); // modal 나타내기
+							//console.log(responseData);
+							$(".detail_workId").val(responseData.workId);
+							$(".detail_workTitle").val(responseData.workTitle);
+							$(".detail_workText").val(responseData.workText);
+							$(".detail_workDate").val(responseData.workStart);
+							$(".detail_workStatus").val(responseData.workStatus);
+							console.log(responseData.manager);
+							$(".detail_workMannager").val(responseData.manager);
+						}
+					});
+					
+					//상세 정보 가져오기
+					//$(".place_name").val(detail["place_name"]);
+					//$(".detail_workId").val(eventObj.id);
+					//$(".detail_workTitle").val(eventObj.title);
+					//$(".detail_workText").val(eventObj.content);
+					//$(".detail_workDate").val(eventObj.start+"~"+eventObj.end);
+					//$(".detail_workStatus").val(eventObj.status);
+					//$(".detail_workMannager").val(eventObj.manager);
+					//alert(eventObj.id);
+					
+				}
+				
 			});
 			calendar.render(); //다시 렌더링
 		});
@@ -177,8 +224,8 @@ float : left;}
 		<div id="calendar"></div>
 	</div>
 
-	<!-- modal 추가 -->
-	<div class="modal fade" id="calendarModal" tabindex="-1" role="dialog"
+	<!-- Work Add modal -->
+	<div class="modal fade" id="calendarAddModal" tabindex="-1" role="dialog"
 		aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
@@ -198,7 +245,7 @@ float : left;}
 						<input type="date" class="form-control" id="calendar_start_date" name="calendar_start_date" value="2022-07-20"> 
 						<label for="taskId" class="col-form-label">종료 날짜</label> 
 						<input type="date" class="form-control" id="calendar_end_date" name="calendar_end_date" value="2022-07-23">
-						<label for="taskId" class="col-form-label">일정 상태</label> 
+						<label for="taskId" class="col-form-label">업무 상태</label> 
 						<select class="form-control" id="calendar_status" name="calendar_status">
 							<option class="form-control" value="plan">대기</option>
 							<option class="form-control" >진행</option>
@@ -218,6 +265,77 @@ float : left;}
 					<button type="button" class="btn btn-warning" id="addCalendar">추가</button>
 					<button type="button" class="btn btn-secondary"
 						data-dismiss="modal" id="sprintSettingModalClose">취소</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Work Detail modal -->
+	<div class="modal fade" id="calendarDetailModal" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel"></h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="taskId" class="col-form-label">업무번호</label> 
+						<input type="text" class="form-control detail_workId" id="calendar_workId" name="calendar_workId" readonly="readonly"> 
+						<label for="taskId" class="col-form-label">업무명</label> 
+						<input type="text" class="form-control detail_workTitle" id="calendar_workTitle" name="calendar_workTitle" readonly="readonly"> 
+						<label for="taskId" class="col-form-label">업무내용</label> 
+						<input type="text" class="form-control detail_workText" id="calendar_workText" name="calendar_workText" readonly="readonly"> 
+						<label for="taskId" class="col-form-label">업무기간</label> 
+						<input type="text" class="form-control detail_workDate" id="calendar_workDate" name="calendar_workDate" readonly="readonly">
+						<label for="taskId" class="col-form-label">업무상태</label> 
+						<input type="text" class="form-control detail_workStatus" id="calendar_workStatus" name="calendar_workStatus" readonly="readonly"> 
+						<label for="taskId" class="col-form-label">담당자</label> 
+						<input type="text" class="form-control detail_workMannager" id="calendar_workMannager" name="calendar_workMannager" readonly="readonly"> 
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-warning" id="WorkModifyBtn">수정</button>
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal" id="WorkDeleteBtn">삭제</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Work Modify modal -->
+	<div class="modal fade" id="calendarModifyModal" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel"></h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="taskId" class="col-form-label">업무번호</label> 
+						<input type="text" class="form-control detail_workId" id="calendar_workId" name="calendar_workId" readonly="readonly"> 
+						<label for="taskId" class="col-form-label">업무명</label> 
+						<input type="text" class="form-control detail_workTitle" id="calendar_workTitle" name="calendar_workTitle" readonly="readonly"> 
+						<label for="taskId" class="col-form-label">업무내용</label> 
+						<input type="text" class="form-control detail_workText" id="calendar_workText" name="calendar_workText" readonly="readonly"> 
+						<label for="taskId" class="col-form-label">업무기간</label> 
+						<input type="text" class="form-control detail_workDate" id="calendar_workDate" name="calendar_workDate" readonly="readonly">
+						<label for="taskId" class="col-form-label">업무상태</label> 
+						<input type="text" class="form-control detail_workStatus" id="calendar_workStatus" name="calendar_workStatus" readonly="readonly"> 
+						<label for="taskId" class="col-form-label">담당자</label> 
+						<input type="text" class="form-control detail_workMannager" id="calendar_workMannager" name="calendar_workMannager" readonly="readonly"> 
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-warning" id="WorkModifyBtn">수정</button>
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal" id="WorkDeleteBtn">삭제</button>
 				</div>
 			</div>
 		</div>

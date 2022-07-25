@@ -97,7 +97,7 @@
 			<scope>runtime</scope>
 			<optional>true</optional>
 		</dependency>
-
+ 
 		<dependency>
 			<groupId>com.oracle.database.security</groupId>
 			<artifactId>osdt_core</artifactId>

@@ -11,7 +11,53 @@
 </script>
 
 <style>
-  h1 { background-color: lightgreen;}
+/******************* header *******************/
+#top {
+	padding: 0px 23px;
+	height: 64px;
+	display:flex;
+	align-items: center;
+    justify-content: space-between;
+}
+
+.nav {
+	display:flex;
+	}
+.nav span {
+	font-size: 20px;
+	margin-right: 100px;
+	}
+.nav a {
+	color: #000;
+	cursor: pointer;
+	text-decoration: none;
+}
+.team_logo {
+	width: 34px;
+	height: 36px;
+	background-color: tomato;
+}
+/******************* header *******************/
+/******************* side *******************/
+#side{
+display: flex;
+
+}
+.side_list {
+	width: 80px;
+	height: 913px;
+	background-color: #eee;
+
+}
+.my_manu {
+	width: 287px;
+	height: 977px;
+	background-color: #aaa;
+}
+
+
+
+/******************* side *******************/
 </style>
 
 <!-- 하위 HTML에서 CSS 재정의할 예정 -->
@@ -25,7 +71,7 @@
 
 
 	<!-- 하위 HTML에서 content 재정의할 예정 -->
-	<div class="panel panel-default" layout:fragment="content">!!!!!!</div>
+	<div class="panel panel-default" layout:fragment="content"></div>
 
 
 	<!-- <footer th:insert="~{/fragments/footer::footer1}"></footer> -->

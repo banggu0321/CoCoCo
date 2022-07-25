@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+
+<div th:fragment="header1">
+	<form class="form-inline my-2 my-lg-0" method="post"
+		th:action="@{/logout}">
+<!-- 
+		<span sec:authorize="isAuthenticated()"> <span
+			sec:authentication="name"></span> <span
+			sec:authentication="principal.authorities"></span>
+			<button class="btn btn-primary" type="submit">Logout</button>
+		</span>
+ -->			
+			
+		<div id="top">
+			<div class="team_logo">
+			<!-- 로고 이미지 -->
+			</div><!-- .team_logo -->
+			<div class="nav">
+				<div class="nav_manu1"><a href="#"><span>메인</span></a></div>
+				<div class="nav_manu2"><a href="#"><span>공지</span></a></div>
+				<div class="nav_manu3"><a href="#"><span>게시판</span></a></div>
+				<div class="nav_manu4"><a href="#"><span>업무</span></a></div>
+				<div class="nav_manu5"><a href="#"><span>관리자</span></a></div>
+			</div><!-- .nav -->
+			
+			<div></div>
+		</div><!-- #top -->
+		
+		<div id="cont">
+			<div id="side">
+				<div class="side_list">
+				</div><!-- side_list -->
+				<div class="my_manu">
+				</div><!-- status -->
+			</div><!-- #side -->
+			<div class="body">
+			</div><!-- body -->
+		</div><!-- #cont -->
+
+
+
+		<!-- 
+ 		<button sec:authorize="isAnonymous()" th:href="@{/auth/login}"
+			class="btn btn-primary" type="submit">Login</button>
+ -->
+	</form>
+</div>
+
+<div th:fragment="header2">Header 파일입니다.2</div>
+
+</html>

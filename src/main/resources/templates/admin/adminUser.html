@@ -5,6 +5,8 @@
 	  layout:decorate="~{/layoutJY/layoutAdmin.html}">
 <head>
 <meta charset="UTF-8">
+<meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
+<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
 <title>Insert title here</title>
 <style>
 table{
@@ -114,6 +116,9 @@ tr:first-child {
 
 <th:block layout:fragment="script">
 	<script>
+		var token = $("meta[name='_csrf']").attr("content");
+	 	var header = $("meta[name='_csrf_header']").attr("content");
+ 	
 		$(".delUser").click(function() {
 			var userId = $(this).attr("user-data");
 			var teamId = "[[${teamId}]]";
@@ -130,6 +135,9 @@ tr:first-child {
 			$.ajax({
 				type:"post",
 				url: "/admin/findUser/"+teamId+"/"+userId,
+				beforeSend : function(xhr){
+					xhr.setRequestHeader(header, token);
+				},
 				success:function(resData) {
 					var id = resData.teamUserId.user.userId;
 					var name = resData.teamUserId.user.name+" ("+id+")";

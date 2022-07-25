@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+
+<div th:fragment="header1">
+	<form class="form-inline my-2 my-lg-0" method="post"
+		th:action="@{/logout}">
+	 
+		<span sec:authorize="isAuthenticated()"> <span
+			sec:authentication="name"></span> <span
+			sec:authentication="principal.authorities"></span>
+			<button class="btn btn-primary" type="submit">Logout</button>
+		</span>
+		
+<!-- 
+ 		<button sec:authorize="isAnonymous()" th:href="@{/auth/login}"
+			class="btn btn-primary" type="submit">Login</button>
+ -->
+	</form>
+</div>
+
+<div th:fragment="header2">Header 파일입니다.2</div>
+
+</html>

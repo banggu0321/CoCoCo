@@ -28,8 +28,9 @@
 <body>
 
 <!-- fragment 삽입하기 -->
-<!-- <header th:replace="~{/fragments/header :: header}"></header> -->
-<header th:replace="~{/layoutJY/header :: header}"></header>
+<header>
+	@@@@@ [[${session.user}]] @@@@@
+</header>
 
 <div class="container-fluid contentBody">
 	<!-- 하위 HTML에서 content 재정의할 예정 -->

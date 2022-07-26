@@ -60,6 +60,9 @@
 	height: 30px;
 }
 
+#teamList {
+	overflow: auto;
+}
 </style>
 <!-- 하위 HTML에서 CSS 재정의할 예정 -->
 <th:block layout:fragment="style"></th:block>
@@ -68,8 +71,7 @@
 <body>
 
 <!-- fragment 삽입하기 -->
-<!-- <header th:replace="~{/fragments/header :: header}"></header> -->
-<header th:replace="~{/layoutJY/header :: header}"></header>
+<header th:replace="~{/fragments/header::header1}"></header>
 
 <div class="container-fluid contentBody">
 	<div th:replace="~{/layoutJY/side :: side}"></div>

@@ -92,6 +92,11 @@ img#status {
 	height: 30px;
 }
 
+
+#teamList {
+	overflow: auto;
+}
+
 .profileImg {
 	position: relative;
 }
@@ -111,8 +116,7 @@ img#status {
 <body>
 
 <!-- fragment 삽입하기 -->
-<!-- <header th:replace="~{/fragments/header :: header}"></header> -->
-<header th:replace="~{/layoutJY/header :: header}"></header>
+<header th:replace="~{/fragments/header::header1}"></header>
 
 <div class="container-fluid contentBody">
 	<div th:replace="~{/layoutJY/side :: side}"></div>

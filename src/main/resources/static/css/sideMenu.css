@@ -23,12 +23,13 @@ display: flex;
 }
 
 .side_list {
-	display:flex;
-	flex-direction: column;
-	justify-content: space-between;
+	display: flex;
+    justify-content: center;
 	width: 80px;
 	height: 100%;
 	background-color: #e7ebf2;
+	padding: 5px 10px;
+	
 }
 
 .list_cont1{
@@ -48,6 +49,7 @@ display: flex;
 	width: 287px;
 	height: 977px;
 	background-color: #fff;
+	padding: 10px 10px;
 }
 
 /******************* side *******************/
@@ -76,6 +78,7 @@ display: flex;
 	padding-left: 51px;
 	padding-right: 51px;
 	background-color: #e7ebf2;
+	padding: 10px 51px;
 }
 /******************* cont *******************/
 
@@ -116,7 +119,7 @@ display: flex;
 
 /* 스크롤바 hover*/
 #teamList:hover::-webkit-scrollbar-thumb{
-    background-color: rgba(255, 127, 39, 0.5);
+    background-color: #858585;
 }
 
 /* 스크롤바 뒷 배경 설정*/

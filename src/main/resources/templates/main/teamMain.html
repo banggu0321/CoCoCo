@@ -7,15 +7,79 @@
 <meta charset="UTF-8">
 <title>CoCoCo | [[${team.teamName}]]</title>
 <style>
+#info {
+	display: flex;
+    flex-direction: row-reverse;
+    align-content: center;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 20px;
+}
 
+#teamInfo img, #name{
+	float: left;
+}
+
+.copyBtn {
+	float: right;
+}
+
+#teamInfo img {
+	width: 70px;
+}
+
+#name {
+	padding: 5px 10px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#ii {
+	padding: 5px 10px;
+}
+
+#main1, #main2, #main3 {
+	background-color: white;
+	border: 1px solid gray;
+	border-radius: 1em;
+	width: 50%;
+    height: 30%;
+    float: left;
+}
+
+#main3 {
+	clear: both;
+	width: 100%;
+	height: 50%;
+}
 </style>
 </head>
 
 <body>
 <div layout:fragment="content">
 	<div class="body">
-		<strong>[[${team.teamName}]]</strong>
-		<button class="btn btn-primary copyBtn">초대코드</button>
+		<div id="info">
+			<button class="btn btn-primary copyBtn">초대코드</button>
+			
+			<div id="teamInfo">
+				<img th:if="${team.teamImg!=null}" th:src="${team.teamImg}" th:alt="${team.teamImg}" class="img-rounded">
+				<img th:if="${team.teamImg==null}" th:src="@{/images/teamImg.png}" alt="null" class="img-rounded">
+				<div id="name">[[${team.teamName}]]</div>
+				<div id="ii">[[${team.teamInfo}]]</div>
+			</div>
+		</div>
+		
+		<div id="main1">
+			공지
+		</div>
+		
+		<div id="main2">
+			진행사항
+		</div>
+		
+		<div id="main3">
+			오늘의 업무
+		</div>
 	</div>
 </div>
 

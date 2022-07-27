@@ -12,15 +12,14 @@
 </script>
 
 <style>
-.contentBody {
-	padding-top: 30px;
-	
+#cont{
+	display: flex;
 }
 
-.content{
-	background-color: #eee;
+#contentBody{
+	margin-top:64px;
+	width: 100%;
 }
-
 </style>
 <!-- 하위 HTML에서 CSS 재정의할 예정 -->
 <th:block layout:fragment="style"></th:block>
@@ -31,9 +30,11 @@
 <!-- fragment 삽입하기 -->
 <header th:replace="~{/layoutJY/header::header2}"></header>
 
-<div class="container-fluid contentBody">
-	<!-- 하위 HTML에서 content 재정의할 예정 -->
-	<div layout:fragment="content"></div>
+<div id="cont">
+	<div id="contentBody">
+		<!-- 하위 HTML에서 content 재정의할 예정 -->
+		<div layout:fragment="content"></div>
+	</div>
 </div>
 
 <!-- 하위 HTML에서 javascript 재정의할 예정   th:block 은 없어지는 태그이다 -->

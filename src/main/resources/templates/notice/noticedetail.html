@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>공지사항</title>
+</head>
+<body>
+	<div class="wrap_notice">
+		<div class="notice_detail">
+			<div class="title">
+				<label>제목</label>
+				<input name="noticeTitle" th:value="${notice.noticeTitle}" readonly="readonly"/>
+			</div>
+			<div class="writer">
+				<label>작성자</label>
+				<input name="noticeUserName" th:value="${notice.user.name}" readonly="readonly"/>
+			</div>
+			<div class="regdate">
+				<label>작성일</label>
+				<input name="noticeRegDate" th:value="${#dates.format(notice.noticeRegDate, 'yy-MM-dd HH:mm')}" readonly="readonly"/>
+			</div>
+			<div class="updatedate">
+				<label>수정일</label>
+				<input name="noticeUpdate" th:value="${#dates.format(notice.noticeUpdate, 'yy-MM-dd HH:mm')}" readonly="readonly"/>
+			</div>
+			<div class="text">
+				<textarea name="noticeText" th:text="${notice.noticeText}" readonly="readonly"></textarea>
+			</div>
+		</div>
+		<a class="btnUpdateNotice"
+					th:href="@{update(page=${pageVO.page}, 
+    size=${pageVO.size}, type=${pageVO.type}, 
+    keyword=${pageVO.keyword},noticeId=${notice.noticeId})}">수정</a>
+		<button type="button" th:onclick="delNotice([[${notice.noticeId}]])">삭제</button>
+		<a class="btnViewList"
+					th:href="@{list(page=${pageVO.page}, 
+    size=${pageVO.size}, type=${pageVO.type}, 
+    keyword=${pageVO.keyword},noticeId=${notice.noticeId})}">목록</a>
+	</div>
+	
+	
+	<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+		<script th:inline="javascript">
+		
+		function delNotice(noticeId) {
+
+			if (confirm("글을 삭제하시겠습니까?")) {
+				var uri = /*[[ @{/notice/delete} ]]*/aa;
+				var html = "";
+
+				html += '<form name="dataForm" action="'+uri+'" method="post">';
+				html += '<input type="hidden" name="noticeId" value="'+noticeId+'"/>';
+				html += '</form>';
+
+				$("body").append(html);
+				document.dataForm.submit();
+			}
+		}
+		
+		</script>
+</body>
+</html>

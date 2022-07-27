@@ -21,7 +21,8 @@
 	
 	<dependencies>
 		<!-- 마리아디비 -->
-		<!-- <dependency>
+		<!--
+		<dependency>
 			<groupId>org.mariadb.jdbc</groupId>
 			<artifactId>mariadb-java-client</artifactId>
 		</dependency>

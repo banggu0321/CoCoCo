@@ -21,7 +21,9 @@
 	cursor: pointer;
 	text-decoration: none;
 }
-.team_logo img{
-	width: 36px;
+.team_logo {
+	width: 34px;
+	height: 34px;
+	background-color: tomato;
 }
 /******************* header *******************/

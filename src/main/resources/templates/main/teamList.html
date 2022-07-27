@@ -7,7 +7,7 @@
 <meta charset="UTF-8">
 <meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
 <meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
-<title>Insert title here</title>
+<title>CoCoCo</title>
 <style>
 .box, .addTeam {
 	position: relative;
@@ -75,6 +75,19 @@
 hr {
 	clear: both;
 }
+
+.showImg {
+	margin-right: 30px;
+	width: 200px;
+}
+
+.showImg , #addTeamFrom {
+	float: left;
+}
+
+.body1 {
+	width: 65%;
+}
 </style>
 </head>
 <body>
@@ -104,16 +117,18 @@ hr {
 	       		</div>
 	       		
 	        	<div class="modal-body">
+	        		<img th:src="@{/images/teamImg.png}" class="showImg img-rounded">
+	        		
 	        		<form id="addTeamForm" method="post" enctype="multipart/form-data">
 			        	<label>WORKSPACE NAME</label>
-			        	<input type="text" name="teamName" class="form-control">
+			        	<input type="text" name="teamName" class="form-control body1">
 			        	
 			         	<label>WORKSPACE INFO</label>
-			         	<textarea class="form-control" name="teamInfo" rows="2"></textarea>
+			         	<textarea class="form-control body1" name="teamInfo" rows="2"></textarea>
 						
 						<div>
 							<label>WORKSPACE IMG</label> 
-							<input type="file" name="teamPhoto" class="form-control custom-file-input">
+							<input type="file" name="teamPhoto" id="img" class="form-control custom-file-input body1">
 						</div>
 						
 						<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
@@ -122,7 +137,7 @@ hr {
 			
 				<div class="modal-footer">
 			    	<button id = "addTeamBtn" class="btn btn-primary">워크스페이스 만들기</button>
-			    	<button type="button" class="btn btn-primary" data-dismiss="modal" >취소</button>
+			    	<button type="button" class="btn btn-primary valDel" data-dismiss="modal" >취소</button>
 	        	</div>
 	        </div>
     	</div>
@@ -139,7 +154,7 @@ hr {
 		        </div>
 				<div class="modal-footer">
 			    	<button id = "enterBtn" class="btn btn-primary">워크스페이스 입장</button>
-			    	<button type="button" class="btn btn-primary" data-dismiss="modal" >취소</button>
+			    	<button type="button" class="btn btn-primary valDel" data-dismiss="modal">취소</button>
 	        	</div>
 	        </div>
     	</div>
@@ -189,6 +204,22 @@ hr {
 			addForm.attr("action","/main/addTeam/[[${session.user.userId}]]");
 			addForm.submit();
 		});
+		
+		$("#img").change(function(event) {
+	        var reader = new FileReader();
+
+	        reader.onload = function(event) {
+	        	$(".showImg").attr("src", event.target.result);
+	        };
+
+	        reader.readAsDataURL(event.target.files[0]);
+	      });
+		
+		$(".valDel").click(function() {
+			$("input").val("");
+			$("textarea").val("");
+			$(".showImg").attr("src", "/images/teamImg.png");
+		})
 	</script>
 </th:block>
 </body>

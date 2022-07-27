@@ -3,6 +3,7 @@
 
 <head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<link rel="stylesheet" th:href="@{/css/header.css}" />
 <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
@@ -28,9 +29,7 @@
 <body>
 
 <!-- fragment 삽입하기 -->
-<header>
-	@@@@@ [[${session.user}]] @@@@@
-</header>
+<header th:replace="~{/layoutJY/header::header2}"></header>
 
 <div class="container-fluid contentBody">
 	<!-- 하위 HTML에서 content 재정의할 예정 -->

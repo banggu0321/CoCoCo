@@ -7,8 +7,7 @@
 	<form class="form-inline my-2 my-lg-0" method="post" th:action="@{/logout}">
 		<div id="top">
 			<div class="team_logo">
-				<img th:if="${team.teamImg!=null}" th:src="${team.teamImg}" class="img-rounded">
-				<img th:if="${team.teamImg==null}" th:src="@{/images/teamImg.png}" class="img-rounded">
+				
 			</div><!-- .team_logo -->
 			<div class="nav">
 				<div class="nav_manu1"><a th:href="@{/main/}+${team.teamId}"><span>메인</span></a></div>
@@ -19,6 +18,17 @@
 			</div><!-- .nav -->
 			
 			<div></div>
+		</div><!-- #top -->
+	</form>
+</div>
+
+<div th:fragment="header2">
+	<form class="form-inline my-2 my-lg-0" method="post" th:action="@{/logout}">
+		<div id="top">
+			<div class="team_logo">
+			
+			</div><!-- .team_logo -->
+			
 		</div><!-- #top -->
 	</form>
 </div>

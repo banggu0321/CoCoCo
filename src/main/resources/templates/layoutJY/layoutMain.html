@@ -9,7 +9,7 @@
 
 <style>
 .body {
-	width: 800px;
+	width: 1000px;
 }
 
 .my_manu div img {
@@ -105,7 +105,7 @@ img#status {
 					<div id="myName">[[${session.user.name}]]
 						<button th:if="${session.user.status != null}" class="btn btn-default btn-sm statusBtn" data-toggle="modal" data-target="#myModal">[[${session.user.status}]]</button>
 						<button th:if="${session.user.status == null}" class="btn btn-default btn-sm statusBtn" data-toggle="modal" data-target="#myModal">퇴근</button>
-						<br>([[${session.user.userId}]])
+						<br>( [[${session.user.userId}]] )
 					</div>
 					[[${session.user.company}]]
 				</div>
@@ -121,7 +121,7 @@ img#status {
 				<img class="admin" th:if="${tu.userRole == 'ADMIN'}" th:src="@{/images/crown.svg}">
 				<p class="status green" th:if="${tu.teamUserId.user.status == '출근'}">●</p>
 				<p class="status red" th:if="${tu.teamUserId.user.status != '출근'}">●</p>
-				[[${tu.teamUserId.user.name}]] ([[${tu.teamUserId.user.userId}]]) 
+				[[${tu.teamUserId.user.name}]] ( [[${tu.teamUserId.user.userId}]] ) 
 			</div>
 			</div>
 		</div>

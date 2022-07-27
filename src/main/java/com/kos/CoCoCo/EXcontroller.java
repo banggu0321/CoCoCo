@@ -11,4 +11,11 @@ public class EXcontroller {
 		
 	}
 	
+	@GetMapping("/ex/ex2")
+	public String B(){
+		return "ex/ex2";
+	}
+	
+
+	
 }

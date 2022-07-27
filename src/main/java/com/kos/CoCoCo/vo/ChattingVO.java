@@ -23,7 +23,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "chatting")
 public class ChattingVO {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long chatId;

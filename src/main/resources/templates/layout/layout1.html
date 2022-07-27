@@ -1,0 +1,98 @@
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script> 
+  //alert("부모가 만든 자바스크립트");
+</script>
+
+<style>
+/******************* header *******************/
+#top {
+	padding: 0px 23px;
+	height: 64px;
+	background-color:#bbb;
+	display:flex;
+	align-items: center;
+    justify-content: space-between;
+}
+
+.nav {
+	display:flex;
+	}
+.nav span {
+	font-size: 20px;
+	margin-right: 100px;
+	}
+.nav a {
+	color: #000;
+	cursor: pointer;
+	text-decoration: none;
+}
+.team_logo {
+	width: 34px;
+	height: 36px;
+	background-color: tomato;
+}
+/******************* header *******************/
+/******************* side *******************/
+#side{
+display: flex;
+
+}
+.side_list {
+	width: 80px;
+	height: 913px;
+	background-color: #eee;
+
+}
+.my_manu {
+	width: 287px;
+	height: 977px;
+	background-color: #aaa;
+}
+
+/******************* side *******************/
+/******************* cont *******************/
+#cont{
+	display: flex;
+	}
+	
+.body{
+	width: 923px;
+	height: 913px;
+	padding-left: 51px;
+	padding-right: 51px;
+	background-color: #777;
+}
+
+/******************* cont *******************/
+</style>
+
+<!-- 하위 HTML에서 CSS 재정의할 예정 -->
+<th:block layout:fragment="style1">
+
+</th:block>
+</head>
+<body>
+	<!-- fragment 삽입하기 -->
+	<header th:insert="~{/fragments/header::header1}"></header>
+
+
+	<!-- 하위 HTML에서 content 재정의할 예정 -->
+	<div class="panel panel-default" layout:fragment="content"></div>
+
+
+	<!-- <footer th:insert="~{/fragments/footer::footer1}"></footer> -->
+
+
+	<!-- 하위 HTML에서 javascript 재정의할 예정   th:block 은 없어지는 태그이다 -->
+	<th:block layout:fragment="script1">
+
+	</th:block>
+</body>
+</html>

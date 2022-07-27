@@ -3,8 +3,6 @@ package com.kos.CoCoCo.gy.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Transient;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +72,6 @@ public class GyWorkRestController {
 		WorkVO insertwork = workRepo.save(work);
 		System.out.println(insertwork);
 		
-		//System.out.println(work.getManager());
 		for(String m:work.getManager()) {
 			UserVO user = userRepo.findByName(m);
 			WorkManagerMultikey multikey = new WorkManagerMultikey(insertwork, user);
@@ -119,19 +116,39 @@ public class GyWorkRestController {
 			list.add(managerName);
 			//work.setManager(list); 여기부터 고쳐야함 
 			//work.manager값이 없음 string[] -> @Transient라서 문제인듯 
-			// Create list
-			//var myList = new List<string>();
-
-			// Add items to the list
-			//myList.Add("item1");
-			//myList.Add("item2");
-
-			// Convert to array
-			//var myArray = myList.ToArray();
+			//work.setManager(w.getWorkManagerId().getUser().getName());
+			//list.add("item2");
+			
 			System.out.println(w.getWorkManagerId().getUser().getName());
 		}
 		//System.out.println(workmanagerlist);
 		
+		return work;
+	}
+	
+	@PostMapping(value="/workdetail.go/{work_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public WorkVO updateWork(@RequestBody WorkVO work , @PathVariable Long work_id) {
+		//WorkVO work2 = workRepo.findById(work_id);
+		
+		
+		//TeamVO team = teamRepo.findById(team_id).get();
+		
+		log.info("Check: {}", work.toString());
+		System.out.println(work);
+		System.out.println(work.getWorkTitle());
+		
+		//work.setTeam(team);
+		WorkVO insertwork = workRepo.save(work);
+		System.out.println(insertwork);
+		
+		//System.out.println(work.getManager());
+		for(String m:work.getManager()) {
+			UserVO user = userRepo.findByName(m);
+			WorkManagerMultikey multikey = new WorkManagerMultikey(insertwork, user);
+			WorkManagerVO workmanager = new WorkManagerVO(multikey);
+			WorkManagerVO modifyworkmanager = workManagerRepo.save(workmanager);
+			System.out.println(modifyworkmanager);
+		}
 		return work;
 	}
 }

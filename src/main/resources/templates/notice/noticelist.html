@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>공지사항</title>
+</head>
+<body>
+	<div class="wrap_notice">
+		<h1>공지사항</h1>
+		<div class="wrap_noticelist">
+			<a class="insertnotice" th:href="@{insert}">글작성하기</a>
+			<table class="notice_table" th:with="noticelist=${noticelist}">
+				<tr class="notice_table_head">
+					<th>순서</th>
+					<th>글번호</th>
+					<th>제목</th>
+					<th>내용</th>
+					<th>작성자</th>
+					<th>작성일</th>
+				</tr>
+				<tr th:each="notice, rowStatus : ${noticelist.result.getContent()}">
+					<td th:text="${rowStatus.count}"></td>
+					<td th:text="${notice.noticeId}"></td>
+					<td><a class="noticelink" th:href="${notice.noticeId}">[[${notice.noticeTitle}]]</a></td>
+					<td th:text="${notice.noticeText}"></td>
+					<td th:text="${notice.user.name}"></td>
+					<td th:text="${#dates.format(notice.noticeRegDate, 'yy-MM-dd HH:mm')}"></td>
+				</tr>
+			</table>
+		</div>
+		<div id="paging">
+			<nav>
+				<div>
+					<ul class="pagination">
+						<li class="page-item" th:if="${noticelist.prevPage}"><a
+							th:href="${noticelist.prevPage.pageNumber}+1">PREV
+								[[${noticelist.prevPage.pageNumber}+1]]</a></li>
+						<li class="page-item"
+							th:classappend="${p.pageNumber==noticelist.currentPageNum-1}?active:''"
+							th:each="p:${noticelist.pageList}"><a th:href="${p.pageNumber}+1">[[${p.pageNumber}+1]]</a>
+						</li>
+						<li class="page-item" th:if="${noticelist.nextPage}"><a
+							th:href="${noticelist.nextPage.pageNumber}+1">NEXT
+								[[${noticelist.nextPage.pageNumber}+1]]</a></li>
+					</ul>
+				</div>
+			</nav>
+			
+		</div>
+		
+		<div id="input_search">
+			<form id="myfrm" th:action="@{list}" method="get">
+				<input type="text" name="page" th:value="${noticelist.currentPageNum}">
+				<input type="text" name="size"
+					th:value="${noticelist.currentPage.pageSize}">
+				<input type="text" name="type" th:value="${pageVO.type}">
+				<input type="text" name="keyword" th:value="${pageVO.keyword}">
+				<input type="text" name="keyword2" th:value="${pageVO.keyword2}">
+			</form>
+			<select id="searchType">
+				<option value="noticeTitleAndText" th:selected="${pageVO.type=='noticeTitleAndText'}">전체</option>
+				<option value="noticeTitle" th:selected="${pageVO.type=='noticeTitle'}">제목</option>
+				<option value="noticeText" th:selected="${pageVO.type=='noticeText'}">내용</option>
+				<option value="noticeRegDate" th:selected="${pageVO.type=='noticeRegDate'}">날짜</option>
+			</select>
+			<input type="text" id="searchKeyword">
+			<input type="date" id="sdate" name="keyword">
+			<input type="date" id="edate" name="keyword2">
+			<button id="searchBtn">검색</button>
+		</div>
+		
+		<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+		<script>
+			
+			$(function() {
+				 
+				var formObj = $("#myfrm");
+
+				$(".pagination a").click(function(e) {
+					e.preventDefault();
+					formObj.find("[name='page']").val($(this).attr('href'));
+					//formObj.attr("action", "/notice/list");
+					formObj.submit();
+				});
+					
+				$("#searchBtn").click(function() {
+					var typeStr = $("#searchType").find(":selected").val();
+					formObj.find("[name='type']").val(typeStr);
+						
+					if(typeStr=="noticeRegDate"){
+							
+						var keywordSdate = $("#sdate").val();
+						var keywordEdate = $("#edate").val();
+						$("#myfrm").find("[name='keyword']").val(keywordSdate + " 00:00:00");
+						$("#myfrm").find("[name='keyword2']").val(keywordEdate + " 23:59:59");
+					}	
+					else{
+						var keywordStr = $("#searchKeyword").val();
+						$("#myfrm").find("[name='keyword']").val(keywordStr);
+					}
+						
+					formObj.find("[name='page']").val(1);
+					formObj.submit();
+					});
+					
+				
+				$(".noticelink").click(function(e) {
+					e.preventDefault();
+					var noticeId = $(this).attr("href");
+										
+					formObj.attr("action", "/notice/detail");
+					formObj.append("<input type='text' name='noticeId' value='"+noticeId+"'>");
+					formObj.submit();
+				});
+					
+			});
+				
+		</script>
+		
+	</div>
+
+</body>
+</html>

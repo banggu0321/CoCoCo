@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>공지사항</title>
+</head>
+<body>
+	<div class="wrap_notice">
+		<h1>공지사항</h1>
+		<div class="wrap_noticelist">
+			<table class="notice_table" th:with="noticelist=${noticelist}">
+				<tr class="notice_table_head">
+					<th>순서</th>
+					<th>글번호</th>
+					<th>제목</th>
+					<th>내용</th>
+					<th>작성자</th>
+					<th>작성일</th>
+				</tr>
+				<tr th:each="notice, rowStatus : ${noticelist.result.getContent()}">
+					<td th:text="${rowStatus.count}"></td>
+					<td th:text="${notice.noticeId}"></td>
+					<td><a class="noticelink" th:href="${notice.noticeId}">[[${notice.noticeTitle}]]</a></td>
+					<td th:text="${notice.noticeText}"></td>
+					<td th:text="${notice.user.name}"></td>
+					<td th:text="${#dates.format(notice.noticeRegDate, 'yy-MM-dd HH:mm')}"></td>
+				</tr>
+			</table>
+		</div>
+		
+				
+		<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+		<script>
+			
+			$(function() {
+				 	
+				
+				$(".noticelink").click(function(e) {
+					e.preventDefault();
+					var noticeId = $(this).attr("href");
+										
+					formObj.attr("action", "/notice/detail");
+					formObj.append("<input type='text' name='noticeId' value='"+noticeId+"'>");
+					formObj.submit();
+				});
+					
+			});
+				
+		</script>
+		
+	</div>
+
+</body>
+</html>

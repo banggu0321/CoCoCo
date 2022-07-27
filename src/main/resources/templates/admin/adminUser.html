@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{/layoutJY/layoutAdmin.html}">
+<head>
+<meta charset="UTF-8">
+<meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
+<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
+<title>CoCoCo | [[${team.teamName}]]</title>
+<style>
+table{
+	background-color: white;
+	text-align: center;
+}
+
+tr:first-child {
+	background-color: #FF7F27;
+	color:white;
+	font-weight: bold;
+}
+
+#adminUser {
+	color: #FF7F27;
+	font-weight: bold;
+}
+
+.delUser:hover, .updateUser:hover {
+	cursor: pointer;
+}
+
+.delUser, .updateUser {
+	width: 25px;
+	height: 25px;
+}
+
+#myModal {
+	position: fixed;
+	top: 30%;
+	left: 20%;
+	right: 20%;
+}
+
+</style>
+</head>
+<body>
+[[${userList}]]
+<div layout:fragment="content">
+	<div class="body">
+		<table id="userList" class="table">
+			<tr>
+				<td></td>
+				<td>이름</td>
+				<td>이메일</td>
+				<td>소속</td>
+				<td>상태</td>
+				<td>참여일자</td>
+				<td>권한</td>
+				<td></td>
+				<td></td>
+			</tr>
+			
+			<tr th:each="user, rowStatus:${userList}">
+				<td th:text="${rowStatus.count}">순서</td>
+				<td th:text="${user.teamUserId.user.name}">이름</td>
+				<td th:text="${user.teamUserId.user.userId}">이메일</td>
+				<td th:text="${user.teamUserId.user.company}">소속</td>
+				<td th:text="${user.teamUserId.user.status}">상태</td>
+				<td th:text="${#dates.format(user.joinDate,'yyyy-MM-dd')}">참여일자</td>
+				<td th:text="${user.userRole}">권한</td>
+				
+				<td th:if="${user.teamUserId.user.userId == user.teamUserId.team.user.userId}"></td>
+				<td th:if="${user.teamUserId.user.userId != user.teamUserId.team.user.userId}" data-toggle="modal" data-target="#myModal" class="roleModel">
+					<img th:src="@{/images/updateRole.svg}" class="updateUser" th:user-data="${user.teamUserId.user.userId}" alt="update">
+				</td>
+				
+				<td th:if="${user.teamUserId.user.userId == user.teamUserId.team.user.userId}"></td>
+				<td th:if="${user.teamUserId.user.userId != user.teamUserId.team.user.userId}">
+					<img th:src="@{/images/deleteImg.svg}" class="delUser" th:user-data="${user.teamUserId.user.userId}" alt="delete">
+				</td>
+			</tr>
+		</table>
+	</div>
+	
+	<!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+		<div class="model_dialog">
+	        <div class="modal-content">
+	        	<div class="modal-header">
+	           		<h4 class="modal-title">권한 변경하기</h4>
+	       		</div>
+	       		
+	        	<div class="modal-body">
+					<input type="hidden" name="userId">
+					
+					<label>USER</label> 
+					<input type="text" name="name" class="form-control" readonly="readonly">
+					
+		        	<label>USER ROLE</label>
+		        	<select class="form-control" name="userRole">
+		        		<option>ADMIN</option>
+		        		<option>USER</option>
+		        	</select>
+		        </div>
+			
+				<div class="modal-footer">
+			    	<button id = "updateBtn" class="btn btn-info">Save</button>
+			    	<button type="button" class="btn btn-default"   data-dismiss="modal" >Close</button>
+	        	</div>
+	        </div>
+    	</div>
+    </div> <!-- 모달끝  -->
+</div>
+
+<th:block layout:fragment="script">
+	<script>
+		var token = $("meta[name='_csrf']").attr("content");
+	 	var header = $("meta[name='_csrf_header']").attr("content");
+ 	
+		$(".delUser").click(function() {
+			var userId = $(this).attr("user-data");
+			var teamId = "[[${teamId}]]";
+	
+			if(confirm("해당 사용자를 삭제하시겠습니까?")) {
+				location.href="/admin/deleteUser/"+teamId+"/"+userId;
+			}
+		});
+		
+		$(".updateUser").click(function() {
+			var userId = $(this).attr("user-data");
+			var teamId = "[[${teamId}]]";
+			
+			$.ajax({
+				type:"post",
+				url: "/admin/findUser/"+teamId+"/"+userId,
+				beforeSend : function(xhr){
+					xhr.setRequestHeader(header, token);
+				},
+				success:function(resData) {
+					var id = resData.teamUserId.user.userId;
+					var name = resData.teamUserId.user.name+" ("+id+")";
+					
+					$("input[name='userId']").val(id);
+					$("input[name='name']").val(name);
+					$("select[name='userRole']").val(resData.userRole);
+				}
+			});
+		});
+		
+		$("#updateBtn").click(function() {
+			var newRole = $("select[name='userRole']").val();
+			var userId = $("input[name='userId']").val();
+			var teamId = "[[${teamId}]]";
+			
+			location.href="/admin/updateUser/"+teamId+"/"+userId+"/"+newRole;
+		});
+	</script>
+</th:block>
+</body>
+</html>

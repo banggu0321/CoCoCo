@@ -1,0 +1,57 @@
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<link rel="stylesheet" th:href="@{/css/header.css}" />
+<link rel="stylesheet" th:href="@{/css/sideMenu.css}" />
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<style>
+.my_manu a {
+	color: black;
+	font-size: 20px;
+}
+
+.my_manu div {
+	padding-bottom: 13px;
+}
+
+.my_manu a:hover {
+	color: black;
+	text-decoration: none;
+	font-size: 23px;
+}
+</style>
+
+<th:block layout:fragment="style"></th:block>
+</head>
+
+<body>
+<header th:replace="~{/layoutJY/header::header1}"></header>
+
+<div id="cont">
+	<div id="side">
+		<div th:replace="~{/layoutJY/side :: side}"></div>
+			
+		<div class="my_manu">
+			<div>
+				<a th:href="@{/admin/team/}+${teamId}" id="adminTeam">워크스페이스 관리</a>
+			</div>
+			<div>
+				<a th:href="@{/admin/user/}+${teamId}" id="adminUser">유저관리</a>
+			</div>
+		</div>
+			
+		<!-- 하위 HTML에서 content 재정의할 예정 -->
+		<div layout:fragment="content"></div>
+	</div>
+</div>
+
+<script>
+
+</script>
+
+<th:block layout:fragment="script"></th:block>
+</body>
+</html>

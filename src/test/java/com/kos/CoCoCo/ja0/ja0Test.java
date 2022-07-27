@@ -1,9 +1,9 @@
 package com.kos.CoCoCo.ja0;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.kos.CoCoCo.ja0.repository.UserRepository;
 import com.kos.CoCoCo.vo.UserVO;
 
 @SpringBootTest
@@ -12,7 +12,7 @@ public class ja0Test {
 	@Autowired
 	UserRepository uRepo;
 	
-	@Test
+	//@Test
 	public void test() {
 		UserVO user = UserVO.builder()
 							.company("Kosta")

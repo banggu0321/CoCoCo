@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{/layoutJY/layoutMain.html}">
+<head>
+<meta charset="UTF-8">
+<title>CoCoCo | [[${team.teamName}]]</title>
+<style>
+
+</style>
+</head>
+
+<body>
+<div layout:fragment="content">
+	<div class="body">
+		<strong>[[${team.teamName}]]</strong>
+		<button class="btn btn-primary copyBtn">초대코드</button>
+	</div>
+</div>
+
+<th:block layout:fragment="script">
+	<script>
+	$(".copyBtn").click(function() {
+		var copyText = "[[${team.inviteCode}]]";
+		const t = document.createElement("textarea");
+		document.body.appendChild(t);
+		t.value = copyText;
+		t.select();
+		document.execCommand('copy');
+		document.body.removeChild(t);
+		alert("초대코드가 복사되었습니다.");
+	});
+	</script>
+</th:block>
+</body>
+</html>

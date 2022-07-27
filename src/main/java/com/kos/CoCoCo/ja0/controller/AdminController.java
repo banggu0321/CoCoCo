@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kos.CoCoCo.fileUploader.S3Uploader;
 import com.kos.CoCoCo.ja0.repository.TeamRepository;
 import com.kos.CoCoCo.ja0.repository.TeamUserRepository;
 import com.kos.CoCoCo.ja0.repository.UserRepository;
@@ -45,6 +46,7 @@ public class AdminController {
 	@GetMapping("/user/{teamId}")
 	public String userList(@PathVariable@ModelAttribute Long teamId, HttpSession session, Model model) {
 		UserVO user = (UserVO)session.getAttribute("user");
+		model.addAttribute("team", tRepo.findById(teamId).get());
 		model.addAttribute("userList", tuRepo.findByTeamId(teamId));
 		model.addAttribute("teamList", tuRepo.findByUserId(user.getUserId()));
 		

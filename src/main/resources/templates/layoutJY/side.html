@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<div th:fragment = "side" class="side">
+<div th:fragment = "side" class="side_list">
 	<div id="teamList">
 		<a th:href="@{/main/}+${tu.teamUserId.team.teamId}" th:each="tu:${teamList}">
 			<img th:if="${tu.teamUserId.team.teamImg!=null}" th:src="${tu.teamUserId.team.teamImg}" 

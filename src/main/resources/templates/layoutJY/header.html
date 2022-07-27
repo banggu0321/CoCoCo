@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+
+<div th:fragment="header1">
+	<form class="form-inline my-2 my-lg-0" method="post" th:action="@{/logout}">
+		<div id="top">
+			<div class="team_logo">
+				<img th:if="${team.teamImg!=null}" th:src="${team.teamImg}" class="img-rounded">
+				<img th:if="${team.teamImg==null}" th:src="@{/images/teamImg.png}" class="img-rounded">
+			</div><!-- .team_logo -->
+			<div class="nav">
+				<div class="nav_manu1"><a th:href="@{/main/}+${team.teamId}"><span>메인</span></a></div>
+				<div class="nav_manu2"><a href="#"><span>공지</span></a></div>
+				<div class="nav_manu3"><a href="#"><span>게시판</span></a></div>
+				<div class="nav_manu4"><a href="#"><span>업무</span></a></div>
+				<div class="nav_manu5"><a th:href="@{/admin/team/}+${team.teamId}"><span>관리자</span></a></div>
+			</div><!-- .nav -->
+			
+			<div></div>
+		</div><!-- #top -->
+	</form>
+</div>
+</html>

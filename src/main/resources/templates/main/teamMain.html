@@ -7,26 +7,20 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
-.content {
-	width: 800px;
-}
+
 </style>
 </head>
+
 <body>
 <div layout:fragment="content">
-	<div class="content">
-		<p>[[${team}]]</p>
-		<button class="btn btn-primary adminBtn">관리자</button>
+	<div class="body">
+		<strong>[[${team.teamName}]]</strong>
 		<button class="btn btn-primary copyBtn">초대코드</button>
 	</div>
 </div>
 
 <th:block layout:fragment="script">
 	<script>
-	$(".adminBtn").click(function() {
-		location.href="/admin/team/[[${team.teamId}]]";
-	});
-	
 	$(".copyBtn").click(function() {
 		var copyText = "[[${team.inviteCode}]]";
 		const t = document.createElement("textarea");

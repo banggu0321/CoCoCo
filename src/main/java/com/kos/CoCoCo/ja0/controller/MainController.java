@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-
+import com.kos.CoCoCo.fileUploader.S3Uploader;
 import com.kos.CoCoCo.ja0.repository.TeamRepository;
 import com.kos.CoCoCo.ja0.repository.TeamUserRepository;
 import com.kos.CoCoCo.ja0.repository.UserRepository;
@@ -45,9 +45,8 @@ public class MainController {
 	
 	@GetMapping("/teamList")
 	public void teamList(HttpSession session, Model model, Principal principal) {
-		UserVO user = uRepo.findById("ja0@naver.com").get();
+		UserVO user = uRepo.findById(principal.getName()).get();
 		session.setAttribute("user", user);
-		//UserVO user = (UserVO) session.getAttribute("user");
 		model.addAttribute("teamList", tuRepo.findByUserId(user.getUserId()));
 	}
 	
@@ -103,6 +102,17 @@ public class MainController {
 		tuRepo.deleteById(teamUserId);
 		
 		return "redirect:/main/teamList";
+	}
+	
+	@GetMapping("/updateStatus/{userId}/{status}/{teamId}")
+	public String updateStatus(@PathVariable String userId, @PathVariable String status, @PathVariable Long teamId, HttpSession session) {
+		uRepo.findById(userId).ifPresent(i->{
+			i.setStatus(status);
+			uRepo.save(i);
+			session.setAttribute("user", i);
+		});
+		
+		return "redirect:/main/"+teamId;
 	}
 	
 	@ResponseBody

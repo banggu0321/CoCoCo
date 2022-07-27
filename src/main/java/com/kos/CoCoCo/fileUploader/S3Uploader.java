@@ -1,4 +1,4 @@
-package com.kos.CoCoCo.ja0.controller;
+package com.kos.CoCoCo.fileUploader;
 
 import java.io.File;
 import java.io.FileOutputStream;

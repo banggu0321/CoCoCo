@@ -26,10 +26,13 @@
 	font-weight: bold;
 }
 
-.content {
+#box {
 	border: 2px solid #FF7F27;
 	border-radius: 1em;
-	padding: 20px 70px;
+	padding: 20px 50px;
+    height: 40%;
+    width: 70%;
+    background-color: white;
 }
 
 #info {
@@ -65,7 +68,7 @@
 </head>
 <body>
 <div layout:fragment="content">
-	<div class="content">
+	<div class="body">
 		<div id="box">
 			<div id="teamImg" th:if="${team.teamImg!=null}">
 				<img th:src="${team.teamImg}" th:alt="${team.teamImg}" class="showImg img-rounded">

@@ -13,12 +13,16 @@
 <style>
 /******************* header *******************/
 #top {
+    position: fixed;
 	padding: 0px 23px;
+	width: 100%;
 	height: 64px;
-	background-color:#bbb;
+	background-color:#fff;
 	display:flex;
 	align-items: center;
     justify-content: space-between;
+   	box-shadow: 0 0px 0px -1px, 0 1px 4px -2px;
+   	z-index: 999;
 }
 
 .nav {
@@ -41,19 +45,38 @@
 /******************* header *******************/
 /******************* side *******************/
 #side{
+position:fixed;
 display: flex;
+top:64px;
+height: 91vh;
 
 }
 .side_list {
+	display:flex;
+	flex-direction: column;
+	justify-content: space-between;
 	width: 80px;
-	height: 913px;
-	background-color: #eee;
+	height: 100%;
+	background-color: #e7ebf2;
+}
+.list_cont1{
+	display:flex;
+	width: 80px;
+	height: 20%;
+	background-color: red;
+	
+}
 
+.list_cont2{
+	display:flex;
+	width: 80px;
+	height: 20%;
+	background-color: red;
 }
 .my_manu {
 	width: 287px;
 	height: 977px;
-	background-color: #aaa;
+	background-color: #fff;
 }
 
 /******************* side *******************/
@@ -63,11 +86,14 @@ display: flex;
 	}
 	
 .body{
-	width: 923px;
+	position:fixed;
+	top: 64px;
+    left: 367px;
+	width: 850px;
 	height: 913px;
 	padding-left: 51px;
 	padding-right: 51px;
-	background-color: #777;
+	background-color: #e7ebf2;
 }
 
 /******************* cont *******************/

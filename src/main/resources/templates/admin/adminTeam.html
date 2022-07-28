@@ -92,9 +92,20 @@
 </div>
 
 <th:block layout:fragment="script">
-<script>
+	<script>
+	$(function() {
+		var msg = "[[${msg}]]";
+		if(msg != "") {
+			alert(msg);
+		}
+		
+		$("#modifyForm").click(modifyForm);
+		$("#delImg").click(deleteImg);
+		$("#deleteBtn").click(deleteTeam);
+	})
+	
 	//수정 form 보여주기
-	$("#modifyForm").click(function() {
+	function modifyForm() {
 		$.ajax({
 			type:"get",
 			url:"/admin/modify/[[${team.teamId}]]",
@@ -102,22 +113,20 @@
 				$("#box").html(resData);
 			}
 		})
-	});
+	}
 	
-	$("#delImg").click(function() {
+	function deleteImg() {
 		if(confirm("이미지를 삭제하시겠습니까?")) {
 			location.href="/admin/deleteImg/[[${team.teamId}]]";
 		}
-	});
+	}
 	
-	$("#deleteBtn").click(function() {
+	function deleteTeam() {
 		if(confirm("워크스페이스를 삭제하시겠습니까?")) {
 			location.href="/admin/delete/[[${team.teamId}]]";
 		}
-	});
-	
-
-</script>
+	}
+	</script>
 </th:block>
 </body>
 </html>

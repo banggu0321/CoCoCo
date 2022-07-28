@@ -5,84 +5,11 @@
 	  layout:decorate="~{/layoutJY/layoutMain.html}">
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" th:href="@{/css/ja0/teamMaincss.css}" />
+
 <title>CoCoCo | [[${team.teamName}]]</title>
 <style>
-#info {
-	display: flex;
-    flex-direction: row-reverse;
-    align-content: center;
-    justify-content: space-between;
-    align-items: flex-end;
-    padding-bottom: 10px;
-    height: 85px;
-}
 
-#box img, #ttt{
-	float: left;
-}
-
-#box img {
-	width: 70px;
-}
-
-.copyBtn {
-	float: right;
-}
-
-#box {
-	display: flex;
-    align-items: center;
-}
-
-#name {
-	padding: 5px 10px;
-    font-size: 18px;
-    font-weight: bold;
-}
-
-#tInfo {
-	padding: 5px 10px;
-	white-space: pre-wrap;
-	height: 40px;
-    overflow-x: hidden;
-    overflow-y: scroll;
-}
-
-/* 스크롤바 설정*/
-#tInfo::-webkit-scrollbar{
-    width: 5px;
-}
-
-/* 스크롤바 막대 설정*/
-#tInfo::-webkit-scrollbar-thumb{
-    background-color: rgba(0,0,0,0);
-}
-
-/* 스크롤바 뒷 배경 설정*/
-#tInfo::-webkit-scrollbar-track{
-    background-color: rgba(0,0,0,0);
-}
-
-#main1, #main2, #main3 {
-	background-color: white;
-	border-radius: 1em;
-	width: 49.5%;
-    height: 40%;
-    float: left;
-    padding: 10px;
-    font-size: 18px;
-    text-align: center;
-}
-
-#main1 {
-	margin-right: 1%;
-}
-
-#main3 {
-	clear: both;
-	width: 100%;
-	margin-top: 1%;
-}
 </style>
 </head>
 
@@ -118,16 +45,22 @@
 
 <th:block layout:fragment="script">
 	<script>
-	$(".copyBtn").click(function() {
+	$(function() {
+		$(".copyBtn").click(copyCode);
+	})
+	
+	function copyCode() {
 		var copyText = "[[${team.inviteCode}]]";
 		const t = document.createElement("textarea");
+		
 		document.body.appendChild(t);
 		t.value = copyText;
 		t.select();
 		document.execCommand('copy');
 		document.body.removeChild(t);
+		
 		alert("초대코드가 복사되었습니다.");
-	});
+	}
 	</script>
 </th:block>
 </body>

@@ -120,46 +120,53 @@ table{
 
 <th:block layout:fragment="script">
 	<script>
-		var token = $("meta[name='_csrf']").attr("content");
-	 	var header = $("meta[name='_csrf_header']").attr("content");
- 	
-		$(".delUser").click(function() {
-			var userId = $(this).attr("user-data");
-			var teamId = "[[${teamId}]]";
+	$(function() {
+		$(".delUser").click(deleteUser);
+		$(".updateUser").click(getUser);
+		$("#updateBtn").click(updateUser);
+		
+	})
 	
-			if(confirm("해당 사용자를 삭제하시겠습니까?")) {
-				location.href="/admin/deleteUser/"+teamId+"/"+userId;
+	var token = $("meta[name='_csrf']").attr("content");
+	var header = $("meta[name='_csrf_header']").attr("content");
+ 	
+	function deleteUser() {
+		var userId = $(this).attr("user-data");
+		var teamId = "[[${teamId}]]";
+	
+		if(confirm("해당 사용자를 삭제하시겠습니까?")) {
+			location.href="/admin/deleteUser/"+teamId+"/"+userId;
+		}
+	}
+		
+	function getUser() {
+		var userId = $(this).attr("user-data");
+		var teamId = "[[${teamId}]]";
+		
+		$.ajax({
+			type:"post",
+			url: "/admin/findUser/"+teamId+"/"+userId,
+			beforeSend : function(xhr){
+				xhr.setRequestHeader(header, token);
+			},
+			success:function(resData) {
+				var id = resData.teamUserId.user.userId;
+				var name = resData.teamUserId.user.name+" ("+id+")";
+				
+				$("input[name='userId']").val(id);
+				$("input[name='name']").val(name);
+				$("select[name='userRole']").val(resData.userRole);
 			}
 		});
+	}
 		
-		$(".updateUser").click(function() {
-			var userId = $(this).attr("user-data");
-			var teamId = "[[${teamId}]]";
-			
-			$.ajax({
-				type:"post",
-				url: "/admin/findUser/"+teamId+"/"+userId,
-				beforeSend : function(xhr){
-					xhr.setRequestHeader(header, token);
-				},
-				success:function(resData) {
-					var id = resData.teamUserId.user.userId;
-					var name = resData.teamUserId.user.name+" ("+id+")";
-					
-					$("input[name='userId']").val(id);
-					$("input[name='name']").val(name);
-					$("select[name='userRole']").val(resData.userRole);
-				}
-			});
-		});
+	function updateUser() {
+		var newRole = $("select[name='userRole']").val();
+		var userId = $("input[name='userId']").val();
+		var teamId = "[[${teamId}]]";
 		
-		$("#updateBtn").click(function() {
-			var newRole = $("select[name='userRole']").val();
-			var userId = $("input[name='userId']").val();
-			var teamId = "[[${teamId}]]";
-			
-			location.href="/admin/updateUser/"+teamId+"/"+userId+"/"+newRole;
-		});
+		location.href="/admin/updateUser/"+teamId+"/"+userId+"/"+newRole;
+	}
 	</script>
 </th:block>
 </body>

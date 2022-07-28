@@ -7,94 +7,12 @@
 <meta charset="UTF-8">
 <meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
 <meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+<link rel="stylesheet" th:href="@{/css/ja0/teamListcss.css}" />
+
 <title>CoCoCo</title>
 <style>
-.box, .addTeam {
-	position: relative;
-	float: left;
-	width: 250px;
-	height: 320px;
-	text-align: center;
-	padding: 30px 20px;
-	margin: 20px;
-	background-color: #eee;
-	border-radius: 1em;
-	cursor: pointer;
-}
 
-.box:hover, .addTeam:hover {
-	background-color: rgba(255, 127, 39, 0.2);
-	border: none;
-}
-
-.info {
-	white-space: pre-wrap;
-}
-
-.name {
-	font-size: 18px;
-	font-weight: bold;
-	padding-top: 10px;
-}
-
-.addTeam {
-	font-size: 35px;
-	background-color: white;
-	border: 2px solid #FF7F27;
-	border-radius: 0.5em;
-	padding: 130px 10px;
-}
-
-.box img{
-	width: 150px;
-	height: 150px;
-}
-.box .delBtn {
-	position: absolute;
-	top: 85%;
-	left: 85%;
-	width: 30px;
-	height: 30px;
-}
-
-.inviteBtn {
-	float: right;
-}
-
-#title {
-	float: left;
-}
-
-#myModal, #myModal2 {
-	position: fixed;
-	top: 30%;
-	left: 20%;
-	right: 20%;
-}
-
-.showImg {
-	margin-right: 30px;
-	width: 200px;
-}
-
-.showImg , #addTeamFrom {
-	float: left;
-}
-
-.modalBody1 {
-	display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-#mainTitle {
-	padding: 5px 20px;
-    display: flex;
-    align-content: center;
-    justify-content: space-between;
-    flex-direction: row-reverse;
-    align-items: center;
-}
 </style>
 </head>
 <body>
@@ -172,66 +90,76 @@
 
 <th:block layout:fragment="script">
 	<script>
-		var token = $("meta[name='_csrf']").attr("content");
-	 	var header = $("meta[name='_csrf_header']").attr("content");
-	 	
-	 	if("[[${msg}]]" != null) {
+	$(function() {
+		var msg = "[[${msg}]]";
+		if(msg != "") {
 			alert(msg);
 		}
+		
+	 	$(".box").click(goTeamMain);
+	 	$("#enterBtn").click(enterTeam);
+	 	$(".delBtn").click(deleteTeam);
+	 	$("#addTeamBtn").click(addTeam);
+	 	$("#img").change(makeView);
+	 	$(".valDel").click(valueDelete);
+	})
 	
-		$(".box").click(function() {
-			var teamId = $(this).attr("team-data");
-			location.href="/main/"+teamId;
-		});
+	var token = $("meta[name='_csrf']").attr("content");
+	var header = $("meta[name='_csrf_header']").attr("content");
+	
+	function goTeamMain() {
+		var teamId = $(this).attr("team-data");
+		location.href="/main/"+teamId;
+	}
 		
-		$("#enterBtn").click(function() {
-			var code = $("#code").val();
+	function enterTeam() {
+		var code = $("#code").val();
 			
-			$.ajax({
-				type:"post",
-				url:"/main/findTeam/"+code,
-				beforeSend : function(xhr){
-					xhr.setRequestHeader(header, token);
-				},
-				success: function(resData) {
-					if(resData != 0) {
-						location.href = "/main/"+resData;
-						return;
-					}
-					alert("초대코드를 확인해주세요!");
+		$.ajax({
+			type:"post",
+			url:"/main/findTeam/"+code,
+			beforeSend : function(xhr){
+				xhr.setRequestHeader(header, token);
+			},
+			success: function(resData) {
+				if(resData != 0) {
+					location.href = "/main/"+resData;
+					return;
 				}
-			});
-		});
-		
-		$(".delBtn").click(function(e) {
-			e.stopPropagation();
-			var teamId = $(this).attr("team-data");
-			if(confirm("해당 워크스페이스를 삭제하시겠습니까?")) {
-				location.href = "/main/deleteTeam/"+teamId;
+				alert("초대코드를 확인해주세요!");
 			}
 		});
+	}
 		
-		$("#addTeamBtn").click(function() {
-			var addForm = $("#addTeamForm");
-			addForm.attr("action","/main/addTeam");
-			addForm.submit();
-		});
+	function deleteTeam(e) {
+		e.stopPropagation();
+		var teamId = $(this).attr("team-data");
+		if(confirm("해당 워크스페이스를 삭제하시겠습니까?")) {
+			location.href = "/main/deleteTeam/"+teamId;
+		}
+	}
 		
-		$("#img").change(function(event) {
-	        var reader = new FileReader();
+	function addTeam() {
+		var addForm = $("#addTeamForm");
+		addForm.attr("action","/main/addTeam");
+		addForm.submit();
+	}
+		
+	function makeView(event) {
+		var reader = new FileReader();
 
-	        reader.onload = function(event) {
-	        	$(".showImg").attr("src", event.target.result);
-	        };
+		reader.onload = function(event) {
+			$(".showImg").attr("src", event.target.result);
+		};
 
-	        reader.readAsDataURL(event.target.files[0]);
-	      });
+		reader.readAsDataURL(event.target.files[0]);
+	}
 		
-		$(".valDel").click(function() {
-			$("input").val("");
-			$("textarea").val("");
-			$(".showImg").attr("src", "/images/teamImg.png");
-		})
+	function valueDelete() {
+		$("input").val("");
+		$("textarea").val("");
+		$(".showImg").attr("src", "/images/teamImg.png");
+	}
 	</script>
 </th:block>
 </body>

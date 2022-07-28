@@ -17,6 +17,7 @@
 	<form id="logoutForm" method="post" th:action="@{/logout}"></form>
 	
 	<script>
+	$(function() {
 		$('[data-toggle="tooltip"]').tooltip();
 		
 		$("#goHome").click(function() {
@@ -26,6 +27,7 @@
 		$("#logout").click(function() {
 			$("#logoutForm").submit();
 		});
+	})
 	</script>
 </div>
 

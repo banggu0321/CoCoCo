@@ -30,19 +30,24 @@
 	</div>
 
 <script>
-	$(".reloadBtn").click(function() {
-		location.reload();
-	});
+$(function() {
+	$(".reloadBtn").click(reload);
+	$("#img").change(makeView);
+})
+
+function reload() {
+	location.reload();
+}
 	
-	$("#img").change(function(event) {
-        var reader = new FileReader();
+function makeView(event) {
+	var reader = new FileReader();
 
-        reader.onload = function(event) {
-        	$(".showImg").attr("src", event.target.result);
-        };
+	reader.onload = function(event) {
+		$(".showImg").attr("src", event.target.result);
+	};
 
-        reader.readAsDataURL(event.target.files[0]);
-      });
+	reader.readAsDataURL(event.target.files[0]);
+}
 	
 </script>
 </html>

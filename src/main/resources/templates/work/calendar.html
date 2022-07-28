@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+<title>calendar</title>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<!-- jquery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- bootstrap 4 -->
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- fullcalendar -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.0/main.min.css">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.0/main.min.js"></script>
+
+
+<script type="text/javascript">
+	$(function(){
+		//이벤트 클릭시 데이터 저장됨
+		var team_id = 1000;
+		var workDatail ;
+		var teamUserlist;
+		
+		//해당 팀의 담당자 모두 가져오기
+		$.ajax({
+			url:"/work/workmanagerlist.go/"+team_id,
+			type:"get",
+			success:function(responseData){
+				teamUserlist = responseData;
+				
+			}
+		});
+	
+		
+		//전체 리스트 가져오기
+		var request = $.ajax({
+			type:"GET",
+			url:"/work/worklist.go/"+team_id,
+			//data : {"team_id" : '1000'},
+			dataType:"json"
+		});
+		
+		//응답시
+		request.done(function(responseData){
+			console.log("OK", responseData);
+			var events = [];
+			$.each(responseData, function(index,data){
+				//console.log(data);
+				if(data.workStatus == 'finish'){
+					events.push({
+						id: data.workId,
+						title : data.workTitle,
+						start : data.workStart,
+						end : data.workEnd,
+						//extendedProps: {
+						//	content : data.workText,
+						//	status : data.workStatus,
+						//	manager : data.manager
+						//},
+						color : 'red'
+						
+					});
+				}else{
+					events.push({
+						id: data.workId,
+						title : data.workTitle,
+						//content : data.workText,
+						start : data.workStart,
+						end : data.workEnd,
+						//status : data.workStatus,
+						//manager : data.manager,
+					});
+				}
+				
+			})
+			console.log(events);
+			
+			//캘린더 만들기
+			var calendarEl = document.getElementById('calendar');
+			var calendar = new FullCalendar.Calendar(calendarEl, {
+				//schedulerLicenseKey : 'CC-Attribution-NonCommercial-NoDerivatives',
+				timeZone : 'UTC+9',
+				initialView : 'dayGridMonth',
+				events : events,
+				headerToolbar: {
+				      left: 'today',//dayGridMonth,timeGridWeek,timeGridDay,list
+				      center: 'prev,title,next',
+				      right: 'addEventButton'
+				    },
+				customButtons : {
+					addEventButton : { // 추가한 버튼 설정
+						text : "일정 추가", // 버튼 내용
+						color: 'yellow', 
+						click : function() { // 버튼 클릭 시 이벤트 추가
+							$("#calendarAddModal").modal("show"); // modal 나타내기
+							
+							//option에 해당 팀의 담당자 추가
+							$.each(teamUserlist,function(index, data){
+								console.log(data);
+								var option = document.createElement('option');
+								option.value = data;
+								option.className = "form-control";
+								option.innerText = data;
+								$("#calendar_manager").append(option);
+								//$("#calendar_manager").appendChild("<option class=\"form-control\">"+data+"</option>");
+								
+							});
+							
+							$("#addWork").on("click", function() { // modal의 추가 버튼 클릭 시
+								var title = $("#calendar_title").val();
+								var content = $("#calendar_content").val();
+								var start_date = $("#calendar_start_date").val();
+								var end_date = $("#calendar_end_date").val();
+								var status = $("#calendar_status").val();
+								var manager = $("#calendar_manager").val();
+
+								//내용 입력 여부 확인
+								if (title == null || title == "") {
+									alert("제목을 입력하세요.");
+								} else if (content == null || content == "") {
+									alert("내용을 입력하세요.");
+								} else if (start_date == "" || end_date == "") {
+									alert("날짜를 입력하세요.");
+								} else if (new Date(end_date) - new Date(start_date) < 0) { // date 타입으로 변경 후 확인
+									alert("종료일이 시작일보다 먼저입니다.");
+								}  else if (manager == "") {
+									alert("업무 담당자를 입력하세요");
+								} else { // 정상적인 입력 시
+									var obj = {
+										"workTitle" : title,
+										"workText": content,
+										"workStart" : start_date,
+										"workEnd" : end_date,
+										"workStatus" : status,
+										"manager" :manager
+									}//전송할 객체 생성
+									console.log(obj); //서버로 해당 객체를 전달해서 DB 연동 가능
+									
+									//let sendData = "username="+$('input[name=username]').val();   //폼의 이름 값을 변수 안에 담아줌
+									
+									//업무 insert
+									$.ajax({
+										type:'post',   //post 방식으로 전송
+										url:'/work/worklist.go/'+team_id,   //데이터를 주고받을 파일 주소
+										data:JSON.stringify( obj),   //위의 변수에 담긴 데이터를 전송해준다.
+										//dataType:'application/json',   //html 파일 형식으로 값을 담아온다.
+										contentType: "application/json; charset=utf-8",
+										success : function(data){   //파일 주고받기가 성공했을 경우. data 변수 안에 값을 담아온다.
+											//console.log(data);
+											alert("업무가 등록되었습니다.");  //현재 화면 위 id="message" 영역 안에 data안에 담긴 html 코드를 넣어준다.
+											location.reload();
+										}
+									});
+								}
+							});
+						}
+					}
+				},
+				editable : false, // false로 변경 시 draggable 작동 x 
+				displayEventTime : false, // 시간 표시 x
+				//navLinks : true, //달력상의 날짜를 클릭할 수 있는지 여부, 클릭시 일달력/주달력으로 넘어감
+				selectable: true, //선택 가능
+				dayMaxEventRows: true, // for all non-TimeGrid views(more)
+				contentHeight: 800, //행 길이
+				//locale: 'ko' //한국어
+				
+				//이벤트 클릭시
+				eventClick : function(info){
+					var eventObj = info.event;
+					
+					//console.log(events);
+					
+					$.ajax({
+						type:"GET",
+						url:"/work/workdetail.go/"+eventObj.id,
+						//data : {"team_id" : '1000'},
+						dataType:"json",
+						success:function(responseData){
+							$("#calendarDetailModal").modal("show"); // modal 나타내기
+							workDatail = responseData;
+							console.log(workDatail);
+							$(".detail_workId").val(workDatail.workId);
+							$(".detail_workTitle").val(workDatail.workTitle);
+							$(".detail_workText").val(workDatail.workText);
+							$(".detail_workDate").val(workDatail.workStart+" ~ "+workDatail.workEnd);
+							$(".detail_workStartDate").val(workDatail.workStart);
+							$(".detail_workEndDate").val(workDatail.workEnd);
+							$(".detail_workStatus").val(workDatail.workStatus);
+							console.log(responseData.manager);
+							
+							$(".detail_workMannager").val(workDatail.manager);
+							//$(".detail_workMannager").val("방근영2");
+							var arr = workDatail.manager;
+							console.log(typeof arr);
+							console.log(arr[0]);
+							console.log(arr[1]);
+							$(".update_workMannager").val(workDatail.manager);//일반for로
+						}
+					});
+					
+					//상세 정보 가져오기
+					//$(".place_name").val(detail["place_name"]);
+					//$(".detail_workId").val(eventObj.id);
+					//$(".detail_workTitle").val(eventObj.title);
+					//$(".detail_workText").val(eventObj.content);
+					//$(".detail_workDate").val(eventObj.start+"~"+eventObj.end);
+					//$(".detail_workStatus").val(eventObj.status);
+					//$(".detail_workMannager").val(eventObj.manager);
+					//alert(eventObj.id);
+					
+				}
+				
+			});
+			calendar.render(); //다시 렌더링
+		});
+		
+		//응답실패시
+		request.fail(function( jqXHR, textStatus ) {
+			  alert( "Request failed: " + textStatus );
+		});
+		
+		$("#WorkUpdateModalBtn").on("click", function() {
+			$("#calendarUpdateModal").modal("show"); // modal 나타내기
+			//console.log(workDatail.manager);
+			//option에 해당 팀의 담당자 추가
+			$.each(teamUserlist,function(index, data){
+				console.log("data :  " +data);
+				var option = document.createElement('option');
+				option.value = data;
+				option.className = "form-control";
+				option.innerText = data;
+				$(".update_workMannager").append(option);
+				//$("#calendar_manager").appendChild("<option class=\"form-control\">"+data+"</option>");
+				
+			});yy
+			
+		});
+		$("#WorkUpdateBtn").on("click", function() {
+			var work_id = $(".detail_workId").val();
+			var title = $(".detail_workTitle").val();
+			var content = $(".detail_workText").val();
+			var start_date = $(".detail_workStartDate").val();
+			var end_date = $(".detail_workEndDate").val();
+			var status = $(".detail_workStatus").val();
+			var manager = $(".detail_workMannager").val();
+
+			//내용 입력 여부 확인
+			if (title == null || title == "") {
+				alert("제목을 입력하세요.");
+			} else if (content == null || content == "") {
+				alert("내용을 입력하세요.");
+			} else if (start_date == "" || end_date == "") {
+				alert("날짜를 입력하세요.");
+			} else if (new Date(end_date) - new Date(start_date) < 0) { // date 타입으로 변경 후 확인
+				alert("종료일이 시작일보다 먼저입니다.");
+			}  else if (manager == "") { 
+				alert("업무 담당자를 입력하세요");
+			} else { // 정상적인 입력 시
+				var obj = {
+					"workTitle" : title,
+					"workText": content,
+					"workStart" : start_date,
+					"workEnd" : end_date,
+					"workStatus" : status,
+					"manager" :manager
+				}//전송할 객체 생성
+				console.log(obj); //서버로 해당 객체를 전달해서 DB 연동 가능
+				
+				//let sendData = "username="+$('input[name=username]').val();   //폼의 이름 값을 변수 안에 담아줌
+				
+				$.ajax({
+					type:'put',   //post 방식으로 전송
+					url:'/work/worklist.go/'+work_id,   //데이터를 주고받을 파일 주소
+					data:JSON.stringify( obj),   //위의 변수에 담긴 데이터를 전송해준다.
+					//dataType:'application/json',   //html 파일 형식으로 값을 담아온다.
+					contentType: "application/json; charset=utf-8",
+					success : function(data){   //파일 주고받기가 성공했을 경우. data 변수 안에 값을 담아온다.
+						//console.log(data);
+						alert("업무가 수정되었습니다.");  //현재 화면 위 id="message" 영역 안에 data안에 담긴 html 코드를 넣어준다.
+						location.reload();
+					}
+				});
+			}
+		});
+	});
+	
+	//WorkUpdateBtn
+</script>
+<style>
+#calendarBox {
+	width: 70%;
+	padding-left: 15%;
+}
+.fc-toolbar-title{
+float : left;
+}
+.fc-button{
+float : left;}
+</style>
+</head>
+<body>
+	<!-- <div id="addButton">
+		<input type="button" id="addCalendar" value="업무추가" class="btn btn-warning">
+	</div> -->
+	<div id="calendarBox">
+		<div id="calendar"></div>
+	</div>
+
+	<!-- Work Add modal -->
+	<div class="modal fade" id="calendarAddModal" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">일정을 입력하세요.</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="taskId" class="col-form-label">일정 제목</label> 
+						<input type="text" class="form-control" id="calendar_title" name="calendar_title" value="제목"> 
+						<label for="taskId" class="col-form-label">일정 내용</label> 
+						<input type="text" class="form-control" id="calendar_content" name="calendar_content" value="내용"> 
+						<label for="taskId" class="col-form-label">시작 날짜</label> 
+						<input type="date" class="form-control" id="calendar_start_date" name="calendar_start_date" value="2022-07-20"> 
+						<label for="taskId" class="col-form-label">종료 날짜</label> 
+						<input type="date" class="form-control" id="calendar_end_date" name="calendar_end_date" value="2022-07-23">
+						<label for="taskId" class="col-form-label">업무 상태</label> 
+						<select class="form-control" id="calendar_status" name="calendar_status">
+							<option class="form-control" value="plan">대기</option>
+							<option class="form-control" >진행</option>
+							<option class="form-control" value="finish">완료</option>
+						</select>
+						<label for="taskId" class="col-form-label">일정 담당자(Ctrl클릭 후 중복선택가능)</label> 
+						<div class="workManager">
+							<select class="form-control" id="calendar_manager" name="calendar_manager" multiple="multiple" size="2">
+								<!-- <option class="form-control managers">선택하세요</option>
+								<option class="form-control">방근영2</option>
+								<option class="form-control">방3</option> -->
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-warning" id="addWork">추가</button>
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal" id="sprintSettingModalClose">취소</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Work Detail modal -->
+	<div class="modal fade" id="calendarDetailModal" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Detail</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="taskId" class="col-form-label">업무번호</label> 
+						<input type="text" class="form-control detail_workId" id="calendar_workId" name="calendar_workId" readonly="readonly"> 
+						<label for="taskId" class="col-form-label">업무명</label> 
+						<input type="text" class="form-control detail_workTitle" id="calendar_title" name="calendar_title" readonly="readonly"> 
+						<label for="taskId" class="col-form-label">업무내용</label> 
+						<input type="text" class="form-control detail_workText" id="calendar_content" name="calendar_content" readonly="readonly"> 
+						<label for="taskId" class="col-form-label">업무기간</label> 
+						<input type="text" class="form-control detail_workDate" id="calendar_date" name="calendar_date" readonly="readonly">
+						<label for="taskId" class="col-form-label">업무상태</label> 
+						<input type="text" class="form-control detail_workStatus" id="calendar_status" name="calendar_status" readonly="readonly"> 
+						<label for="taskId" class="col-form-label">담당자</label> 
+						<input type="text" class="form-control detail_workMannager" id="calendar_manager" name="calendar_manager" readonly="readonly"> 
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-warning WorkUpdateBtn" id="WorkUpdateModalBtn">수정</button>
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal" id="WorkDeleteBtn">삭제</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Work Update modal -->
+	<div class="modal fade" id="calendarUpdateModal" tabindex="-100" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">수정</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="taskId" class="col-form-label">업무번호</label> 
+						<input type="text" class="form-control detail_workId" id="calendar_workId" name="calendar_workId" readonly="readonly"> 
+						<label for="taskId" class="col-form-label">업무명</label> 
+						<input type="text" class="form-control detail_workTitle" id="calendar_title" name="calendar_title"  > 
+						<label for="taskId" class="col-form-label">업무내용</label> 
+						<input type="text" class="form-control detail_workText" id="calendar_content" name="calendar_content" > 
+						<label for="taskId" class="col-form-label">업무시작일</label> 
+						<input type=date class="form-control detail_workStartDate" id="calendar_start_date" name="calendar_start_date" > 
+						<label for="taskId" class="col-form-label">업무마감일</label> 
+						<input type="date" class="form-control detail_workEndDate" id="calendar_end_date" name="calendar_end_date" >
+						<label for="taskId" class="col-form-label">업무상태</label> 
+						<select class="form-control detail_workStatus" id="calendar_status" name="calendar_status">
+							<option class="form-control" >대기</option>
+							<option class="form-control" value="plan">진행</option>
+							<option class="form-control" value="finish">완료</option>
+						</select>
+						<label for="taskId" class="col-form-label">일정 담당자(Ctrl클릭 후 중복선택가능)</label> 
+						<div class="workManager">
+							<select class="form-control update_workMannager" id="update_calendar_manager" name="calendar_manager" multiple="multiple" size="2">
+								<!-- <option class="form-control managers" selected="selected">방근영2</option> -->
+								<!-- <option class="form-control managers">선택하세요</option>
+								<option class="form-control">방근영2</option>
+								<option class="form-control">방3</option> -->
+							</select>
+						</div>
+					
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-warning" id="WorkUpdateBtn">수정</button>
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal" id="sprintSettingModalClose">취소</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

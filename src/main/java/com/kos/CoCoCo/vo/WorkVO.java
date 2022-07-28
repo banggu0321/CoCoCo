@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,5 +39,8 @@ public class WorkVO {
 	private Date workEnd;
 	
 	private String workStatus;
+	
+	@Transient
+	String[] manager;
 
 }

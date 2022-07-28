@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge'>
 <title>calendar</title>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
+<!-- csrf -->
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 <!-- jquery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <!-- bootstrap 4 -->
@@ -26,13 +29,26 @@
 
 <script type="text/javascript">
 	$(function(){
+		var token = $("meta[name='_csrf']").attr("content");
+		var header = $("meta[name='_csrf_header']").attr("content");
+		
 		var team_id = 1000;
+		var user_id = 'bang';
 		var workDatail ;
 		var teamUserlist;
 		
 		//해당 팀의 담당자 모두 가져오기
 		$.ajax({
 			url:"/work/workmanagerlist.go/"+team_id,
+			type:"get",
+			success:function(responseData){
+				teamUserlist = responseData;
+			}
+		});
+		
+		//나의 업무 모두 가져오기
+		$.ajax({
+			url:"/work/worklist.go/"+user_id,
 			type:"get",
 			success:function(responseData){
 				teamUserlist = responseData;
@@ -160,6 +176,11 @@
 										data:JSON.stringify( obj),   //위의 변수에 담긴 데이터를 전송해준다.
 										//dataType:'application/json',   //html 파일 형식으로 값을 담아오기
 										contentType: "application/json; charset=utf-8",
+										//csrf token
+										beforeSend : function(xhr)
+							            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+											xhr.setRequestHeader(header, token);
+							            },
 										success : function(data){   //파일 주고받기가 성공했을 경우. data 변수 안에 값을 담아온다.
 											//console.log(data);
 											alert("업무가 등록되었습니다."); 
@@ -227,7 +248,7 @@
 			$.each(teamUserlist,function(index, data){//jquery로 해결하기
 				
 				if(workDatail.manager.includes(data)){
-					$(".update_workMannager").append("<option class=\"form-control updatemanageroption managerselected\" value=\'"+data+"' selected=\"selected\">"+data+"</option>"); 
+					$(".update_workMannager").append("<option class=\"form-control updatemanageroption managerselected\" value=\'"+data+"'>"+data+"</option>"); 
 					//option.attr("selected","selected");
 					//$(".update_workMannager").value=data;
 					//console.log("data : " + data);
@@ -251,13 +272,13 @@
 			
 		});
 		$("#WorkUpdateBtn").on("click", function() {
-			var work_id = $(".detail_workId").val();
-			var title = $(".detail_workTitle").val();
-			var content = $(".detail_workText").val();
-			var start_date = $(".detail_workStartDate").val();
-			var end_date = $(".detail_workEndDate").val();
-			var status = $(".detail_workStatus").val();
-			var manager = $(".detail_workMannager").val();
+			var work_id = $(".update_workId").val();
+			var title = $(".update_workTitle").val();
+			var content = $(".update_workText").val();
+			var start_date = $(".update_workStartDate").val();
+			var end_date = $(".update_workEndDate").val();
+			var status = $(".update_workStatus").val();
+			var manager = $(".update_workMannager").val();
 
 			//내용 입력 여부 확인
 			if (title == null || title == "") {
@@ -289,7 +310,11 @@
 					data:JSON.stringify( obj),   //위의 변수에 담긴 데이터를 전송해준다.
 					//dataType:'application/json',   //html 파일 형식으로 값을 담아온다.
 					contentType: "application/json; charset=utf-8",
-					success : function(data){   //파일 주고받기가 성공했을 경우. data 변수 안에 값을 담아온다.
+					beforeSend : function(xhr)
+		            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+						xhr.setRequestHeader(header, token);
+		            },
+		            success : function(data){   //파일 주고받기가 성공했을 경우. data 변수 안에 값을 담아온다.
 						//console.log(data);
 						alert("업무가 수정되었습니다.");  //현재 화면 위 id="message" 영역 안에 data안에 담긴 html 코드를 넣어준다.
 						location.reload();
@@ -299,19 +324,24 @@
 		});
 		$("#WorkDeleteBtn").on("click", function() {
 			var work_id = $(".detail_workId").val();
-			$.ajax({
-				type:'delete',   //post 방식으로 전송
-				url:'/work/worklist.go/'+work_id,   //데이터를 주고받을 파일 주소
-				//data:JSON.stringify( obj),   //위의 변수에 담긴 데이터를 전송해준다.
-				//dataType:'application/json',   //html 파일 형식으로 값을 담아온다.
-				contentType: "application/json; charset=utf-8",
-				success : function(data){   //파일 주고받기가 성공했을 경우. data 변수 안에 값을 담아온다.
-					//console.log(data);
-					alert("업무가 삭제되었습니다.");  //현재 화면 위 id="message" 영역 안에 data안에 담긴 html 코드를 넣어준다.
-					location.reload();
-				}
-			});
-			
+			if(confirm("해당업무[" + work_id + "]를 삭제하시겠습니까?")){
+				$.ajax({
+					type:'delete',   //post 방식으로 전송
+					url:'/work/worklist.go/'+work_id,   //데이터를 주고받을 파일 주소
+					//data:JSON.stringify( obj),   //위의 변수에 담긴 데이터를 전송해준다.
+					//dataType:'application/json',   //html 파일 형식으로 값을 담아온다.
+					contentType: "application/json; charset=utf-8",
+					beforeSend : function(xhr)
+		            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+						xhr.setRequestHeader(header, token);
+		            },
+		            success : function(data){   //파일 주고받기가 성공했을 경우. data 변수 안에 값을 담아온다.
+						//console.log(data);
+						alert("업무가 삭제되었습니다.");  //현재 화면 위 id="message" 영역 안에 data안에 담긴 html 코드를 넣어준다.
+						location.reload();
+					}
+				});
+			}else{}
 		});
 	});
 	
@@ -432,17 +462,17 @@ float : left;}
 				<div class="modal-body">
 					<div class="form-group">
 						<label for="taskId" class="col-form-label">업무번호</label> 
-						<input type="text" class="form-control detail_workId" id="calendar_workId" name="calendar_workId" readonly="readonly"> 
+						<input type="text" class="form-control detail_workId update_workId" id="calendar_workId" name="calendar_workId" readonly="readonly"> 
 						<label for="taskId" class="col-form-label">업무명</label> 
-						<input type="text" class="form-control detail_workTitle" id="calendar_title" name="calendar_title"  > 
+						<input type="text" class="form-control detail_workTitle update_workTitle" id="calendar_title" name="calendar_title"  > 
 						<label for="taskId" class="col-form-label">업무내용</label> 
-						<input type="text" class="form-control detail_workText" id="calendar_content" name="calendar_content" > 
+						<input type="text" class="form-control detail_workText update_workText" id="calendar_content" name="calendar_content" > 
 						<label for="taskId" class="col-form-label">업무시작일</label> 
-						<input type=date class="form-control detail_workStartDate" id="calendar_start_date" name="calendar_start_date" > 
+						<input type=date class="form-control detail_workStartDate update_workStartDate" id="calendar_start_date" name="calendar_start_date" > 
 						<label for="taskId" class="col-form-label">업무마감일</label> 
-						<input type="date" class="form-control detail_workEndDate" id="calendar_end_date" name="calendar_end_date" >
+						<input type="date" class="form-control detail_workEndDate update_workEndDate" id="calendar_end_date" name="calendar_end_date" >
 						<label for="taskId" class="col-form-label">업무상태</label> 
-						<select class="form-control detail_workStatus" id="calendar_status" name="calendar_status">
+						<select class="form-control detail_workStatus update_workStatus" id="calendar_status" name="calendar_status">
 							<option class="form-control" >대기</option>
 							<option class="form-control" value="plan">진행</option>
 							<option class="form-control" value="finish">완료</option>

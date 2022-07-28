@@ -3,6 +3,8 @@ package com.kos.CoCoCo.gy.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +32,6 @@ import com.kos.CoCoCo.vo.UserVO;
 import com.kos.CoCoCo.vo.WorkManagerMultikey;
 import com.kos.CoCoCo.vo.WorkManagerVO;
 import com.kos.CoCoCo.vo.WorkVO;
-
-import javassist.expr.NewArray;
 
 @RestController
 @RequestMapping("/work/*")
@@ -103,7 +103,7 @@ public class GyWorkRestController {
 	}
 	@GetMapping(value="/workdetail.go/{work_id}")
 	public WorkVO workdetaillist(Model model, @PathVariable Long work_id) {
-		WorkVO work = workRepo.findByWorkId(work_id);
+		WorkVO work = workRepo.findById(work_id).get();
 		List<WorkManagerVO> workmanagerlist = workManagerRepo.findByWork(work_id);
 
 		//(String[])workmanagerlist.toArray()
@@ -115,13 +115,32 @@ public class GyWorkRestController {
 		work.setManager(arr);
 		return work;
 	}
-	@PutMapping(value="/workdetail.go/{work_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+	
+	@Transactional
+	@PutMapping(value="/worklist.go/{work_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public WorkVO updateWork(@RequestBody WorkVO work , @PathVariable Long work_id) {
-		WorkVO updatework = workRepo.save(work);
+		
+		//@PathVariable Long bno, @RequestBody WebReply reply
+		//WebBoard board = boardRepo.findById(bno).get();
+		//reply.setBoard(board);
+		//System.out.println(reply);
+		//replyRepo.save(reply);
+		//return replyRepo.getRepliesOfBoard2(bno);
+		
+		
+		WorkVO originalwork = workRepo.findById(work_id).get();
+		originalwork.setWorkTitle(work.getWorkTitle());
+		originalwork.setWorkText(work.getWorkText());
+		originalwork.setWorkStart(work.getWorkStart());
+		originalwork.setWorkEnd(work.getWorkEnd());
+		originalwork.setWorkStatus(work.getWorkStatus());
+		originalwork.setManager(work.getManager());
+		
+		WorkVO updatework = workRepo.save(originalwork);
 		
 		if(work.getManager()!=null) {
 			workManagerRepo.workManagerDelete(work_id);
-			for(String m:work.getManager()) {
+			for(String m:updatework.getManager()) {
 				UserVO user = userRepo.findByName(m);
 				WorkManagerMultikey multikey = new WorkManagerMultikey(updatework, user);
 				WorkManagerVO workmanager = new WorkManagerVO(multikey);
@@ -131,9 +150,11 @@ public class GyWorkRestController {
 		}else {
 			System.out.println("Manager 변동없음");
 		}
-		return work;
+		return updatework;
 	}
-	@DeleteMapping(value="/workdetail.go/{work_id}")
+	
+	@Transactional
+	@DeleteMapping(value="/worklist.go/{work_id}")
 	public void deleteWork(@PathVariable Long work_id) {
 		workManagerRepo.workManagerDelete(work_id);
 		workRepo.deleteById(work_id);

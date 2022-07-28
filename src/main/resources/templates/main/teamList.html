@@ -185,7 +185,7 @@
 			
 			$.ajax({
 				type:"post",
-				url:"/main/findTeam/[[${session.user.userId}]]/"+code,
+				url:"/main/findTeam/"+code,
 				beforeSend : function(xhr){
 					xhr.setRequestHeader(header, token);
 				},
@@ -203,13 +203,13 @@
 			e.stopPropagation();
 			var teamId = $(this).attr("team-data");
 			if(confirm("해당 워크스페이스를 삭제하시겠습니까?")) {
-				location.href = "/main/deleteTeam/[[${session.user.userId}]]/"+teamId;
+				location.href = "/main/deleteTeam/"+teamId;
 			}
 		});
 		
 		$("#addTeamBtn").click(function() {
 			var addForm = $("#addTeamForm");
-			addForm.attr("action","/main/addTeam/[[${session.user.userId}]]");
+			addForm.attr("action","/main/addTeam");
 			addForm.submit();
 		});
 		

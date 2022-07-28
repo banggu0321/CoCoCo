@@ -113,6 +113,16 @@ img#status {
 .red {
 	color: red;
 }
+
+#userInfo {
+	display:inline-block;
+	border: 1px solid;
+	visibility: hidden;
+}
+
+#userInfo:hover {
+	display: inline;
+}
 </style>
 
 <th:block layout:fragment="style"></th:block>
@@ -149,7 +159,9 @@ img#status {
 					<img class="admin" th:if="${tu.userRole == 'ADMIN'}" th:src="@{/images/crown.svg}">
 					<p class="status green" th:if="${tu.teamUserId.user.status == '출근'}">●</p>
 					<p class="status red" th:if="${tu.teamUserId.user.status != '출근'}">●</p>
+					
 					[[${tu.teamUserId.user.name}]]
+					<div id="userInfo">소개소개</div>
 				</div>
 			</div>
 		</div>
@@ -196,9 +208,8 @@ $(".statusBtn").click(function () {
 
 $("#statusUpdate").click(function () {
 	var status = $("select[name='status']").val();
-	var userId = "[[${session.user.userId}]]";
 
-	location.href="/main/updateStatus/" + userId +"/" + status + "/[[${team.teamId}]]";
+	location.href="/main/updateStatus/" + status + "/[[${team.teamId}]]";
 })
 </script>
 

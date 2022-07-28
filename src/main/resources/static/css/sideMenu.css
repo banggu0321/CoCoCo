@@ -109,17 +109,24 @@
 #myMenu{
 	bottom: 10%;
     position: absolute;
+    display: flex;
+    flex-direction: column;
 }
 
-#teamList a img, #myMenu a img {
+#teamList a img {
 	margin: 10px;
 	width: 40px;
 	height: 40px;
 }
 
-#myMenu a img {
+#myMenu img {
+	margin: 15px 17px;
 	width: 30px;
 	height: 30px;
+}
+
+#myMenu img:hover {
+	cursor: pointer;	
 }
 
 #teamList{

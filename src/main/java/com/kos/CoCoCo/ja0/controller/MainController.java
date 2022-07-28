@@ -47,26 +47,29 @@ public class MainController {
 	public void teamList(HttpSession session, Model model, Principal principal) {
 		UserVO user = uRepo.findById(principal.getName()).get();
 		session.setAttribute("user", user);
+		session.setAttribute("teamList", tuRepo.findByUserId(user.getUserId()));
+		
 		model.addAttribute("teamList", tuRepo.findByUserId(user.getUserId()));
 	}
 	
 	@GetMapping("/{teamId}")
 	public String teamMain(@PathVariable Long teamId, HttpSession session, Model model) {
-		UserVO user = (UserVO)session.getAttribute("user");
+		session.setAttribute("teamId", teamId);
+		
 		model.addAttribute("team", tRepo.findById(teamId).get());
 		model.addAttribute("userList", tuRepo.findByTeamId(teamId));
-		model.addAttribute("teamList", tuRepo.findByUserId(user.getUserId()));
+		
 		return "main/teamMain";
 	}
 	
-	@PostMapping("/addTeam/{userId}")
-	public String addTeam(TeamVO team, MultipartFile teamPhoto, @PathVariable String userId, HttpServletRequest request) throws IOException{
+	@PostMapping("/addTeam")
+	public String addTeam(TeamVO team, MultipartFile teamPhoto, HttpSession session) throws IOException{
 		if (!teamPhoto.isEmpty()) {
 			String img = uploader.upload(teamPhoto, "uploads/teamImages/");
 			team.setTeamImg(img);
 	    }
 		
-		UserVO user = uRepo.findById(userId).get();
+		UserVO user = (UserVO) session.getAttribute("user");
 		
 		team.setUser(user); 
 		team.setInviteCode(makeTeamCode());
@@ -93,10 +96,10 @@ public class MainController {
 		return teamCode;
 	}
 	
-	@GetMapping("/deleteTeam/{userId}/{teamId}")
-	public String deleteTeam(@PathVariable Long teamId, @PathVariable String userId) {
+	@GetMapping("/deleteTeam/{teamId}")
+	public String deleteTeam(@PathVariable Long teamId, HttpSession session) {
 		TeamVO team = tRepo.findById(teamId).get();
-		UserVO user = uRepo.findById(userId).get();
+		UserVO user = (UserVO) session.getAttribute("user");
 		TeamUserMultikey teamUserId = new TeamUserMultikey(team, user);
 		
 		tuRepo.deleteById(teamUserId);
@@ -104,9 +107,10 @@ public class MainController {
 		return "redirect:/main/teamList";
 	}
 	
-	@GetMapping("/updateStatus/{userId}/{status}/{teamId}")
-	public String updateStatus(@PathVariable String userId, @PathVariable String status, @PathVariable Long teamId, HttpSession session) {
-		uRepo.findById(userId).ifPresent(i->{
+	@GetMapping("/updateStatus/{status}/{teamId}")
+	public String updateStatus(@PathVariable String status, @PathVariable Long teamId, HttpSession session) {
+		UserVO user = (UserVO) session.getAttribute("user");
+		uRepo.findById(user.getUserId()).ifPresent(i->{
 			i.setStatus(status);
 			uRepo.save(i);
 			session.setAttribute("user", i);
@@ -116,14 +120,14 @@ public class MainController {
 	}
 	
 	@ResponseBody
-	@PostMapping("/findTeam/{userId}/{code}")
-	public Long findTeam(@PathVariable String code, @PathVariable String userId, Model model) {
+	@PostMapping("/findTeam/{code}")
+	public Long findTeam(@PathVariable String code, HttpSession session, Model model) {
 		List<TeamVO> team = tRepo.findByInviteCode(code);
 
 		if(team.isEmpty()) return 0L;
 		
 		TeamVO t = team.get(0);
-		UserVO user = uRepo.findById(userId).get();
+		UserVO user = (UserVO) session.getAttribute("user");
 		TeamUserMultikey id = new TeamUserMultikey(t, user);
 		tuRepo.findById(id).ifPresentOrElse(i->{
 			

@@ -3,21 +3,29 @@
 
 <div th:fragment = "side" class="side_list">
 	<div id="teamList">
-		<a th:href="@{/main/}+${tu.teamUserId.team.teamId}" th:each="tu:${teamList}">
-			<img th:if="${tu.teamUserId.team.teamImg!=null}" th:src="${tu.teamUserId.team.teamImg}" 
-				data-toggle="tooltip" data-placement="right" th:title="${tu.teamUserId.team.teamName}" class="img-rounded">
-			<img th:if="${tu.teamUserId.team.teamImg==null}" th:src="@{/images/teamImg.png}" alt="null"
-				data-toggle="tooltip" data-placement="right" th:title="${tu.teamUserId.team.teamName}" class="img-rounded">
+		<a th:href="@{/main/}+${tu.teamUserId.team.teamId}" th:each="tu:${session.teamList}"
+				data-toggle="tooltip" data-placement="right" th:title="${tu.teamUserId.team.teamName}">
+			<img th:if="${tu.teamUserId.team.teamImg!=null}" th:src="${tu.teamUserId.team.teamImg}" class="img-rounded">
+			<img th:if="${tu.teamUserId.team.teamImg==null}" th:src="@{/images/teamImg.png}" alt="null" class="img-rounded">
 		</a>
 	</div>
 	<div id="myMenu">
-		<a href="/main/teamList">
-			<img th:src="@{/images/home.svg}" alt="home">
-		</a>
+		<img th:src="@{/images/home.svg}" alt="home" id="goHome">
+		<img th:src="@{/images/logout.svg}" alt="logout" id="logout">
 	</div>
+
+	<form id="logoutForm" method="post" th:action="@{/logout}"></form>
 	
 	<script>
 		$('[data-toggle="tooltip"]').tooltip();
+		
+		$("#goHome").click(function() {
+			location.href="/main/teamList";
+		});
+		
+		$("#logout").click(function() {
+			$("#logoutForm").submit();
+		});
 	</script>
 </div>
 

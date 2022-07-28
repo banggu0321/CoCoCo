@@ -2,8 +2,8 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
-<link rel="stylesheet" th:href="@{/css/header.css}" />
-<link rel="stylesheet" th:href="@{/css/sideMenu.css}" />
+<link rel="stylesheet" th:href="@{/css/ja0/header.css}" />
+<link rel="stylesheet" th:href="@{/css/ja0/sideMenu.css}" />
 <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
@@ -25,12 +25,9 @@
 	width: 100px;
 	height: 100px;
 }
- 
-#myInfo {
-	font-weight: bold;
-}
 
-#myName {
+#myName, #userName {
+	font-weight: bold;
 	font-size: 17px;
 }
 
@@ -115,14 +112,33 @@ img#status {
 }
 
 #userInfo {
-	display:inline-block;
-	border: 1px solid;
-	visibility: hidden;
+	position: absolute;
+	display: none;
+    top: 0px;
+    left: 0px;
+    width: 97%;
+	border: 2.5px solid #FF7F27;
+	background-color: white;
+	border-radius: 0.5em;
+	padding: 10px 0px;
+	z-index: 1;
 }
 
-#userInfo:hover {
-	display: inline;
+#userInfo img{
+    width: 50px;
+    height: 50px;
 }
+
+#userInfo img, #uInfo {
+	float: left;
+}
+
+.userProfile:hover #userInfo {
+	display: flex;
+    align-items: center;
+	opacity: 1;
+}
+
 </style>
 
 <th:block layout:fragment="style"></th:block>
@@ -143,7 +159,6 @@ img#status {
 					<div id="myName">[[${session.user.name}]]
 						<button th:if="${session.user.status != null}" class="btn btn-default btn-sm statusBtn" data-toggle="modal" data-target="#myModal">[[${session.user.status}]]</button>
 						<button th:if="${session.user.status == null}" class="btn btn-default btn-sm statusBtn" data-toggle="modal" data-target="#myModal">퇴근</button>
-						<br>( [[${session.user.userId}]] )
 					</div>
 					[[${session.user.company}]]
 				</div>
@@ -156,12 +171,22 @@ img#status {
 				<div class="userProfile" th:each="tu:${userList}" th:if="${tu.teamUserId.user.userId != session.user.userId}">
 					<img th:if="${tu.teamUserId.user.image == null}" th:src="@{/images/userImg.svg}" class="img-circle img">
 					<img th:if="${tu.teamUserId.user.image != null}" th:src="${tu.teamUserId.user.image}" class="img-circle img">
+					
 					<img class="admin" th:if="${tu.userRole == 'ADMIN'}" th:src="@{/images/crown.svg}">
 					<p class="status green" th:if="${tu.teamUserId.user.status == '출근'}">●</p>
 					<p class="status red" th:if="${tu.teamUserId.user.status != '출근'}">●</p>
 					
 					[[${tu.teamUserId.user.name}]]
-					<div id="userInfo">소개소개</div>
+					
+					<div id="userInfo">
+						<img th:if="${tu.teamUserId.user.image == null}" th:src="@{/images/userImg.svg}" class="img-circle img">
+						<img th:if="${tu.teamUserId.user.image != null}" th:src="${tu.teamUserId.user.image}" class="img-circle img">
+						
+						<div id="uInfo">
+							<p id="userName">[[${tu.teamUserId.user.name}]] ( [[${tu.teamUserId.user.company}]] )<p>
+							<p>[[${tu.teamUserId.user.status}]]</p>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

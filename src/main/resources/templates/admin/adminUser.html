@@ -14,10 +14,12 @@ table{
 	text-align: center;
 }
 
-tr:first-child {
+.head {
 	background-color: #FF7F27;
 	color:white;
 	font-weight: bold;
+	position: sticky;
+	top: 0;
 }
 
 #adminUser {
@@ -41,6 +43,10 @@ tr:first-child {
 	right: 20%;
 }
 
+.body {
+	overflow-x: hidden;
+	overflow-y: auto; 
+}
 </style>
 </head>
 <body>
@@ -48,7 +54,7 @@ tr:first-child {
 <div layout:fragment="content">
 	<div class="body">
 		<table id="userList" class="table">
-			<tr>
+			<tr class="head">
 				<td></td>
 				<td>이름</td>
 				<td>이메일</td>

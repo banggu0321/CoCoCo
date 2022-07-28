@@ -110,11 +110,13 @@
 							
 							//option에 해당 팀의 담당자 추가
 							$.each(teamUserlist,function(index, data){
-								var option = document.createElement('option');
+								$("#calendar_manager").append("<option class=\"form-control addmanageroption\" value=\'"+data+"'>"+data+"</option>"); 
+								
+								/* var option = document.createElement('option');
 								option.value = data;
 								option.className = "form-control addmanageroption";
 								option.innerText = data;
-								$("#calendar_manager").append(option);
+								$("#calendar_manager").append(option); */
 								//$("#calendar_manager").appendChild("<option class=\"form-control\">"+data+"</option>");
 							});
 							
@@ -295,6 +297,22 @@
 				});
 			}
 		});
+		$("#WorkDeleteBtn").on("click", function() {
+			var work_id = $(".detail_workId").val();
+			$.ajax({
+				type:'delete',   //post 방식으로 전송
+				url:'/work/worklist.go/'+work_id,   //데이터를 주고받을 파일 주소
+				//data:JSON.stringify( obj),   //위의 변수에 담긴 데이터를 전송해준다.
+				//dataType:'application/json',   //html 파일 형식으로 값을 담아온다.
+				contentType: "application/json; charset=utf-8",
+				success : function(data){   //파일 주고받기가 성공했을 경우. data 변수 안에 값을 담아온다.
+					//console.log(data);
+					alert("업무가 삭제되었습니다.");  //현재 화면 위 id="message" 영역 안에 data안에 담긴 html 코드를 넣어준다.
+					location.reload();
+				}
+			});
+			
+		});
 	});
 	
 	//WorkUpdateBtn
@@ -392,7 +410,7 @@ float : left;}
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-warning WorkUpdateBtn" id="WorkUpdateModalBtn">수정</button>
+					<button type="button" class="btn btn-warning WorkUpdateModalBtn" id="WorkUpdateModalBtn">수정</button>
 					<button type="button" class="btn btn-secondary"
 						data-dismiss="modal" id="WorkDeleteBtn">삭제</button>
 				</div>
@@ -442,7 +460,7 @@ float : left;}
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-warning" id="WorkUpdateBtn">수정</button>
+					<button type="button" class="btn btn-warning WorkUpdateBtn" id="WorkUpdateBtn">수정</button>
 					<button type="button" class="btn btn-secondary"
 						data-dismiss="modal" id="sprintSettingModalClose">취소</button>
 				</div>

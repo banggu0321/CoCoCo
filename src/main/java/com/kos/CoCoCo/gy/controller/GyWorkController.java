@@ -38,11 +38,15 @@ public class GyWorkController {
 	public String workCalendar() {
 		return "/work/calendar";
 	}
-	 
 	
 	@GetMapping("/work/layout")
 	public String layout() {
 		return "work/layout/layout1";
 	}
+	@GetMapping("/workm")
+	public String workmanager() {
+		return "/work/workmanager";
+	}
+	
 	
 }

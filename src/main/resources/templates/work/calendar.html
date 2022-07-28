@@ -18,10 +18,14 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.0/main.min.css">
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.0/main.min.js"></script>
 
+<style type="text/css">
+.managerselected{
+    background-color: #E3E3E3 ;
+}
+</style>
 
 <script type="text/javascript">
 	$(function(){
-		//이벤트 클릭시 데이터 저장됨
 		var team_id = 1000;
 		var workDatail ;
 		var teamUserlist;
@@ -32,10 +36,8 @@
 			type:"get",
 			success:function(responseData){
 				teamUserlist = responseData;
-				
 			}
 		});
-	
 		
 		//전체 리스트 가져오기
 		var request = $.ajax({
@@ -45,7 +47,7 @@
 			dataType:"json"
 		});
 		
-		//응답시
+		//전체 리스트 응답시
 		request.done(function(responseData){
 			console.log("OK", responseData);
 			var events = [];
@@ -99,19 +101,25 @@
 						click : function() { // 버튼 클릭 시 이벤트 추가
 							$("#calendarAddModal").modal("show"); // modal 나타내기
 							
+							//console.log("length : "+document.getElementsByClassName('manageroption').length);
+							if(document.getElementsByClassName('addmanageroption').length){
+								$(".addmanageroption").remove();
+							}else{
+								console.log("옵션이 존재하지 않았음");
+							}
+							
 							//option에 해당 팀의 담당자 추가
 							$.each(teamUserlist,function(index, data){
-								console.log(data);
 								var option = document.createElement('option');
 								option.value = data;
-								option.className = "form-control";
+								option.className = "form-control addmanageroption";
 								option.innerText = data;
 								$("#calendar_manager").append(option);
 								//$("#calendar_manager").appendChild("<option class=\"form-control\">"+data+"</option>");
-								
 							});
 							
-							$("#addWork").on("click", function() { // modal의 추가 버튼 클릭 시
+							// modal의 추가 버튼 클릭 시
+							$("#addWork").on("click", function() { 
 								var title = $("#calendar_title").val();
 								var content = $("#calendar_content").val();
 								var start_date = $("#calendar_start_date").val();
@@ -148,11 +156,11 @@
 										type:'post',   //post 방식으로 전송
 										url:'/work/worklist.go/'+team_id,   //데이터를 주고받을 파일 주소
 										data:JSON.stringify( obj),   //위의 변수에 담긴 데이터를 전송해준다.
-										//dataType:'application/json',   //html 파일 형식으로 값을 담아온다.
+										//dataType:'application/json',   //html 파일 형식으로 값을 담아오기
 										contentType: "application/json; charset=utf-8",
 										success : function(data){   //파일 주고받기가 성공했을 경우. data 변수 안에 값을 담아온다.
 											//console.log(data);
-											alert("업무가 등록되었습니다.");  //현재 화면 위 id="message" 영역 안에 data안에 담긴 html 코드를 넣어준다.
+											alert("업무가 등록되었습니다."); 
 											location.reload();
 										}
 									});
@@ -164,16 +172,14 @@
 				editable : false, // false로 변경 시 draggable 작동 x 
 				displayEventTime : false, // 시간 표시 x
 				//navLinks : true, //달력상의 날짜를 클릭할 수 있는지 여부, 클릭시 일달력/주달력으로 넘어감
-				selectable: true, //선택 가능
-				dayMaxEventRows: true, // for all non-TimeGrid views(more)
+				selectable: true, //날짜 선택 가능
+				dayMaxEventRows: true, // for all non-TimeGrid views(more) 행길이 설정 가능->contentHeight로 설정
 				contentHeight: 800, //행 길이
 				//locale: 'ko' //한국어
 				
 				//이벤트 클릭시
 				eventClick : function(info){
-					var eventObj = info.event;
-					
-					//console.log(events);
+					var eventObj = info.event; //해당 work_id가져오기
 					
 					$.ajax({
 						type:"GET",
@@ -191,30 +197,11 @@
 							$(".detail_workStartDate").val(workDatail.workStart);
 							$(".detail_workEndDate").val(workDatail.workEnd);
 							$(".detail_workStatus").val(workDatail.workStatus);
-							console.log(responseData.manager);
-							
+							//console.log(responseData.manager);
 							$(".detail_workMannager").val(workDatail.manager);
-							//$(".detail_workMannager").val("방근영2");
-							var arr = workDatail.manager;
-							console.log(typeof arr);
-							console.log(arr[0]);
-							console.log(arr[1]);
-							$(".update_workMannager").val(workDatail.manager);//일반for로
 						}
-					});
-					
-					//상세 정보 가져오기
-					//$(".place_name").val(detail["place_name"]);
-					//$(".detail_workId").val(eventObj.id);
-					//$(".detail_workTitle").val(eventObj.title);
-					//$(".detail_workText").val(eventObj.content);
-					//$(".detail_workDate").val(eventObj.start+"~"+eventObj.end);
-					//$(".detail_workStatus").val(eventObj.status);
-					//$(".detail_workMannager").val(eventObj.manager);
-					//alert(eventObj.id);
-					
+					});					
 				}
-				
 			});
 			calendar.render(); //다시 렌더링
 		});
@@ -227,17 +214,38 @@
 		$("#WorkUpdateModalBtn").on("click", function() {
 			$("#calendarUpdateModal").modal("show"); // modal 나타내기
 			//console.log(workDatail.manager);
+			
+			//console.log("length : "+document.getElementsByClassName('manageroption').length);
+			if(document.getElementsByClassName('updatemanageroption').length){
+				$(".updatemanageroption").remove();
+			}else{
+				console.log("옵션이 존재하지 않았음");
+			}
 			//option에 해당 팀의 담당자 추가
-			$.each(teamUserlist,function(index, data){
-				console.log("data :  " +data);
-				var option = document.createElement('option');
-				option.value = data;
-				option.className = "form-control";
-				option.innerText = data;
-				$(".update_workMannager").append(option);
-				//$("#calendar_manager").appendChild("<option class=\"form-control\">"+data+"</option>");
+			$.each(teamUserlist,function(index, data){//jquery로 해결하기
 				
-			});yy
+				if(workDatail.manager.includes(data)){
+					$(".update_workMannager").append("<option class=\"form-control updatemanageroption managerselected\" value=\'"+data+"' selected=\"selected\">"+data+"</option>"); 
+					//option.attr("selected","selected");
+					//$(".update_workMannager").value=data;
+					//console.log("data : " + data);
+					//console.log("val : "+ $(".update_workMannager").value)
+				}else{
+					//alert("없음");
+					$(".update_workMannager").append("<option class=\"form-control updatemanageroption\" value=\'"+data+"'>"+data+"</option>"); 
+				}
+				/* var option = document.createElement('option');
+				option.value = data;
+				option.className = "form-control updatemanageroption";
+				option.innerText = data;
+				option.attr("selected","selected");
+				$(".update_workMannager").append(option); */ 
+			});
+			/* var arr = workDatail.manager;
+			//console.log(typeof arr);
+			console.log(workDatail.manager[0]);
+			console.log(workDatail.manager[1]);
+			$(".update_workMannager").val(arr[0]);//일반for로 */
 			
 		});
 		$("#WorkUpdateBtn").on("click", function() {
@@ -340,7 +348,7 @@ float : left;}
 						</select>
 						<label for="taskId" class="col-form-label">일정 담당자(Ctrl클릭 후 중복선택가능)</label> 
 						<div class="workManager">
-							<select class="form-control" id="calendar_manager" name="calendar_manager" multiple="multiple" size="2">
+							<select class="form-control" id="calendar_manager" name="calendar_manager" multiple="multiple" size="3">
 								<!-- <option class="form-control managers">선택하세요</option>
 								<option class="form-control">방근영2</option>
 								<option class="form-control">방3</option> -->
@@ -423,7 +431,7 @@ float : left;}
 						</select>
 						<label for="taskId" class="col-form-label">일정 담당자(Ctrl클릭 후 중복선택가능)</label> 
 						<div class="workManager">
-							<select class="form-control update_workMannager" id="update_calendar_manager" name="calendar_manager" multiple="multiple" size="2">
+							<select class="form-control update_workMannager" id="update_calendar_manager" name="calendar_manager" multiple="multiple" size="3">
 								<!-- <option class="form-control managers" selected="selected">방근영2</option> -->
 								<!-- <option class="form-control managers">선택하세요</option>
 								<option class="form-control">방근영2</option>

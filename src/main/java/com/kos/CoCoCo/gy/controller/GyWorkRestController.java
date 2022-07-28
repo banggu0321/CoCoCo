@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -62,6 +63,7 @@ public class GyWorkRestController {
 	}
 	@PostMapping(value="/worklist.go/{team_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public WorkVO addWork(@RequestBody WorkVO work , @PathVariable Long team_id) {
+		System.out.println("오나요?");
 		TeamVO team = teamRepo.findById(team_id).get();
 		
 		log.info("Check: {}", work.toString());
@@ -79,13 +81,6 @@ public class GyWorkRestController {
 			WorkManagerVO insertworkmanager = workManagerRepo.save(workmanager);
 			System.out.println(insertworkmanager);
 		}
-		
-		//String a = work.keys("title")
-		
-		//Iterator i = ((Object) obj).keys();
-		//WorkVO work = new WorkVO();
-		//work.setWorkTitle(obj.getClass("title"))
-		//WorkVO insertbBoard = workRepo.save(obj);
 		return work;
 	}
 	@GetMapping("/workmanagerlist.go/{team_id}")
@@ -119,20 +114,22 @@ public class GyWorkRestController {
 		work.setManager(arr);
 		return work;
 	}
-	//@PutMapping(value="/workdetail.go/{work_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping(value="/workdetail.go/{work_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public WorkVO updateWork(@RequestBody WorkVO work , @PathVariable Long work_id) {
-		//WorkVO originalework = workRepo.findByWorkId(work_id);
-		//originalework.se
-		//WorkVO updatework = workRepo.save(work);
+		WorkVO updatework = workRepo.save(work);
 		
-		//System.out.println(work.getManager());
-		/*
-		 * for(String m:work.getManager()) { UserVO user = userRepo.findByName(m);
-		 * WorkManagerMultikey multikey = new WorkManagerMultikey(insertwork, user);
-		 * WorkManagerVO workmanager = new WorkManagerVO(multikey); WorkManagerVO
-		 * modifyworkmanager = workManagerRepo.save(workmanager);
-		 * System.out.println(modifyworkmanager); }
-		 */
+		if(work.getManager()!=null) {
+			workManagerRepo.workManagerDelete(work_id);
+			for(String m:work.getManager()) {
+				UserVO user = userRepo.findByName(m);
+				WorkManagerMultikey multikey = new WorkManagerMultikey(updatework, user);
+				WorkManagerVO workmanager = new WorkManagerVO(multikey);
+				WorkManagerVO modifyworkmanager = workManagerRepo.save(workmanager);
+				System.out.println(modifyworkmanager);
+			}
+		}else {
+			System.out.println("Manager 변동없음");
+		}
 		return work;
 	}
 }

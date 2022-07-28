@@ -109,46 +109,30 @@ public class GyWorkRestController {
 	public WorkVO workdetaillist(Model model, @PathVariable Long work_id) {
 		WorkVO work = workRepo.findByWorkId(work_id);
 		List<WorkManagerVO> workmanagerlist = workManagerRepo.findByWork(work_id);
-		List<String> list = new ArrayList();
-		for(WorkManagerVO w:workmanagerlist) {
-			
-			String managerName = w.getWorkManagerId().getUser().getName(); 
-			list.add(managerName);
-			//work.setManager(list); 여기부터 고쳐야함 
-			//work.manager값이 없음 string[] -> @Transient라서 문제인듯 
-			//work.setManager(w.getWorkManagerId().getUser().getName());
-			//list.add("item2");
-			
-			System.out.println(w.getWorkManagerId().getUser().getName());
+
+		//(String[])workmanagerlist.toArray()
+		//work.setManager(workmanagerlist.stream().toArray(String[]::new));
+		String[] arr = new String[workmanagerlist.size()];
+		for(int i=0;i<workmanagerlist.size();i++) {
+			arr[i] = workmanagerlist.get(i).getWorkManagerId().getUser().getName();
 		}
-		//System.out.println(workmanagerlist);
-		
+		work.setManager(arr);
 		return work;
 	}
-	
-	@PostMapping(value="/workdetail.go/{work_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+	//@PutMapping(value="/workdetail.go/{work_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public WorkVO updateWork(@RequestBody WorkVO work , @PathVariable Long work_id) {
-		//WorkVO work2 = workRepo.findById(work_id);
-		
-		
-		//TeamVO team = teamRepo.findById(team_id).get();
-		
-		log.info("Check: {}", work.toString());
-		System.out.println(work);
-		System.out.println(work.getWorkTitle());
-		
-		//work.setTeam(team);
-		WorkVO insertwork = workRepo.save(work);
-		System.out.println(insertwork);
+		//WorkVO originalework = workRepo.findByWorkId(work_id);
+		//originalework.se
+		//WorkVO updatework = workRepo.save(work);
 		
 		//System.out.println(work.getManager());
-		for(String m:work.getManager()) {
-			UserVO user = userRepo.findByName(m);
-			WorkManagerMultikey multikey = new WorkManagerMultikey(insertwork, user);
-			WorkManagerVO workmanager = new WorkManagerVO(multikey);
-			WorkManagerVO modifyworkmanager = workManagerRepo.save(workmanager);
-			System.out.println(modifyworkmanager);
-		}
+		/*
+		 * for(String m:work.getManager()) { UserVO user = userRepo.findByName(m);
+		 * WorkManagerMultikey multikey = new WorkManagerMultikey(insertwork, user);
+		 * WorkManagerVO workmanager = new WorkManagerVO(multikey); WorkManagerVO
+		 * modifyworkmanager = workManagerRepo.save(workmanager);
+		 * System.out.println(modifyworkmanager); }
+		 */
 		return work;
 	}
 }

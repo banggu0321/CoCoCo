@@ -191,9 +191,15 @@
 							$(".detail_workStartDate").val(workDatail.workStart);
 							$(".detail_workEndDate").val(workDatail.workEnd);
 							$(".detail_workStatus").val(workDatail.workStatus);
-							//console.log(responseData.manager);
-							//$(".detail_workMannager").val(workDatail.manager);
-							$(".detail_workMannager").val("방근영2");
+							console.log(responseData.manager);
+							
+							$(".detail_workMannager").val(workDatail.manager);
+							//$(".detail_workMannager").val("방근영2");
+							var arr = workDatail.manager;
+							console.log(typeof arr);
+							console.log(arr[0]);
+							console.log(arr[1]);
+							$(".update_workMannager").val(workDatail.manager);//일반for로
 						}
 					});
 					
@@ -221,16 +227,18 @@
 		$("#WorkUpdateModalBtn").on("click", function() {
 			$("#calendarUpdateModal").modal("show"); // modal 나타내기
 			//console.log(workDatail.manager);
-			$.each(workDatail.manager,function(data){
-				console.log(workDatail.manager);
+			//option에 해당 팀의 담당자 추가
+			$.each(teamUserlist,function(index, data){
+				console.log("data :  " +data);
 				var option = document.createElement('option');
 				option.value = data;
 				option.className = "form-control";
 				option.innerText = data;
-				$("#calendar_manager").append(option);
+				$(".update_workMannager").append(option);
 				//$("#calendar_manager").appendChild("<option class=\"form-control\">"+data+"</option>");
 				
-			});
+			});yy
+			
 		});
 		$("#WorkUpdateBtn").on("click", function() {
 			var work_id = $(".detail_workId").val();
@@ -415,8 +423,8 @@ float : left;}
 						</select>
 						<label for="taskId" class="col-form-label">일정 담당자(Ctrl클릭 후 중복선택가능)</label> 
 						<div class="workManager">
-							<select class="form-control detail_workMannager" id="calendar_manager" name="calendar_manager" multiple="multiple" size="2">
-								<option class="form-control managers" selected="selected">방근영2</option>
+							<select class="form-control update_workMannager" id="update_calendar_manager" name="calendar_manager" multiple="multiple" size="2">
+								<!-- <option class="form-control managers" selected="selected">방근영2</option> -->
 								<!-- <option class="form-control managers">선택하세요</option>
 								<option class="form-control">방근영2</option>
 								<option class="form-control">방3</option> -->

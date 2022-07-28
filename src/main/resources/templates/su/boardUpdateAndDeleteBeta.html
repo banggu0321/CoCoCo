@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head>
+<meta charset="EUC-KR">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+<title>board UD beta page</title>
+<script type="text/javascript">
+	window.onload = function() {
+		document.getElementById("boardDeleteBtn").addEventListener('click',
+				hello);
+	}
+
+	function hello() {
+		var boardID = document.getElementById("bid").value;
+		window.location.href = "/boardDeleteBeta?bid=" + boardID;
+	}
+</script>
+
+<script th:inline="javascript" th:src="@{'js/RESTreply.js'}"></script>
+<script th:inline="javascript">
+$(document).ready(function() {
+	var boardID = "[[${boardDetail.boardId}]]"; 	
+	replyREST.getAllReply(boardID,printList);
+});
+function printList(list) {
+	var str = "";
+	var replyObj;
+
+	for (var i = 0; i < list.length; i++) {
+		replyObj = list[i];
+
+		str += "<tr>" +"<td>"+ replyObj.replyId + "</td>" + "<td>" + replyObj.replyText + "</td>" 
+			+ "<td>" + replyObj.board.boardId + "</td>"+"<td>"+replyObj.user.userId+"</td>"
+			+ "<td>" + formatDate(replyObj.replyRegDate) + "</td>"
+			+"<td>"+formatDate(replyObj.replyUpdate) + "</td>" + "</tr>";
+	}
+	$("#replyTable").html(str);
+}
+function formatDate(timeValue) {
+	var date = new Date(timeValue);
+	return date.getFullYear() + "-" + (date.getMonth() + 1) + "-"
+			+ date.getDate();
+}
+</script>
+</head>
+<body>
+
+	<form method="post" action="/postBoardUpdateBeta">
+		<input id="bid" name="boardID" type="hidden" th:value="${boardDetail.boardId}"> 
+		title:<input name="boardTitle" type="text" th:value="${boardDetail.boardTitle}"><br>
+		content: <textarea name="boardText" th:text="${boardDetail.boardText}"></textarea>
+		<br> <input type="button" value="file">
+		<hr>
+		<button type="button" id="boardDeleteBtn">delete</button>
+		<br> <input type="submit" value="update"> <input type="reset" value="reset">
+	</form>
+	<hr>
+
+	<br>
+	<br>
+	<br>
+	<br>
+	<form method="post" action="/postReplyInsertBeta">
+		<input name="replyBid" type="hidden" th:value="${boardDetail.boardId}">
+		text: <textarea name="replyText"></textarea>
+		<input type="submit" value="reply insert">
+	</form>
+
+	<hr>
+	<table>
+		<thead>
+		<tr>
+			<th>replyID</th>
+			<th>text</th>
+			<th>boardID</th>
+			<th>userID</th>
+			<th>regDate</th>
+			<th>update</th>
+		</tr>
+		</thead>
+		<tbody id="replyTable"></tbody>	</table>
+</body>
+</html>

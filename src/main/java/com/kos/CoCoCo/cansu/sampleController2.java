@@ -24,7 +24,7 @@ import com.kos.CoCoCo.vo.TeamVO;
 import com.kos.CoCoCo.vo.UserVO;
 
 @Controller
-public class sampleController {
+public class sampleController2 {
 	
 	@Autowired
 	ReplyRepositoryTestSu replyRP;
@@ -40,34 +40,15 @@ public class sampleController {
 	
 	@Autowired
 	BoardCategoryRepositoryTestSu boardcateRP;
-		
-	@GetMapping("/replyDeleteSample")
-	public String replyDelete(HttpServletRequest request) {
-		
-		String replyID = request.getParameter("rid");
-//		System.out.println(replyID);
-		
-		replyRP.deleteById(Long.valueOf(replyID));
-		
-		return "redirect:/boardSample";
-	}
 	
-	@GetMapping("/boardDelete")
-	public String boardDelete(HttpServletRequest request) {
-		
-		String boardID = request.getParameter("bid");
-		
-		List<ReplyVO> rlist = replyRP.selectByboardID(Integer.valueOf(boardID));
-		if(rlist.isEmpty())
-		{
-			boardRP.deleteById(Long.valueOf(boardID));			
-		}
-		
-		return "redirect:/boardSample";
+	@GetMapping("/boardSampleBeta")
+	public String boardlist() {			
+		return "su/boardMainBeta";
 	}
-	
-	@PostMapping("/postReplyInsert")
-	public String replyInsert(HttpServletRequest request) {
+		
+	//void - error, insert는 controller.method가 필요
+	@PostMapping("/postReplyInsertBeta")
+	public String replyInsertBeta(HttpServletRequest request) {
 		
 		String text = request.getParameter("replyText");		
 		String boardID = request.getParameter("replyBid");
@@ -80,12 +61,11 @@ public class sampleController {
 		ReplyVO rvo = ReplyVO.builder().board(boardTemp).user(uservo).replyText(text).build();
 		replyRP.save(rvo);
 		
-//		return "redirect:/boardSample";
 		return "redirect:/boardUDsampleBeta?id="+boardID;
 	}
 	
-	@GetMapping("/boardUDsample")
-	public String boardUD(HttpServletRequest request, Model model) {
+	@GetMapping("/boardUDsampleBeta")
+	public String boardUDBeta(HttpServletRequest request, Model model) {
 		
 		//main list selected board get -> error
 		String boardID = request.getParameter("id");
@@ -98,10 +78,29 @@ public class sampleController {
 		model.addAttribute("replyList", rlist);		
 //		System.out.println(bvo.getBoardText());
 		
-		return "su/boardUpdateAndDelete";
+		return "su/boardUpdateAndDeleteBeta";
 	}
 	
-	@PostMapping("/postBoardUpdate")
+	@GetMapping("/boardInsertSample2")
+	public String boardInsertBeta() {
+		return "su/boardInsertBeta";
+	}
+	
+	@GetMapping("/boardDeleteBeta")
+	public String boardDelete(HttpServletRequest request) {
+		
+		String boardID = request.getParameter("bid");
+		
+		List<ReplyVO> rlist = replyRP.selectByboardID(Integer.valueOf(boardID));
+		if(rlist.isEmpty())
+		{
+			boardRP.deleteById(Long.valueOf(boardID));			
+		}
+		
+		return "redirect:/boardSampleBeta";
+	}
+	
+	@PostMapping("/postBoardUpdateBeta")
 	public String boardUpdate(HttpServletRequest request){
 		
 		String title = request.getParameter("boardTitle");
@@ -117,23 +116,11 @@ public class sampleController {
 		bvo.setBoardText(text);
 		boardRP.save(bvo);
 		
-		return "redirect:/boardSample";
+		return "redirect:/boardSampleBeta";
 	}
 
-	@GetMapping("/boardSample")
-	public String boardlist(Model model) {		
-		List<BoardVO> bvo = (List<BoardVO>)boardRP.findAll();		
-		model.addAttribute("board", bvo);	
-		return "su/boardMain";
-	}
-
-	@GetMapping("/boardInsertSample")
-	public String boardInsert() {
-		return "su/boardInsert";
-	}
-	
-	@PostMapping("/postBoardInsertSample")
-	public String boardInsertPost(HttpServletRequest request) {
+	@PostMapping("/postBoardInsertSample2")
+	public String boardInsertPostBeta(HttpServletRequest request) {
 
 		System.out.println("title: "+request.getParameter("title"));
 		System.out.println("content: "+request.getParameter("content"));
@@ -143,7 +130,7 @@ public class sampleController {
 
 		makeBoardSample(title, content);
 
-		return "redirect:/boardSample";
+		return "redirect:/boardSampleBeta";
 	}
 
 	private void makeBoardSample(String title, String content) {

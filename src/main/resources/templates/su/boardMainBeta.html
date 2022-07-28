@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head>
+<style>
+table, th, td {
+  border:1px solid black;
+}
+</style>
+<meta charset="utf-8">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<title>board main page</title>
+</head>
+<body>
+	<h1>board main page</h1>
+	<hr>
+
+	<div id="boardMain1">
+		<form method="get" action="/boardInsertSample2">
+			<input type="submit" value="insert board">
+		</form>
+	</div>
+
+	<div id="boardMain2">
+		<table>
+			<thead><tr>
+				<th>title</th>
+				<th>userID</th>
+				<th>categoryID</th>
+				<th>regDate</th>
+				<th>updateDate</th>
+			</tr></thead>
+			<tbody id="replyTable"></tbody>
+		</table>
+	</div>
+	
+	<script th:inline="javascript" th:src="@{'js/RESTreply.js'}"></script>
+	<script th:inline="javascript">
+	$(document).ready(function() {
+		replyREST.getAllBoard("boardList",printList);
+		
+	});
+	function printList(list) {
+		var str = "";
+		var replyObj;
+
+		for (var i = 0; i < list.length; i++) {
+			replyObj = list[i];
+
+			str += "<tr>" + "<td>"+"<a href='/boardUDsampleBeta?id="+replyObj.boardId+"'>" + replyObj.boardTitle+"</a>" + "</td>" + "<td>" + replyObj.user.userId + "</td>" 
+				+ "<td>" + replyObj.category.boardCategoryId.categoryId + "</td>" + "<td>" + formatDate(replyObj.boardRegDate) + "</td>"
+				+"<td>"+formatDate(replyObj.boardUpdate) + "</td>" + "</tr>";
+		}
+		$("#replyTable").html(str);
+	}
+	function formatDate(timeValue) {
+		var date = new Date(timeValue);
+		return date.getFullYear() + "-" + (date.getMonth() + 1) + "-"
+				+ date.getDate();
+	}
+	</script>
+</body>
+</html>

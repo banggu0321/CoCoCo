@@ -4,11 +4,7 @@
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
 <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<script> 
-  //alert("부모가 만든 자바스크립트");
-</script>
+<script	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
 <style>
 /******************* header *******************/
@@ -20,13 +16,13 @@
 	background-color:#fff;
 	display:flex;
 	align-items: center;
-    justify-content: space-between;
    	box-shadow: 0 0px 0px -1px, 0 1px 4px -2px;
    	z-index: 999;
 }
 
 .nav {
 	display:flex;
+	padding-left: 365px;
 	}
 .nav span {
 	font-size: 20px;
@@ -64,28 +60,57 @@ height: 91vh;
 	width: 80px;
 	height: 20%;
 	background-color: red;
-	
 }
 
-.list_cont2{
-	display:flex;
-	width: 80px;
-	height: 20%;
+.list_cont2 {
+	display: flex;
+    width: 80px;
+    height: 20%;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+
+}
+.mode_change {
+	width: 24px;
+	height: 24px;
 	background-color: red;
+}
+.home_go {
+	width: 24px;
+	height: 24px;
+	background-color: red;
+	
+}
+.log_out {
+	width: 24px;
+	height: 24px;
+	background-color: red;
+	
 }
 .my_manu {
 	width: 287px;
 	height: 977px;
 	background-color: #fff;
 }
+.user_img {
+	width: 100%;
+	height: 30%
+}
+.user_list {
+	width: 100%;
+	height: 70%;
+
+}
 
 /******************* side *******************/
 /******************* cont *******************/
-#cont{
+#cont {
 	display: flex;
 	}
 	
-.body{
+.body {
 	position:fixed;
 	top: 64px;
     left: 367px;
@@ -96,29 +121,19 @@ height: 91vh;
 	background-color: #e7ebf2;
 }
 
+.chat {
+	position:fixed;
+	top: 64px;
+	right: 1px;
+	width: 318px;
+	height: 913px;
+
+}
+
 /******************* cont *******************/
 </style>
-
-<!-- 하위 HTML에서 CSS 재정의할 예정 -->
-<th:block layout:fragment="style1">
-
-</th:block>
 </head>
 <body>
-	<!-- fragment 삽입하기 -->
 	<header th:insert="~{/fragments/header::header1}"></header>
-
-
-	<!-- 하위 HTML에서 content 재정의할 예정 -->
-	<div class="panel panel-default" layout:fragment="content"></div>
-
-
-	<!-- <footer th:insert="~{/fragments/footer::footer1}"></footer> -->
-
-
-	<!-- 하위 HTML에서 javascript 재정의할 예정   th:block 은 없어지는 태그이다 -->
-	<th:block layout:fragment="script1">
-
-	</th:block>
 </body>
 </html>

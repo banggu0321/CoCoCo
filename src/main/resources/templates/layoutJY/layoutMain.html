@@ -46,7 +46,7 @@ img#status {
 	height: 20px;
 }
 
-.profileImg .img{
+.userProfile .img{
 	width: 40px;
 	height: 40px;
 }
@@ -55,7 +55,7 @@ img#status {
 	padding-left: 15px;
 }
 
-.profileImg {
+.userProfile {
 	position: relative;
 }
 
@@ -69,6 +69,34 @@ img#status {
 
 .statusBtn {
 	font-size: 14px;
+}
+
+#proList {
+	height: 60%;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+/* 스크롤바 설정*/
+#proList::-webkit-scrollbar{
+    width: 5px;
+}
+
+/* 스크롤바 막대 설정*/
+#proList::-webkit-scrollbar-thumb{
+    height: 10%;
+    background-color: rgba(0,0,0,0);
+    border-radius: 10px;/* 스크롤바 둥글게 설정    */
+}
+
+/* 스크롤바 hover*/
+#proList:hover::-webkit-scrollbar-thumb{
+    background-color: #858585;
+}
+
+/* 스크롤바 뒷 배경 설정*/
+#proList::-webkit-scrollbar-track{
+    background-color: rgba(0,0,0,0);
 }
 
 .green, .red {
@@ -114,15 +142,15 @@ img#status {
 			<hr>
 			
 			<h4 id="listTitle">팀원</h4>
-			<div th:each="tu:${userList}" th:if="${tu.teamUserId.user.userId != session.user.userId}">
-			<div class="profileImg">
-				<img th:if="${tu.teamUserId.user.image == null}" th:src="@{/images/userImg.svg}" class="img-circle img">
-				<img th:if="${tu.teamUserId.user.image != null}" th:src="${tu.teamUserId.user.image}" class="img-circle img">
-				<img class="admin" th:if="${tu.userRole == 'ADMIN'}" th:src="@{/images/crown.svg}">
-				<p class="status green" th:if="${tu.teamUserId.user.status == '출근'}">●</p>
-				<p class="status red" th:if="${tu.teamUserId.user.status != '출근'}">●</p>
-				[[${tu.teamUserId.user.name}]] ( [[${tu.teamUserId.user.userId}]] ) 
-			</div>
+			<div id="proList">
+				<div class="userProfile" th:each="tu:${userList}" th:if="${tu.teamUserId.user.userId != session.user.userId}">
+					<img th:if="${tu.teamUserId.user.image == null}" th:src="@{/images/userImg.svg}" class="img-circle img">
+					<img th:if="${tu.teamUserId.user.image != null}" th:src="${tu.teamUserId.user.image}" class="img-circle img">
+					<img class="admin" th:if="${tu.userRole == 'ADMIN'}" th:src="@{/images/crown.svg}">
+					<p class="status green" th:if="${tu.teamUserId.user.status == '출근'}">●</p>
+					<p class="status red" th:if="${tu.teamUserId.user.status != '출근'}">●</p>
+					[[${tu.teamUserId.user.name}]]
+				</div>
 			</div>
 		</div>
 			

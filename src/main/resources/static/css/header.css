@@ -19,29 +19,33 @@
 	display:flex;
 	align-items: center;
     justify-content: space-between;
-    border-bottom: 2px solid rgba(255, 127, 39, 0.5); 
     */
 }
 
 .nav {
 	display:flex;
-	}
+	padding-left: 365px;
+}
+
 .nav span {
 	font-size: 20px;
 	margin-right: 100px;
-	}
+}
+
 .nav a {
 	color: #000;
 	cursor: pointer;
 	text-decoration: none;
 }
+
 .team_logo {
 	width: 34px;
 	height: 34px;
 	background-color: tomato;
 }
 /******************* header *******************/
-/* button */
+
+/******************* button *******************/
 .btn-cococo {
 	color: #fff;
     background-color: #FF7F27;

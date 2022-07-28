@@ -7,7 +7,7 @@
 
 .side_list {
 	width: 80px;
-	height: 100vh;
+	height: 95vh;
 	background-color: #e7ebf2;
 	padding: 5px;
 	display: flex;
@@ -16,7 +16,7 @@
 
 .my_manu {
 	width: 300px;
-	height: 100%;
+	height: 95vh;
 	padding: 10px 10px;
 	background-color: #fff;
 } 
@@ -82,7 +82,7 @@
 	
 .body{
 	width: 1200px;
-	height: 100%;
+	height: 95vh;
 	padding: 10px 51px;
 	background-color: #e7ebf2;
 }

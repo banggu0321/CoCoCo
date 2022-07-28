@@ -3,6 +3,7 @@ package com.kos.CoCoCo.ja0.controller;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.kos.CoCoCo.fileUploader.S3Uploader;
 import com.kos.CoCoCo.ja0.repository.TeamRepository;
@@ -44,7 +46,13 @@ public class MainController {
 	S3Uploader uploader;
 	
 	@GetMapping("/teamList")
-	public void teamList(HttpSession session, Model model, Principal principal) {
+	public void teamList(HttpSession session, Model model, Principal principal, HttpServletRequest request) {
+		Map<String, Object> map = (Map<String, Object>) RequestContextUtils.getInputFlashMap(request);
+		if(map != null) {
+			String msg = (String) map.get("msg");
+			model.addAttribute("msg", msg);
+		}
+		
 		UserVO user = uRepo.findById(principal.getName()).get();
 		session.setAttribute("user", user);
 		session.setAttribute("teamList", tuRepo.findByUserId(user.getUserId()));

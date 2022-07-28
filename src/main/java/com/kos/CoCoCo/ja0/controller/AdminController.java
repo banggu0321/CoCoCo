@@ -2,7 +2,9 @@ package com.kos.CoCoCo.ja0.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.kos.CoCoCo.fileUploader.S3Uploader;
 import com.kos.CoCoCo.ja0.repository.TeamRepository;
@@ -63,7 +66,13 @@ public class AdminController {
 	}
 	
 	@GetMapping("/team/{teamId}")
-	public String team(@PathVariable Long teamId, HttpSession session, Model model) {
+	public String team(@PathVariable Long teamId, HttpSession session, Model model, HttpServletRequest request) {
+		Map<String, Object> map = (Map<String, Object>) RequestContextUtils.getInputFlashMap(request);
+		if(map != null) {
+			String msg = (String) map.get("msg");
+			model.addAttribute("msg", msg);
+		}
+		
 		UserVO user = (UserVO)session.getAttribute("user");
 		model.addAttribute("team", tRepo.findById(teamId).get());
 		model.addAttribute("teamList", tuRepo.findByUserId(user.getUserId()));
@@ -87,7 +96,7 @@ public class AdminController {
 	}
 	
 	@PostMapping("/modify")
-	public String modifyTeam(TeamVO team, MultipartFile newPhoto, RedirectAttributes attr) {
+	public String modifyTeam(TeamVO team, MultipartFile newPhoto) {
 		tRepo.findById(team.getTeamId()).ifPresent(i->{		
 			if (!newPhoto.isEmpty()) {
 				try {
@@ -101,9 +110,9 @@ public class AdminController {
 			i.setTeamInfo(team.getTeamInfo());
 			i.setTeamName(team.getTeamName());
 			
-			TeamVO result = tRepo.save(i);
-			//attr.addFlashAttribute("msg", result !=null?"수정!":"실페!");
+			tRepo.save(i);
 		});
+		
 		return "redirect:/admin/team/"+team.getTeamId();
 	}
 	
@@ -115,11 +124,11 @@ public class AdminController {
 		if(teamUser.size() <= 1) {
 			tuRepo.deleteByTeamId(teamId);
 			tRepo.deleteById(teamId);
-			//attr.addFlashAttribute("msg", "워크스페이스가 삭제되었습니다.");			
+			attr.addFlashAttribute("msg", "워크스페이스가 삭제되었습니다.");			
 			return "redirect:/main/teamList";
 		}
 		
-		//attr.addFlashAttribute("msg", "워크스페이스를 삭제할 수 없습니다.");	
+		attr.addFlashAttribute("msg", "워크스페이스를 삭제할 수 없습니다.");	
 		return "redirect:/admin/team/"+teamId;
 	}
 	

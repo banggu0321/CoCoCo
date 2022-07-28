@@ -20,65 +20,12 @@
 	padding: 10px 10px;
 	background-color: #fff;
 } 
-
-.list_cont1{
-	display:flex;
-	width: 80px;
-	height: 20%;
-	background-color: red;
-}
-
-.list_cont2{
-	display:flex;
-	width: 80px;
-	height: 20%;
-	background-color: red;
-}
-
-/* #side{
-	position:fixed;
-	display: flex;
-	top:64px;
-	height: 91vh;
-}
-
-.side_list {
-	display: flex;
-    justify-content: center;
-	width: 80px;
-	height: 100%;
-	background-color: #e7ebf2;
-	padding: 5px 10px;
-	
-}
-
-.list_cont1{
-	display:flex;
-	width: 80px;
-	height: 20%;
-	background-color: red;
-}
-
-.list_cont2{
-	display:flex;
-	width: 80px;
-	height: 20%;
-	background-color: red;
-}
-
-.my_manu {
-	width: 287px;
-	height: 977px;
-	background-color: #fff;
-	padding: 10px 10px;
-}
-*/
 /******************* side *******************/
 
 /******************* cont *******************/
 #cont{
 	display: flex;
-	}
+}
 	
 .body{
 	width: 1200px;
@@ -86,31 +33,14 @@
 	padding: 10px 51px;
 	background-color: #e7ebf2;
 }
-/* 
-#cont{
-	display: flex;
-	}
-	
-.body{
-	position:fixed;
-	top: 64px;
-    left: 367px;
-	width: 850px;
-	height: 913px;
-	padding-left: 51px;
-	padding-right: 51px;
-	background-color: #e7ebf2;
-	padding: 10px 51px;
-}
-*/
 /******************* cont *******************/
 
 /******************* side_list *******************/
 #myMenu{
-	bottom: 10%;
-    position: absolute;
     display: flex;
+    position: absolute;
     flex-direction: column;
+	bottom: 10%;
 }
 
 #teamList a img {

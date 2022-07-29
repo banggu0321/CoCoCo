@@ -56,7 +56,7 @@
 	float: left;
 }
 
-#myModal, #myModal2 {
+#myModal, #myModal2, #myModal3 {
 	position: fixed;
 	top: 30%;
 	left: 20%;

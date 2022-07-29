@@ -8,140 +8,7 @@
 
 <link rel="stylesheet" th:href="@{/css/ja0/header.css}" />
 <link rel="stylesheet" th:href="@{/css/ja0/sideMenu.css}" />
-
-<style>
-.body {
-	width: 1000px;
-}
-
-.my_manu div img {
-	margin: 10px;
-}
-
-#myProfile {
-	text-align: center;
-	padding: 10px;
-}
-
-#myProfile img{
-	width: 100px;
-	height: 100px;
-}
-
-#myName, #userName {
-	font-weight: bold;
-	font-size: 17px;
-}
-
-#myModal {
-	position: fixed;
-	top: 30%;
-	left: 20%;
-	right: 20%;
-}
-
-img#status {
-	width: 20px;
-	height: 20px;
-}
-
-.userProfile .img{
-	width: 40px;
-	height: 40px;
-}
-
-#listTitle {
-	padding-left: 15px;
-}
-
-.userProfile {
-	position: relative;
-}
-
-.admin {
-	width: 15px;
-	height: 15px;
-	position: absolute;
-	left: 10%;
-    top: -15%;
-}
-
-.statusBtn {
-	font-size: 14px;
-}
-
-#proList {
-	height: 60%;
-	overflow-x: hidden;
-	overflow-y: auto;
-}
-
-/* 스크롤바 설정*/
-#proList::-webkit-scrollbar{
-    width: 5px;
-}
-
-/* 스크롤바 막대 설정*/
-#proList::-webkit-scrollbar-thumb{
-    height: 10%;
-    background-color: rgba(0,0,0,0);
-    border-radius: 10px;/* 스크롤바 둥글게 설정    */
-}
-
-/* 스크롤바 hover*/
-#proList:hover::-webkit-scrollbar-thumb{
-    background-color: #858585;
-}
-
-/* 스크롤바 뒷 배경 설정*/
-#proList::-webkit-scrollbar-track{
-    background-color: rgba(0,0,0,0);
-}
-
-.green, .red {
-	font-size: 20px;
-	position: absolute;
-	left: 15%;
-    top: 50%;
-}
-
-.green {
-	color: green;
-}
-
-.red {
-	color: red;
-}
-
-#userInfo {
-	position: absolute;
-	display: none;
-    top: 0px;
-    left: 0px;
-    width: 97%;
-	border: 2.5px solid #FF7F27;
-	background-color: white;
-	border-radius: 0.5em;
-	padding: 10px 0px;
-	z-index: 1;
-}
-
-#userInfo img{
-    width: 50px;
-    height: 50px;
-}
-
-#userInfo img, #uInfo {
-	float: left;
-}
-
-.userProfile:hover #userInfo {
-	display: flex;
-    align-items: center;
-	opacity: 1;
-}
-
-</style>
+<link rel="stylesheet" th:href="@{/css/ja0/layoutMaincss.css}" />
 
 <th:block layout:fragment="style"></th:block>
 </head>
@@ -219,25 +86,33 @@ img#status {
 	    
 		<!-- 하위 HTML에서 content 재정의할 예정 -->
 		<div layout:fragment="content"></div>
+		
+		<div id="main4">
+			채팅!
+		</div>
 	</div>
 </div>
 
 <script>
-$(".statusBtn").click(function () {
+$(function() {
+	$(".statusBtn").click(myStatus);
+	$("#statusUpdate").click(updateStatus);
+})
+
+function myStatus() {
 	var status = "[[${session.user.status}]]";
 	
 	if(status != "") {
 		$("select[name='status']").val(status);
 		return;
 	}
-	alert("null!!!");
-})
+}
 
-$("#statusUpdate").click(function () {
+function updateStatus() {
 	var status = $("select[name='status']").val();
 
-	location.href="/main/updateStatus/" + status + "/[[${team.teamId}]]";
-})
+	location.href="/main/updateStatus/t/" + status;
+}
 </script>
 
 <th:block layout:fragment="script"></th:block>

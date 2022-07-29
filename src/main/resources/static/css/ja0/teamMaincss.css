@@ -76,3 +76,10 @@
 	width: 100%;
 	margin-top: 1%;
 }
+
+#main4 {
+	clear: both;
+	padding: 10px;
+    font-size: 18px;
+    text-align: center;
+}

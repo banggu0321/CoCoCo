@@ -21,9 +21,9 @@
 		<button data-toggle="modal" data-target="#myModal2" class="btn btn-cococo inviteBtn">초대코드</button>
 		<h3 id="title">WORKSPACE LIST</h3>
 	</div>
-	<div class="content" th:each="team:${teamList}">
+	<div class="content" th:each="team:${session.teamList}">
 		<div class="box" th:team-data="${team.teamUserId.team.teamId}">
-			<img th:src="@{/images/deleteImg.svg}" class="delBtn" th:team-data="${team.teamUserId.team.teamId}">
+			<img th:if="${session.user.userId != team.teamUserId.team.user.userId}" th:src="@{/images/deleteImg.svg}" class="delBtn" th:team-data="${team.teamUserId.team.teamId}">
 			<img th:if="${team.teamUserId.team.teamImg!=null}" th:src="${team.teamUserId.team.teamImg}" th:alt="${team.teamUserId.team.teamImg}" class="img-rounded">
 			<img th:if="${team.teamUserId.team.teamImg==null}" th:src="@{/images/teamImg.png}" alt="null" class="img-rounded">
 			<p class="name">[[${team.teamUserId.team.teamName}]]</p>
@@ -86,6 +86,29 @@
     	</div>
     </div> <!-- Modal --> 
     
+    <!-- 상태변경 모달 -->
+	<div id="myModal3" class="modal fade" role="dialog">
+		<div class="model_dialog">
+	        <!-- Modal content -->
+	        <div class="modal-content">
+	        	<div class="modal-body">
+					<label>상태 설정을 먼저 해주세요!</label> 
+					<select class="form-control" name="status">
+						<option>출근</option>
+						<option>회의중</option>
+						<option>자리비움</option>
+						<option>외근</option>
+						<option>퇴근</option>
+						<option>휴가</option>
+					</select>
+		        </div>
+				<div class="modal-footer">
+			    	<button id = "statusUpdate" class="btn btn-cococo">수정</button>
+			    	<button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+	        	</div>
+	        </div>
+	   	</div>
+	</div> <!-- Modal --> 
 </div>
 
 <th:block layout:fragment="script">
@@ -96,12 +119,17 @@
 			alert(msg);
 		}
 		
+		if("[[${session.user.status}]]" == "") {
+			$("#myModal3").modal("show");
+		}
+		
 	 	$(".box").click(goTeamMain);
 	 	$("#enterBtn").click(enterTeam);
 	 	$(".delBtn").click(deleteTeam);
 	 	$("#addTeamBtn").click(addTeam);
 	 	$("#img").change(makeView);
 	 	$(".valDel").click(valueDelete);
+	 	$("#statusUpdate").click(updateStatus);
 	})
 	
 	var token = $("meta[name='_csrf']").attr("content");
@@ -159,6 +187,12 @@
 		$("input").val("");
 		$("textarea").val("");
 		$(".showImg").attr("src", "/images/teamImg.png");
+	}
+	
+	function updateStatus() {
+		var status = $("select[name='status']").val();
+
+		location.href="/main/updateStatus/m/" + status;
 	}
 	</script>
 </th:block>

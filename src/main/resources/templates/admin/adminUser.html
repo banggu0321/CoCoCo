@@ -66,7 +66,7 @@ table{
 				<td></td>
 			</tr>
 			
-			<tr th:each="user, rowStatus:${userList}">
+			<tr id="teamUser" th:each="user, rowStatus:${userList}">
 				<td th:text="${rowStatus.count}">순서</td>
 				<td th:text="${user.teamUserId.user.name}">이름</td>
 				<td th:text="${user.teamUserId.user.userId}">이메일</td>
@@ -124,28 +124,25 @@ table{
 		$(".delUser").click(deleteUser);
 		$(".updateUser").click(getUser);
 		$("#updateBtn").click(updateUser);
-		
 	})
 	
 	var token = $("meta[name='_csrf']").attr("content");
 	var header = $("meta[name='_csrf_header']").attr("content");
- 	
+
 	function deleteUser() {
 		var userId = $(this).attr("user-data");
-		var teamId = "[[${teamId}]]";
 	
 		if(confirm("해당 사용자를 삭제하시겠습니까?")) {
-			location.href="/admin/deleteUser/"+teamId+"/"+userId;
+			location.href="/admin/deleteUser/"+userId;
 		}
 	}
 		
 	function getUser() {
 		var userId = $(this).attr("user-data");
-		var teamId = "[[${teamId}]]";
 		
 		$.ajax({
 			type:"post",
-			url: "/admin/findUser/"+teamId+"/"+userId,
+			url: "/admin/findUser/"+userId,
 			beforeSend : function(xhr){
 				xhr.setRequestHeader(header, token);
 			},
@@ -163,9 +160,8 @@ table{
 	function updateUser() {
 		var newRole = $("select[name='userRole']").val();
 		var userId = $("input[name='userId']").val();
-		var teamId = "[[${teamId}]]";
 		
-		location.href="/admin/updateUser/"+teamId+"/"+userId+"/"+newRole;
+		location.href="/admin/updateUser/"+userId+"/"+newRole;
 	}
 	</script>
 </th:block>

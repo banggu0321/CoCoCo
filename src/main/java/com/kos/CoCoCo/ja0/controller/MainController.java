@@ -48,6 +48,7 @@ public class MainController {
 	@GetMapping("/teamList")
 	public void teamList(HttpSession session, Model model, Principal principal, HttpServletRequest request) {
 		Map<String, Object> map = (Map<String, Object>) RequestContextUtils.getInputFlashMap(request);
+		
 		if(map != null) {
 			String msg = (String) map.get("msg");
 			model.addAttribute("msg", msg);
@@ -56,8 +57,6 @@ public class MainController {
 		UserVO user = uRepo.findById(principal.getName()).get();
 		session.setAttribute("user", user);
 		session.setAttribute("teamList", tuRepo.findByUserId(user.getUserId()));
-		
-		model.addAttribute("teamList", tuRepo.findByUserId(user.getUserId()));
 	}
 	
 	@GetMapping("/{teamId}")
@@ -115,16 +114,22 @@ public class MainController {
 		return "redirect:/main/teamList";
 	}
 	
-	@GetMapping("/updateStatus/{status}/{teamId}")
-	public String updateStatus(@PathVariable String status, @PathVariable Long teamId, HttpSession session) {
+	@GetMapping("/updateStatus/{str}/{status}")
+	public String updateStatus(@PathVariable String str, @PathVariable String status, HttpSession session) {
 		UserVO user = (UserVO) session.getAttribute("user");
+		
 		uRepo.findById(user.getUserId()).ifPresent(i->{
 			i.setStatus(status);
 			uRepo.save(i);
 			session.setAttribute("user", i);
 		});
 		
-		return "redirect:/main/"+teamId;
+		if(str.equals("t")) {
+			Long teamId = (Long) session.getAttribute("teamId");
+			return "redirect:/main/"+teamId;
+		}
+		
+		return "redirect:/main/teamList";
 	}
 	
 	@ResponseBody
@@ -138,12 +143,13 @@ public class MainController {
 		UserVO user = (UserVO) session.getAttribute("user");
 		TeamUserMultikey id = new TeamUserMultikey(t, user);
 		tuRepo.findById(id).ifPresentOrElse(i->{
-			
 		}, ()->{
 			TeamUserVO teamUser = TeamUserVO.builder().teamUserId(new TeamUserMultikey(t, user))
 					.userRole("USER").build();
 			tuRepo.save(teamUser);
 		});
+		
+		session.setAttribute("teamList", tuRepo.findByUserId(user.getUserId()));
 		
 		return t.getTeamId();
 	}

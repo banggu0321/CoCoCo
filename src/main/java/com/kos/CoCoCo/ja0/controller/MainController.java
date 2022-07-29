@@ -61,9 +61,13 @@ public class MainController {
 	
 	@GetMapping("/{teamId}")
 	public String teamMain(@PathVariable Long teamId, HttpSession session, Model model) {
-		session.setAttribute("teamId", teamId);
+		UserVO user = (UserVO)session.getAttribute("user");
+		TeamVO team = tRepo.findById(teamId).get();
+		TeamUserMultikey tuId = new TeamUserMultikey(team, user);
 		
-		model.addAttribute("team", tRepo.findById(teamId).get());
+		session.setAttribute("teamId", teamId);
+		session.setAttribute("teamUser", tuRepo.findById(tuId).get());
+		model.addAttribute("team", team);
 		model.addAttribute("userList", tuRepo.findByTeamId(teamId));
 		
 		return "main/teamMain";

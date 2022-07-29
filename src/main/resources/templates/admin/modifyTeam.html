@@ -37,9 +37,19 @@
 
 <script>
 $(function() {
+	$("#modifyForm").submit(isEmpty);
 	$(".reloadBtn").click(reload);
 	$("#img").change(makeView);
 })
+
+function isEmpty() {
+	var teamName = $("input[name='teamName']");
+	if(teamName.val() == "") {
+		alert("워크스페이스 이름은 필수입니다!");
+		teamName.focus();
+		return false; 
+	}
+}
 
 function reload() {
 	location.reload();

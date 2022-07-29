@@ -14,7 +14,10 @@
 				<div class="nav_manu2"><a href="#"><span>공지</span></a></div>
 				<div class="nav_manu3"><a href="#"><span>게시판</span></a></div>
 				<div class="nav_manu4"><a href="#"><span>업무</span></a></div>
-				<div class="nav_manu5"><a th:href="@{/admin/team}"><span>관리자</span></a></div>
+				<div class="nav_manu5">
+					<a th:if="${session.teamUser.userRole == 'ADMIN'}" th:href="@{/admin/team}"><span>관리자</span></a>
+					<span th:if="${session.teamUser.userRole != 'ADMIN'}"></span>
+				</div>
 			</div><!-- .nav -->
 			
 			<div></div>

@@ -24,13 +24,16 @@
 	<div class="content" th:each="team:${session.teamList}">
 		<div class="box" th:team-data="${team.teamUserId.team.teamId}">
 			<img th:if="${session.user.userId != team.teamUserId.team.user.userId}" th:src="@{/images/deleteImg.svg}" class="delBtn" th:team-data="${team.teamUserId.team.teamId}">
+			
 			<img th:if="${team.teamUserId.team.teamImg!=null}" th:src="${team.teamUserId.team.teamImg}" th:alt="${team.teamUserId.team.teamImg}" class="img-rounded">
 			<img th:if="${team.teamUserId.team.teamImg==null}" th:src="@{/images/teamImg.png}" alt="null" class="img-rounded">
+			
 			<p class="name">[[${team.teamUserId.team.teamName}]]</p>
 			<p>[[${#dates.format(team.teamUserId.team.createDate,'yyyy-MM-dd')}]]</p>
 			<p class="info">[[${team.teamUserId.team.teamInfo}]]</p>	
 		</div>
 	</div>
+	
 	<div class="addTeam" data-toggle="modal" data-target="#myModal">+</div>
 	
 	<!-- 워크스페이스 등록 모달 -->
@@ -162,12 +165,20 @@
 	function deleteTeam(e) {
 		e.stopPropagation();
 		var teamId = $(this).attr("team-data");
+		
 		if(confirm("해당 워크스페이스를 삭제하시겠습니까?")) {
 			location.href = "/main/deleteTeam/"+teamId;
 		}
 	}
 		
 	function addTeam() {
+		var teamName = $("input[name='teamName']");
+		if(teamName.val() == "") {
+			alert("워크스페이스 이름은 필수입니다!");
+			teamName.focus();
+			return; 
+		}
+		
 		var addForm = $("#addTeamForm");
 		addForm.attr("action","/main/addTeam");
 		addForm.submit();

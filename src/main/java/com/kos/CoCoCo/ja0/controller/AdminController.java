@@ -155,6 +155,8 @@ public class AdminController {
 		tuRepo.findById(id).ifPresent(i->{
 			i.setUserRole(newRole);
 			tuRepo.save(i);
+			
+			session.setAttribute("teamUser", i);
 		});
 		return "redirect:/admin/user";
 	}

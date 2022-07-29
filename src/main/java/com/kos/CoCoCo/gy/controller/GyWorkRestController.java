@@ -36,7 +36,7 @@ import com.kos.CoCoCo.vo.WorkVO;
 @RestController
 @RequestMapping("/work/*")
 public class GyWorkRestController {
-	private static final Logger log = LoggerFactory.getLogger(GyWorkController.class);
+	private static final Logger log = LoggerFactory.getLogger(GyWorkRestController.class);
 	
 	@Autowired
 	GyTeamRepository teamRepo;
@@ -64,7 +64,7 @@ public class GyWorkRestController {
 	}
 	@PostMapping(value="/worklist.go/{team_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public WorkVO addWork(@RequestBody WorkVO work , @PathVariable Long team_id) {
-		System.out.println("오나요?");
+		//System.out.println("오나요?");
 		TeamVO team = teamRepo.findById(team_id).get();
 		
 		log.info("Check: {}", work.toString());
@@ -158,5 +158,14 @@ public class GyWorkRestController {
 	public void deleteWork(@PathVariable Long work_id) {
 		workManagerRepo.workManagerDelete(work_id);
 		workRepo.deleteById(work_id);
+	}
+	
+	@GetMapping("/myworklist.go/{user_id}")
+	public List<WorkVO> myWork(Model model, @PathVariable String user_id) {
+		System.out.println("오긴함?");
+		//UserVO user = userRepo.findById(user_id).get();
+		List<WorkVO> myworklist = workRepo.findByUser(user_id);
+		System.out.println(myworklist);
+		return myworklist;
 	}
 }

@@ -33,9 +33,11 @@
 		var header = $("meta[name='_csrf_header']").attr("content");
 		
 		var team_id = 1000;
-		var user_id = 'bang';
+		var user_id = "bang";
+		var eventlist = [];
 		var workDatail ;
 		var teamUserlist;
+		var myWorklist;
 		
 		//해당 팀의 담당자 모두 가져오기
 		$.ajax({
@@ -48,10 +50,11 @@
 		
 		//나의 업무 모두 가져오기
 		$.ajax({
-			url:"/work/worklist.go/"+user_id,
+			url:"/work/myworklist.go/"+user_id,
 			type:"get",
 			success:function(responseData){
-				teamUserlist = responseData;
+				myWorklist = responseData;
+				console.log(myWorklist)
 			}
 		});
 		
@@ -66,11 +69,11 @@
 		//전체 리스트 응답시
 		request.done(function(responseData){
 			console.log("OK", responseData);
-			var events = [];
+			
 			$.each(responseData, function(index,data){
 				//console.log(data);
 				if(data.workStatus == 'finish'){
-					events.push({
+					eventlist.push({
 						id: data.workId,
 						title : data.workTitle,
 						start : data.workStart,
@@ -84,7 +87,7 @@
 						
 					});
 				}else{
-					events.push({
+					eventlist.push({
 						id: data.workId,
 						title : data.workTitle,
 						//content : data.workText,
@@ -95,8 +98,8 @@
 					});
 				}
 				
-			})
-			console.log(events);
+			});
+			console.log(eventlist);
 			
 			//캘린더 만들기
 			var calendarEl = document.getElementById('calendar');
@@ -104,13 +107,59 @@
 				//schedulerLicenseKey : 'CC-Attribution-NonCommercial-NoDerivatives',
 				timeZone : 'UTC+9',
 				initialView : 'dayGridMonth',
-				events : events,
+				events : eventlist,
 				headerToolbar: {
-				      left: 'today',//dayGridMonth,timeGridWeek,timeGridDay,list
+				      left: 'myWorkButton today' , //dayGridMonth,timeGridWeek,timeGridDay,list
 				      center: 'prev,title,next',
 				      right: 'addEventButton'
 				    },
 				customButtons : {
+					myWorkButton:{
+						text : "My Work", // 버튼 내용
+						color: 'yellow', 
+						click : function() { // 버튼 클릭 시 이벤트 추가
+							console.log("새로 가져올거 :"+myWorklist);
+							/* console.log("원래거 :"+eventlist);
+							console.log(">>>"+eventlist[1][title]);
+							for(i=0;i<eventlist.length+1;i++){
+								
+								
+								//Object.values(자료[i])
+								//console.log(">>>"+eventlist[i][title]);
+								//calendar.getEventSourceById(eventlist[i].id).remove();
+								//calendar.getEventSourceById("dataList").remove();
+							} */
+							eventlist=[];
+
+							$.each(myWorklist, function(index,data){
+								//console.log(data);
+								if(data.workStatus == 'finish'){
+									eventlist.push({
+										id: data.workId,
+										title : data.workTitle,
+										start : data.workStart,
+										end : data.workEnd,
+										color : 'red'
+										
+									});
+								}else{
+									eventlist.push({
+										id: data.workId,
+										title : data.workTitle,
+										start : data.workStart,
+										end : data.workEnd
+									});
+								}
+							});
+							console.log("바뀐 event : "+eventlist);
+							calendar.removeAllEvents();
+							calendar.addEventSource(eventlist);
+							//console.log(calendar.getEventSources());
+							//calendar.getEventSourEventSources().remove();
+							//calendar.refetchEvents(eventlist);
+							calendar.render(); //다시 렌더링
+						}
+					},
 					addEventButton : { // 추가한 버튼 설정
 						text : "일정 추가", // 버튼 내용
 						color: 'yellow', 

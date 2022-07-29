@@ -77,8 +77,9 @@
 	margin-top: 1%;
 }
 
-#main4 {
-	clear: both;
+#chatting {
+	width: 300px;
+    height: 94vh;
 	padding: 10px;
     font-size: 18px;
     text-align: center;

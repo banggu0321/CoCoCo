@@ -1,10 +1,5 @@
 @charset "UTF-8";
 /******************* side *******************/
-#side{
-	display: flex;
-	margin-top: 64px;
-}
-
 .side_list {
 	width: 80px;
 	height: 95vh;
@@ -20,16 +15,34 @@
 	padding: 10px 10px;
 	background-color: #fff;
 } 
+
+.side_list {
+	width: 80px;
+	height: 94vh;
+	background-color: #e7ebf2;
+	padding: 5px;
+	display: flex;
+    justify-content: center;
+}
+
+.my_menu {
+	width: 300px;
+	height: 94vh;
+	padding: 10px 10px;
+	background-color: #fff;
+} 
 /******************* side *******************/
 
 /******************* cont *******************/
 #cont{
+	padding-top: 64px;
 	display: flex;
+    flex-direction: row;
 }
 	
 .body{
 	width: 1200px;
-    height: 95vh;
+    height: 94vh;
     padding: 10px 51px;
     background-color: #e7ebf2;
 }

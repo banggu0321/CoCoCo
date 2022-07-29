@@ -36,6 +36,7 @@
 		var user_id = "bang";
 		var totaleventlist = [];
 		var myeventlist = [];
+		var manager = [];
 		var workDatail ;
 		var teamUserlist;
 		var myWorklist;
@@ -70,11 +71,29 @@
 		//전체 리스트 응답시
 		request.done(function(responseData){
 			console.log("OK", responseData);
-			$(".fc-totalButton-button").hide();
 			
 			$.each(responseData, function(index,data){
-				//console.log(data);
-				if(data.workStatus == 'finish'){
+				manager = data.manager;
+				console.log("원래 data : "+ manager);
+				for(i=0;i<manager.length;i++){
+					console.log("왜 user야??"+manager[i]);
+					//console.log(user_id);
+					if(manager[i] == "bang"){
+						data.manager = "user";
+					}else{
+						data.manager = "none";
+					}
+				}
+				console.log("조건 결과 data : "+ data.manager);
+				if(data.manager=="none"){
+					totaleventlist.push({
+						id: data.workId,
+						title : data.workTitle,
+						start : data.workStart,
+						end : data.workEnd,
+						color : 'gray'
+					});
+				}else if(data.workStatus == 'finish'){
 					totaleventlist.push({
 						id: data.workId,
 						title : data.workTitle,
@@ -86,17 +105,13 @@
 						//	manager : data.manager
 						//},
 						color : 'red'
-						
 					});
 				}else{
 					totaleventlist.push({
 						id: data.workId,
 						title : data.workTitle,
-						//content : data.workText,
 						start : data.workStart,
 						end : data.workEnd,
-						//status : data.workStatus,
-						//manager : data.manager,
 					});
 				}
 				
@@ -120,7 +135,7 @@
 						text : "My Work", // 버튼 내용
 						color: 'yellow', 
 						click : function() { // 버튼 클릭 시 이벤트 추가
-							console.log("새로 가져올거 :"+myWorklist);
+							//console.log("새로 가져올거 :"+myWorklist);
 							myeventlist=[];
 							$.each(myWorklist, function(index,data){
 								//console.log(data);
@@ -141,7 +156,7 @@
 									});
 								}
 							});
-							console.log("바뀐 event : "+myeventlist);
+							//console.log("바뀐 event : "+myeventlist);
 							calendar.removeAllEvents();
 							calendar.addEventSource(myeventlist);
 							calendar.render(); //다시 렌더링
@@ -153,8 +168,8 @@
 						text : "All Work", // 버튼 내용
 						color: 'yellow', 
 						click : function() {
-							console.log("원래 event : "+totaleventlist);
-							console.log("바뀐 event : "+myeventlist);
+							//console.log("원래 event : "+totaleventlist);
+							//console.log("바뀐 event : "+myeventlist);
 							calendar.removeAllEvents();
 							calendar.addEventSource(totaleventlist);
 							calendar.render(); //다시 렌더링

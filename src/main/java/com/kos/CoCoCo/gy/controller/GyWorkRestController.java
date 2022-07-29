@@ -59,6 +59,15 @@ public class GyWorkRestController {
 		TeamVO team = teamRepo.findById(team_id).get();
 		//System.out.println(team);
 		List<WorkVO> worklist = workRepo.findByTeam(team);
+		
+		for(WorkVO work:worklist) {
+			List<WorkManagerVO> workmanagerlist = workManagerRepo.findByWork(work.getWorkId());
+			String[] arr = new String[workmanagerlist.size()];
+			for(int i=0;i<workmanagerlist.size();i++) {
+				arr[i] = workmanagerlist.get(i).getWorkManagerId().getUser().getUserId();
+			}
+			work.setManager(arr);
+		}
 		System.out.println(worklist);
 		return worklist;
 	}
@@ -162,7 +171,7 @@ public class GyWorkRestController {
 	
 	@GetMapping("/myworklist.go/{user_id}")
 	public List<WorkVO> myWork(Model model, @PathVariable String user_id) {
-		System.out.println("오긴함?");
+		//System.out.println("오긴함?");
 		//UserVO user = userRepo.findById(user_id).get();
 		List<WorkVO> myworklist = workRepo.findByUser(user_id);
 		System.out.println(myworklist);

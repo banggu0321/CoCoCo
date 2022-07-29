@@ -21,8 +21,8 @@
 		<button data-toggle="modal" data-target="#myModal2" class="btn btn-cococo inviteBtn">초대코드</button>
 		<h3 id="title">WORKSPACE LIST</h3>
 	</div>
-	<div class="content" th:each="team:${session.teamList}">
-		<div class="box" th:team-data="${team.teamUserId.team.teamId}">
+	<div class="content">
+		<div class="box" th:team-data="${team.teamUserId.team.teamId}" th:each="team:${session.teamList}">
 			<img th:if="${session.user.userId != team.teamUserId.team.user.userId}" th:src="@{/images/deleteImg.svg}" class="delBtn" th:team-data="${team.teamUserId.team.teamId}">
 			
 			<img th:if="${team.teamUserId.team.teamImg!=null}" th:src="${team.teamUserId.team.teamImg}" th:alt="${team.teamUserId.team.teamImg}" class="img-rounded">
@@ -32,9 +32,10 @@
 			<p>[[${#dates.format(team.teamUserId.team.createDate,'yyyy-MM-dd')}]]</p>
 			<p class="info">[[${team.teamUserId.team.teamInfo}]]</p>	
 		</div>
+		
+		<div class="addTeam" data-toggle="modal" data-target="#myModal">+</div>
 	</div>
 	
-	<div class="addTeam" data-toggle="modal" data-target="#myModal">+</div>
 	
 	<!-- 워크스페이스 등록 모달 -->
     <div id="myModal" class="modal fade" role="dialog">

@@ -14,14 +14,6 @@
 </script>
 
 <style>
-#cont{
-	display: flex;
-}
-
-#contentBody{
-	margin-top:64px;
-	width: 100%;
-}
 </style>
 <!-- 하위 HTML에서 CSS 재정의할 예정 -->
 <th:block layout:fragment="style"></th:block>
@@ -33,10 +25,8 @@
 <header th:replace="~{/layoutJY/header::header2}"></header>
 
 <div id="cont">
-	<div id="contentBody">
-		<!-- 하위 HTML에서 content 재정의할 예정 -->
-		<div layout:fragment="content"></div>
-	</div>
+	<!-- 하위 HTML에서 content 재정의할 예정 -->
+	<div layout:fragment="content"></div>
 </div>
 
 <!-- 하위 HTML에서 javascript 재정의할 예정   th:block 은 없어지는 태그이다 -->

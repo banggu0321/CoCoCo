@@ -36,7 +36,8 @@
 		var user_id = "bang";
 		var totaleventlist = [];
 		var myeventlist = [];
-		var manager = [];
+		var eventObj;
+		var workmanager = [];
 		var workDatail ;
 		var teamUserlist;
 		var myWorklist;
@@ -56,7 +57,7 @@
 			type:"get",
 			success:function(responseData){
 				myWorklist = responseData;
-				console.log(myWorklist)
+				console.log("my events",myWorklist)
 			}
 		});
 		
@@ -64,27 +65,26 @@
 		var request = $.ajax({
 			type:"GET",
 			url:"/work/worklist.go/"+team_id,
-			//data : {"team_id" : '1000'},
 			dataType:"json"
 		});
 		
 		//전체 리스트 응답시
 		request.done(function(responseData){
-			console.log("OK", responseData);
+			console.log("total events", responseData);
 			
+			//data.manager = "user" / "none"
 			$.each(responseData, function(index,data){
-				manager = data.manager;
-				console.log("원래 data : "+ manager);
-				for(i=0;i<manager.length;i++){
-					console.log("왜 user야??"+manager[i]);
-					//console.log(user_id);
-					if(manager[i] == "bang"){
+				workmanager = data.manager;
+				//console.log("원래 data : "+ workmanager);
+				for(i=0;i<workmanager.length;i++){
+					//console.log("왜 user야??"+manager[i]);
+					if(workmanager[i] == user_id){
 						data.manager = "user";
 					}else{
 						data.manager = "none";
 					}
 				}
-				console.log("조건 결과 data : "+ data.manager);
+				//console.log("조건 결과 data : "+ data.manager);
 				if(data.manager=="none"){
 					totaleventlist.push({
 						id: data.workId,
@@ -112,11 +112,12 @@
 						title : data.workTitle,
 						start : data.workStart,
 						end : data.workEnd,
+						groupId : data.workStatus, //plan
 					});
 				}
 				
 			});
-			console.log(totaleventlist);
+			//console.log(totaleventlist);
 			
 			//캘린더 만들기
 			var calendarEl = document.getElementById('calendar');
@@ -231,7 +232,7 @@
 										"workStatus" : status,
 										"manager" :manager
 									}//전송할 객체 생성
-									console.log(obj); //서버로 해당 객체를 전달해서 DB 연동 가능
+									console.log("insert object", obj); //서버로 해당 객체를 전달해서 DB 연동 가능
 									
 									//let sendData = "username="+$('input[name=username]').val();   //폼의 이름 값을 변수 안에 담아줌
 									
@@ -268,7 +269,7 @@
 				
 				//이벤트 클릭시
 				eventClick : function(info){
-					var eventObj = info.event; //해당 work_id가져오기
+					eventObj = info.event; //해당 work_id가져오기
 					
 					$.ajax({
 						type:"GET",
@@ -278,7 +279,7 @@
 						success:function(responseData){
 							$("#calendarDetailModal").modal("show"); // modal 나타내기
 							workDatail = responseData;
-							console.log(workDatail);
+							console.log("detail event", workDatail);
 							$(".detail_workId").val(workDatail.workId);
 							$(".detail_workTitle").val(workDatail.workTitle);
 							$(".detail_workText").val(workDatail.workText);
@@ -289,7 +290,14 @@
 							//console.log(responseData.manager);
 							$(".detail_workMannager").val(workDatail.manager);
 						}
-					});					
+					});	
+					//alert(eventObj.groupId);
+					if(eventObj.groupId == "plan"){
+						//$(".WorkStatusUpdateModalBtn").disabled = false;
+						$(".WorkStatusUpdateModalBtn").attr("disabled", false);
+					}else{
+						$(".WorkStatusUpdateModalBtn").attr("disabled", true);
+					}
 				}
 			});
 			calendar.render(); //다시 렌더링
@@ -303,7 +311,6 @@
 		
 		$("#WorkUpdateModalBtn").on("click", function() {
 			$("#calendarUpdateModal").modal("show"); // modal 나타내기
-			//console.log(workDatail.manager);
 			
 			//console.log("length : "+document.getElementsByClassName('manageroption').length);
 			if(document.getElementsByClassName('updatemanageroption').length){
@@ -338,6 +345,27 @@
 			$(".update_workMannager").val(arr[0]);//일반for로 */
 			
 		});
+		$(".WorkStatusUpdateModalBtn").on("click", function() {
+			var work_id = $(".detail_workId").val();
+			var status = "finish";
+			console.log("object status", work_id, status);
+			
+			$.ajax({
+				type:'put',   //put 방식으로 전송
+				url:'/work/updatestatus.go/'+work_id,   //데이터를 주고받을 파일 주소
+				data:status,   //위의 변수에 담긴 데이터를 전송해준다.
+				contentType: "application/json; charset=utf-8",
+				beforeSend : function(xhr)
+	            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+					xhr.setRequestHeader(header, token);
+	            },
+	            success : function(data){   //파일 주고받기가 성공했을 경우. data 변수 안에 값을 담아온다.
+					console.log("update status",data);
+					alert("업무 상태가 수정되었습니다.");  //현재 화면 위 id="message" 영역 안에 data안에 담긴 html 코드를 넣어준다.
+					location.reload();
+				}
+			});
+		});
 		$("#WorkUpdateBtn").on("click", function() {
 			var work_id = $(".update_workId").val();
 			var title = $(".update_workTitle").val();
@@ -367,12 +395,12 @@
 					"workStatus" : status,
 					"manager" :manager
 				}//전송할 객체 생성
-				console.log(obj); //서버로 해당 객체를 전달해서 DB 연동 가능
+				console.log("update object", obj); //서버로 해당 객체를 전달해서 DB 연동 가능
 				
 				//let sendData = "username="+$('input[name=username]').val();   //폼의 이름 값을 변수 안에 담아줌
 				
 				$.ajax({
-					type:'put',   //post 방식으로 전송
+					type:'put',   //put 방식으로 전송
 					url:'/work/worklist.go/'+work_id,   //데이터를 주고받을 파일 주소
 					data:JSON.stringify( obj),   //위의 변수에 담긴 데이터를 전송해준다.
 					//dataType:'application/json',   //html 파일 형식으로 값을 담아온다.
@@ -507,6 +535,7 @@ float : left;}
 					</div>
 				</div>
 				<div class="modal-footer">
+					<button type="button" class="btn btn-warning WorkStatusUpdateModalBtn" id="WorkStatusUpdateModalBtn" disabled>상태바꾸기</button>
 					<button type="button" class="btn btn-warning WorkUpdateModalBtn" id="WorkUpdateModalBtn">수정</button>
 					<button type="button" class="btn btn-secondary"
 						data-dismiss="modal" id="WorkDeleteBtn">삭제</button>

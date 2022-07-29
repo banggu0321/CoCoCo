@@ -126,6 +126,15 @@ public class GyWorkRestController {
 	}
 	
 	@Transactional
+	@PutMapping(value="/updatestatus.go/{work_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public WorkVO updateStatusWork(@RequestBody String status , @PathVariable Long work_id) {
+		WorkVO originalwork = workRepo.findById(work_id).get();
+		originalwork.setWorkStatus(status);
+		
+		WorkVO updatework = workRepo.save(originalwork);
+		return updatework;
+	}
+	@Transactional
 	@PutMapping(value="/worklist.go/{work_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public WorkVO updateWork(@RequestBody WorkVO work , @PathVariable Long work_id) {
 		

@@ -44,7 +44,7 @@
 		
 		//해당 팀의 담당자 모두 가져오기
 		$.ajax({
-			url:"/work/workmanagerlist.go/"+team_id,
+			url:"/work/teamUserList/"+team_id,
 			type:"get",
 			success:function(responseData){
 				teamUserlist = responseData;
@@ -53,7 +53,7 @@
 		
 		//나의 업무 모두 가져오기
 		$.ajax({
-			url:"/work/myworklist.go/"+user_id,
+			url:"/work/myWorkList/"+user_id,
 			type:"get",
 			success:function(responseData){
 				myWorklist = responseData;
@@ -64,7 +64,7 @@
 		//전체 리스트 가져오기
 		var request = $.ajax({
 			type:"GET",
-			url:"/work/worklist.go/"+team_id,
+			url:"/work/teamWorkList/"+team_id,
 			dataType:"json"
 		});
 		
@@ -91,7 +91,7 @@
 						title : data.workTitle,
 						start : data.workStart,
 						end : data.workEnd,
-						color : 'gray'
+						color : '#BFBFBF'
 					});
 				}else if(data.workStatus == 'finish'){
 					totaleventlist.push({
@@ -104,7 +104,16 @@
 						//	status : data.workStatus,
 						//	manager : data.manager
 						//},
-						color : 'red'
+						color : 'gray'
+					});
+				}else if(data.workStatus == 'ongoing'){
+					totaleventlist.push({
+						id: data.workId,
+						title : data.workTitle,
+						start : data.workStart,
+						end : data.workEnd,
+						color : 'green',
+						groupId : data.workStatus
 					});
 				}else{
 					totaleventlist.push({
@@ -112,7 +121,7 @@
 						title : data.workTitle,
 						start : data.workStart,
 						end : data.workEnd,
-						groupId : data.workStatus, //plan
+						groupId : data.workStatus, //plan,ongoing
 					});
 				}
 				
@@ -236,10 +245,10 @@
 									
 									//let sendData = "username="+$('input[name=username]').val();   //폼의 이름 값을 변수 안에 담아줌
 									
-									//업무 insert
+									//insert work
 									$.ajax({
 										type:'post',   //post 방식으로 전송
-										url:'/work/worklist.go/'+team_id,   //데이터를 주고받을 파일 주소
+										url:'/work/addWork/'+team_id,   //데이터를 주고받을 파일 주소
 										data:JSON.stringify( obj),   //위의 변수에 담긴 데이터를 전송해준다.
 										//dataType:'application/json',   //html 파일 형식으로 값을 담아오기
 										contentType: "application/json; charset=utf-8",
@@ -273,7 +282,7 @@
 					
 					$.ajax({
 						type:"GET",
-						url:"/work/workdetail.go/"+eventObj.id,
+						url:"/work/workDetail/"+eventObj.id,
 						//data : {"team_id" : '1000'},
 						dataType:"json",
 						success:function(responseData){
@@ -292,7 +301,7 @@
 						}
 					});	
 					//alert(eventObj.groupId);
-					if(eventObj.groupId == "plan"){
+					if(eventObj.groupId == "plan" || eventObj.groupId == "ongoing"){
 						//$(".WorkStatusUpdateModalBtn").disabled = false;
 						$(".WorkStatusUpdateModalBtn").attr("disabled", false);
 					}else{
@@ -352,7 +361,7 @@
 			
 			$.ajax({
 				type:'put',   //put 방식으로 전송
-				url:'/work/updatestatus.go/'+work_id,   //데이터를 주고받을 파일 주소
+				url:'/work/updateWorkStatus/'+work_id,   //데이터를 주고받을 파일 주소
 				data:status,   //위의 변수에 담긴 데이터를 전송해준다.
 				contentType: "application/json; charset=utf-8",
 				beforeSend : function(xhr)
@@ -401,7 +410,7 @@
 				
 				$.ajax({
 					type:'put',   //put 방식으로 전송
-					url:'/work/worklist.go/'+work_id,   //데이터를 주고받을 파일 주소
+					url:'/work/updateWork/'+work_id,   //데이터를 주고받을 파일 주소
 					data:JSON.stringify( obj),   //위의 변수에 담긴 데이터를 전송해준다.
 					//dataType:'application/json',   //html 파일 형식으로 값을 담아온다.
 					contentType: "application/json; charset=utf-8",
@@ -422,7 +431,7 @@
 			if(confirm("해당업무[" + work_id + "]를 삭제하시겠습니까?")){
 				$.ajax({
 					type:'delete',   //post 방식으로 전송
-					url:'/work/worklist.go/'+work_id,   //데이터를 주고받을 파일 주소
+					url:'/work/deleteWork/'+work_id,   //데이터를 주고받을 파일 주소
 					//data:JSON.stringify( obj),   //위의 변수에 담긴 데이터를 전송해준다.
 					//dataType:'application/json',   //html 파일 형식으로 값을 담아온다.
 					contentType: "application/json; charset=utf-8",
@@ -486,7 +495,7 @@ float : left;}
 						<label for="taskId" class="col-form-label">업무 상태</label> 
 						<select class="form-control" id="calendar_status" name="calendar_status">
 							<option class="form-control" value="plan">대기</option>
-							<option class="form-control" >진행</option>
+							<option class="form-control" value="ongoing" >진행</option>
 							<option class="form-control" value="finish">완료</option>
 						</select>
 						<label for="taskId" class="col-form-label">일정 담당자(Ctrl클릭 후 중복선택가능)</label> 
@@ -569,8 +578,8 @@ float : left;}
 						<input type="date" class="form-control detail_workEndDate update_workEndDate" id="calendar_end_date" name="calendar_end_date" >
 						<label for="taskId" class="col-form-label">업무상태</label> 
 						<select class="form-control detail_workStatus update_workStatus" id="calendar_status" name="calendar_status">
-							<option class="form-control" >대기</option>
-							<option class="form-control" value="plan">진행</option>
+							<option class="form-control" value="plan">대기</option>
+							<option class="form-control" value="ongoing">진행</option>
 							<option class="form-control" value="finish">완료</option>
 						</select>
 						<label for="taskId" class="col-form-label">일정 담당자(Ctrl클릭 후 중복선택가능)</label> 

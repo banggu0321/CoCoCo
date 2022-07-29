@@ -54,7 +54,7 @@ public class GyWorkRestController {
 	GyTeamUserRepository teamUserRepo;
 	//HttpSession session, HttpServletRequest request
 	
-	@GetMapping("/worklist.go/{team_id}")
+	@GetMapping("/teamWorkList/{team_id}")
 	public List<WorkVO> worklist(Model model, @PathVariable Long team_id) {
 		TeamVO team = teamRepo.findById(team_id).get();
 		//System.out.println(team);
@@ -71,7 +71,7 @@ public class GyWorkRestController {
 		System.out.println(worklist);
 		return worklist;
 	}
-	@PostMapping(value="/worklist.go/{team_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value="/addWork/{team_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public WorkVO addWork(@RequestBody WorkVO work , @PathVariable Long team_id) {
 		//System.out.println("오나요?");
 		TeamVO team = teamRepo.findById(team_id).get();
@@ -93,7 +93,7 @@ public class GyWorkRestController {
 		}
 		return work;
 	}
-	@GetMapping("/workmanagerlist.go/{team_id}")
+	@GetMapping("/teamUserList/{team_id}")
 	public List<String> workmanagerlist(Model model, @PathVariable Long team_id) {
 		//TeamVO team = teamRepo.findById(team_id).get();
 		//System.out.println(team);
@@ -110,7 +110,7 @@ public class GyWorkRestController {
 		System.out.println(teamusernamelist);
 		return teamusernamelist;
 	}
-	@GetMapping(value="/workdetail.go/{work_id}")
+	@GetMapping(value="/workDetail/{work_id}")
 	public WorkVO workdetaillist(Model model, @PathVariable Long work_id) {
 		WorkVO work = workRepo.findById(work_id).get();
 		List<WorkManagerVO> workmanagerlist = workManagerRepo.findByWork(work_id);
@@ -126,7 +126,7 @@ public class GyWorkRestController {
 	}
 	
 	@Transactional
-	@PutMapping(value="/updatestatus.go/{work_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping(value="/updateWorkStatus/{work_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public WorkVO updateStatusWork(@RequestBody String status , @PathVariable Long work_id) {
 		WorkVO originalwork = workRepo.findById(work_id).get();
 		originalwork.setWorkStatus(status);
@@ -135,7 +135,7 @@ public class GyWorkRestController {
 		return updatework;
 	}
 	@Transactional
-	@PutMapping(value="/worklist.go/{work_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping(value="/updateWork/{work_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public WorkVO updateWork(@RequestBody WorkVO work , @PathVariable Long work_id) {
 		
 		//@PathVariable Long bno, @RequestBody WebReply reply
@@ -172,13 +172,13 @@ public class GyWorkRestController {
 	}
 	
 	@Transactional
-	@DeleteMapping(value="/worklist.go/{work_id}")
+	@DeleteMapping(value="/deleteWork/{work_id}")
 	public void deleteWork(@PathVariable Long work_id) {
 		workManagerRepo.workManagerDelete(work_id);
 		workRepo.deleteById(work_id);
 	}
 	
-	@GetMapping("/myworklist.go/{user_id}")
+	@GetMapping("/myWorkList/{user_id}")
 	public List<WorkVO> myWork(Model model, @PathVariable String user_id) {
 		//System.out.println("오긴함?");
 		//UserVO user = userRepo.findById(user_id).get();

@@ -46,7 +46,13 @@ public class AdminController {
 	S3Uploader uploader;
 
 	@GetMapping("/user")
-	public String userList(HttpSession session, Model model) {
+	public String userList(HttpSession session, Model model, HttpServletRequest request) {
+		Map<String, Object> map = (Map<String, Object>) RequestContextUtils.getInputFlashMap(request);
+		if(map != null) {
+			String msg = (String) map.get("msg");
+			model.addAttribute("msg", msg);
+		}
+		
 		Long teamId = (Long) session.getAttribute("teamId");
 		model.addAttribute("team", tRepo.findById(teamId).get()); //title
 		model.addAttribute("userList", tuRepo.findByTeamId(teamId));
@@ -55,12 +61,13 @@ public class AdminController {
 	}
 	
 	@GetMapping("/deleteUser/{userId}")
-	public String deleteUser(@PathVariable String userId, HttpSession session, Model model) {
+	public String deleteUser(@PathVariable String userId, HttpSession session, Model model, RedirectAttributes attr) {
 		Long teamId = (Long) session.getAttribute("teamId");
 		TeamUserMultikey teamUser = TeamUserMultikey.builder().team(tRepo.findById(teamId).get())
 												.user(uRepo.findById(userId).get()).build();
 		tuRepo.deleteById(teamUser);
 		
+		attr.addFlashAttribute("msg", "사용자가 삭제되었습니다.");
 		return "redirect:/admin/user";
 	}
 	
@@ -156,7 +163,7 @@ public class AdminController {
 			i.setUserRole(newRole);
 			tuRepo.save(i);
 			
-			session.setAttribute("teamUser", i);
+			//session.setAttribute("teamUser", i);
 		});
 		return "redirect:/admin/user";
 	}

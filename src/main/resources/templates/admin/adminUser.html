@@ -121,6 +121,11 @@ table{
 <th:block layout:fragment="script">
 	<script>
 	$(function() {
+		var msg = "[[${msg}]]";
+		if(msg != "") {
+			alert(msg);
+		}
+		
 		$(".delUser").click(deleteUser);
 		$(".updateUser").click(getUser);
 		$("#updateBtn").click(updateUser);

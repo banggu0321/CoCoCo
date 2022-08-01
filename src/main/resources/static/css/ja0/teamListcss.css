@@ -5,12 +5,14 @@
 }
 
 .content {
-	padding-left: 20px;	
+    display: flex;
+    flex-wrap: wrap;
+    width: 1450px;
+    justify-content: center;
 }
 
 .box, .addTeam {
 	position: relative;
-	float: left;
 	width: 250px;
 	height: 320px;
 	text-align: center;
@@ -87,7 +89,7 @@
 }
 
 #mainTitle {
-	padding: 5px 20px;
+	padding: 5px 50px;
     display: flex;
     align-content: center;
     justify-content: space-between;

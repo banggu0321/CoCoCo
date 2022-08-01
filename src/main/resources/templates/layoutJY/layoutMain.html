@@ -34,8 +34,6 @@
 				</div>
 			</div>
 			
-			<hr>
-			
 			<h4 id="listTitle">팀원</h4>
 			<div id="proList">
 				<div class="userProfile" th:each="tu:${userList}" th:if="${tu.teamUserId.user.userId != session.user.userId}">

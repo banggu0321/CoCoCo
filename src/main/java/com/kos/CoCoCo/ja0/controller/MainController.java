@@ -10,9 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +31,7 @@ import com.kos.CoCoCo.vo.TeamUserMultikey;
 import com.kos.CoCoCo.vo.TeamUserVO;
 import com.kos.CoCoCo.vo.TeamVO;
 import com.kos.CoCoCo.vo.UserVO;
+import com.querydsl.core.types.Predicate;
 
 @Controller
 @RequestMapping("/main/*")
@@ -46,7 +50,7 @@ public class MainController {
 	S3Uploader uploader;
 	
 	@GetMapping("/teamList")
-	public void teamList(HttpSession session, Model model, Principal principal, HttpServletRequest request) {
+	public void teamList(@ModelAttribute PageVO pageVO, HttpSession session, Model model, Principal principal, HttpServletRequest request) {
 		Map<String, Object> map = (Map<String, Object>) RequestContextUtils.getInputFlashMap(request);
 		
 		if(map != null) {
@@ -55,8 +59,18 @@ public class MainController {
 		}
 		
 		UserVO user = uRepo.findById(principal.getName()).get();
+		List<TeamUserVO> teamList = tuRepo.findByUserId(user.getUserId());
 		session.setAttribute("user", user);
-		session.setAttribute("teamList", tuRepo.findByUserId(user.getUserId()));
+		session.setAttribute("teamList", teamList);
+		
+		//teamListPaging
+		Pageable page = pageVO.makePaging(1, "joinDate"); //joinDate로 asc
+		Predicate predicate =  tuRepo.makePredicate(user.getUserId());
+		
+		Page<TeamUserVO> team = tuRepo.findAll(predicate, page);
+		
+		PageMaker<TeamUserVO> pgmaker = new PageMaker<>(team);
+		model.addAttribute("paging", pgmaker);
 	}
 	
 	@GetMapping("/{teamId}")

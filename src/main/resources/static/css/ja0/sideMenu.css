@@ -9,20 +9,13 @@
     justify-content: center;
 }
 
-.side_list {
-	width: 80px;
-	height: 94vh;
-	background-color: #e7ebf2;
-	padding: 5px;
-	display: flex;
-    justify-content: center;
-}
-
 .my_menu {
 	width: 300px;
 	height: 94vh;
 	padding: 10px 10px;
 	background-color: #fff;
+	display: flex;
+    flex-direction: column;
 } 
 /******************* side *******************/
 

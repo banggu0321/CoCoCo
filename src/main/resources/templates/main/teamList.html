@@ -9,10 +9,22 @@
 <meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
 
 <link rel="stylesheet" th:href="@{/css/ja0/teamListcss.css}" />
-
 <title>CoCoCo</title>
 <style>
+a {
+	color : #FF7F27;
+	font-size: 30px;
+}
+a:hover {
+	color : #FF7F27;
+	text-decoration: none;
+}
 
+#pagingBoby {
+	display: flex;
+    justify-content: center;
+    align-items: center;
+}
 </style>
 </head>
 <body>
@@ -21,21 +33,41 @@
 		<button data-toggle="modal" data-target="#myModal2" class="btn btn-cococo inviteBtn">초대코드</button>
 		<h3 id="title">WORKSPACE LIST</h3>
 	</div>
-	<div class="content">
-		<div class="box" th:team-data="${team.teamUserId.team.teamId}" th:each="team:${session.teamList}">
-			<img th:if="${session.user.userId != team.teamUserId.team.user.userId}" th:src="@{/images/deleteImg.svg}" class="delBtn" th:team-data="${team.teamUserId.team.teamId}">
-			
-			<img th:if="${team.teamUserId.team.teamImg!=null}" th:src="${team.teamUserId.team.teamImg}" th:alt="${team.teamUserId.team.teamImg}" class="img-rounded">
-			<img th:if="${team.teamUserId.team.teamImg==null}" th:src="@{/images/teamImg.png}" alt="null" class="img-rounded">
-			
-			<p class="name">[[${team.teamUserId.team.teamName}]]</p>
-			<p>[[${#dates.format(team.teamUserId.team.createDate,'yyyy-MM-dd')}]]</p>
-			<p class="info">[[${team.teamUserId.team.teamInfo}]]</p>	
+	
+	<div id="pagingBoby">
+		<!-- prevPage -->
+		<div class="pagingBtn" th:if="${paging.prevPage}">
+			<a th:href="${paging.prevPage.pageNumber}+1">◀</a>
 		</div>
 		
-		<div class="addTeam" data-toggle="modal" data-target="#myModal">+</div>
+		<div class="content">
+		
+			<div class="box" th:team-data="${team.teamUserId.team.teamId}" th:each="team:${paging.result.getContent()}">
+				<img th:if="${session.user.userId != team.teamUserId.team.user.userId}" th:src="@{/images/deleteImg.svg}" class="delBtn" th:team-data="${team.teamUserId.team.teamId}">
+				
+				<img th:if="${team.teamUserId.team.teamImg}" th:src="${team.teamUserId.team.teamImg}" th:alt="${team.teamUserId.team.teamImg}" class="img-rounded">
+				<img th:if="${team.teamUserId.team.teamImg == null}" th:src="@{/images/teamImg.png}" alt="null" class="img-rounded">
+				
+				<p class="name">[[${team.teamUserId.team.teamName}]]</p>
+				<p>[[${#dates.format(team.teamUserId.team.createDate,'yyyy-MM-dd')}]]</p>
+				<p class="info">[[${team.teamUserId.team.teamInfo}]]</p>	
+			</div>
+			
+			<div class="addTeam" data-toggle="modal" data-target="#myModal">+</div>
+		
+		</div>
+		
+		<!-- nextPage -->
+		<div class="pagingBtn" th:if="${paging.nextPage}">
+			<a th:href="${paging.nextPage.pageNumber}+1">▶</a>
+		</div>
 	</div>
 	
+	<!--  paginForm -->
+	<form id="f1" th:action="@{/main/teamList}" method="get">
+	    <input type="hidden" name="page" th:value="${paging.currentPageNum}">
+	    <input type="hidden" name="size" th:value="${paging.currentPage.pageSize}">
+	</form>
 	
 	<!-- 워크스페이스 등록 모달 -->
     <div id="myModal" class="modal fade" role="dialog">
@@ -127,6 +159,7 @@
 			$("#myModal3").modal("show");
 		}
 		
+		$(".pagingBtn a").click(movePage);
 	 	$(".box").click(goTeamMain);
 	 	$("#enterBtn").click(enterTeam);
 	 	$(".delBtn").click(deleteTeam);
@@ -134,10 +167,19 @@
 	 	$("#img").change(makeView);
 	 	$(".valDel").click(valueDelete);
 	 	$("#statusUpdate").click(updateStatus);
+	 	
 	})
 	
 	var token = $("meta[name='_csrf']").attr("content");
 	var header = $("meta[name='_csrf_header']").attr("content");
+	
+	var formObj = $("#f1");
+	function movePage(e){
+		e.preventDefault();
+		formObj.find("[name='page']").val($(this).attr('href'));
+		formObj.attr("action", "/main/teamList");
+		formObj.submit();
+	}
 	
 	function goTeamMain() {
 		var teamId = $(this).attr("team-data");

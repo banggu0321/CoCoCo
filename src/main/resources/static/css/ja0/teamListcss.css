@@ -1,5 +1,13 @@
 @charset "UTF-8";
 
+#cont{
+	padding-top: 64px;
+}
+
+.content {
+	padding-left: 20px;	
+}
+
 .box, .addTeam {
 	position: relative;
 	float: left;
@@ -7,7 +15,7 @@
 	height: 320px;
 	text-align: center;
 	padding: 30px 20px;
-	margin: 20px;
+	margin: 13px;
 	background-color: #eee;
 	border-radius: 1em;
 	cursor: pointer;

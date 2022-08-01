@@ -50,7 +50,6 @@ table{
 </style>
 </head>
 <body>
-[[${userList}]]
 <div layout:fragment="content">
 	<div class="body">
 		<table id="userList" class="table">
@@ -75,13 +74,14 @@ table{
 				<td th:text="${#dates.format(user.joinDate,'yyyy-MM-dd')}">참여일자</td>
 				<td th:text="${user.userRole}">권한</td>
 				
-				<td th:if="${user.teamUserId.user.userId == user.teamUserId.team.user.userId}"></td>
-				<td th:if="${user.teamUserId.user.userId != user.teamUserId.team.user.userId}" data-toggle="modal" data-target="#myModal" class="roleModel">
+				<td th:if="${user.teamUserId.user.userId == user.teamUserId.team.user.userId || user.teamUserId.user.userId == session.user.userId}"></td>
+				<td th:if="${user.teamUserId.user.userId != user.teamUserId.team.user.userId && user.teamUserId.user.userId != session.user.userId}" 
+						data-toggle="modal" data-target="#myModal" class="roleModel">
 					<img th:src="@{/images/updateRole.svg}" class="updateUser" th:user-data="${user.teamUserId.user.userId}" alt="update">
 				</td>
 				
-				<td th:if="${user.teamUserId.user.userId == user.teamUserId.team.user.userId}"></td>
-				<td th:if="${user.teamUserId.user.userId != user.teamUserId.team.user.userId}">
+				<td th:if="${user.teamUserId.user.userId == user.teamUserId.team.user.userId || user.teamUserId.user.userId == session.user.userId}"></td>
+				<td th:if="${user.teamUserId.user.userId != user.teamUserId.team.user.userId && user.teamUserId.user.userId != session.user.userId}">
 					<img th:src="@{/images/deleteImg.svg}" class="delUser" th:user-data="${user.teamUserId.user.userId}" alt="delete">
 				</td>
 			</tr>

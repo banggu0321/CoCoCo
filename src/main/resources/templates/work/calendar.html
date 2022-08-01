@@ -76,29 +76,39 @@
 			$.each(responseData, function(index,data){
 				workmanager = data.manager;
 				//console.log("원래 data : "+ workmanager);
+				if(workmanager.includes("bang")){
+					data.manager = "user";
+				}else{
+					data.manager = "none";
+				}
+				/* workmanager.includes(1)
 				for(i=0;i<workmanager.length;i++){
-					//console.log("왜 user야??"+manager[i]);
-					if(workmanager[i] == user_id){
+					console.log("왜 user야??"+workmanager[i]+"왜");
+					if(workmanager[i] == 'bang'){
 						data.manager = "user";
 					}else{
 						data.manager = "none";
 					}
-				}
+				} */
+				var date_end1 = data.workEnd.substr(0,8); 
+				var date_end2 = String(Number(data.workEnd.substr(8))+1);
+				date_end2 = ('00' + date_end2).slice(-2);
+				
 				//console.log("조건 결과 data : "+ data.manager);
-				if(data.manager=="none"){
+				if(data.manager=="none"){//자기꺼 아님
 					totaleventlist.push({
 						id: data.workId,
 						title : data.workTitle,
 						start : data.workStart,
-						end : data.workEnd,
+						end : date_end1+date_end2,
 						color : '#BFBFBF'
 					});
-				}else if(data.workStatus == 'finish'){
+				}else if(data.workStatus == 'finish'){//완료
 					totaleventlist.push({
 						id: data.workId,
 						title : data.workTitle,
 						start : data.workStart,
-						end : data.workEnd,
+						end : date_end1+date_end2,
 						//extendedProps: {
 						//	content : data.workText,
 						//	status : data.workStatus,
@@ -106,21 +116,22 @@
 						//},
 						color : 'gray'
 					});
-				}else if(data.workStatus == 'ongoing'){
+				}else if(data.workStatus == 'ongoing'){//진행중
 					totaleventlist.push({
 						id: data.workId,
 						title : data.workTitle,
 						start : data.workStart,
-						end : data.workEnd,
-						color : 'green',
+						end : date_end1+date_end2,
+						color : '#6BD089',
 						groupId : data.workStatus
 					});
-				}else{
+				}else{//대기
 					totaleventlist.push({
 						id: data.workId,
 						title : data.workTitle,
 						start : data.workStart,
-						end : data.workEnd,
+						end : date_end1+date_end2,
+						color : '#94D8F6',
 						groupId : data.workStatus, //plan,ongoing
 					});
 				}
@@ -132,7 +143,7 @@
 			var calendarEl = document.getElementById('calendar');
 			var calendar = new FullCalendar.Calendar(calendarEl, {
 				//schedulerLicenseKey : 'CC-Attribution-NonCommercial-NoDerivatives',
-				timeZone : 'UTC+9',
+				//timeZone : 'UTC+9',
 				initialView : 'dayGridMonth',
 				events : totaleventlist,
 				headerToolbar: {
@@ -148,21 +159,33 @@
 							//console.log("새로 가져올거 :"+myWorklist);
 							myeventlist=[];
 							$.each(myWorklist, function(index,data){
+								var date_end1 = data.workEnd.substr(0,8); 
+								var date_end2 = String(Number(data.workEnd.substr(8))+1);
+								date_end2 = ('00' + date_end2).slice(-2);
+								
 								//console.log(data);
 								if(data.workStatus == 'finish'){
 									myeventlist.push({
 										id: data.workId,
 										title : data.workTitle,
 										start : data.workStart,
-										end : data.workEnd,
-										color : 'red'
+										end : date_end1+date_end2,
+										color : 'black'
+									});
+								}else if(data.workStatus == 'ongoing'){//진행중
+									myeventlist.push({
+										id: data.workId,
+										title : data.workTitle,
+										start : data.workStart,
+										end : date_end1+date_end2,
+										color : 'green',
 									});
 								}else{
 									myeventlist.push({
 										id: data.workId,
 										title : data.workTitle,
 										start : data.workStart,
-										end : data.workEnd
+										end : date_end1+date_end2
 									});
 								}
 							});
@@ -295,7 +318,16 @@
 							$(".detail_workDate").val(workDatail.workStart+" ~ "+workDatail.workEnd);
 							$(".detail_workStartDate").val(workDatail.workStart);
 							$(".detail_workEndDate").val(workDatail.workEnd);
-							$(".detail_workStatus").val(workDatail.workStatus);
+							
+							
+							if(workDatail.workStatus=="plan"){
+								$(".detail_workStatus").val('대기');
+							}else if(workDatail.workStatus=="ongoing"){
+								$(".detail_workStatus").val('진행');
+							}else{
+								$(".detail_workStatus").val('완료');
+								//$(".detail_workStatus").val(workDatail.workStatus);
+							}
 							//console.log(responseData.manager);
 							$(".detail_workMannager").val(workDatail.manager);
 						}
@@ -356,7 +388,13 @@
 		});
 		$(".WorkStatusUpdateModalBtn").on("click", function() {
 			var work_id = $(".detail_workId").val();
-			var status = "finish";
+			var status = $(".detail_workStatus").val();
+			if(status=="대기"){
+				status="ongoing";
+			}else{
+				status='finish';
+			}
+			//status = '대기' ? status= 'ongoing': 'finish';
 			console.log("object status", work_id, status);
 			
 			$.ajax({
@@ -382,6 +420,13 @@
 			var start_date = $(".update_workStartDate").val();
 			var end_date = $(".update_workEndDate").val();
 			var status = $(".update_workStatus").val();
+			if(status=="대기"){
+				status="plan";
+			}else if(status=="진행"){
+				status="ongoing";
+			}else{
+				status="finish";
+			}			
 			var manager = $(".update_workMannager").val();
 
 			//내용 입력 여부 확인
@@ -489,9 +534,9 @@ float : left;}
 						<label for="taskId" class="col-form-label">일정 내용</label> 
 						<input type="text" class="form-control" id="calendar_content" name="calendar_content" value="내용"> 
 						<label for="taskId" class="col-form-label">시작 날짜</label> 
-						<input type="date" class="form-control" id="calendar_start_date" name="calendar_start_date" value="2022-07-20"> 
+						<input type="date" class="form-control" id="calendar_start_date" name="calendar_start_date" value="2022-08-01"> 
 						<label for="taskId" class="col-form-label">종료 날짜</label> 
-						<input type="date" class="form-control" id="calendar_end_date" name="calendar_end_date" value="2022-07-23">
+						<input type="date" class="form-control" id="calendar_end_date" name="calendar_end_date" value="2022-08-05">
 						<label for="taskId" class="col-form-label">업무 상태</label> 
 						<select class="form-control" id="calendar_status" name="calendar_status">
 							<option class="form-control" value="plan">대기</option>
@@ -578,9 +623,9 @@ float : left;}
 						<input type="date" class="form-control detail_workEndDate update_workEndDate" id="calendar_end_date" name="calendar_end_date" >
 						<label for="taskId" class="col-form-label">업무상태</label> 
 						<select class="form-control detail_workStatus update_workStatus" id="calendar_status" name="calendar_status">
-							<option class="form-control" value="plan">대기</option>
-							<option class="form-control" value="ongoing">진행</option>
-							<option class="form-control" value="finish">완료</option>
+							<option class="form-control" value="대기">대기</option>
+							<option class="form-control" value="진행">진행</option>
+							<option class="form-control" value="완료">완료</option>
 						</select>
 						<label for="taskId" class="col-form-label">일정 담당자(Ctrl클릭 후 중복선택가능)</label> 
 						<div class="workManager">

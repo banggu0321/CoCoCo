@@ -96,3 +96,17 @@
     flex-direction: row-reverse;
     align-items: center;
 }
+
+.pagingBtn img {
+	width: 30px;
+}
+
+.pagingBtn img:hover {
+	cursor: pointer;
+}
+
+#pagingBody {
+	display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -33,7 +33,6 @@ public interface TeamUserRepository
 	public default Predicate makePredicate(String UserId) {
 		BooleanBuilder builder = new BooleanBuilder();
 		QTeamUserVO teamUser = QTeamUserVO.teamUserVO;
-		// 검색조건처리
 		return builder.and(teamUser.teamUserId.user.userId.eq(UserId));
 	}
 }

@@ -11,20 +11,7 @@
 <link rel="stylesheet" th:href="@{/css/ja0/teamListcss.css}" />
 <title>CoCoCo</title>
 <style>
-a {
-	color : #FF7F27;
-	font-size: 30px;
-}
-a:hover {
-	color : #FF7F27;
-	text-decoration: none;
-}
 
-#pagingBoby {
-	display: flex;
-    justify-content: center;
-    align-items: center;
-}
 </style>
 </head>
 <body>
@@ -34,10 +21,10 @@ a:hover {
 		<h3 id="title">WORKSPACE LIST</h3>
 	</div>
 	
-	<div id="pagingBoby">
+	<div id="pagingBody">
 		<!-- prevPage -->
 		<div class="pagingBtn" th:if="${paging.prevPage}">
-			<a th:href="${paging.prevPage.pageNumber}+1">◀</a>
+			<img th:src="@{/images/prevPage.svg}" th:page-data="${paging.prevPage.pageNumber}+1">
 		</div>
 		
 		<div class="content">
@@ -59,7 +46,7 @@ a:hover {
 		
 		<!-- nextPage -->
 		<div class="pagingBtn" th:if="${paging.nextPage}">
-			<a th:href="${paging.nextPage.pageNumber}+1">▶</a>
+			<img th:src="@{/images/nextPage.svg}" th:page-data="${paging.nextPage.pageNumber}+1">
 		</div>
 	</div>
 	
@@ -159,7 +146,7 @@ a:hover {
 			$("#myModal3").modal("show");
 		}
 		
-		$(".pagingBtn a").click(movePage);
+		$(".pagingBtn img").click(movePage);
 	 	$(".box").click(goTeamMain);
 	 	$("#enterBtn").click(enterTeam);
 	 	$(".delBtn").click(deleteTeam);
@@ -174,9 +161,8 @@ a:hover {
 	var header = $("meta[name='_csrf_header']").attr("content");
 	
 	var formObj = $("#f1");
-	function movePage(e){
-		e.preventDefault();
-		formObj.find("[name='page']").val($(this).attr('href'));
+	function movePage(){
+		formObj.find("[name='page']").val($(this).attr('page-data'));
 		formObj.attr("action", "/main/teamList");
 		formObj.submit();
 	}

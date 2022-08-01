@@ -43,7 +43,7 @@ public class sampleController2 {
 	
 	@GetMapping("/boardSampleBeta")
 	public String boardlist() {			
-		return "su/boardMainBeta";
+		return "su/thymeleaf/boardMain";
 	}
 		
 	//void - error, insert는 controller.method가 필요
@@ -83,7 +83,7 @@ public class sampleController2 {
 	
 	@GetMapping("/boardInsertSample2")
 	public String boardInsertBeta() {
-		return "su/boardInsertBeta";
+		return "su/thymeleaf/boardInsert";
 	}
 	
 	@GetMapping("/boardDeleteBeta")

@@ -1,5 +1,6 @@
 package com.kos.CoCoCo.cansu;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -42,16 +43,61 @@ public class tableCRUDTest {
 	
 	@Autowired
 	ReplyRepositoryTestSu replyRP;
+
 	
 	@Test
-	public void replySelectByboardID() {
-		int boardID = 61;
+	public void boardSelectByCategoryID() {
+		List<Long>categoryID = boardcateRP.selectIDByname("sample2022");
 		
-		List<ReplyVO> rlist = replyRP.selectByboardID(boardID);
-		rlist.forEach(a->{
+		List<BoardVO> boardList = new ArrayList<>();
+		categoryID.forEach(a->{
+			BoardVO temp = boardRP.selectBoardByID(a);
+			if(temp != null) {
+				boardList.add(temp);
+			}
+		});
+		
+		boardList.forEach(a->{
 			System.out.println(a);
 		});
 	}
+	
+//	@Test 
+//	public void categorySelectName() {
+//		List<String> list = boardcateRP.selectAllCategoryName();
+////		list.forEach(a->{
+////			System.out.println(a);
+////		});
+////		
+////		for(String temp: list) {
+////			System.out.println(temp);
+////		}
+//		
+//		for(int i=0; i<list.size(); i++) {
+//			System.out.println(list.get(i));
+//		}
+//	}
+
+//	@Test
+//	public void categorySelectAll() {
+//		List<BoardCategoryVO> list = (List<BoardCategoryVO>)boardcateRP.findAll();
+//		
+//		for(BoardCategoryVO temp: list) {
+//			System.out.println("categoryID: "+temp.getBoardCategoryId().getCategoryId());
+//			System.out.println("teamID: "+temp.getBoardCategoryId().getTeam().getTeamId());
+//			System.out.println("category name: "+temp.getCategoryName());
+//		}
+//	}
+	
+//	@Test
+//	public void replySelectByboardID() {
+//		int boardID = 61;
+//		
+//		List<ReplyVO> rlist = replyRP.selectByboardID(boardID);
+//		rlist.forEach(a->{
+//			System.out.println(a);
+//		});
+//	}
 
 //	@Test
 //	public void replyDelete() {

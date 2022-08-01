@@ -10,9 +10,18 @@ var replyREST =(
 			$.getJSON('/BOARDrest/'+obj,callback);
 		};
 		
+		var getAllCategory = function(obj, callback){
+			$.getJSON('/BOARDrest/'+obj,callback);
+		}
+		
+		var getBoardByName = function(obj, callback){
+			$.getJSON('/BOARDrest/boardList/'+obj,callback);
+		}
+		
 		return{
 			getAllBoard: getAllBoard,
-			getAllReply: getAllReply
+			getAllReply: getAllReply,
+			getAllCategory: getAllCategory
 		}
 	}
 )();

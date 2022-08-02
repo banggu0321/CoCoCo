@@ -40,7 +40,7 @@
 }
 /******************* header *******************/
 /******************* side *******************/
-#side{
+#side_bar{
 position:fixed;
 display: flex;
 top:64px;
@@ -53,7 +53,7 @@ height: 91vh;
 	background-color: #e7ebf2;
 }
 
-.my_manu {
+.my_menu {
 	width: 287px;
 	height: 977px;
 	background-color: #fff;
@@ -65,7 +65,7 @@ height: 91vh;
 	display: flex;
 	}
 	
-.body {
+.inner_content {
 	position:fixed;
 	top: 64px;
     left: 367px;
@@ -89,6 +89,23 @@ height: 91vh;
 </style>
 </head>
 <body>
-	<header th:insert="~{/fragments/header::header1}"></header>
+	<header th:replace="~{/fragments/header::header1}"></header>
+	<div th:replace="~{/fragments/side :: side}"></div>
+	<div id="cont" layout:fragment="content">
+		<div id="side_bar" layout:fragment="side_list">
+			<div class="side_list">
+			</div><!-- side_list -->
+			
+			<div class="my_menu">
+			</div><!-- my_menu -->
+			
+		</div><!-- #side -->
+		
+		<div class="inner_content" layout:fragment="inner_content">
+		</div><!-- inner_content -->
+		
+		<div class="chat" layout:fragment="chat">
+		</div><!-- chat -->
+	</div>
 </body>
 </html>

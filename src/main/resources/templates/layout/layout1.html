@@ -90,13 +90,12 @@ height: 91vh;
 </head>
 <body>
 	<header th:replace="~{/fragments/header::header1}"></header>
-	<div th:replace="~{/fragments/side :: side}"></div>
+	
 	<div id="cont" layout:fragment="content">
-		<div id="side_bar" layout:fragment="side_list">
-			<div class="side_list">
-			</div><!-- side_list -->
+		<div id="side_bar">
+			<div th:replace="~{/fragments/side :: side}"></div>
 			
-			<div class="my_menu">
+			<div class="my_menu" layout:fragment="my_menu">
 			</div><!-- my_menu -->
 			
 		</div><!-- #side -->

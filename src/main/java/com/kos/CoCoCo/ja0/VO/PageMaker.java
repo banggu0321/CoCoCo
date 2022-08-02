@@ -1,4 +1,4 @@
-package com.kos.CoCoCo.ja0.controller;
+package com.kos.CoCoCo.ja0.VO;
 
 import java.util.ArrayList;
 import java.util.List;

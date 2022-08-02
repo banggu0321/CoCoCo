@@ -1,0 +1,86 @@
+@charset "UTF-8";
+
+#info {
+	display: flex;
+    flex-direction: row-reverse;
+    align-content: center;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-bottom: 10px;
+    height: 85px;
+}
+
+#box img, #ttt{
+	float: left;
+}
+
+#box img {
+	width: 70px;
+}
+
+.copyBtn {
+	float: right;
+}
+
+#box {
+	display: flex;
+    align-items: center;
+}
+
+#name {
+	padding: 5px 10px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#tInfo {
+	padding: 5px 10px;
+	white-space: pre-wrap;
+	height: 40px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+/* 스크롤바 설정*/
+#tInfo::-webkit-scrollbar{
+    width: 5px;
+}
+
+/* 스크롤바 막대 설정*/
+#tInfo::-webkit-scrollbar-thumb{
+    background-color: rgba(0,0,0,0);
+}
+
+/* 스크롤바 뒷 배경 설정*/
+#tInfo::-webkit-scrollbar-track{
+    background-color: rgba(0,0,0,0);
+}
+
+#main1, #main2, #main3 {
+	background-color: white;
+	border-radius: 1em;
+	width: 49.5%;
+    height: 40%;
+    float: left;
+    padding: 10px;
+    font-size: 18px;
+    text-align: center;
+}
+
+#main1 {
+	margin-right: 1%;
+}
+
+#main3 {
+	clear: both;
+	width: 100%;
+	margin-top: 1%;
+}
+
+#chatting {
+	width: 300px;
+    height: 94vh;
+	padding: 10px;
+    font-size: 18px;
+    text-align: center;
+}

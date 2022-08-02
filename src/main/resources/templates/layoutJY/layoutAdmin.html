@@ -2,22 +2,37 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
-<link rel="stylesheet" th:href="@{/css/header.css}" />
-<link rel="stylesheet" th:href="@{/css/sideMenu.css}" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
+<link rel="stylesheet" th:href="@{/css/ja0/header.css}" />
+<link rel="stylesheet" th:href="@{/css/ja0/sideMenu.css}" />
+
 <style>
-.my_manu a {
+.body {
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.my_menu {
+	display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.my_menu a {
 	color: black;
 	font-size: 20px;
 }
 
-.my_manu div {
+.my_menu div {
 	padding-bottom: 13px;
+	width: 280px;
+	text-align: end;
 }
 
-.my_manu a:hover {
+.my_menu a:hover {
 	color: black;
 	text-decoration: none;
 	font-size: 23px;
@@ -31,21 +46,19 @@
 <header th:replace="~{/layoutJY/header::header1}"></header>
 
 <div id="cont">
-	<div id="side">
 		<div th:replace="~{/layoutJY/side :: side}"></div>
 			
-		<div class="my_manu">
+		<div class="my_menu">
 			<div>
-				<a th:href="@{/admin/team/}+${teamId}" id="adminTeam">워크스페이스 관리</a>
+				<a th:href="@{/admin/team}" id="adminTeam">워크스페이스 관리</a>
 			</div>
 			<div>
-				<a th:href="@{/admin/user/}+${teamId}" id="adminUser">유저관리</a>
+				<a th:href="@{/admin/user}" id="adminUser">유저관리</a>
 			</div>
 		</div>
 			
 		<!-- 하위 HTML에서 content 재정의할 예정 -->
 		<div layout:fragment="content"></div>
-	</div>
 </div>
 
 <script>

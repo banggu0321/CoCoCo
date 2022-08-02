@@ -2,6 +2,7 @@ package com.kos.CoCoCo.gy.repo;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -12,4 +13,8 @@ public interface GyWorkManagerRepository extends CrudRepository<WorkManagerVO, W
 	
 	@Query(value="select * from WORK_MANAGER where work_work_id =?1 ", nativeQuery = true)
 	public List<WorkManagerVO> findByWork(Long work_id);
+	
+	@Modifying
+	@Query(value="delete from WORK_MANAGER where work_work_id=?1", nativeQuery = true)//테이블이름 써서 nativequery
+	public void workManagerDelete(Long work_id);
 }

@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
-public class TeamUserMultikey implements Serializable{ 
+public class TeamUserMultikey implements Serializable { 
 	private static final long serialVersionUID = 1L;
 	
 	@ManyToOne

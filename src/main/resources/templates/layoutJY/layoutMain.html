@@ -2,90 +2,13 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
-<link rel="stylesheet" th:href="@{/css/header.css}" />
-<link rel="stylesheet" th:href="@{/css/sideMenu.css}" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
-<style>
-.body {
-	width: 800px;
-}
-
-.my_manu div img {
-	margin: 10px;
-}
-
-#myProfile {
-	text-align: center;
-	padding: 10px;
-}
-
-#myProfile img{
-	width: 100px;
-	height: 100px;
-}
- 
-#myInfo {
-	font-weight: bold;
-}
-
-#myName {
-	font-size: 17px;
-}
-
-#myModal {
-	position: fixed;
-	top: 30%;
-	left: 20%;
-	right: 20%;
-}
-
-img#status {
-	width: 20px;
-	height: 20px;
-}
-
-.profileImg .img{
-	width: 40px;
-	height: 40px;
-}
-
-#listTitle {
-	padding-left: 15px;
-}
-
-.profileImg {
-	position: relative;
-}
-
-.admin {
-	width: 15px;
-	height: 15px;
-	position: absolute;
-	left: 10%;
-    top: -15%;
-}
-
-.statusBtn {
-	font-size: 14px;
-}
-
-.green, .red {
-	font-size: 20px;
-	position: absolute;
-	left: 13%;
-    top: 52%;
-}
-
-.green {
-	color: green;
-}
-
-.red {
-	color: red;
-}
-</style>
+<link rel="stylesheet" th:href="@{/css/ja0/header.css}" />
+<link rel="stylesheet" th:href="@{/css/ja0/sideMenu.css}" />
+<link rel="stylesheet" th:href="@{/css/ja0/layoutMaincss.css}" />
 
 <th:block layout:fragment="style"></th:block>
 </head>
@@ -94,35 +17,41 @@ img#status {
 <header th:replace="~{/layoutJY/header::header1}"></header>
 
 <div id="cont">
-	<div id="side">
 		<div th:replace="~{/layoutJY/side :: side}"></div>
 			
-		<div class="my_manu">
+		<div class="my_menu">
 			<div id="myProfile">
-				<img th:if="${session.user.image == null}" th:src="@{/images/userImg.svg}" class="img-circle">
-				<img th:if="${session.user.image != null}" th:src="${session.user.image}" class="img-circle">
+				<img th:src="${session.user.image}?:@{/images/userImg.svg}" class="img-circle">
+				<img class="admin" th:if="${session.teamUser.userRole == 'ADMIN'}" th:src="@{/images/crown.svg}">
+				
 				<div id="myInfo">
 					<div id="myName">[[${session.user.name}]]
-						<button th:if="${session.user.status != null}" class="btn btn-default btn-sm statusBtn" data-toggle="modal" data-target="#myModal">[[${session.user.status}]]</button>
-						<button th:if="${session.user.status == null}" class="btn btn-default btn-sm statusBtn" data-toggle="modal" data-target="#myModal">퇴근</button>
-						<br>([[${session.user.userId}]])
+						<button th:text="${session.user.status}?:상태설정" class="btn btn-default btn-sm statusBtn" data-toggle="modal" data-target="#myModal"></button>
 					</div>
 					[[${session.user.company}]]
 				</div>
 			</div>
 			
-			<hr>
-			
 			<h4 id="listTitle">팀원</h4>
-			<div th:each="tu:${userList}" th:if="${tu.teamUserId.user.userId != session.user.userId}">
-			<div class="profileImg">
-				<img th:if="${tu.teamUserId.user.image == null}" th:src="@{/images/userImg.svg}" class="img-circle img">
-				<img th:if="${tu.teamUserId.user.image != null}" th:src="${tu.teamUserId.user.image}" class="img-circle img">
-				<img class="admin" th:if="${tu.userRole == 'ADMIN'}" th:src="@{/images/crown.svg}">
-				<p class="status green" th:if="${tu.teamUserId.user.status == '출근'}">●</p>
-				<p class="status red" th:if="${tu.teamUserId.user.status != '출근'}">●</p>
-				[[${tu.teamUserId.user.name}]] ([[${tu.teamUserId.user.userId}]]) 
-			</div>
+			<div id="proList">
+				<div class="userProfile" th:each="tu:${userList}" th:if="${tu.teamUserId.user.userId != session.user.userId}">
+					<img th:src="${tu.teamUserId.user.image}?:@{/images/userImg.svg}" class="img-circle img">
+					
+					<img class="admin" th:if="${tu.userRole == 'ADMIN'}" th:src="@{/images/crown.svg}">
+					<p class="status" th:classappend="${tu.teamUserId.user.status == '출근'}?green:red">●</p>
+					
+					[[${tu.teamUserId.user.name}]]
+					
+					<div id="userInfo">
+						<img th:src="${tu.teamUserId.user.image}?:@{/images/userImg.svg}"class="img-circle img">
+						<img class="admin" th:if="${tu.userRole == 'ADMIN'}" th:src="@{/images/crown.svg}">
+						
+						<div id="uInfo">
+							<p id="userName">[[${tu.teamUserId.user.name}]] ( [[${tu.teamUserId.user.company}]] )<p>
+							<p>[[${tu.teamUserId.user.status}]]</p>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 			
@@ -135,14 +64,16 @@ img#status {
 						<label>상태변경</label> 
 						<select class="form-control" name="status">
 							<option>출근</option>
-							<option>퇴근</option>
+							<option>회의</option>
+							<option>자리비움</option>
 							<option>외근</option>
+							<option>퇴근</option>
 							<option>휴가</option>
 						</select>
 			        </div>
 					<div class="modal-footer">
-				    	<button id = "statusUpdate" class="btn btn-primary">수정</button>
-				    	<button type="button" class="btn btn-primary" data-dismiss="modal">취소</button>
+				    	<button id = "statusUpdate" class="btn btn-cococo">수정</button>
+				    	<button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
 		        	</div>
 		        </div>
 	    	</div>
@@ -150,26 +81,35 @@ img#status {
 	    
 		<!-- 하위 HTML에서 content 재정의할 예정 -->
 		<div layout:fragment="content"></div>
-	</div>
+		
+		<div id="chatting">
+			채팅
+			채팅
+			채팅
+			채팅
+			채팅
+		</div>
 </div>
 
 <script>
-$(".statusBtn").click(function () {
+$(function() {
+	$(".statusBtn").click(myStatus);
+	$("#statusUpdate").click(updateStatus);
+})
+
+function myStatus() {
 	var status = "[[${session.user.status}]]";
 	
-	if(status != null || status != '') {
+	if(status != "") {
 		$("select[name='status']").val(status);
-		return;
 	}
-	alert("null!");
-})
+}
 
-$("#statusUpdate").click(function () {
+function updateStatus() {
 	var status = $("select[name='status']").val();
-	var userId = "[[${session.user.userId}]]";
 
-	location.href="/main/updateStatus/" + userId +"/" + status + "/[[${team.teamId}]]";
-})
+	location.href="/main/updateStatus/t/" + status;
+}
 </script>
 
 <th:block layout:fragment="script"></th:block>

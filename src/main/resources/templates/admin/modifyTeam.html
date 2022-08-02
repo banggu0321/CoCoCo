@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<div id="box">
-	<img th:if="${team.teamImg!=null}" class="showImg img-rounded" th:src="${team.teamImg}" th:alt="${team.teamImg}">
-	<img th:if="${team.teamImg==null}" class="showImg img-rounded" th:src="@{/images/teamImg.png}" alt="null">
+	<img th:src="${team.teamImg}?:@{/images/teamImg.png}" class="showImg img-rounded" th:alt="${team.teamImg}">
 	
 	<div id="teamInfo">
 		<form id="modifyForm" action="/admin/modify" method="post" enctype="multipart/form-data">
@@ -25,26 +23,46 @@
 			
 			<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 			
-			<input type="submit" class="btn btn-primary" value="수정">
-			<input type="button" class="btn btn-primary reloadBtn" value="취소">
+			<input type="submit" class="btn btn-cococo" value="수정">
+			<input type="button" class="btn btn-default reloadBtn" value="취소">
 		</form>
 	</div>
-</div>
+	
+<style>
+.form-control {
+	margin-bottom: 20px;
+}
+</style>
 
 <script>
-	$(".reloadBtn").click(function() {
-		location.reload();
-	});
+$(function() {
+	$("#modifyForm").submit(isEmpty);
+	$(".reloadBtn").click(reload);
+	$("#img").change(makeView);
+})
+
+function isEmpty() {
+	var teamName = $("input[name='teamName']");
+	if(teamName.val() == "") {
+		alert("워크스페이스 이름은 필수입니다!");
+		teamName.focus();
+		return false; 
+	}
+}
+
+function reload() {
+	location.reload();
+}
 	
-	$("#img").change(function(event) {
-        var reader = new FileReader();
+function makeView(event) {
+	var reader = new FileReader();
 
-        reader.onload = function(event) {
-        	$(".showImg").attr("src", event.target.result);
-        };
+	reader.onload = function(event) {
+		$(".showImg").attr("src", event.target.result);
+	};
 
-        reader.readAsDataURL(event.target.files[0]);
-      });
+	reader.readAsDataURL(event.target.files[0]);
+}
 	
 </script>
 </html>

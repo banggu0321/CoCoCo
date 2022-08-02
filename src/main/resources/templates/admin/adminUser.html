@@ -14,10 +14,12 @@ table{
 	text-align: center;
 }
 
-tr:first-child {
+.head {
 	background-color: #FF7F27;
 	color:white;
 	font-weight: bold;
+	position: sticky;
+	top: 0;
 }
 
 #adminUser {
@@ -41,14 +43,17 @@ tr:first-child {
 	right: 20%;
 }
 
+.body {
+	overflow-x: hidden;
+	overflow-y: auto; 
+}
 </style>
 </head>
 <body>
-[[${userList}]]
 <div layout:fragment="content">
 	<div class="body">
 		<table id="userList" class="table">
-			<tr>
+			<tr class="head">
 				<td></td>
 				<td>이름</td>
 				<td>이메일</td>
@@ -60,7 +65,7 @@ tr:first-child {
 				<td></td>
 			</tr>
 			
-			<tr th:each="user, rowStatus:${userList}">
+			<tr id="teamUser" th:each="user, rowStatus:${userList}">
 				<td th:text="${rowStatus.count}">순서</td>
 				<td th:text="${user.teamUserId.user.name}">이름</td>
 				<td th:text="${user.teamUserId.user.userId}">이메일</td>
@@ -69,13 +74,14 @@ tr:first-child {
 				<td th:text="${#dates.format(user.joinDate,'yyyy-MM-dd')}">참여일자</td>
 				<td th:text="${user.userRole}">권한</td>
 				
-				<td th:if="${user.teamUserId.user.userId == user.teamUserId.team.user.userId}"></td>
-				<td th:if="${user.teamUserId.user.userId != user.teamUserId.team.user.userId}" data-toggle="modal" data-target="#myModal" class="roleModel">
+				<td th:if="${user.teamUserId.user.userId == user.teamUserId.team.user.userId || user.teamUserId.user.userId == session.user.userId}"></td>
+				<td th:if="${user.teamUserId.user.userId != user.teamUserId.team.user.userId && user.teamUserId.user.userId != session.user.userId}" 
+						data-toggle="modal" data-target="#myModal" class="roleModel">
 					<img th:src="@{/images/updateRole.svg}" class="updateUser" th:user-data="${user.teamUserId.user.userId}" alt="update">
 				</td>
 				
-				<td th:if="${user.teamUserId.user.userId == user.teamUserId.team.user.userId}"></td>
-				<td th:if="${user.teamUserId.user.userId != user.teamUserId.team.user.userId}">
+				<td th:if="${user.teamUserId.user.userId == user.teamUserId.team.user.userId || user.teamUserId.user.userId == session.user.userId}"></td>
+				<td th:if="${user.teamUserId.user.userId != user.teamUserId.team.user.userId && user.teamUserId.user.userId != session.user.userId}">
 					<img th:src="@{/images/deleteImg.svg}" class="delUser" th:user-data="${user.teamUserId.user.userId}" alt="delete">
 				</td>
 			</tr>
@@ -104,8 +110,8 @@ tr:first-child {
 		        </div>
 			
 				<div class="modal-footer">
-			    	<button id = "updateBtn" class="btn btn-info">Save</button>
-			    	<button type="button" class="btn btn-default"   data-dismiss="modal" >Close</button>
+			    	<button id = "updateBtn" class="btn btn-cococo">변경</button>
+			    	<button type="button" class="btn btn-default" data-dismiss="modal" >취소</button>
 	        	</div>
 	        </div>
     	</div>
@@ -114,46 +120,54 @@ tr:first-child {
 
 <th:block layout:fragment="script">
 	<script>
-		var token = $("meta[name='_csrf']").attr("content");
-	 	var header = $("meta[name='_csrf_header']").attr("content");
- 	
-		$(".delUser").click(function() {
-			var userId = $(this).attr("user-data");
-			var teamId = "[[${teamId}]]";
+	$(function() {
+		var msg = "[[${msg}]]";
+		if(msg != "") {
+			alert(msg);
+		}
+		
+		$(".delUser").click(deleteUser);
+		$(".updateUser").click(getUser);
+		$("#updateBtn").click(updateUser);
+	})
 	
-			if(confirm("해당 사용자를 삭제하시겠습니까?")) {
-				location.href="/admin/deleteUser/"+teamId+"/"+userId;
+	var token = $("meta[name='_csrf']").attr("content");
+	var header = $("meta[name='_csrf_header']").attr("content");
+
+	function deleteUser() {
+		var userId = $(this).attr("user-data");
+	
+		if(confirm("해당 사용자를 삭제하시겠습니까?")) {
+			location.href="/admin/deleteUser/"+userId;
+		}
+	}
+		
+	function getUser() {
+		var userId = $(this).attr("user-data");
+		
+		$.ajax({
+			type:"post",
+			url: "/admin/findUser/"+userId,
+			beforeSend : function(xhr){
+				xhr.setRequestHeader(header, token);
+			},
+			success:function(resData) {
+				var id = resData.teamUserId.user.userId;
+				var name = resData.teamUserId.user.name+" ("+id+")";
+				
+				$("input[name='userId']").val(id);
+				$("input[name='name']").val(name);
+				$("select[name='userRole']").val(resData.userRole);
 			}
 		});
+	}
 		
-		$(".updateUser").click(function() {
-			var userId = $(this).attr("user-data");
-			var teamId = "[[${teamId}]]";
-			
-			$.ajax({
-				type:"post",
-				url: "/admin/findUser/"+teamId+"/"+userId,
-				beforeSend : function(xhr){
-					xhr.setRequestHeader(header, token);
-				},
-				success:function(resData) {
-					var id = resData.teamUserId.user.userId;
-					var name = resData.teamUserId.user.name+" ("+id+")";
-					
-					$("input[name='userId']").val(id);
-					$("input[name='name']").val(name);
-					$("select[name='userRole']").val(resData.userRole);
-				}
-			});
-		});
+	function updateUser() {
+		var newRole = $("select[name='userRole']").val();
+		var userId = $("input[name='userId']").val();
 		
-		$("#updateBtn").click(function() {
-			var newRole = $("select[name='userRole']").val();
-			var userId = $("input[name='userId']").val();
-			var teamId = "[[${teamId}]]";
-			
-			location.href="/admin/updateUser/"+teamId+"/"+userId+"/"+newRole;
-		});
+		location.href="/admin/updateUser/"+userId+"/"+newRole;
+	}
 	</script>
 </th:block>
 </body>

@@ -3,24 +3,17 @@
 
 <head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
-<link rel="stylesheet" th:href="@{/css/header.css}" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" th:href="@{/css/ja0/header.css}" />
 
 <script>
 	
 </script>
 
 <style>
-.contentBody {
-	padding-top: 30px;
-	
-}
-
-.content{
-	background-color: #eee;
-}
-
 </style>
 <!-- 하위 HTML에서 CSS 재정의할 예정 -->
 <th:block layout:fragment="style"></th:block>
@@ -31,7 +24,7 @@
 <!-- fragment 삽입하기 -->
 <header th:replace="~{/layoutJY/header::header2}"></header>
 
-<div class="container-fluid contentBody">
+<div id="cont">
 	<!-- 하위 HTML에서 content 재정의할 예정 -->
 	<div layout:fragment="content"></div>
 </div>

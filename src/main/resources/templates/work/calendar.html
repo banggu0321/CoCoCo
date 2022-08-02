@@ -81,15 +81,7 @@
 				}else{
 					data.manager = "none";
 				}
-				/* workmanager.includes(1)
-				for(i=0;i<workmanager.length;i++){
-					console.log("왜 user야??"+workmanager[i]+"왜");
-					if(workmanager[i] == 'bang'){
-						data.manager = "user";
-					}else{
-						data.manager = "none";
-					}
-				} */
+				
 				var date_end1 = data.workEnd.substr(0,8); 
 				var date_end2 = String(Number(data.workEnd.substr(8))+1);
 				date_end2 = ('00' + date_end2).slice(-2);
@@ -164,7 +156,7 @@
 								date_end2 = ('00' + date_end2).slice(-2);
 								
 								//console.log(data);
-								if(data.workStatus == 'finish'){
+								if(data.workStatus == 'finish'){//완료
 									myeventlist.push({
 										id: data.workId,
 										title : data.workTitle,
@@ -190,8 +182,8 @@
 								}
 							});
 							//console.log("바뀐 event : "+myeventlist);
-							calendar.removeAllEvents();
-							calendar.addEventSource(myeventlist);
+							calendar.removeAllEvents(); //전 event삭제
+							calendar.addEventSource(myeventlist); //event 추가
 							calendar.render(); //다시 렌더링
 							$(".fc-myWorkButton-button").hide();
 							$(".fc-totalButton-button").show();
@@ -203,8 +195,8 @@
 						click : function() {
 							//console.log("원래 event : "+totaleventlist);
 							//console.log("바뀐 event : "+myeventlist);
-							calendar.removeAllEvents();
-							calendar.addEventSource(totaleventlist);
+							calendar.removeAllEvents(); //전 event삭제
+							calendar.addEventSource(totaleventlist); //event 추가
 							calendar.render(); //다시 렌더링
 							$(".fc-myWorkButton-button").show();
 							$(".fc-totalButton-button").hide();
@@ -226,14 +218,7 @@
 							//option에 해당 팀의 담당자 추가
 							$.each(teamUserlist,function(index, data){
 								$("#calendar_manager").append("<option class=\"form-control addmanageroption\" value=\'"+data+"'>"+data+"</option>"); 
-								
-								/* var option = document.createElement('option');
-								option.value = data;
-								option.className = "form-control addmanageroption";
-								option.innerText = data;
-								$("#calendar_manager").append(option); */
-								//$("#calendar_manager").appendChild("<option class=\"form-control\">"+data+"</option>");
-							});
+								});
 							
 							// modal의 추가 버튼 클릭 시
 							$("#addWork").on("click", function() { 
@@ -265,8 +250,6 @@
 										"manager" :manager
 									}//전송할 객체 생성
 									console.log("insert object", obj); //서버로 해당 객체를 전달해서 DB 연동 가능
-									
-									//let sendData = "username="+$('input[name=username]').val();   //폼의 이름 값을 변수 안에 담아줌
 									
 									//insert work
 									$.ajax({
@@ -364,27 +347,11 @@
 				
 				if(workDatail.manager.includes(data)){
 					$(".update_workMannager").append("<option class=\"form-control updatemanageroption managerselected\" value=\'"+data+"'>"+data+"</option>"); 
-					//option.attr("selected","selected");
-					//$(".update_workMannager").value=data;
-					//console.log("data : " + data);
-					//console.log("val : "+ $(".update_workMannager").value)
-				}else{
+					}else{
 					//alert("없음");
 					$(".update_workMannager").append("<option class=\"form-control updatemanageroption\" value=\'"+data+"'>"+data+"</option>"); 
 				}
-				/* var option = document.createElement('option');
-				option.value = data;
-				option.className = "form-control updatemanageroption";
-				option.innerText = data;
-				option.attr("selected","selected");
-				$(".update_workMannager").append(option); */ 
-			});
-			/* var arr = workDatail.manager;
-			//console.log(typeof arr);
-			console.log(workDatail.manager[0]);
-			console.log(workDatail.manager[1]);
-			$(".update_workMannager").val(arr[0]);//일반for로 */
-			
+			});			
 		});
 		$(".WorkStatusUpdateModalBtn").on("click", function() {
 			var work_id = $(".detail_workId").val();

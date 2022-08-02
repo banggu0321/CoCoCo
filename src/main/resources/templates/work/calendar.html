@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="~{/layout/layout1}">
 <head>
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge'>
@@ -477,140 +478,142 @@ float : left;}
 </style>
 </head>
 <body>
-	<!-- <div id="addButton">
-		<input type="button" id="addCalendar" value="업무추가" class="btn btn-warning">
-	</div> -->
-	<div id="calendarBox">
-		<div id="calendar"></div>
-	</div>
-
-	<!-- Work Add modal -->
-	<div class="modal fade" id="calendarAddModal" tabindex="-1" role="dialog"
-		aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">일정을 입력하세요.</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<div class="form-group">
-						<label for="taskId" class="col-form-label">일정 제목</label> 
-						<input type="text" class="form-control" id="calendar_title" name="calendar_title" value="제목"> 
-						<label for="taskId" class="col-form-label">일정 내용</label> 
-						<input type="text" class="form-control" id="calendar_content" name="calendar_content" value="내용"> 
-						<label for="taskId" class="col-form-label">시작 날짜</label> 
-						<input type="date" class="form-control" id="calendar_start_date" name="calendar_start_date" value="2022-08-01"> 
-						<label for="taskId" class="col-form-label">종료 날짜</label> 
-						<input type="date" class="form-control" id="calendar_end_date" name="calendar_end_date" value="2022-08-05">
-						<label for="taskId" class="col-form-label">업무 상태</label> 
-						<select class="form-control" id="calendar_status" name="calendar_status">
-							<option class="form-control" value="plan">대기</option>
-							<option class="form-control" value="ongoing" >진행</option>
-							<option class="form-control" value="finish">완료</option>
-						</select>
-						<label for="taskId" class="col-form-label">일정 담당자(Ctrl클릭 후 중복선택가능)</label> 
-						<div class="workManager">
-							<select class="form-control" id="calendar_manager" name="calendar_manager" multiple="multiple" size="3">
-								<!-- <option class="form-control managers">선택하세요</option>
-								<option class="form-control">방근영2</option>
-								<option class="form-control">방3</option> -->
-							</select>
-						</div>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-warning" id="addWork">추가</button>
-					<button type="button" class="btn btn-secondary"
-						data-dismiss="modal" id="sprintSettingModalClose">취소</button>
-				</div>
-			</div>
+	<div id="inner_content" layout:fragment="inner_content">
+		<!-- <div id="addButton">
+			<input type="button" id="addCalendar" value="업무추가" class="btn btn-warning">
+		</div> -->
+		<div id="calendarBox">
+			<div id="calendar"></div>
 		</div>
-	</div>
-	<!-- Work Detail modal -->
-	<div class="modal fade" id="calendarDetailModal" tabindex="-1" role="dialog"
-		aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Detail</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<div class="form-group">
-						<label for="taskId" class="col-form-label">업무번호</label> 
-						<input type="text" class="form-control detail_workId" id="calendar_workId" name="calendar_workId" readonly="readonly"> 
-						<label for="taskId" class="col-form-label">업무명</label> 
-						<input type="text" class="form-control detail_workTitle" id="calendar_title" name="calendar_title" readonly="readonly"> 
-						<label for="taskId" class="col-form-label">업무내용</label> 
-						<input type="text" class="form-control detail_workText" id="calendar_content" name="calendar_content" readonly="readonly"> 
-						<label for="taskId" class="col-form-label">업무기간</label> 
-						<input type="text" class="form-control detail_workDate" id="calendar_date" name="calendar_date" readonly="readonly">
-						<label for="taskId" class="col-form-label">업무상태</label> 
-						<input type="text" class="form-control detail_workStatus" id="calendar_status" name="calendar_status" readonly="readonly"> 
-						<label for="taskId" class="col-form-label">담당자</label> 
-						<input type="text" class="form-control detail_workMannager" id="calendar_manager" name="calendar_manager" readonly="readonly"> 
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-warning WorkStatusUpdateModalBtn" id="WorkStatusUpdateModalBtn" disabled>상태바꾸기</button>
-					<button type="button" class="btn btn-warning WorkUpdateModalBtn" id="WorkUpdateModalBtn">수정</button>
-					<button type="button" class="btn btn-secondary"
-						data-dismiss="modal" id="WorkDeleteBtn">삭제</button>
-				</div>
-			</div>
-		</div>
-	</div>
 	
-	<!-- Work Update modal -->
-	<div class="modal fade" id="calendarUpdateModal" tabindex="-100" role="dialog"
-		aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">수정</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<div class="form-group">
-						<label for="taskId" class="col-form-label">업무번호</label> 
-						<input type="text" class="form-control detail_workId update_workId" id="calendar_workId" name="calendar_workId" readonly="readonly"> 
-						<label for="taskId" class="col-form-label">업무명</label> 
-						<input type="text" class="form-control detail_workTitle update_workTitle" id="calendar_title" name="calendar_title"  > 
-						<label for="taskId" class="col-form-label">업무내용</label> 
-						<input type="text" class="form-control detail_workText update_workText" id="calendar_content" name="calendar_content" > 
-						<label for="taskId" class="col-form-label">업무시작일</label> 
-						<input type=date class="form-control detail_workStartDate update_workStartDate" id="calendar_start_date" name="calendar_start_date" > 
-						<label for="taskId" class="col-form-label">업무마감일</label> 
-						<input type="date" class="form-control detail_workEndDate update_workEndDate" id="calendar_end_date" name="calendar_end_date" >
-						<label for="taskId" class="col-form-label">업무상태</label> 
-						<select class="form-control detail_workStatus update_workStatus" id="calendar_status" name="calendar_status">
-							<option class="form-control" value="대기">대기</option>
-							<option class="form-control" value="진행">진행</option>
-							<option class="form-control" value="완료">완료</option>
-						</select>
-						<label for="taskId" class="col-form-label">일정 담당자(Ctrl클릭 후 중복선택가능)</label> 
-						<div class="workManager">
-							<select class="form-control update_workMannager" id="update_calendar_manager" name="calendar_manager" multiple="multiple" size="3">
-								<!-- <option class="form-control managers" selected="selected">방근영2</option> -->
-								<!-- <option class="form-control managers">선택하세요</option>
-								<option class="form-control">방근영2</option>
-								<option class="form-control">방3</option> -->
+		<!-- Work Add modal -->
+		<div class="modal fade" id="calendarAddModal" tabindex="-1" role="dialog"
+			aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">일정을 입력하세요.</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="form-group">
+							<label for="taskId" class="col-form-label">일정 제목</label> 
+							<input type="text" class="form-control" id="calendar_title" name="calendar_title" value="제목"> 
+							<label for="taskId" class="col-form-label">일정 내용</label> 
+							<input type="text" class="form-control" id="calendar_content" name="calendar_content" value="내용"> 
+							<label for="taskId" class="col-form-label">시작 날짜</label> 
+							<input type="date" class="form-control" id="calendar_start_date" name="calendar_start_date" value="2022-08-01"> 
+							<label for="taskId" class="col-form-label">종료 날짜</label> 
+							<input type="date" class="form-control" id="calendar_end_date" name="calendar_end_date" value="2022-08-05">
+							<label for="taskId" class="col-form-label">업무 상태</label> 
+							<select class="form-control" id="calendar_status" name="calendar_status">
+								<option class="form-control" value="plan">대기</option>
+								<option class="form-control" value="ongoing" >진행</option>
+								<option class="form-control" value="finish">완료</option>
 							</select>
+							<label for="taskId" class="col-form-label">일정 담당자(Ctrl클릭 후 중복선택가능)</label> 
+							<div class="workManager">
+								<select class="form-control" id="calendar_manager" name="calendar_manager" multiple="multiple" size="3">
+									<!-- <option class="form-control managers">선택하세요</option>
+									<option class="form-control">방근영2</option>
+									<option class="form-control">방3</option> -->
+								</select>
+							</div>
 						</div>
-					
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-warning" id="addWork">추가</button>
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal" id="sprintSettingModalClose">취소</button>
 					</div>
 				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-warning WorkUpdateBtn" id="WorkUpdateBtn">수정</button>
-					<button type="button" class="btn btn-secondary"
-						data-dismiss="modal" id="sprintSettingModalClose">취소</button>
+			</div>
+		</div>
+		<!-- Work Detail modal -->
+		<div class="modal fade" id="calendarDetailModal" tabindex="-1" role="dialog"
+			aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Detail</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="form-group">
+							<label for="taskId" class="col-form-label">업무번호</label> 
+							<input type="text" class="form-control detail_workId" id="calendar_workId" name="calendar_workId" readonly="readonly"> 
+							<label for="taskId" class="col-form-label">업무명</label> 
+							<input type="text" class="form-control detail_workTitle" id="calendar_title" name="calendar_title" readonly="readonly"> 
+							<label for="taskId" class="col-form-label">업무내용</label> 
+							<input type="text" class="form-control detail_workText" id="calendar_content" name="calendar_content" readonly="readonly"> 
+							<label for="taskId" class="col-form-label">업무기간</label> 
+							<input type="text" class="form-control detail_workDate" id="calendar_date" name="calendar_date" readonly="readonly">
+							<label for="taskId" class="col-form-label">업무상태</label> 
+							<input type="text" class="form-control detail_workStatus" id="calendar_status" name="calendar_status" readonly="readonly"> 
+							<label for="taskId" class="col-form-label">담당자</label> 
+							<input type="text" class="form-control detail_workMannager" id="calendar_manager" name="calendar_manager" readonly="readonly"> 
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-warning WorkStatusUpdateModalBtn" id="WorkStatusUpdateModalBtn" disabled>상태바꾸기</button>
+						<button type="button" class="btn btn-warning WorkUpdateModalBtn" id="WorkUpdateModalBtn">수정</button>
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal" id="WorkDeleteBtn">삭제</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Work Update modal -->
+		<div class="modal fade" id="calendarUpdateModal" tabindex="-100" role="dialog"
+			aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">수정</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="form-group">
+							<label for="taskId" class="col-form-label">업무번호</label> 
+							<input type="text" class="form-control detail_workId update_workId" id="calendar_workId" name="calendar_workId" readonly="readonly"> 
+							<label for="taskId" class="col-form-label">업무명</label> 
+							<input type="text" class="form-control detail_workTitle update_workTitle" id="calendar_title" name="calendar_title"  > 
+							<label for="taskId" class="col-form-label">업무내용</label> 
+							<input type="text" class="form-control detail_workText update_workText" id="calendar_content" name="calendar_content" > 
+							<label for="taskId" class="col-form-label">업무시작일</label> 
+							<input type=date class="form-control detail_workStartDate update_workStartDate" id="calendar_start_date" name="calendar_start_date" > 
+							<label for="taskId" class="col-form-label">업무마감일</label> 
+							<input type="date" class="form-control detail_workEndDate update_workEndDate" id="calendar_end_date" name="calendar_end_date" >
+							<label for="taskId" class="col-form-label">업무상태</label> 
+							<select class="form-control detail_workStatus update_workStatus" id="calendar_status" name="calendar_status">
+								<option class="form-control" value="대기">대기</option>
+								<option class="form-control" value="진행">진행</option>
+								<option class="form-control" value="완료">완료</option>
+							</select>
+							<label for="taskId" class="col-form-label">일정 담당자(Ctrl클릭 후 중복선택가능)</label> 
+							<div class="workManager">
+								<select class="form-control update_workMannager" id="update_calendar_manager" name="calendar_manager" multiple="multiple" size="3">
+									<!-- <option class="form-control managers" selected="selected">방근영2</option> -->
+									<!-- <option class="form-control managers">선택하세요</option>
+									<option class="form-control">방근영2</option>
+									<option class="form-control">방3</option> -->
+								</select>
+							</div>
+						
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-warning WorkUpdateBtn" id="WorkUpdateBtn">수정</button>
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal" id="sprintSettingModalClose">취소</button>
+					</div>
 				</div>
 			</div>
 		</div>

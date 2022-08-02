@@ -5,8 +5,7 @@
 	<div id="teamList">
 		<a th:href="@{/main/}+${tu.teamUserId.team.teamId}" th:each="tu:${session.teamList}"
 				data-toggle="tooltip" data-placement="right" th:title="${tu.teamUserId.team.teamName}">
-			<img th:if="${tu.teamUserId.team.teamImg!=null}" th:src="${tu.teamUserId.team.teamImg}" class="img-rounded">
-			<img th:if="${tu.teamUserId.team.teamImg==null}" th:src="@{/images/teamImg.png}" alt="null" class="img-rounded">
+			<img th:src="${tu.teamUserId.team.teamImg}?:@{/images/teamImg.png}" class="img-rounded">
 		</a>
 	</div>
 	<div id="myMenu">

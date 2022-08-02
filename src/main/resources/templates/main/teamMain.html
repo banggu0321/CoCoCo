@@ -20,8 +20,7 @@
 			<button class="btn btn-cococo copyBtn">초대코드</button>
 			
 			<div id="box">
-				<img th:if="${team.teamImg!=null}" th:src="${team.teamImg}" th:alt="${team.teamImg}" class="img-rounded">
-				<img th:if="${team.teamImg==null}" th:src="@{/images/teamImg.png}" alt="null" class="img-rounded">
+				<img th:src="${team.teamImg}?:@{/images/teamImg.png}" th:alt="${team.teamImg}" class="img-rounded">
 				<div id="ttt">
 					<div id="name">[[${team.teamName}]]</div>
 					<div id="tInfo">[[${team.teamInfo}]]</div>

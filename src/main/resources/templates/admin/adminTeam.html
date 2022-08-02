@@ -65,7 +65,7 @@
 <div layout:fragment="content">
 	<div class="body">
 		<div id="box">
-			<div id="teamImg" th:if="${team.teamImg!=null}">
+			<div id="teamImg" th:if="${team.teamImg}">
 				<img th:src="${team.teamImg}" th:alt="${team.teamImg}" class="showImg img-rounded">
 				<img id="delImg" th:src="@{/images/deleteTeamImg.svg}">
 			</div>

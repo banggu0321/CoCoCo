@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-	<img th:if="${team.teamImg!=null}" class="showImg img-rounded" th:src="${team.teamImg}" th:alt="${team.teamImg}">
-	<img th:if="${team.teamImg==null}" class="showImg img-rounded" th:src="@{/images/teamImg.png}" alt="null">
+	<img th:src="${team.teamImg}?:@{/images/teamImg.png}" class="showImg img-rounded" th:alt="${team.teamImg}">
 	
 	<div id="teamInfo">
 		<form id="modifyForm" action="/admin/modify" method="post" enctype="multipart/form-data">

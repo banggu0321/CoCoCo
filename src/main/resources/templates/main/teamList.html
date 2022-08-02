@@ -32,8 +32,7 @@
 			<div class="box" th:team-data="${team.teamUserId.team.teamId}" th:each="team:${paging.result.getContent()}">
 				<img th:if="${session.user.userId != team.teamUserId.team.user.userId}" th:src="@{/images/deleteImg.svg}" class="delBtn" th:team-data="${team.teamUserId.team.teamId}">
 				
-				<img th:if="${team.teamUserId.team.teamImg}" th:src="${team.teamUserId.team.teamImg}" th:alt="${team.teamUserId.team.teamImg}" class="img-rounded">
-				<img th:if="${team.teamUserId.team.teamImg == null}" th:src="@{/images/teamImg.png}" alt="null" class="img-rounded">
+				<img th:src="${team.teamUserId.team.teamImg}?:@{/images/teamImg.png}" th:alt="${team.teamUserId.team.teamImg}" class="img-rounded">
 				
 				<p class="name">[[${team.teamUserId.team.teamName}]]</p>
 				<p>[[${#dates.format(team.teamUserId.team.createDate,'yyyy-MM-dd')}]]</p>

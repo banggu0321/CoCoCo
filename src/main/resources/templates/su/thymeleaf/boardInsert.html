@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="www.thymeleaf.org">
 <head>
 <meta charset="utf-8">
 <title>board insert</title>
@@ -20,9 +20,13 @@ width: 70%;
 <div id="boardInsert">
 <form method="post" action="/postBoardInsertSample2" class="form-group">
 
+	<p>카테고리: [[${categoryName}]]<p>
+	<hr>
+
     <div class="form-group">
       <label>title</label>
       <div>
+      	<input name="category" type="hidden" th:value="${categoryName}">
         <input name="title" class="form-control" type="text">
       </div>
     </div>

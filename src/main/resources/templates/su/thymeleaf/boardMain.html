@@ -18,7 +18,7 @@ left:10%;
 text-align:right;
 
 position:relative;
-left:30%;
+left:45%;
 }
 #boardMain2{
 margin: 0 auto;
@@ -77,11 +77,10 @@ width:80%;
 	<div id="boardMain">
 		<div id="boardMain1">
 			<div id="boardMainSub1">
-				category name - <button id="boardFormA">A form</button> - <button>B form</button>
+				<button id="boardFormA">A form</button> - <button>B form</button>
 			</div>
 			
 			<div id="boardMainSub2">
-			<button id="sampleBtn">sample</button>
 			<button id="boardCategory" type="button" class="btn btn-primary">카테고리 선택</button>
 			<button id="insertBoard" type="button" class="btn btn-primary">게시판 만들기</button>
 			</div>
@@ -116,7 +115,11 @@ width:80%;
 			<div class="modal-body">
 			카테고리 이름: 
 			<select id="categoryTable"></select>
-			<button id="categoryNameBtn">선택</button>
+			<button id="categoryNameBtn">선택</button><br><br>
+			
+			카테고리 이름: 
+			<input type="text" id="cNameInsert">
+			<button id="cNameInsertBtn">적용하기</button>
 			</div>
 		</div>
 
@@ -124,7 +127,9 @@ width:80%;
 
 
 	<script th:inline="javascript" th:src="@{'js/RESTreply.js'}"></script>
-	<script th:inline="javascript">
+	<script th:inline="javascript">	
+	var insertName = document.getElementById("cNameInsert");
+	var insertNameBtn = document.getElementById("cNameInsertBtn");
 	
 	var insertBtn = document.getElementById("insertBoard");
 	var categoryBtn = document.getElementById("boardCategory");
@@ -136,10 +141,24 @@ width:80%;
 	var cNameBtn = document.getElementById("categoryNameBtn");
 	
 	var formA = document.getElementById("boardFormA");
-	formA.onclick = function(){
-		alert("form clicked");
-	}
+	var categoryResult;
+	var showCategory = document.getElementById("scName");
+	
 
+	</script>
+
+	<script th:inline="javascript">
+		formA.onclick = function() {
+			alert("form clicked");
+		}
+
+		insertNameBtn.onclick = function() {
+			alert(insertName.value);
+
+			replyREST.getAllBoard("boardList/insertName/" + insertName.value,
+					printList);
+			modal.style.display = "none";
+		}
 
 		categoryBtn.onclick = function() {
 			modal.style.display = "block";
@@ -147,7 +166,7 @@ width:80%;
 		}
 
 		cNameBtn.onclick = function() {
-			let categoryResult = categoryName.options[categoryName.selectedIndex].text;
+			categoryResult = categoryName.options[categoryName.selectedIndex].text;
 			replyREST.getAllBoard("boardList/" + categoryResult, printList);
 
 			modal.style.display = "none";
@@ -156,10 +175,21 @@ width:80%;
 		modalClose.onclick = function() {
 			modal.style.display = "none";
 		};
+
 		insertBtn.onclick = function() {
-			location.href = "/boardInsertSample2";
+
+			if (categoryResult == null) {
+				alert("카테고리를 선택하세요.");
+			} else if (categoryResult != null) {
+				location.href = "/boardInsertSample2/" + categoryResult;
+			}
 		};
 
+		$(document).ready(function() {
+			replyREST.getAllBoard("boardList", printList);
+		});
+	</script>
+	<script th:inline="javascript">		
 		function printCategory(list) {
 			var result = "";
 			var obj;
@@ -170,24 +200,27 @@ width:80%;
 			}
 			$("#categoryTable").html(result);
 		}
-	</script>
-	<script th:inline="javascript">
-		$(document).ready(function() {
-			replyREST.getAllBoard("boardList", printList);
-		});
+		
 		function printList(list) {
 			var str = "";
 			var replyObj;
 
-			for (var i = 0; i < list.length; i++) {
-				replyObj = list[i];
+			if (list.length == 0) {
+				alert("list is null");
+				str += "<tr>"+"<td colspan='4'>"+"<center>"+"만든 게시글 없습니다."+"</center>"+"</td>"+"</tr>";
+			} else if (list.length != 0) {
 
-				str += "<tr>" + "<td>" + "<a href='/boardUDsampleBeta?id="
-						+ replyObj.boardId + "'>" + replyObj.boardTitle
-						+ "</a>" + "</td>" + "<td>" + formatDate(replyObj.boardRegDate)
-						+ "</td>" + "<td>" + formatDate(replyObj.boardUpdate)
-						+ "</td>"+ "<td>" + replyObj.user.name
-						+ "</td>"  + "</tr>";
+				for (var i = 0; i < list.length; i++) {
+					replyObj = list[i];
+
+					str += "<tr>" + "<td>" + "<a href='/boardUDsampleBeta?id="
+							+ replyObj.boardId + "'>" + replyObj.boardTitle
+							+ "</a>" + "</td>" + "<td>"
+							+ formatDate(replyObj.boardRegDate) + "</td>"
+							+ "<td>" + formatDate(replyObj.boardUpdate)
+							+ "</td>" + "<td>" + replyObj.user.name + "</td>"
+							+ "</tr>";
+				}
 			}
 			$("#replyTable").html(str);
 		}

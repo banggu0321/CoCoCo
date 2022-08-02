@@ -43,24 +43,59 @@ public class tableCRUDTest {
 	
 	@Autowired
 	ReplyRepositoryTestSu replyRP;
-
+	
 	
 	@Test
-	public void boardSelectByCategoryID() {
-		List<Long>categoryID = boardcateRP.selectIDByname("sample2022");
+	public void categoryNameInsertByuserID() {
 		
-		List<BoardVO> boardList = new ArrayList<>();
-		categoryID.forEach(a->{
-			BoardVO temp = boardRP.selectBoardByID(a);
-			if(temp != null) {
-				boardList.add(temp);
-			}
-		});
 		
-		boardList.forEach(a->{
-			System.out.println(a);
-		});
+//		Long teamID = 21L; //teams -> team_id
+		String userID = "0720"; //user_id
+		String categoryName = "sample0802beta";	
+		
+		List<Long>categoryID = boardcateRP.selectIDByname(categoryName);
+		
+		System.out.println(categoryID);
+		if(categoryID.isEmpty()) {
+			categoryNameInsert(categoryName, userID, boardcateRP);
+		}
 	}
+
+	private void categoryNameInsert(String categoryName, String userID, BoardCategoryRepositoryTestSu boardcateRP2) {
+		//BoardCategoryMultikey -> generateValue not work
+		long gnrTemp =  new Random().nextLong();
+		if(gnrTemp <0) {
+			gnrTemp = -1*gnrTemp;
+		}
+		long gnrValue = Long.valueOf(String.valueOf(gnrTemp).substring(0, 6));
+//		System.out.println(gnrValue);
+		
+		UserVO uservo = userRP.findById(userID).get();
+		TeamVO teamvo =  teamRP.selectByUserID(uservo.getUserId());
+		System.out.println(teamvo);
+		
+		BoardCategoryMultikey bcMultikey = BoardCategoryMultikey.builder().categoryId(gnrValue).team(teamvo).build();
+		BoardCategoryVO bcTemp = BoardCategoryVO.builder().boardCategoryId(bcMultikey).categoryName(categoryName).build();
+		boardcateRP.save(bcTemp);
+	}
+
+	
+//	@Test
+//	public void boardSelectByCategoryID() {
+//		List<Long>categoryID = boardcateRP.selectIDByname("sample2022");
+//		
+//		List<BoardVO> boardList = new ArrayList<>();
+//		categoryID.forEach(a->{
+//			BoardVO temp = boardRP.selectBoardByID(a);
+//			if(temp != null) {
+//				boardList.add(temp);
+//			}
+//		});
+//		
+//		boardList.forEach(a->{
+//			System.out.println(a);
+//		});
+//	}
 	
 //	@Test 
 //	public void categorySelectName() {

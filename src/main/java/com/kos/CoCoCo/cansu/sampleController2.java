@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.kos.CoCoCo.cansu.test.BoardCategoryRepositoryTestSu;
@@ -78,11 +79,12 @@ public class sampleController2 {
 		model.addAttribute("replyList", rlist);		
 //		System.out.println(bvo.getBoardText());
 		
-		return "su/boardUpdateAndDeleteBeta";
+		return "su/thymeleaf/boardUpdateAndDeleteBeta";
 	}
 	
-	@GetMapping("/boardInsertSample2")
-	public String boardInsertBeta() {
+	@GetMapping("/boardInsertSample2/{name}")
+	public String boardInsertBeta(@PathVariable String name, Model model) {
+		model.addAttribute("categoryName", name);
 		return "su/thymeleaf/boardInsert";
 	}
 	
@@ -122,18 +124,20 @@ public class sampleController2 {
 	@PostMapping("/postBoardInsertSample2")
 	public String boardInsertPostBeta(HttpServletRequest request) {
 
-		System.out.println("title: "+request.getParameter("title"));
-		System.out.println("content: "+request.getParameter("content"));
+//		System.out.println("title: "+request.getParameter("title"));
+//		System.out.println("content: "+request.getParameter("content"));
+//		System.out.println("category name: "+request.getParameter("category"));
 
 		String title = request.getParameter("title");
 		String content =request.getParameter("content");
+		String category = request.getParameter("category");
 
-		makeBoardSample(title, content);
+		makeBoardSample(title, content,category);
 
 		return "redirect:/boardSampleBeta";
 	}
 
-	private void makeBoardSample(String title, String content) {
+	private void makeBoardSample(String title, String content, String category) {
 		long gnrTemp =  new Random().nextLong();
 		if(gnrTemp <0) {
 			gnrTemp = -1*gnrTemp;
@@ -147,7 +151,7 @@ public class sampleController2 {
 		System.out.println(teamvo);
 
 		//categoryName 
-		String categoryName = "sample2022";
+		String categoryName = category;
 		BoardCategoryMultikey bctemp = BoardCategoryMultikey.builder().categoryId(gnrValue).team(teamvo).build();
 		BoardCategoryVO bcvotemp = BoardCategoryVO.builder().boardCategoryId(bctemp).categoryName(categoryName).build();
 		//		System.out.println(bcvotemp);

@@ -5,15 +5,49 @@
 	  layout:decorate="~{/layout/layout1.html}">
 <head>
 <meta charset="UTF-8">
+
 <link rel="stylesheet" th:href="@{/css/ja0/teamMaincss.css}" />
-<link rel="stylesheet" th:href="@{/css/ja0/header.css}" />
-<link rel="stylesheet" th:href="@{/css/ja0/sideMenu.css}" />
 <link rel="stylesheet" th:href="@{/css/ja0/layoutMaincss.css}" />
 
 <title>CoCoCo | [[${team.teamName}]]</title>
 <style>
 
 </style>
+
+<script type="text/javascript">
+	$(function() {
+		$(".statusBtn").click(myStatus);
+		$("#statusUpdate").click(updateStatus);
+		$(".copyBtn").click(copyCode);
+	})
+	
+	function myStatus() {
+		var status = "[[${session.user.status}]]";
+		
+		if(status != "") {
+			$("select[name='status']").val(status);
+		}
+	}
+	
+	function updateStatus() {
+		var status = $("select[name='status']").val();
+	
+		location.href="/main/updateStatus/t/" + status;
+	}
+	
+	function copyCode() {
+		var copyText = "[[${team.inviteCode}]]";
+		const t = document.createElement("textarea");
+		
+		document.body.appendChild(t);
+		t.value = copyText;
+		t.select();
+		document.execCommand('copy');
+		document.body.removeChild(t);
+		
+		alert("초대코드가 복사되었습니다.");
+	}
+</script>
 </head>
 
 <body>
@@ -81,53 +115,30 @@
 </div>
 			
 <div layout:fragment="inner_content">
-	<div class="body">
-		<div id="info">
-			<button class="btn btn-cococo copyBtn">초대코드</button>
-			
-			<div id="box">
-				<img th:src="${team.teamImg}?:@{/images/teamImg.png}" th:alt="${team.teamImg}" class="img-rounded">
-				<div id="ttt">
-					<div id="name">[[${team.teamName}]]</div>
-					<div id="tInfo">[[${team.teamInfo}]]</div>
-				</div>
+	<div id="info">
+		<button class="btn btn-cococo copyBtn">초대코드</button>
+		
+		<div id="box">
+			<img th:src="${team.teamImg}?:@{/images/teamImg.png}" th:alt="${team.teamImg}" class="img-rounded">
+			<div id="ttt">
+				<div id="name">[[${team.teamName}]]</div>
+				<div id="tInfo">[[${team.teamInfo}]]</div>
 			</div>
 		</div>
-		
-		<div id="main1">
-			공지
-		</div>
-		
-		<div id="main2">
-			진행사항
-		</div>
-		
-		<div id="main3">
-			오늘의 업무
-		</div>
-		
 	</div>
-</div>
-
-<th:block layout:fragment="script">
-	<script>
-	$(function() {
-		$(".copyBtn").click(copyCode);
-	})
+		
+	<div id="main1">
+		공지
+	</div>
 	
-	function copyCode() {
-		var copyText = "[[${team.inviteCode}]]";
-		const t = document.createElement("textarea");
+	<div id="main2">
+		진행사항
+	</div>
+	
+	<div id="main3">
+		오늘의 업무
+	</div>
 		
-		document.body.appendChild(t);
-		t.value = copyText;
-		t.select();
-		document.execCommand('copy');
-		document.body.removeChild(t);
-		
-		alert("초대코드가 복사되었습니다.");
-	}
-	</script>
-</th:block>
+</div>
 </body>
 </html>

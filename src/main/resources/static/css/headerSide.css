@@ -1,0 +1,163 @@
+@charset "UTF-8";
+/******************* header *******************/
+#top {
+    position: fixed;
+	padding: 0px 23px;
+	width: 100%;
+	height: 64px;
+	background-color:#fff;
+	display:flex;
+	align-items: center;
+   	box-shadow: 0 0px 0px -1px, 0 1px 4px -2px;
+   	z-index: 999;
+}
+
+.nav {
+	display:flex;
+	padding-left: 365px;
+}
+
+.nav span {
+	font-size: 20px;
+	margin-right: 100px;
+}
+
+.nav a {
+	color: #000;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.team_logo {
+	width: 34px;
+	height: 36px;
+	background-color: tomato;
+}
+/******************* header *******************/
+
+/******************* side *******************/
+#side_bar{
+	position:fixed;
+	display: flex;
+	top:64px;
+	height: 91vh;
+}
+
+.side_list {
+	width: 80px;
+	height: 100%;
+	background-color: #e7ebf2;
+}
+
+.my_menu {
+	width: 287px;
+	height: 977px;
+	background-color: #fff;
+}
+
+/******************* side *******************/
+/******************* cont *******************/
+#cont {
+	display: flex;
+	}
+	
+.inner_content {
+	position:fixed;
+	top: 64px;
+    left: 367px;
+	width: 850px;
+	height: 913px;
+	padding-left: 51px;
+	padding-right: 51px;
+	background-color: #e7ebf2;
+}
+
+.chat {
+	position:fixed;
+	top: 64px;
+	right: 1px;
+	width: 318px;
+	height: 913px;
+
+}
+
+/******************* cont *******************/
+
+/******************* side_list *******************/
+#myMenu{
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+	bottom: 10%;
+	padding: 0px 9px;
+}
+
+#teamList a img {
+	margin: 10px;
+	width: 40px;
+	height: 40px;
+}
+
+#myMenu img {
+	margin: 15px 17px;
+	width: 30px;
+	height: 30px;
+}
+
+#myMenu img:hover {
+	cursor: pointer;	
+}
+
+#teamList{
+	margin: 5px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    height: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* 스크롤바 설정*/
+#teamList::-webkit-scrollbar{
+    width: 5px;
+}
+
+/* 스크롤바 막대 설정*/
+#teamList::-webkit-scrollbar-thumb{
+    height: 10%;
+    background-color: rgba(0,0,0,0);
+    border-radius: 10px;/* 스크롤바 둥글게 설정    */
+}
+
+/* 스크롤바 hover*/
+#teamList:hover::-webkit-scrollbar-thumb{
+    background-color: #858585;
+}
+
+/* 스크롤바 뒷 배경 설정*/
+#teamList::-webkit-scrollbar-track{
+    background-color: rgba(0,0,0,0);
+}
+/******************* side_list *******************/
+
+/******************* button *******************/
+.btn-cococo {
+	color: #fff;
+    background-color: #FF7F27;
+    border-color: #FF7F27;
+}
+
+.btn-cococo:hover {
+	color: #fff;
+	background-color: #f26100;
+    border-color: #f26100;
+	
+}
+/******************* button *******************/
+
+/******************* input *******************/
+input[type=file] {
+    padding: 3px;
+}
+/******************* input *******************/

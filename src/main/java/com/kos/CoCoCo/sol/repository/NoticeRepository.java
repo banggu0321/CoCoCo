@@ -7,20 +7,22 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.stereotype.Repository;
 
 import com.kos.CoCoCo.vo.NoticeVO;
 import com.kos.CoCoCo.vo.QNoticeVO;
+import com.kos.CoCoCo.vo.TeamVO;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 
-
-public interface NoticeRepository extends PagingAndSortingRepository<NoticeVO, Long>,
+@Repository
+public interface NoticeRepository extends JpaRepository<NoticeVO, Long>,PagingAndSortingRepository<NoticeVO, Long>,
  QuerydslPredicateExecutor<NoticeVO> {
-	
-	List<NoticeVO> findByFixedYN(String fixedYN);
 	
    	public default Predicate makePredicate(String type, String keyword, String keyword2) {
 		BooleanBuilder builder = new BooleanBuilder();
@@ -64,5 +66,8 @@ public interface NoticeRepository extends PagingAndSortingRepository<NoticeVO, L
 		return ts;
 		
 	}
+
+	
+
 	
 }

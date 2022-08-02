@@ -5,20 +5,40 @@
 <meta charset="UTF-8">
 <title>글 작성하기</title>
 </head>
+<style>
+	.wrap_notice {
+		width: 700px;
+		margin: 0 auto;
+		margin-top: 40px;
+	}
+	
+	.wrap_notice .title input {
+		width: 100%;
+		box-sizing: border-box;
+	}
+	
+	.wrap_notice textarea {
+		width: 100%;
+		height: 300px;
+		margin-top: 15px;
+	}
+	
+</style>
 <body>
-	<div id="wrap_notice">
-		<div id="wrap_notice_insert">
+	<div class="wrap_notice">
+		<div class="wrap_notice_update">
 			<form th:action="${update}" method="post" enctype="multipart/form-data">
 				<div class="checklist">
 					<label>상단고정</label>
-					<input type="checkbox" name="fixed_yn" value="y">
+					<input th:checked="${notice.fixedYN} == 1" type="checkbox" name="fixedYN" value='1' id="input_check"/>
+					<input type="hidden" name="fixedYN" value='0' id="input_check_hidden"/>
 				</div>
 				<div class="title">
 					<label>제목</label>
-						<input type="text" name="noticeTitle">
+						<input type="text" name="noticeTitle" th:value="${notice.noticeTitle}">
 				</div>
 				<div class="text">
-					<input type="text" name="noticeText">
+					<textarea name="noticeText" th:text="${notice.noticeText}"></textarea>
 				</div>
 				<div class="upload">
 					<input type="file" multiple="multiple" name="files">

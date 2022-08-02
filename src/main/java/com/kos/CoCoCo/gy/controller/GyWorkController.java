@@ -1,5 +1,7 @@
 package com.kos.CoCoCo.gy.controller;
 
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +33,10 @@ public class GyWorkController {
 	@Autowired
 	GyTeamUserRepository teamuserRepo;
 	
-	@GetMapping("/workc")
-	public String workCalendar() {
+	@RequestMapping("/work/work")
+	public String workCalendar(HttpSession request) throws Exception{
+		//HttpSession session = request.getSession();
+		
 		return "/work/calendar";
 	}
 	

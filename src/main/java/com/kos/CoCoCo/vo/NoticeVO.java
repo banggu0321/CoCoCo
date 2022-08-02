@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -45,5 +46,6 @@ public class NoticeVO {
 	@UpdateTimestamp
 	private Timestamp noticeUpdate;
 	
-	private String fixedYN;
+	private Integer fixedYN;
+	
 }

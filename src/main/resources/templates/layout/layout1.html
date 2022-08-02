@@ -147,7 +147,7 @@ height: 91vh;
 <body>
 	<header th:replace="~{/fragments/header::header1}"></header>
 	
-	<div id="cont" layout:fragment="content">
+	<div id="cont">
 		<div id="side_bar">
 			<div th:replace="~{/fragments/side :: side}"></div>
 			
@@ -156,7 +156,8 @@ height: 91vh;
 			
 		</div><!-- #side -->
 		
-		<div class="inner_content" layout:fragment="inner_content">
+		<div layout:fragment="inner_content">
+			<div class="inner_content"></div>
 		</div><!-- inner_content -->
 		
 		<div class="chat" layout:fragment="chat">

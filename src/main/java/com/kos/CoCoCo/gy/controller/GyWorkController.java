@@ -33,14 +33,18 @@ public class GyWorkController {
 	@Autowired
 	GyTeamUserRepository teamuserRepo;
 	
-	@RequestMapping("/work/work")
-	public String workCalendar(HttpSession request) throws Exception{
-		//HttpSession session = request.getSession();
+	@GetMapping("/work")
+	public String workCalendar(){
+		//HttpSession session = request.getSession();(HttpSession request) throws Exception
 		
-		return "/work/calendar";
+		return "work/calendar";
 	}
 	
-	@GetMapping("/work/layout")
+	@GetMapping("/workc")
+	public String cal() {
+		return "work/calendarConnect";
+	}
+	@GetMapping("/layout")
 	public String layout() {
 		return "work/layout/layout1";
 	}

@@ -1,0 +1,53 @@
+@charset "UTF-8";
+
+#teamInfo, #teamImg, div img {
+	float: left;
+	font-size: 18px;
+}
+
+#teamInfo label {
+	font-size: 20px;
+}
+
+#teamInfo p {
+	margin-bottom: 20px;
+}
+
+.showImg {
+	margin: 0px 70px;
+	width: 280px;
+}
+
+#adminTeam {
+	color: #FF7F27;
+	font-weight: bold;
+}
+
+#box {
+	border: 2px solid #FF7F27;
+    border-radius: 1em;
+    padding: 20px 50px;
+    background-color: white;
+    height: 450px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+#info {
+	white-space: pre-wrap;
+}
+
+#teamImg {
+	position: relative;
+}
+
+#delImg {
+	width: 30px;
+	position: absolute;
+    left: 80%;
+}
+
+#delImg:hover {
+	cursor: pointer;
+}

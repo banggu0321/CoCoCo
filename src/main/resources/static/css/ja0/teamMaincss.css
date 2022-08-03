@@ -1,5 +1,157 @@
 @charset "UTF-8";
 
+.inner_content {
+	padding-top: 10px;
+}	
+
+.my_menu div img {
+	margin: 10px;
+}
+
+#myProfile {
+	padding: 20px 10px;
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    border-bottom: 1px solid #eee;
+}
+
+#myProfile img{
+	width: 100px;
+	height: 100px;
+}
+
+#myName, #userName {
+	font-weight: bold;
+	font-size: 17px;
+}
+
+#myModal {
+	position: fixed;
+	top: 30%;
+	left: 20%;
+	right: 20%;
+}
+
+img#status {
+	width: 20px;
+	height: 20px;
+}
+
+.userProfile .img{
+	width: 40px;
+	height: 40px;
+}
+
+#listTitle {
+	padding: 15px;
+}
+
+.userProfile {
+	width: 100%;
+	position: relative;
+}
+
+#proList .admin, #userInfo .admin, #myProfile .admin {
+	width: 15px;
+	height: 15px;
+	position: absolute;
+	left: 10%;
+    top: -15%;
+}
+
+.statusBtn {
+	font-size: 14px;
+}
+
+#proList {
+	height: 60%;
+	overflow-x: hidden;
+	overflow-y: auto;
+	margin: 0px 5px;
+}
+
+/* 스크롤바 설정*/
+#proList::-webkit-scrollbar{
+    width: 5px;
+}
+
+/* 스크롤바 막대 설정*/
+#proList::-webkit-scrollbar-thumb{
+    height: 10%;
+    background-color: rgba(0,0,0,0);
+    border-radius: 10px;/* 스크롤바 둥글게 설정    */
+}
+
+/* 스크롤바 hover*/
+#proList:hover::-webkit-scrollbar-thumb{
+    background-color: #858585;
+}
+
+/* 스크롤바 뒷 배경 설정*/
+#proList::-webkit-scrollbar-track{
+    background-color: rgba(0,0,0,0);
+}
+
+.green, .red {
+	font-size: 20px;
+	position: absolute;
+	left: 14%;
+    top: 48%;
+}
+
+.green {
+	color: green;
+}
+
+.red {
+	color: red;
+}
+
+#userInfo {
+	position: absolute;
+	display: none;
+    top: 0px;
+    left: 0px;
+    width: 97%;
+	border: 2.5px solid #FF7F27;
+	background-color: white;
+	border-radius: 0.5em;
+	padding: 10px 0px;
+	z-index: 1;
+}
+
+#userInfo img{
+    width: 50px;
+    height: 50px;
+}
+
+#userInfo img, #uInfo {
+	float: left;
+}
+
+#userInfo .admin {
+	position: absolute;
+	left: 12%;
+    top: 0%;
+}
+
+#myProfile img.admin {
+	position: absolute;
+    left: 55%;
+    top: 0%;
+    width: 30px;
+    height: 30px;
+}
+
+.userProfile:hover #userInfo {
+	display: flex;
+    align-items: center;
+	opacity: 1;
+}
+
 #info {
 	display: flex;
     flex-direction: row-reverse;
@@ -16,10 +168,6 @@
 
 #box img {
 	width: 70px;
-}
-
-.copyBtn {
-	float: right;
 }
 
 #box {
@@ -75,12 +223,4 @@
 	clear: both;
 	width: 100%;
 	margin-top: 1%;
-}
-
-#chatting {
-	width: 300px;
-    height: 94vh;
-	padding: 10px;
-    font-size: 18px;
-    text-align: center;
 }

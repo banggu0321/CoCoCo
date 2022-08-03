@@ -7,7 +7,6 @@
 <meta charset="UTF-8">
 
 <link rel="stylesheet" th:href="@{/css/ja0/teamMaincss.css}" />
-<link rel="stylesheet" th:href="@{/css/ja0/layoutMaincss.css}" />
 
 <title>CoCoCo | [[${team.teamName}]]</title>
 <style>
@@ -32,7 +31,7 @@
 	function updateStatus() {
 		var status = $("select[name='status']").val();
 	
-		location.href="/main/updateStatus/t/" + status;
+		location.href="/CoCoCo/updateStatus/t/" + status;
 	}
 	
 	function copyCode() {
@@ -53,35 +52,38 @@
 <body>
 
 <div layout:fragment="my_menu">
-	<div id="myProfile">
-		<img th:src="${session.user.image}?:@{/images/userImg.svg}" class="img-circle">
-		<img class="admin" th:if="${session.teamUser.userRole == 'ADMIN'}" th:src="@{/images/crown.svg}">
-				
-		<div id="myInfo">
-			<div id="myName">[[${session.user.name}]]
-				<button th:text="${session.user.status}?:상태설정" class="btn btn-default btn-sm statusBtn" data-toggle="modal" data-target="#myModal"></button>
-			</div>
-			[[${session.user.company}]]
-		</div>
-	</div>
-			
-	<h4 id="listTitle">팀원</h4>
-	<div id="proList">
-		<div class="userProfile" th:each="tu:${userList}" th:if="${tu.teamUserId.user.userId != session.user.userId}">
-			<img th:src="${tu.teamUserId.user.image}?:@{/images/userImg.svg}" class="img-circle img">
-			
-			<img class="admin" th:if="${tu.userRole == 'ADMIN'}" th:src="@{/images/crown.svg}">
-			<p class="status" th:classappend="${tu.teamUserId.user.status == '출근'}?green:red">●</p>
-			
-			[[${tu.teamUserId.user.name}]]
+	<div class="my_menu">
+		<div id="myProfile">
+			<img th:src="${session.user.image}?:@{/images/userImg.svg}" class="img-circle">
+			<img class="admin" th:if="${session.teamUser.userRole == 'ADMIN'}" th:src="@{/images/crown.svg}">
 					
-			<div id="userInfo">
-				<img th:src="${tu.teamUserId.user.image}?:@{/images/userImg.svg}"class="img-circle img">
+			<div id="myInfo">
+				<div id="myName">[[${session.user.name}]]
+					<button th:text="${session.user.status}?:상태설정" class="btn btn-default btn-sm statusBtn" data-toggle="modal" data-target="#myModal"></button>
+				</div>
+				[[${session.user.company}]]
+			</div>
+		</div>
+		
+				
+		<h4 id="listTitle">팀원</h4>
+		<div id="proList">
+			<div class="userProfile" th:each="tu:${userList}" th:if="${tu.teamUserId.user.userId != session.user.userId}">
+				<img th:src="${tu.teamUserId.user.image}?:@{/images/userImg.svg}" class="img-circle img">
+				
 				<img class="admin" th:if="${tu.userRole == 'ADMIN'}" th:src="@{/images/crown.svg}">
+				<p class="status" th:classappend="${tu.teamUserId.user.status == '출근'}?green:red">●</p>
+				
+				[[${tu.teamUserId.user.name}]]
 						
-				<div id="uInfo">
-					<p id="userName">[[${tu.teamUserId.user.name}]] ( [[${tu.teamUserId.user.company}]] )<p>
-					<p>[[${tu.teamUserId.user.status}]]</p>
+				<div id="userInfo">
+					<img th:src="${tu.teamUserId.user.image}?:@{/images/userImg.svg}"class="img-circle img">
+					<img class="admin" th:if="${tu.userRole == 'ADMIN'}" th:src="@{/images/crown.svg}">
+							
+					<div id="uInfo">
+						<p id="userName">[[${tu.teamUserId.user.name}]] ( [[${tu.teamUserId.user.company}]] )<p>
+						<p>[[${tu.teamUserId.user.status}]]</p>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -115,30 +117,31 @@
 </div>
 			
 <div layout:fragment="inner_content">
-	<div id="info">
-		<button class="btn btn-cococo copyBtn">초대코드</button>
-		
-		<div id="box">
-			<img th:src="${team.teamImg}?:@{/images/teamImg.png}" th:alt="${team.teamImg}" class="img-rounded">
-			<div id="ttt">
-				<div id="name">[[${team.teamName}]]</div>
-				<div id="tInfo">[[${team.teamInfo}]]</div>
+	<div class="inner_content">
+		<div id="info">
+			<button class="btn btn-cococo copyBtn">초대코드</button>
+			
+			<div id="box">
+				<img th:src="${team.teamImg}?:@{/images/teamImg.png}" th:alt="${team.teamImg}" class="img-rounded">
+				<div id="ttt">
+					<div id="name">[[${team.teamName}]]</div>
+					<div id="tInfo">[[${team.teamInfo}]]</div>
+				</div>
 			</div>
 		</div>
-	</div>
+			
+		<div id="main1">
+			공지
+		</div>
 		
-	<div id="main1">
-		공지
-	</div>
-	
-	<div id="main2">
-		진행사항
-	</div>
-	
-	<div id="main3">
-		오늘의 업무
-	</div>
+		<div id="main2">
+			진행사항
+		</div>
 		
+		<div id="main3">
+			오늘의 업무
+		</div>
+	</div>	
 </div>
 </body>
 </html>

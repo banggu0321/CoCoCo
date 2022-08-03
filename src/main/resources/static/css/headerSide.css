@@ -9,7 +9,7 @@
 	display:flex;
 	align-items: center;
    	box-shadow: 0 0px 0px -1px, 0 1px 4px -2px;
-   	z-index: 999;
+   	z-index: 1;
 }
 
 .nav {
@@ -37,10 +37,8 @@
 
 /******************* side *******************/
 #side_bar{
-	position:fixed;
 	display: flex;
-	top:64px;
-	height: 91vh;
+	height: 95vh;
 }
 
 .side_list {
@@ -50,8 +48,8 @@
 }
 
 .my_menu {
-	width: 287px;
-	height: 977px;
+	width: 318px;
+	height: 95vh;
 	background-color: #fff;
 }
 
@@ -59,26 +57,20 @@
 /******************* cont *******************/
 #cont {
 	display: flex;
-	}
+	padding-top: 64px;
+}
 	
 .inner_content {
-	position:fixed;
-	top: 64px;
-    left: 367px;
 	width: 850px;
-	height: 913px;
+	height: 95vh;
 	padding-left: 51px;
 	padding-right: 51px;
 	background-color: #e7ebf2;
 }
 
 .chat {
-	position:fixed;
-	top: 64px;
-	right: 1px;
 	width: 318px;
-	height: 913px;
-
+	height: 95vh;
 }
 
 /******************* cont *******************/
@@ -155,9 +147,3 @@
 	
 }
 /******************* button *******************/
-
-/******************* input *******************/
-input[type=file] {
-    padding: 3px;
-}
-/******************* input *******************/

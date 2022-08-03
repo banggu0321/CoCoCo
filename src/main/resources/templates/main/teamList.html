@@ -50,7 +50,7 @@
 	</div>
 	
 	<!--  paginForm -->
-	<form id="f1" th:action="@{/main/teamList}" method="get">
+	<form id="f1" th:action="@{/CoCoCo}" method="get">
 	    <input type="hidden" name="page" th:value="${paging.currentPageNum}">
 	    <input type="hidden" name="size" th:value="${paging.currentPage.pageSize}">
 	</form>
@@ -162,7 +162,7 @@
 	var formObj = $("#f1");
 	function movePage(){
 		formObj.find("[name='page']").val($(this).attr('page-data'));
-		formObj.attr("action", "/main/teamList");
+		formObj.attr("action", "/CoCoCo");
 		formObj.submit();
 	}
 	
@@ -176,7 +176,7 @@
 			
 		$.ajax({
 			type:"post",
-			url:"/main/findTeam/"+code,
+			url:"/CoCoCo/findTeam/"+code,
 			beforeSend : function(xhr){
 				xhr.setRequestHeader(header, token);
 			},
@@ -195,7 +195,7 @@
 		var teamId = $(this).attr("team-data");
 		
 		if(confirm("해당 워크스페이스를 삭제하시겠습니까?")) {
-			location.href = "/main/deleteTeam/"+teamId;
+			location.href = "/CoCoCo/deleteTeam/"+teamId;
 		}
 	}
 		
@@ -208,7 +208,7 @@
 		}
 		
 		var addForm = $("#addTeamForm");
-		addForm.attr("action","/main/addTeam");
+		addForm.attr("action","/CoCoCo/addTeam");
 		addForm.submit();
 	}
 		
@@ -231,7 +231,7 @@
 	function updateStatus() {
 		var status = $("select[name='status']").val();
 
-		location.href="/main/updateStatus/m/" + status;
+		location.href="/CoCoCo/updateStatus/m/" + status;
 	}
 	</script>
 </th:block>

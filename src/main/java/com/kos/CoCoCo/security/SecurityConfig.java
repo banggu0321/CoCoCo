@@ -62,7 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				// 지금 사용자생성 postMapping에 가지않는 이유?
 				// .usernameParameter("username")
 				// .passwordParameter("password")
-				.defaultSuccessUrl("/main/teamList") // 로그인 성공 후 리다이렉트 주소
+				.defaultSuccessUrl("/CoCoCo") // 로그인 성공 후 리다이렉트 주소
 				.permitAll(); // 접근전부허용
 
 		http.logout() // 로그아웃에 관한 설정을 의미

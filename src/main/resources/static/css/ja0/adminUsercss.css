@@ -1,0 +1,33 @@
+@charset "UTF-8";
+
+table{
+	background-color: white;
+	text-align: center;
+}
+
+.head {
+	background-color: #FF7F27;
+	color:white;
+	font-weight: bold;
+}
+
+#adminUser {
+	color: #FF7F27;
+	font-weight: bold;
+}
+
+.delUser:hover, .updateUser:hover {
+	cursor: pointer;
+}
+
+.delUser, .updateUser {
+	width: 25px;
+	height: 25px;
+}
+
+#myModal {
+	position: fixed;
+	top: 30%;
+	left: 20%;
+	right: 20%;
+}

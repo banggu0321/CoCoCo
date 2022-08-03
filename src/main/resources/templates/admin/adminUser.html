@@ -2,56 +2,86 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	  xmlns:th="http://www.thymeleaf.org"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{/layoutJY/layoutAdmin.html}">
+	  layout:decorate="~{/layout/layout1.html}">
 <head>
 <meta charset="UTF-8">
 <meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
 <meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+<link rel="stylesheet" th:href="@{/css/ja0/admincss.css}" />
+<link rel="stylesheet" th:href="@{/css/ja0/adminUsercss.css}" />
+
 <title>CoCoCo | [[${team.teamName}]]</title>
+
 <style>
-table{
-	background-color: white;
-	text-align: center;
-}
 
-.head {
-	background-color: #FF7F27;
-	color:white;
-	font-weight: bold;
-	position: sticky;
-	top: 0;
-}
-
-#adminUser {
-	color: #FF7F27;
-	font-weight: bold;
-}
-
-.delUser:hover, .updateUser:hover {
-	cursor: pointer;
-}
-
-.delUser, .updateUser {
-	width: 25px;
-	height: 25px;
-}
-
-#myModal {
-	position: fixed;
-	top: 30%;
-	left: 20%;
-	right: 20%;
-}
-
-.body {
-	overflow-x: hidden;
-	overflow-y: auto; 
-}
 </style>
+
+<script type="text/javascript">
+	$(function() {
+		var msg = "[[${msg}]]";
+		if(msg != "") {
+			alert(msg);
+		}
+		
+		$(".delUser").click(deleteUser);
+		$(".updateUser").click(getUser);
+		$("#updateBtn").click(updateUser);
+	})
+	
+	var token = $("meta[name='_csrf']").attr("content");
+	var header = $("meta[name='_csrf_header']").attr("content");
+	
+	function deleteUser() {
+		var userId = $(this).attr("user-data");
+	
+		if(confirm("해당 사용자를 삭제하시겠습니까?")) {
+			location.href="/admin/deleteUser/"+userId;
+		}
+	}
+		
+	function getUser() {
+		var userId = $(this).attr("user-data");
+		
+		$.ajax({
+			type:"post",
+			url: "/admin/findUser/"+userId,
+			beforeSend : function(xhr){
+				xhr.setRequestHeader(header, token);
+			},
+			success:function(resData) {
+				var id = resData.teamUserId.user.userId;
+				var name = resData.teamUserId.user.name+" ("+id+")";
+				
+				$("input[name='userId']").val(id);
+				$("input[name='name']").val(name);
+				$("select[name='userRole']").val(resData.userRole);
+			}
+		});
+	}
+		
+	function updateUser() {
+		var newRole = $("select[name='userRole']").val();
+		var userId = $("input[name='userId']").val();
+		
+		location.href="/admin/updateUser/"+userId+"/"+newRole;
+	}
+</script>
 </head>
 <body>
-<div layout:fragment="content">
-	<div class="body">
+<div layout:fragment="my_menu">
+	<div class="my_menu">
+		<div>
+			<a th:href="@{/admin/team}" id="adminTeam">워크스페이스 관리</a>
+		</div>
+		<div>
+			<a th:href="@{/admin/user}" id="adminUser">유저관리</a>
+		</div>
+	</div>
+</div>
+
+<div layout:fragment="inner_content">
+	<div class="inner_content">
 		<table id="userList" class="table">
 			<tr class="head">
 				<td></td>
@@ -117,58 +147,5 @@ table{
     	</div>
     </div> <!-- 모달끝  -->
 </div>
-
-<th:block layout:fragment="script">
-	<script>
-	$(function() {
-		var msg = "[[${msg}]]";
-		if(msg != "") {
-			alert(msg);
-		}
-		
-		$(".delUser").click(deleteUser);
-		$(".updateUser").click(getUser);
-		$("#updateBtn").click(updateUser);
-	})
-	
-	var token = $("meta[name='_csrf']").attr("content");
-	var header = $("meta[name='_csrf_header']").attr("content");
-
-	function deleteUser() {
-		var userId = $(this).attr("user-data");
-	
-		if(confirm("해당 사용자를 삭제하시겠습니까?")) {
-			location.href="/admin/deleteUser/"+userId;
-		}
-	}
-		
-	function getUser() {
-		var userId = $(this).attr("user-data");
-		
-		$.ajax({
-			type:"post",
-			url: "/admin/findUser/"+userId,
-			beforeSend : function(xhr){
-				xhr.setRequestHeader(header, token);
-			},
-			success:function(resData) {
-				var id = resData.teamUserId.user.userId;
-				var name = resData.teamUserId.user.name+" ("+id+")";
-				
-				$("input[name='userId']").val(id);
-				$("input[name='name']").val(name);
-				$("select[name='userRole']").val(resData.userRole);
-			}
-		});
-	}
-		
-	function updateUser() {
-		var newRole = $("select[name='userRole']").val();
-		var userId = $("input[name='userId']").val();
-		
-		location.href="/admin/updateUser/"+userId+"/"+newRole;
-	}
-	</script>
-</th:block>
 </body>
 </html>

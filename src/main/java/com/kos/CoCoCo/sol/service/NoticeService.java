@@ -24,16 +24,17 @@ public class NoticeService {
 	
 	@Autowired
 	private NoticeFileRepository noticeFRepo;
-	
-	public void insert(NoticeVO notice) {
-		noticeRepo.save(notice);
-	}
+		
 	public void insert(NoticeVO notice, MultipartFile[] files) throws Exception {
 				
 		NoticeVO newNotice = noticeRepo.save(notice);
 		String filePath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\noticefiles";
 		UUID uuid = UUID.randomUUID();
 		for(MultipartFile file:files) {
+			String fname = file.getOriginalFilename();
+			if(fname==null || fname.equals("")) { 
+				continue;
+			}
 			String fileName = uuid + "_" + file.getOriginalFilename();
 			File saveFile = new File(filePath, fileName);
 			file.transferTo(saveFile); //upload 
@@ -50,24 +51,4 @@ public class NoticeService {
 	}
 		
 }
-	
-	/*	
-	@Transactional
-	public NoticeDTO getPost(Long noticeId) {
-		NoticeVO notice = noticeRepo.findById(noticeId).get();
-		
-		NoticeDTO noticeDTO = NoticeDTO.builder()
-				.noticeId(notice.getNoticeId())
-				.team(notice.getTeam())
-				.user(notice.getUser())
-				.noticeTitle(notice.getNoticeTitle())
-				.noticeText(notice.getNoticeText())
-				.noticeRegDate(notice.getNoticeRegDate())
-				.noticeUpdate(notice.getNoticeUpdate())
-				.fixedYN(notice.getFixedYN())
-				.build();
-		
-		return noticeDTO;
-	}*/
-	
 

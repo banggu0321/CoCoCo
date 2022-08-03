@@ -1,5 +1,6 @@
 package com.kos.CoCoCo.gy.controller;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -185,5 +186,23 @@ public class GyWorkRestController {
 		List<WorkVO> myworklist = workRepo.findByUser(user_id);
 		System.out.println(myworklist);
 		return myworklist;
+	}
+	
+	@GetMapping("/teamTodayWorkList/{team_id}")
+	public List<WorkVO> todayWork(Model model, @PathVariable Long team_id) {
+		TeamVO team = teamRepo.findById(team_id).get();
+		//System.out.println(team);
+		List<WorkVO> worklist = workRepo.findByTeam(team);
+		
+		for(WorkVO work:worklist) {
+			List<WorkManagerVO> workmanagerlist = workManagerRepo.findByWork(work.getWorkId());
+			String[] arr = new String[workmanagerlist.size()];
+			for(int i=0;i<workmanagerlist.size();i++) {
+				arr[i] = workmanagerlist.get(i).getWorkManagerId().getUser().getUserId();
+			}
+			work.setManager(arr);
+		}
+		System.out.println(worklist);
+		return worklist;
 	}
 }

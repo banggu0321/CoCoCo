@@ -1,0 +1,21 @@
+.managerselected {
+	background-color: #E3E3E3;
+}
+
+#calendarBox {
+	width: auto;
+	font-size : 16px;
+	display : center;
+	padding : 100px 0 0 0;
+}
+#calendar{
+	background-color: white;
+}
+
+.fc-toolbar-title {
+	float: left;
+}
+
+.fc-button {
+	float: left;
+}

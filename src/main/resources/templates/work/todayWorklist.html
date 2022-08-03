@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<!--
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+
+ csrf 
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+-->
+
+<style type="text/css">
+.worklist{
+	margin-top : 0.65rem;
+	height: calc(1.5em + 0.75rem + 20px);
+}
+.workTitleText{
+	float:left;
+}
+#workShowBtn{
+	float:right;
+	margin-bottom: 0.2rem;
+	padding: 0.175rem 0.55rem;
+    font-size: 0.85rem;
+}
+.workListBox{
+	clear: both;
+}
+</style>
+<script type="text/javascript">
+	$(function(){
+		var team_id = 1000;
+		var teamWorkList;
+		var teamTodayWorkList;
+		var workmanager = [];
+		
+	    var now = new Date();
+	    var year=now.getFullYear(); //연도
+	    var month=now.getMonth()+1; //월
+	    var date=now.getDate(); //일
+	    //$("#today").text(now);
+	    $("#today").text(year+"."+month+"."+date);
+	    
+	  //해당 팀의 담당자 모두 가져오기
+		$.ajax({
+			url:"/work/teamTodayWorkList/"+team_id,
+			type:"get",
+			success:function(responseData){
+				teamWorkList = responseData;
+				//option에 해당 팀의 담당자 추가
+				$.each(teamWorkList,function(index, data){ 
+					if(index<4){
+						workmanager = data.manager;
+						
+						if(workmanager.includes("bang")){
+							data.manager = "user";
+						}else{
+							data.manager = "none";
+						}
+						
+						var date_end1 = data.workEnd.substr(0,8); 
+						var date_end2 = String(Number(data.workEnd.substr(8))+1);
+						date_end2 = ('00' + date_end2).slice(-2);
+						
+						if(data.manager=="none"){//자기꺼 아님
+							$(".workListBox").append(`<div class="form-control worklist" style="color:#BFBFBF" >${data.workTitle}<br>${data.workStart}~${date_end1+date_end2}</div>`); 
+							
+						}else{
+							$(".workListBox").append(`<div class="form-control worklist" style="color:tomato">${data.workTitle}<br>${data.workStart}~${date_end1+date_end2}</div>`); 
+						}
+					}
+					
+				});		
+			}
+		});
+		$("#workShowBtn").on("click", function() {
+			location.href="/work/work";
+		});	    
+	});
+</script>
+</head>
+<body>
+	<div class="mainWork">
+		<div class="workTitleBox">
+			<h5 class="workTitleText">오늘의 업무(<span id="today"></span>)</h5>
+			<button class="btn btn-cococo" id="workShowBtn">더보기</button>
+		</div>
+		<div class="workListBox">
+		</div>
+	</div>
+</body>
+</html>

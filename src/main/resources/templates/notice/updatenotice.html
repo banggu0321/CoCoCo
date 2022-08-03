@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="~{/layout/layout1}">
 <head>
 <meta charset="UTF-8">
+<meta name="_csrf" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:content="${_csrf.headerName}" />
 <title>글 작성하기</title>
 </head>
 <style>
@@ -25,9 +29,10 @@
 	
 </style>
 <body>
+<div layout:fragment="inner_content">
 	<div class="wrap_notice">
 		<div class="wrap_notice_update">
-			<form th:action="${update}" method="post" enctype="multipart/form-data">
+			<form method="post" enctype="multipart/form-data">
 				<div class="checklist">
 					<label>상단고정</label>
 					<input th:checked="${notice.fixedYN} == 1" type="checkbox" name="fixedYN" value='1' id="input_check"/>
@@ -37,17 +42,50 @@
 					<label>제목</label>
 						<input type="text" name="noticeTitle" th:value="${notice.noticeTitle}">
 				</div>
+				<div class="writer">
+					<input type="hidden" name="user" th:value="${session.user.Username}" readonly="readonly">
+					<!-- <input type="hidden" name="teamId" th:value="${session.team.teamId}" readonly="readonly"> -->
+				</div>
 				<div class="text">
 					<textarea name="noticeText" th:text="${notice.noticeText}"></textarea>
 				</div>
-				<div class="upload">
+				<div class="noticefiles">
+					<label>첨부파일</label>
+					<ul th:each="file : ${nflist}">
+						<li th:if="${nflist} == null" th:text="첨부파일 없음"></li>
+						<li th:if="${nflist} != null" >
+							<a th:href="@{'/noticefiles/' + ${file.filename}}">[[${file.originFname}]]</a>
+						</li>
+					</ul>
 					<input type="file" multiple="multiple" name="files">
 				</div>
-				<button type="submit">수정</button>
+				<button type="submit" id="btnUpdate">수정</button>
+				<input type="hidden" th:name="${_csrf.parameterName}"
+					th:value="${_csrf.token}" />
 			</form>
 			<a class="btnViewList"
 					th:href="@{list}">목록</a>
 		</div>		
 	</div>
+</div>
+	<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+	<script>
+		$(function(){
+			var token = $("meta[name='_csrf']").attr("content");
+			var header = $("meta[name='_csrf_header']").attr("content");
+
+			$('#btnUpdate').click(function() {
+				$.ajax({
+					url : "/notice/update",
+					beforeSend : function(xhr)
+		            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+						xhr.setRequestHeader(header, token);  },
+					success : function(responseData) {
+						$(".wrap_notice").html(responseData);
+					}
+				});
+			});
+		});
+	</script>
 </body>
 </html>

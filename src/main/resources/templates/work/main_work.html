@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>오늘의 업무</title>
+<meta charset="UTF-8">
+
+</head>
+<body>
+	<div>
+		<div class="wrap_work">
+			<h2>오늘의 업무</h2>
+			<div class="wrap_worklist" th:with="worklist=${worklist}">
+				<ul	th:each="work:${worklist}" th:if="${work.workStart}<=${localDateTime}<=${work.workEnd}">
+					<li	th:text="${work.workTitle}"></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

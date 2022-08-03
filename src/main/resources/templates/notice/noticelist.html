@@ -2,73 +2,80 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{/layout/layout1.html}">
+	layout:decorator="~{/layout/layout1}">
 <head>
-<meta charset="UTF-8">
-<title>CoCoCo</title>
-<style>
-	a {
-		text-decoration: none;
-	}
-	.wrap_notice {
-		width: 700px;
-		margin: 0 auto;
-		margin-top: 40px;
-	}
-	
-	.insertnotice {
-		text-decoration: none;
-		padding: 5px;
-		background-color: #FF7637;
-		color: #ffffff;
-		margin: 15px;
-		float: right;
-		border-radius: 5px;
-	}
-	
-	.notice_table {
-		width: 100%;
-	}
-	
-	.notice_table tr {
-		text-align: center;
-	}
-	.notice_table th {
-		padding-bottom: 5px;
-	}
-	.notice_table td {
-		padding: 5px;
-	}
-	
-	.notice_table .title  {
-		text-align: left;
-	}
-	
-	.noticelink {
-		color: black;
-	}
-	
-	.fixed a {
-		color: #FF7637;
-		font-weight: bold;
-	}
-	
-	#paging {
-		text-align: center;
-	}
-	.pagination .page-item {
-		display:inline;
-	}
-	
-	#input_search {
-		width: 340px;
-		margin: 0 auto;
-	}
+<title>공지사항</title>
 
+<meta charset="UTF-8">
+<meta name="_csrf" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
+<style>
+a {
+	text-decoration: none;
+}
+
+.wrap_notice {
+	width: 700px;
+	margin: 0 auto;
+	margin-top: 40px;
+}
+
+.insertnotice {
+	text-decoration: none;
+	padding: 5px;
+	background-color: #FF7637;
+	color: #ffffff;
+	margin: 15px;
+	float: right;
+	border-radius: 5px;
+}
+
+.notice_table {
+	width: 100%;
+}
+
+.notice_table tr {
+	text-align: center;
+}
+
+.notice_table th {
+	padding-bottom: 5px;
+}
+
+.notice_table td {
+	padding: 5px;
+}
+
+.notice_table .title {
+	text-align: left;
+}
+
+.noticelink {
+	color: black;
+}
+
+.fixed a {
+	color: #FF7637;
+	font-weight: bold;
+}
+
+#paging {
+	text-align: center;
+}
+
+.pagination .page-item {
+	display: inline;
+}
+
+#input_search {
+	width: 340px;
+	margin: 0 auto;
+}
 </style>
 </head>
 <body>
-	<div layout:fragment="content">
+	<div layout:fragment="inner_content">
 		<div class="wrap_notice">
 			<h1>공지사항</h1>
 			<button class="insertnotice">Write</button>
@@ -85,10 +92,17 @@
 					<tbody>
 						<tr th:each="notice : ${noticelist.result.getContent()}">
 							<td th:text="${notice.noticeId}"></td>
-							<td class="fixed" th:if="${notice.fixedYN}==1" th:title="${notice.noticeText}"><a class="noticelink" th:href="${notice.noticeId}"><img src="https://cdn.icon-icons.com/icons2/317/PNG/512/pin-icon_34381.png" width="10" height="10"> [[${notice.noticeTitle}]]</a></td>
-							<td class="title" th:if="${notice.fixedYN}!=1" th:title="${notice.noticeText}"><a class="noticelink" th:href="${notice.noticeId}"> [[${notice.noticeTitle}]]</a></td>
+							<td class="fixed" th:if="${notice.fixedYN}==1"
+								th:title="${notice.noticeText}"><a class="noticelink"
+								th:href="${notice.noticeId}"><img
+									src="/images/pin-icon-black.png"
+									width="15" height="15"> [[${notice.noticeTitle}]]</a></td>
+							<td class="title" th:if="${notice.fixedYN}!=1"
+								th:title="${notice.noticeText}"><a class="noticelink"
+								th:href="${notice.noticeId}"> [[${notice.noticeTitle}]]</a></td>
 							<td th:text="${notice.user.name}"></td>
-							<td th:text="${#dates.format(notice.noticeRegDate, 'yy-MM-dd HH:mm')}"></td>
+							<td
+								th:text="${#dates.format(notice.noticeRegDate, 'yy-MM-dd HH:mm')}"></td>
 						</tr>
 					</tbody>
 				</table>
@@ -102,121 +116,130 @@
 									[[${noticelist.prevPage.pageNumber}+1]]</a></li>
 							<li class="page-item"
 								th:classappend="${p.pageNumber==noticelist.currentPageNum-1}?active:''"
-								th:each="p:${noticelist.pageList}"><a th:href="${p.pageNumber}+1">[[${p.pageNumber}+1]]</a>
-							</li>
+								th:each="p:${noticelist.pageList}"><a
+								th:href="${p.pageNumber}+1">[[${p.pageNumber}+1]]</a></li>
 							<li class="page-item" th:if="${noticelist.nextPage}"><a
 								th:href="${noticelist.nextPage.pageNumber}+1">NEXT
 									[[${noticelist.nextPage.pageNumber}+1]]</a></li>
 						</ul>
 					</div>
 				</nav>
-				
+
 			</div>
-			
+
 			<div id="input_search">
-				<form id="myfrm" th:action="@{list}" method="get">
-					<input type="hidden" name="page" th:value="${noticelist.currentPageNum}">
-					<input type="hidden" name="size"
-						th:value="${noticelist.currentPage.pageSize}">
-					<input type="hidden" name="type" th:value="${pageVO.type}">
-					<input type="hidden" name="keyword" th:value="${pageVO.keyword}">
+				<form id="myfrm" th:action="@{/notice}" method="get">
+					<input type="hidden" name="page"
+						th:value="${noticelist.currentPageNum}"> <input
+						type="hidden" name="size"
+						th:value="${noticelist.currentPage.pageSize}"> <input
+						type="hidden" name="type" th:value="${pageVO.type}"> <input
+						type="hidden" name="keyword" th:value="${pageVO.keyword}">
 					<input type="hidden" name="keyword2" th:value="${pageVO.keyword2}">
 				</form>
 				<select id="searchType" onchange="changeInput()">
-					<option value="noticeTitleAndText" th:selected="${pageVO.type=='noticeTitleAndText'}">전체</option>
-					<option value="noticeTitle" th:selected="${pageVO.type=='noticeTitle'}">제목</option>
-					<option value="noticeText" th:selected="${pageVO.type=='noticeText'}">내용</option>
-					<option value="noticeRegDate" th:selected="${pageVO.type=='noticeRegDate'}">날짜</option>
-				</select>
-				<input type="text" id="searchKeyword">
-				<input type="date" id="sdate" name="keyword" style="display: none" class="typeDate">
-				<input type="date" id="edate" name="keyword2" style="display: none" class="typeDate">
+					<option value="noticeTitleAndText"
+						th:selected="${pageVO.type=='noticeTitleAndText'}">전체</option>
+					<option value="noticeTitle"
+						th:selected="${pageVO.type=='noticeTitle'}">제목</option>
+					<option value="noticeText"
+						th:selected="${pageVO.type=='noticeText'}">내용</option>
+					<option value="noticeRegDate"
+						th:selected="${pageVO.type=='noticeRegDate'}">날짜</option>
+				</select> <input type="text" id="searchKeyword"> <input type="date"
+					id="sdate" name="keyword" style="display: none" class="typeDate">
+				<input type="date" id="edate" name="keyword2" style="display: none"
+					class="typeDate">
 				<button id="searchBtn">검색</button>
 			</div>
-			
+
 			<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 			<script>
-			
-			$(function(){
-				
-				
-				$('.insertnotice').click(function(){
-					$.ajax({
-						url : "/notice/insert",
-						success : function(responseData) {
-								$(".wrap_notice").html(responseData);
-						}
-					});
-				});
-				
-				
-				
-				function changeInput(){
+				function changeInput() {
 					var searchType = document.getElementById("searchType");
 					var opt = searchType.options[searchType.selectedIndex].value;
-					if(opt=="noticeRegDate"){
-						document.getElementById("searchKeyword").style.display="none";
-						document.getElementById("sdate").style.display="inline-block";
-						document.getElementById("edate").style.display="inline-block";
+					if (opt == "noticeRegDate") {
+						document.getElementById("searchKeyword").style.display = "none";
+						document.getElementById("sdate").style.display = "inline-block";
+						document.getElementById("edate").style.display = "inline-block";
 					} else {
-						document.getElementById("searchKeyword").style.display="inline-block";
-						document.getElementById("sdate").style.display="none";
-						document.getElementById("edate").style.display="none";
+						document.getElementById("searchKeyword").style.display = "inline-block";
+						document.getElementById("sdate").style.display = "none";
+						document.getElementById("edate").style.display = "none";
 					}
-					
+
 				}
-					$(function() {
-		
-						 
-						var formObj = $("#myfrm");
-		
-						$(".pagination a").click(function(e) {
-							e.preventDefault();
-							formObj.find("[name='page']").val($(this).attr('href'));
-							//formObj.attr("action", "/notice/list");
-							formObj.submit();
-						});
-							
-						$("#searchBtn").click(function() {
-							var typeStr = $("#searchType").find(":selected").val();
-							formObj.find("[name='type']").val(typeStr);
-								
-							if(typeStr=="noticeRegDate"){
-									
-								var keywordSdate = $("#sdate").val();
-								var keywordEdate = $("#edate").val();
-								$("#myfrm").find("[name='keyword']").val(keywordSdate + " 00:00:00");
-								$("#myfrm").find("[name='keyword2']").val(keywordEdate + " 23:59:59");
-							}	
-							else{
-								var keywordStr = $("#searchKeyword").val();
-								$("#myfrm").find("[name='keyword']").val(keywordStr);
+
+				$(function() {
+					
+					var token = $("meta[name='_csrf']").attr("content");
+					var header = $("meta[name='_csrf_header']").attr("content");
+
+					$('.insertnotice').click(function() {
+						$.ajax({
+							url : "/notice/insert",
+							beforeSend : function(xhr)
+				            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+								xhr.setRequestHeader(header, token);  },
+							success : function(responseData) {
+								$(".wrap_notice").html(responseData);
 							}
-								
-							formObj.find("[name='page']").val(1);
-							formObj.submit();
-							});
-							
-						
-						$(".noticelink").click(function(e) {
-							e.preventDefault();
-							var noticeId = $(this).attr("href");
-												
-							formObj.attr("action", "/notice/detail");
-							formObj.append("<input type='hidden' name='noticeId' value='"+noticeId+"'>");
-							formObj.submit();
 						});
-						
-							
 					});
-						
-				
-			});
-			
-			
+
+					var formObj = $("#myfrm");
+
+					$(".pagination a").click(
+							function(e) {
+								e.preventDefault();
+								formObj.find("[name='page']").val(
+										$(this).attr('href'));
+								//formObj.attr("action", "/notice/list");
+								formObj.submit();
+							});
+
+					$("#searchBtn").click(
+							function() {
+								var typeStr = $("#searchType")
+										.find(":selected").val();
+								formObj.find("[name='type']").val(typeStr);
+
+								if (typeStr == "noticeRegDate") {
+
+									var keywordSdate = $("#sdate").val();
+									var keywordEdate = $("#edate").val();
+									$("#myfrm").find("[name='keyword']").val(
+											keywordSdate + " 00:00:00");
+									$("#myfrm").find("[name='keyword2']").val(
+											keywordEdate + " 23:59:59");
+								} else {
+									var keywordStr = $("#searchKeyword").val();
+									$("#myfrm").find("[name='keyword']").val(
+											keywordStr);
+								}
+
+								formObj.find("[name='page']").val(1);
+								formObj.submit();
+							});
+
+					$(".noticelink")
+							.click(
+									function(e) {
+										e.preventDefault();
+										var noticeId = $(this).attr("href");
+
+										formObj
+												.attr("action",
+														"/notice/detail");
+										formObj
+												.append("<input type='hidden' name='noticeId' value='"+noticeId+"'>");
+										formObj.submit();
+									});
+
+				});
 			</script>
-			
+
 		</div>
-</div>
+	</div>
 </body>
 </html>

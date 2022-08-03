@@ -182,31 +182,6 @@ public class NoticeController {
 		return "redirect:/notice";
 	}
 	
-	
-	@GetMapping("/main")
-	public String mainNotice(Model model, HttpSession session,
-			HttpServletRequest requestPrinc) {
-		
-		TeamVO team = tRepo.findById(3L).get();
-		session.setAttribute("teamId", 3L);
-	    Long teamId = (Long)session.getAttribute("teamId");
-		System.out.println("팀ID : "+ team.getTeamId());
-		System.out.println(team);
-		System.out.println(teamId);
-		
-		List<NoticeVO> noticelist = noticeRepo.findByTeamId(3L);
-		
-		//해당 team 게시판만 조회
-		/*noticelist = new PageImpl<NoticeVO>(noticelist.stream()
-				.filter(notice->{return notice.getTeam()!=null && notice.getTeam().getTeamId()==teamId;})
-				.collect(Collectors.toList()),
-				page, noticelist.getTotalElements());*/
-		
-		model.addAttribute("noticelist", noticelist);
-		
-		return "notice/main_notice";
-	}
-
 
 }
 

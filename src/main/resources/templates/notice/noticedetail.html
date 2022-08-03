@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="~{/layout/layout1}">
 <head>
 <meta charset="UTF-8">
 <meta name="_csrf" th:content="${_csrf.token}" />
@@ -27,6 +29,7 @@
 	
 </style>
 <body>
+<div layout:fragment="inner_content">
 	<div class="wrap_notice">
 		<div class="notice_detail">
 			<form id="frm">
@@ -54,13 +57,12 @@
 						readonly="readonly"></textarea>
 				</div>
 					
-				<div class="noticefiles"
-					>
+				<div class="noticefiles">
 					<label>첨부파일</label>
 					<ul th:each="file : ${nflist}">
-						<li th:if="${nflist.length() == 0}">첨부파일 없음</li>
-						<li th:if="${nflist} != null || ${nflist.length() != 0}" th:text="${file.originFname}">
-							<a th:href="/noticefiles/${file.filename}"></a>
+						<li th:if="${nflist} == null" th:text="첨부파일 없음"></li>
+						<li th:if="${nflist} != null" >
+							<a th:href="@{'/noticefiles/' + ${file.filename}}">[[${file.originFname}]]</a>
 						</li>
 					</ul>
 				</div>
@@ -72,14 +74,14 @@
 				<input type="hidden" th:name="${_csrf.parameterName}"
 					th:value="${_csrf.token}" />
 				<a class="btnViewList"
-					th:href="@{list(page=${pageVO.page}, 
+					th:href="@{/notice/(page=${pageVO.page}, 
     size=${pageVO.size}, type=${pageVO.type}, 
     keyword=${pageVO.keyword},noticeId=${notice.noticeId})}">목록</a>
 			</form>
 		</div>
 
 	</div>
-
+</div>
 	<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 	<script>
 		$(function() {

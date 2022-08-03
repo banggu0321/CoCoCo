@@ -3,44 +3,49 @@
 	xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>공지사항</title>
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+<title>메인 | 공지사항</title>
 </head>
 <body>
-	<div class="wrap_notice">
-		<h1>공지사항</h1>
-		<div class="wrap_noticelist">
-			<table class="notice_table" th:with="noticelist=${noticelist}">
-				<tr class="notice_table_head">
-					<th>글번호</th>
-					<th>제목</th>
-					<th>내용</th>
-					<th>작성자</th>
-					<th>작성일</th>
-				</tr>
-				<tr th:each="notice:${noticelist.result.getContent()}">
-					<td th:text="${notice.noticeId}"></td>
-					<td><a class="noticelink" th:href="${notice.noticeId}">[[${notice.noticeTitle}]]</a></td>
-					<td th:text="${notice.noticeText}"></td>
-					<td th:text="${notice.user.name}"></td>
-					<td th:text="${#dates.format(notice.noticeRegDate, 'yy-MM-dd HH:mm')}"></td>
-				</tr>
-			</table>
-			<a th:href="@{/notice/list}">더보기</a>
+	<div>
+		<div class="wrap_notice">
+			<h2>공지사항</h2>
+			<div class="wrap_noticelist">
+				<table class="notice_table" th:with="noticelist=${noticelist}">
+					<tbody>
+						<tr th:each="notice:${noticelist}" th:if="${noticeStat.index}<5">
+							<td class="fixed noticelink" th:if="${notice.fixedYN}==1"
+								th:title="${notice.noticeText}"><img
+									src="/images/pin-icon.png" width="10" height="10"> [[${notice.noticeTitle}]]</td>
+							<td class="title" th:if="${notice.fixedYN}!=1"
+								th:title="${notice.noticeText}">[[${notice.noticeTitle}]]</td>
+							<td
+								th:text="${#dates.format(notice.noticeRegDate, 'yy-MM-dd HH:mm')}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<a th:href="@{/notice}">더보기</a>
 		</div>
 
 		<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 		<script>
-			
+		var token = $("meta[name='_csrf']").attr("content");
+		var header = $("meta[name='_csrf_header']").attr("content");
+
 			$(function() {
-				 	
-				$(".noticelink").click(function(e) {
-					e.preventDefault();
-					var noticeId = $(this).attr("href");
-										
-					formObj.attr("action", "/notice/detail");
-					formObj.append("<input type='text' name='noticeId' value='"+noticeId+"'>");
-					formObj.submit();
+				
+				$('.noticelink').click(function() {
+						
+					$.ajax({
+						url : "/notice/detail?noticeId=${notice.noticeId}",
+						success : function(responseData) {
+						$(".wrap_notice").html(responseData);
+						}
+					});
 				});
+				 	
 					
 			});
 				

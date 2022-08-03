@@ -5,8 +5,6 @@
 	  layout:decorate="~{/main/layout/layoutTeamList.html}">
 <head>
 <meta charset="UTF-8">
-<meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
-<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
 
 <link rel="stylesheet" th:href="@{/css/ja0/teamListcss.css}" />
 <title>CoCoCo</title>
@@ -32,7 +30,7 @@
 			<div class="box" th:team-data="${team.teamUserId.team.teamId}" th:each="team:${paging.result.getContent()}">
 				<img th:if="${session.user.userId != team.teamUserId.team.user.userId}" th:src="@{/images/deleteImg.svg}" class="delBtn" th:team-data="${team.teamUserId.team.teamId}">
 				
-				<img th:src="${team.teamUserId.team.teamImg}?:@{/images/teamImg.png}" th:alt="${team.teamUserId.team.teamImg}" class="img-rounded">
+				<img th:src="${team.teamUserId.team.teamImg}?:@{/images/teamImg.png}" th:alt="${team.teamUserId.team.teamImg}" class="rounded">
 				
 				<p class="name">[[${team.teamUserId.team.teamName}]]</p>
 				<p>[[${#dates.format(team.teamUserId.team.createDate,'yyyy-MM-dd')}]]</p>
@@ -56,8 +54,8 @@
 	</form>
 	
 	<!-- 워크스페이스 등록 모달 -->
-    <div id="myModal" class="modal fade" role="dialog">
-		<div class="model_dialog">
+    <div class="modal fade" id="myModal">
+		<div class="modal-dialog">
 	        <!-- Modal content -->
 	        <div class="modal-content">
 	        	<div class="modal-header">
@@ -65,7 +63,7 @@
 	       		</div>
 	       		
 	        	<div class="modal-body modalBody1">
-	        		<img th:src="@{/images/teamImg.png}" class="showImg img-rounded">
+	        		<img th:src="@{/images/teamImg.png}" class="showImg rounded">
 	        		
 	        		<form id="addTeamForm" method="post" enctype="multipart/form-data">
 			        	<label>WORKSPACE NAME</label>
@@ -76,7 +74,7 @@
 						
 						<div>
 							<label>WORKSPACE IMG</label> 
-							<input type="file" name="teamPhoto" id="img" class="form-control custom-file-input">
+							<input type="file" name="teamPhoto" id="img" class="form-control" accept="image/*">
 						</div>
 						
 						<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
@@ -85,36 +83,41 @@
 			
 				<div class="modal-footer">
 			    	<button id = "addTeamBtn" class="btn btn-cococo">워크스페이스 만들기</button>
-			    	<button type="button" class="btn btn-default valDel" data-dismiss="modal" >취소</button>
+			    	<button type="button" class="btn btn-light valDel" data-dismiss="modal">취소</button>
 	        	</div>
 	        </div>
     	</div>
     </div> <!-- Modal --> 
     
 	<!-- 초대코드 입력 모달 -->
-    <div id="myModal2" class="modal fade" role="dialog">
-		<div class="model_dialog">
+    <div class="modal fade" id="myModal2">
+		<div class="modal-dialog">
 	        <!-- Modal content -->
 	        <div class="modal-content">
+	        	<div class="modal-header">
+					<label class="modal-title">초대코드 입력</label>
+				</div>
 	        	<div class="modal-body">
-					<label>초대코드 입력</label> 
 					<input type="text" id="code" class="form-control">
 		        </div>
 				<div class="modal-footer">
 			    	<button id = "enterBtn" class="btn btn-cococo">워크스페이스 입장</button>
-			    	<button type="button" class="btn btn-default valDel" data-dismiss="modal">취소</button>
+			    	<button type="button" class="btn btn-light valDel" data-dismiss="modal">취소</button>
 	        	</div>
 	        </div>
     	</div>
     </div> <!-- Modal --> 
     
     <!-- 상태변경 모달 -->
-	<div id="myModal3" class="modal fade" role="dialog">
-		<div class="model_dialog">
+	<div class="modal fade" id="myModal3">
+		<div class="modal-dialog">
 	        <!-- Modal content -->
 	        <div class="modal-content">
+	        	<div class="modal-header">
+					<label class="modal-title">상태 설정을 먼저 해주세요!</label>
+				</div>
+				
 	        	<div class="modal-body">
-					<label>상태 설정을 먼저 해주세요!</label> 
 					<select class="form-control" name="status">
 						<option>출근</option>
 						<option>회의중</option>
@@ -126,7 +129,7 @@
 		        </div>
 				<div class="modal-footer">
 			    	<button id = "statusUpdate" class="btn btn-cococo">수정</button>
-			    	<button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+			    	<button type="button" class="btn btn-light" data-dismiss="modal">취소</button>
 	        	</div>
 	        </div>
 	   	</div>

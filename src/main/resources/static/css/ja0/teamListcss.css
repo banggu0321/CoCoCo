@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 #cont{
-	padding-top: 64px;
+	display: block;
 }
 
 .content {
@@ -58,14 +58,6 @@
 	height: 30px;
 }
 
-.inviteBtn {
-	float: right;
-}
-
-#title {
-	float: left;
-}
-
 #myModal, #myModal2, #myModal3 {
 	position: fixed;
 	top: 30%;
@@ -109,4 +101,8 @@
 	display: flex;
     justify-content: center;
     align-items: center;
+}
+
+input[type=file] {
+    padding: 3px;
 }

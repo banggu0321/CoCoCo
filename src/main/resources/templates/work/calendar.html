@@ -23,11 +23,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.0/main.min.css">
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.0/main.min.js"></script>
 
-<style type="text/css">
-.managerselected{
-    background-color: #E3E3E3 ;
-}
-</style>
+<link rel="stylesheet" th:href="@{/css/gy/work.css}" />
 
 <script th:inline="javascript">
 	$(function(){
@@ -148,7 +144,7 @@
 				customButtons : {
 					myWorkButton:{
 						text : "My Work", // 버튼 내용
-						color: 'yellow', 
+						//color: 'yellow', 
 						click : function() { // 버튼 클릭 시 이벤트 추가
 							//console.log("새로 가져올거 :"+myWorklist);
 							myeventlist=[];
@@ -193,7 +189,7 @@
 					},
 					totalButton:{
 						text : "All Work", // 버튼 내용
-						color: 'yellow', 
+						//color: 'yellow', 
 						click : function() {
 							//console.log("원래 event : "+totaleventlist);
 							//console.log("바뀐 event : "+myeventlist);
@@ -206,7 +202,7 @@
 					},
 					addEventButton : { // 추가한 버튼 설정
 						text : "일정 추가", // 버튼 내용
-						color: 'yellow', 
+						//color: 'yellow', 
 						click : function() { // 버튼 클릭 시 이벤트 추가
 							$("#calendarAddModal").modal("show"); // modal 나타내기
 							
@@ -465,17 +461,6 @@
 	
 	//WorkUpdateBtn
 </script>
-<style>
-#calendarBox {
-	width: 70%;
-	padding-left: 15%;
-}
-.fc-toolbar-title{
-float : left;
-}
-.fc-button{
-float : left;}
-</style>
 </head>
 <body>
 	<div layout:fragment="inner_content">

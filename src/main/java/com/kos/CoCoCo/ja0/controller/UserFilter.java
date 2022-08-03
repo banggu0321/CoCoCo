@@ -15,8 +15,8 @@ import javax.servlet.http.HttpSession;
 
 import com.kos.CoCoCo.vo.TeamUserVO;
 
-@WebFilter(urlPatterns = "/admin/*")
-public class AdminFilter implements Filter {
+@WebFilter(urlPatterns = {"/main/*", "/admin/*"})
+public class UserFilter implements Filter {
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -26,24 +26,16 @@ public class AdminFilter implements Filter {
 		HttpServletRequest httpReq = (HttpServletRequest)request;
 		
 		HttpSession session = httpReq.getSession();
-		TeamUserVO teamUser = (TeamUserVO) session.getAttribute("teamUser");
 		
-		//System.out.println("adminfilter 지나감!");		
+		String getClass = session.getAttribute("user").getClass().getSimpleName();
 		
-		if(teamUser == null) {
+		if(!getClass.equals("UserVO")) {
 			httpRes.setContentType("text/html; charset=UTF-8");
 			PrintWriter writer = response.getWriter();
-			writer.println("<script>alert('관리자 페이지 접근이 불가능합니다!');  location.href='/CoCoCo';</script>");
+			writer.println("<script>location.href='/CoCoCo';</script>");
 			writer.close();
 		} else {
-			if(teamUser.getUserRole().equals("ADMIN")) {
-				chain.doFilter(request, response);
-			} else {
-				httpRes.setContentType("text/html; charset=UTF-8");
-				PrintWriter writer = response.getWriter();
-				writer.println("<script>alert('관리자 페이지 접근이 불가능합니다!');  location.href='/main/"+ teamUser.getTeamUserId().getTeam().getTeamId()+"';</script>");
-				writer.close();
-			}
+			chain.doFilter(request, response);
 		}
 	}
 

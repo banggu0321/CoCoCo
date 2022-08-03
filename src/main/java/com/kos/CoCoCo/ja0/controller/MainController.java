@@ -36,7 +36,7 @@ import com.kos.CoCoCo.vo.UserVO;
 import com.querydsl.core.types.Predicate;
 
 @Controller
-@RequestMapping("/main/*")
+@RequestMapping("/CoCoCo")
 public class MainController {
 
 	@Autowired
@@ -51,8 +51,8 @@ public class MainController {
 	@Autowired
 	S3Uploader uploader;
 	
-	@GetMapping("/teamList")
-	public void teamList(@ModelAttribute PageVO pageVO, HttpSession session, Model model, Principal principal, HttpServletRequest request) {
+	@GetMapping("")
+	public String teamList(@ModelAttribute PageVO pageVO, HttpSession session, Model model, Principal principal, HttpServletRequest request) {
 		Map<String, Object> map = (Map<String, Object>) RequestContextUtils.getInputFlashMap(request);
 		
 		if(map != null) {
@@ -73,20 +73,8 @@ public class MainController {
 		
 		PageMaker<TeamUserVO> pgmaker = new PageMaker<>(team);
 		model.addAttribute("paging", pgmaker);
-	}
-	
-	@GetMapping("/{teamId}")
-	public String teamMain(@PathVariable Long teamId, HttpSession session, Model model) {
-		UserVO user = (UserVO)session.getAttribute("user");
-		TeamVO team = tRepo.findById(teamId).get();
-		TeamUserMultikey tuId = new TeamUserMultikey(team, user);
 		
-		session.setAttribute("teamId", teamId);
-		session.setAttribute("teamUser", tuRepo.findById(tuId).get());
-		model.addAttribute("team", team);
-		model.addAttribute("userList", tuRepo.findByTeamId(teamId));
-		
-		return "main/teamMain";
+		return "/main/teamList";
 	}
 	
 	@PostMapping("/addTeam")
@@ -106,7 +94,7 @@ public class MainController {
 		TeamUserVO teamUser = TeamUserVO.builder().teamUserId(teamUserId).userRole("ADMIN").build();
 		tuRepo.save(teamUser);
 		
-		return "redirect:/main/teamList";
+		return "redirect:/CoCoCo";
 	}
 	
 	//초대코드 만들기
@@ -131,7 +119,7 @@ public class MainController {
 		
 		tuRepo.deleteById(teamUserId);
 		
-		return "redirect:/main/teamList";
+		return "redirect:/CoCoCo";
 	}
 	
 	@GetMapping("/updateStatus/{str}/{status}")
@@ -149,7 +137,7 @@ public class MainController {
 			return "redirect:/main/"+teamId;
 		}
 		
-		return "redirect:/main/teamList";
+		return "redirect:/CoCoCo";
 	}
 	
 	@ResponseBody

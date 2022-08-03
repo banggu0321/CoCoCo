@@ -1,15 +1,15 @@
 @charset "UTF-8";
 
-.body {
-	width: 1000px;
-}
+.inner_content {
+	padding-top: 10px;
+}	
 
 .my_menu div img {
 	margin: 10px;
 }
 
 #myProfile {
-	padding: 10px;
+	padding: 20px 10px;
 	display: flex;
     flex-direction: column;
     align-items: center;
@@ -50,7 +50,7 @@ img#status {
 }
 
 .userProfile {
-	width: 276px;
+	width: 100%;
 	position: relative;
 }
 
@@ -70,6 +70,7 @@ img#status {
 	height: 60%;
 	overflow-x: hidden;
 	overflow-y: auto;
+	margin: 0px 5px;
 }
 
 /* 스크롤바 설정*/
@@ -140,7 +141,7 @@ img#status {
 #myProfile img.admin {
 	position: absolute;
     left: 55%;
-    top: -5%;
+    top: 0%;
     width: 30px;
     height: 30px;
 }

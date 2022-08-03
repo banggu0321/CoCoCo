@@ -15,7 +15,7 @@ import javax.servlet.http.HttpSession;
 
 import com.kos.CoCoCo.vo.TeamUserVO;
 
-@WebFilter(urlPatterns = {"/main/*", "/admin/*"})
+@WebFilter(urlPatterns = {"/main/*", "/admin/*", "/work/*", "/notice/*"})
 public class UserFilter implements Filter {
 
 	@Override

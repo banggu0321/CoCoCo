@@ -143,22 +143,22 @@ public class MainController {
 	@ResponseBody
 	@PostMapping("/findTeam/{code}")
 	public Long findTeam(@PathVariable String code, HttpSession session, Model model) {
-		List<TeamVO> team = tRepo.findByInviteCode(code);
+		TeamVO team = tRepo.findByInviteCode(code);
 
-		if(team.isEmpty()) return 0L;
+		if(team == null) return 0L;
 		
-		TeamVO t = team.get(0);
 		UserVO user = (UserVO) session.getAttribute("user");
-		TeamUserMultikey id = new TeamUserMultikey(t, user);
+		TeamUserMultikey id = new TeamUserMultikey(team, user);
+		
 		tuRepo.findById(id).ifPresentOrElse(i->{
 		}, ()->{
-			TeamUserVO teamUser = TeamUserVO.builder().teamUserId(new TeamUserMultikey(t, user))
+			TeamUserVO teamUser = TeamUserVO.builder().teamUserId(new TeamUserMultikey(team, user))
 					.userRole("USER").build();
 			tuRepo.save(teamUser);
 		});
 		
 		session.setAttribute("teamList", tuRepo.findByUserId(user.getUserId()));
 		
-		return t.getTeamId();
+		return team.getTeamId();
 	}
 }

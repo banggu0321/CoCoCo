@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -70,17 +71,16 @@ public class NoticeController {
 	NoticeFileRepository noticeFRepo;
 
 	@GetMapping("")
-	public String noticelist(NoticePageVO pageVO, Model model, HttpSession session,
+	public String noticelist(NoticePageVO pageVO, NoticeVO notice, Model model, HttpSession session,
 			HttpServletRequest requestPrinc, Principal principal) {
 		System.out.println("principal.getName():" + principal.getName());
 		UserVO user =uRepo.findById(principal.getName()).get();
 		
-		TeamVO team = tRepo.findById(3L).get();
-		session.setAttribute("teamId", 3L);
+		//TeamVO team = tRepo.findById(186L).get();
+		//session.setAttribute("teamId", 186L);
 	    Long teamId = (Long)session.getAttribute("teamId");
-		//System.out.println("팀ID : "+ team.getTeamId());
-		//System.out.println(team);
-		//System.out.println(teamId);
+		TeamVO team = tRepo.findById(teamId).get();
+		notice.setTeam(team);
 		
 		if(pageVO == null) {
 			pageVO = new NoticePageVO();
@@ -120,21 +120,22 @@ public class NoticeController {
 		
 	
 	@GetMapping("/insert")
-	public String insert(HttpSession session, Principal principal) {
-		
+	public String insert(UserVO user, HttpSession session, Principal principal) {
+				
 		return "notice/insertnotice";
 	}
 	
 	@PostMapping("/insert")
-	public String insertPost(HttpSession session, NoticeVO notice, MultipartFile[] files) throws Exception{
+	public String insertPost(HttpSession session, Model model, NoticeVO notice, MultipartFile[] files) throws Exception{
 		System.out.println("공지vo"+notice);
-		/*TeamVO team = tRepo.findById(3L).get();
-		session.setAttribute("teamId", 3L);
-	    Long teamId = (Long)session.getAttribute("teamId");
-		System.out.println("팀ID : "+ team.getTeamId());*/
+				
+		Long teamId = (Long) session.getAttribute("teamId");
+		TeamVO team = tRepo.findById(teamId).get();
+		notice.setTeam(team);
 		
-		log.info(notice.toString());
-		
+		UserVO writer = (UserVO) session.getAttribute("user");
+		notice.setUser(writer);
+				
 		noticeService.insert(notice, files);
 		
 		return "redirect:/notice";

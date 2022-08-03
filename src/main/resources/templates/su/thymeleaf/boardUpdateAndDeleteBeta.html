@@ -6,9 +6,37 @@
 margin: 0 auto;
 width: 70%;
 }
+#insertReply{
+position: relative;
+left:10%;
 
+width:80%;
+text-align:center;
+
+margin-top: 2%;
+}
+#replyPart1{
+float:left;
+width:15%;
+}
+#replyPart2{
+float:left;
+width:60%;
+}
+#replyPart3{
+float:left;
+width:20%;
+}
+
+#replyContent{
+width:60%;
+}
+#replyList{
+padding-top: 2%;
+}
 </style>
 <meta charset="utf-8">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -18,8 +46,13 @@ width: 70%;
 	window.onload = function() {
 		document.getElementById("boardDeleteBtn").addEventListener('click',
 				hello);
+		document.getElementById("boardUCancel").addEventListener('click',updateCancle);
 	}
-
+	
+	function updateCancle(){
+		window.location.href = "/boardSampleBeta";
+	}
+	
 	function hello() {
 		var boardID = document.getElementById("bid").value;
 		window.location.href = "/boardDeleteBeta?bid=" + boardID;
@@ -32,24 +65,36 @@ $(document).ready(function() {
 	var boardID = "[[${boardDetail.boardId}]]"; 	
 	replyREST.getAllReply(boardID,printList);
 });
+
+
 function printList(list) {
 	var str = "";
 	var replyObj;
 
 	for (var i = 0; i < list.length; i++) {
 		replyObj = list[i];
-
-		str += "<tr>" +"<td>"+ replyObj.replyId + "</td>" + "<td>" + replyObj.replyText + "</td>" 
-			+ "<td>" + replyObj.board.boardId + "</td>"+"<td>"+replyObj.user.userId+"</td>"
-			+ "<td>" + formatDate(replyObj.replyRegDate) + "</td>"
-			+"<td>"+formatDate(replyObj.replyUpdate) + "</td>" + "</tr>";
+		
+		str += "<div style=\"position:relative; left:25%; width:50%; padding-top:2%; background:white; \">"
+		
+		+"<div style=\"float:left; height:100px;\">"+"<img src='/images/sample0802.png' width='38'>" +"</div>"
+		
+		+"<div style=\"height:100px; width:50%; \">"
+		
+		+"<div>"+"이름"+" - "
+		+"<a href=\"#\">"+"삭제"+"</a>"+" - "
+		+"<a href=\"#\">"+"수정"+"</a>"+"</div>"+"<br>"
+		
+		+"<div id=\"replyContent\">"+ "<span>"+replyObj.replyText+"</span>"+"</div>"+"<br>"
+		
+		+"<div>"+"<span>"+"<font size=\"2\" color=\"gray\">"+"등록일: "+formatDate(replyObj.replyUpdate)+"</font>"+"</span>"+"</div>"
+		+"</div>"+"</div>"+"<br>";
 	}
 	$("#replyTable").html(str);
 }
 function formatDate(timeValue) {
 	var date = new Date(timeValue);
 	return date.getFullYear() + "-" + (date.getMonth() + 1) + "-"
-			+ date.getDate();
+			+ date.getDate()+" "+date.getHours()+":"+date.getMinutes();
 }
 </script>
 </head>
@@ -76,38 +121,47 @@ function formatDate(timeValue) {
 				<div class="form-group">
 				<input type="button" id="boardDeleteBtn" class="btn btn-primary" value="삭제">
 				</div>
+				
 				<div class="form-group">
-				<input type="submit" value="update" class="btn btn-primary"> 
-				<input type="reset" value="reset" class="btn btn-primary">
+				<input type="submit" value="적용" class="btn btn-primary"> 
+				<input id="boardUCancel" type="button" value="목록 돌아가기" class="btn btn-primary">
 				</div>
 			</form>
 			<hr>
 		</div>
 
-		<br>
 	<br>
 	<br>
 	<br>
-	<form method="post" action="/postReplyInsertBeta">
-		<input name="replyBid" type="hidden" th:value="${boardDetail.boardId}">
-		text: <textarea name="replyText"></textarea>
-		<input type="submit" value="reply insert">
-	</form>
+	<br>
 
-	<hr>
-	<table>
-		<thead>
-		<tr>
-			<th>replyID</th>
-			<th>text</th>
-			<th>boardID</th>
-			<th>userID</th>
-			<th>regDate</th>
-			<th>update</th>
-		</tr>
-		</thead>
-		<tbody id="replyTable"></tbody>	</table>
-</div>
+		<div id="boardReply" >
+		
+		<div id="replyList" class="w3-light-grey">
+		<div id="replyTable"></div>
+		</div>
+
+			<div id="insertReply">
+				<form method="post" action="/postReplyInsertBeta">
+
+					<input name="replyBid" type="hidden" th:value="${boardDetail.boardId}">
+					
+					<div id="replyPart1">
+					<img src="/images/sample0802.png" width="38">
+					</div>
+					
+					<div id="replyPart2">
+					<input name="replyText" type="text" class="form-control" placeholder="Add comment">
+					</div>
+					
+					<div id="replyPart3">
+					<input type="submit" value="reply insert" class="btn btn-primary">
+					</div>
+
+				</form>
+			</div>
+		</div>
+	</div>
 	
 </body>
 </html>

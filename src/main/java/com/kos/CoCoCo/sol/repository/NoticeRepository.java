@@ -25,11 +25,17 @@ import com.querydsl.core.types.Predicate;
 public interface NoticeRepository extends JpaRepository<NoticeVO, Long>, PagingAndSortingRepository<NoticeVO, Long>,
  QuerydslPredicateExecutor<NoticeVO> {
 	
-	@Query(value="SELECT * FROM notice n WHERE n.TEAM_TEAM_ID = ?1 order by n.fixedyn desc, n.notice_reg_date desc", nativeQuery=true)
-	public List<NoticeVO> findByTeamId(Long teamId);
+	public List<NoticeVO> findByTeam(TeamVO team);
 	
-	public Page<NoticeVO> findByTeam(TeamVO team,Pageable pageable);
+	public Page<NoticeVO> findByTeam(TeamVO team, Pageable pageable);
 
+	public default Predicate makePredicate2(String type, String keyword, String keyword2, TeamVO team) {
+		BooleanBuilder builder = (BooleanBuilder) makePredicate(type, keyword, keyword2);
+		QNoticeVO notice = QNoticeVO.noticeVO;
+		builder.and(notice.team.eq(team));
+		return builder;
+	}
+	
    	public default Predicate makePredicate(String type, String keyword, String keyword2) {
 		BooleanBuilder builder = new BooleanBuilder();
 		QNoticeVO notice = QNoticeVO.noticeVO;

@@ -29,26 +29,8 @@
 			<a th:href="@{/notice}">더보기</a>
 		</div>
 
-		<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 		<script>
-		var token = $("meta[name='_csrf']").attr("content");
-		var header = $("meta[name='_csrf_header']").attr("content");
-
-			$(function() {
-				
-				$('.noticelink').click(function() {
-						
-					$.ajax({
-						url : "/notice/detail?noticeId=${notice.noticeId}",
-						success : function(responseData) {
-						$(".wrap_notice").html(responseData);
-						}
-					});
-				});
-				 	
-					
-			});
-				
+	
 		</script>
 		
 	</div>

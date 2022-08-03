@@ -87,9 +87,9 @@ public class NoticeController {
 		}
 				
 		Pageable page = pageVO.makePaging(0, new String[]{"fixedYN","noticeId"});
-		Predicate prediacte = noticeRepo.makePredicate(pageVO.getType(), pageVO.getKeyword(), pageVO.getKeyword2());
+		Predicate prediacte = noticeRepo.makePredicate2(pageVO.getType(), pageVO.getKeyword(), pageVO.getKeyword2(), team);
 		
-		Page<NoticeVO> noticelist = noticeRepo.findByTeam(team, page);
+		Page<NoticeVO> noticelist = noticeRepo.findAll(prediacte, page);
 		PageMaker<NoticeVO> pgmaker = new PageMaker<>(noticelist);
 		
 		model.addAttribute("noticelist", pgmaker);

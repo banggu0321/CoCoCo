@@ -5,88 +5,13 @@
 	  layout:decorate="~{/layout/layout1.html}">
 <head>
 <meta charset="UTF-8">
+
+<link rel="stylesheet" th:href="@{/css/ja0/adminTeamcss.css}" />
+
 <title>CoCoCo | [[${team.teamName}]]</title>
 
 <style>
-.body {
-	display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.my_menu {
-	display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-}
 
-.my_menu a {
-	color: black;
-	font-size: 20px;
-}
-
-.my_menu div {
-	padding: 13px;
-	width: 280px;
-	text-align: end;
-}
-
-.my_menu a:hover {
-	color: black;
-	text-decoration: none;
-	font-size: 23px;
-}
-#teamInfo, #teamImg, div img {
-	float: left;
-	font-size: 18px;
-}
-
-#teamInfo label {
-	font-size: 20px;
-}
-
-#teamInfo p {
-	margin-bottom: 20px;
-}
-
-.showImg {
-	margin: 0px 70px;
-	width: 280px;
-}
-
-#adminTeam {
-	color: #FF7F27;
-	font-weight: bold;
-}
-
-#box {
-	border: 2px solid #FF7F27;
-    border-radius: 1em;
-    padding: 20px 50px;
-    background-color: white;
-    height: 450px;
-    width: 800px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-#info {
-	white-space: pre-wrap;
-}
-
-#teamImg {
-	position: relative;
-}
-
-#delImg {
-	width: 30px;
-	position: absolute;
-    left: 80%;
-}
-
-#delImg:hover {
-	cursor: pointer;
-}
 </style>
 
 <script type="text/javascript">
@@ -127,32 +52,36 @@
 </head>
 <body>
 <div layout:fragment="my_menu">
-	<div>
-		<a th:href="@{/admin/team}" id="adminTeam">워크스페이스 관리</a>
-	</div>
-	<div>
-		<a th:href="@{/admin/user}" id="adminUser">유저관리</a>
+	<div class="my_menu">
+		<div>
+			<a th:href="@{/admin/team}" id="adminTeam">워크스페이스 관리</a>
+		</div>
+		<div>
+			<a th:href="@{/admin/user}" id="adminUser">유저관리</a>
+		</div>
 	</div>
 </div>
 
 <div layout:fragment="inner_content">
-	<div id="box">
-		<div id="teamImg" th:if="${team.teamImg}">
-			<img th:src="${team.teamImg}" th:alt="${team.teamImg}" class="showImg img-rounded">
-			<img id="delImg" th:src="@{/images/deleteTeamImg.svg}">
-		</div>
-		<img th:if="${team.teamImg==null}" th:src="@{/images/teamImg.png}" alt="null" class="showImg img-rounded">
-		<div id="teamInfo">
-			<label>WORKSPACE NAME</label>
-				<p>[[${team.teamName}]]</p>
-			<label>WORKSPACE INFO</label>
-				<p id="info">[[${team.teamInfo}]]</p>
-			<label>CREATED DATE</label>
-				<p>[[${#dates.format(team.createDate,'yyyy-MM-dd')}]]</p>
-			<label>CREATOR</label>
-				<p>[[${team.user.name}]] ([[${team.user.userId}]])</p>
-		<button class="btn btn-cococo" id="modifyForm">수정</button>
-		<button class="btn btn-default" id="deleteBtn">워크스페이스 삭제</button>
+	<div class="inner_content">
+		<div id="box">
+			<div id="teamImg" th:if="${team.teamImg}">
+				<img th:src="${team.teamImg}" th:alt="${team.teamImg}" class="showImg img-rounded">
+				<img id="delImg" th:src="@{/images/deleteTeamImg.svg}">
+			</div>
+			<img th:if="${team.teamImg==null}" th:src="@{/images/teamImg.png}" alt="null" class="showImg img-rounded">
+			<div id="teamInfo">
+				<label>WORKSPACE NAME</label>
+					<p>[[${team.teamName}]]</p>
+				<label>WORKSPACE INFO</label>
+					<p id="info">[[${team.teamInfo}]]</p>
+				<label>CREATED DATE</label>
+					<p>[[${#dates.format(team.createDate,'yyyy-MM-dd')}]]</p>
+				<label>CREATOR</label>
+					<p>[[${team.user.name}]] ([[${team.user.userId}]])</p>
+			<button class="btn btn-cococo" id="modifyForm">수정</button>
+			<button class="btn btn-default" id="deleteBtn">워크스페이스 삭제</button>
+			</div>
 		</div>
 	</div>
 </div>

@@ -16,15 +16,18 @@
 		<div id="side_bar">
 			<div th:replace="~{/fragments/side :: side}"></div>
 			
-			<div class="my_menu" layout:fragment="my_menu">
+			<div layout:fragment="my_menu">
+				<div class="my_menu"></div>
 			</div><!-- my_menu -->
 			
 		</div><!-- #side -->
 		
-		<div class="inner_content" layout:fragment="inner_content">
+		<div layout:fragment="inner_content">
+			<div class="inner_content"></div>
 		</div><!-- inner_content -->
 		
-		<div class="chat" layout:fragment="chat">
+		<div layout:fragment="chat">
+			<div class="chat"></div>
 		</div><!-- chat -->
 	</div>
 </body>

@@ -2,6 +2,7 @@
 
 #cont{
 	padding-top: 64px;
+	display: block;
 }
 
 .content {
@@ -109,4 +110,8 @@
 	display: flex;
     justify-content: center;
     align-items: center;
+}
+
+input[type=file] {
+    padding: 3px;
 }

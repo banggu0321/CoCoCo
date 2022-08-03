@@ -125,6 +125,9 @@ public class AdminController {
 			tRepo.save(i);
 		});
 		
+		UserVO user = (UserVO) session.getAttribute("user");
+		session.setAttribute("teamList", tuRepo.findByUserId(user.getUserId()));
+		
 		return "redirect:/admin/team";
 	}
 	

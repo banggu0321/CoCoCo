@@ -8,74 +8,12 @@
 <meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
 <meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
 
+<link rel="stylesheet" th:href="@{/css/ja0/adminUsercss.css}" />
+
 <title>CoCoCo | [[${team.teamName}]]</title>
 
 <style>
-.body {
-	display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.my_menu {
-	display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-}
 
-.my_menu a {
-	color: black;
-	font-size: 20px;
-}
-
-.my_menu div {
-	padding-bottom: 13px;
-	width: 280px;
-	text-align: end;
-}
-
-.my_menu a:hover {
-	color: black;
-	text-decoration: none;
-	font-size: 23px;
-}
-table{
-	background-color: white;
-	text-align: center;
-}
-
-.head {
-	background-color: #FF7F27;
-	color:white;
-	font-weight: bold;
-	position: sticky;
-	top: 0;
-}
-
-#adminUser {
-	color: #FF7F27;
-	font-weight: bold;
-}
-
-.delUser:hover, .updateUser:hover {
-	cursor: pointer;
-}
-
-.delUser, .updateUser {
-	width: 25px;
-	height: 25px;
-}
-
-#myModal {
-	position: fixed;
-	top: 30%;
-	left: 20%;
-	right: 20%;
-}
-
-.body {
-	overflow-x: hidden;
-	overflow-y: auto; 
-}
 </style>
 
 <script type="text/javascript">
@@ -131,49 +69,53 @@ table{
 </head>
 <body>
 <div layout:fragment="my_menu">
-	<div>
-		<a th:href="@{/admin/team}" id="adminTeam">워크스페이스 관리</a>
-	</div>
-	<div>
-		<a th:href="@{/admin/user}" id="adminUser">유저관리</a>
+	<div class="my_menu">
+		<div>
+			<a th:href="@{/admin/team}" id="adminTeam">워크스페이스 관리</a>
+		</div>
+		<div>
+			<a th:href="@{/admin/user}" id="adminUser">유저관리</a>
+		</div>
 	</div>
 </div>
 
 <div layout:fragment="inner_content">
-	<table id="userList" class="table">
-		<tr class="head">
-			<td></td>
-			<td>이름</td>
-			<td>이메일</td>
-			<td>소속</td>
-			<td>상태</td>
-			<td>참여일자</td>
-			<td>권한</td>
-			<td></td>
-			<td></td>
-		</tr>
-		
-		<tr id="teamUser" th:each="user, rowStatus:${userList}">
-			<td th:text="${rowStatus.count}">순서</td>
-			<td th:text="${user.teamUserId.user.name}">이름</td>
-			<td th:text="${user.teamUserId.user.userId}">이메일</td>
-			<td th:text="${user.teamUserId.user.company}">소속</td>
-			<td th:text="${user.teamUserId.user.status}">상태</td>
-			<td th:text="${#dates.format(user.joinDate,'yyyy-MM-dd')}">참여일자</td>
-			<td th:text="${user.userRole}">권한</td>
+	<div class="inner_content">
+		<table id="userList" class="table">
+			<tr class="head">
+				<td></td>
+				<td>이름</td>
+				<td>이메일</td>
+				<td>소속</td>
+				<td>상태</td>
+				<td>참여일자</td>
+				<td>권한</td>
+				<td></td>
+				<td></td>
+			</tr>
 			
-			<td th:if="${user.teamUserId.user.userId == user.teamUserId.team.user.userId || user.teamUserId.user.userId == session.user.userId}"></td>
-			<td th:if="${user.teamUserId.user.userId != user.teamUserId.team.user.userId && user.teamUserId.user.userId != session.user.userId}" 
-					data-toggle="modal" data-target="#myModal" class="roleModel">
-				<img th:src="@{/images/updateRole.svg}" class="updateUser" th:user-data="${user.teamUserId.user.userId}" alt="update">
-			</td>
-			
-			<td th:if="${user.teamUserId.user.userId == user.teamUserId.team.user.userId || user.teamUserId.user.userId == session.user.userId}"></td>
-			<td th:if="${user.teamUserId.user.userId != user.teamUserId.team.user.userId && user.teamUserId.user.userId != session.user.userId}">
-				<img th:src="@{/images/deleteImg.svg}" class="delUser" th:user-data="${user.teamUserId.user.userId}" alt="delete">
-			</td>
-		</tr>
-	</table>
+			<tr id="teamUser" th:each="user, rowStatus:${userList}">
+				<td th:text="${rowStatus.count}">순서</td>
+				<td th:text="${user.teamUserId.user.name}">이름</td>
+				<td th:text="${user.teamUserId.user.userId}">이메일</td>
+				<td th:text="${user.teamUserId.user.company}">소속</td>
+				<td th:text="${user.teamUserId.user.status}">상태</td>
+				<td th:text="${#dates.format(user.joinDate,'yyyy-MM-dd')}">참여일자</td>
+				<td th:text="${user.userRole}">권한</td>
+				
+				<td th:if="${user.teamUserId.user.userId == user.teamUserId.team.user.userId || user.teamUserId.user.userId == session.user.userId}"></td>
+				<td th:if="${user.teamUserId.user.userId != user.teamUserId.team.user.userId && user.teamUserId.user.userId != session.user.userId}" 
+						data-toggle="modal" data-target="#myModal" class="roleModel">
+					<img th:src="@{/images/updateRole.svg}" class="updateUser" th:user-data="${user.teamUserId.user.userId}" alt="update">
+				</td>
+				
+				<td th:if="${user.teamUserId.user.userId == user.teamUserId.team.user.userId || user.teamUserId.user.userId == session.user.userId}"></td>
+				<td th:if="${user.teamUserId.user.userId != user.teamUserId.team.user.userId && user.teamUserId.user.userId != session.user.userId}">
+					<img th:src="@{/images/deleteImg.svg}" class="delUser" th:user-data="${user.teamUserId.user.userId}" alt="delete">
+				</td>
+			</tr>
+		</table>
+	</div>
 	
 	<!-- Modal -->
     <div id="myModal" class="modal fade" role="dialog">

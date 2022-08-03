@@ -141,7 +141,7 @@ public class AdminController {
 			//tuRepo.deleteByTeamId(teamId);
 			tRepo.deleteById(teamId);
 			attr.addFlashAttribute("msg", "워크스페이스가 삭제되었습니다.");			
-			return "redirect:/main/teamList";
+			return "redirect:/CoCoCo";
 		}
 		
 		attr.addFlashAttribute("msg", "워크스페이스를 삭제할 수 없습니다.");	

@@ -1,4 +1,10 @@
 @charset "UTF-8";
+
+
+.inner_content {
+	padding-top: 13px;	
+}
+
 .body {
 	display: flex;
     flex-direction: column;

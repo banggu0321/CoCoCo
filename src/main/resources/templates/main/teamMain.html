@@ -7,7 +7,6 @@
 <meta charset="UTF-8">
 
 <link rel="stylesheet" th:href="@{/css/ja0/teamMaincss.css}" />
-<link rel="stylesheet" th:href="@{/css/ja0/layoutMaincss.css}" />
 
 <title>CoCoCo | [[${team.teamName}]]</title>
 <style>
@@ -47,11 +46,6 @@
 		
 		alert("초대코드가 복사되었습니다.");
 	}
-	
-	function call(){
-		$("#myModal").modal();
-		$("#myModal").css("z-index", -1);
-	}
 </script>
 </head>
 
@@ -65,7 +59,7 @@
 					
 			<div id="myInfo">
 				<div id="myName">[[${session.user.name}]]
-					<button th:text="${session.user.status}?:상태설정" class="btn btn-default btn-sm statusBtn" data-toggle="modal" onclick="call()"></button> <!-- data-target="#myModal" -->
+					<button th:text="${session.user.status}?:상태설정" class="btn btn-default btn-sm statusBtn" data-toggle="modal" data-target="#myModal"></button>
 				</div>
 				[[${session.user.company}]]
 			</div>

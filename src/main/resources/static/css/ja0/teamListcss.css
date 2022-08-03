@@ -1,7 +1,6 @@
 @charset "UTF-8";
 
 #cont{
-	padding-top: 64px;
 	display: block;
 }
 
@@ -57,14 +56,6 @@
 	left: 85%;
 	width: 30px;
 	height: 30px;
-}
-
-.inviteBtn {
-	float: right;
-}
-
-#title {
-	float: left;
 }
 
 #myModal, #myModal2, #myModal3 {

@@ -40,7 +40,7 @@ public class InnerMainController {
 		System.out.println(team);
 		System.out.println(teamId);
 		
-		List<NoticeVO> noticelist = noticeRepo.findByTeamId(teamId);
+		List<NoticeVO> noticelist = noticeRepo.findByTeam(team);
 				
 		model.addAttribute("noticelist", noticelist);
 		

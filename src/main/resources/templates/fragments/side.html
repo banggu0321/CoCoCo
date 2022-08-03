@@ -5,7 +5,7 @@
 	<div id="teamList">
 		<a th:href="@{/main/}+${tu.teamUserId.team.teamId}" th:each="tu:${session.teamList}">
 			<img th:src="${tu.teamUserId.team.teamImg}?:@{/images/teamImg.png}" class="rounded"
-				data-toggle="tooltip" data-placement="right" th:title="${tu.teamUserId.team.teamName}">
+				data-toggle="tooltip" th:title="${tu.teamUserId.team.teamName}">
 		</a>
 	</div>
 	<div id="myMenu">
@@ -17,7 +17,7 @@
 	
 	<script>
 	$(function() {
-		/* $('[data-toggle="tooltip"]').tooltip(); */
+		$('[data-toggle="tooltip"]').tooltip();
 		
 		$("#goHome").click(function() {
 			location.href="/CoCoCo";

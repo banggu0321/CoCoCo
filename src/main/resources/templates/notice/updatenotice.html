@@ -43,8 +43,8 @@
 						<input type="text" name="noticeTitle" th:value="${notice.noticeTitle}">
 				</div>
 				<div class="writer">
-					<input type="hidden" name="user" th:value="${session.user.Username}" readonly="readonly">
-					<!-- <input type="hidden" name="teamId" th:value="${session.team.teamId}" readonly="readonly"> -->
+					<input type="hidden" name="user" th:value="${session.user}" readonly="readonly">
+					<input type="hidden" name="teamId" th:value="${session.teamId}" readonly="readonly">
 				</div>
 				<div class="text">
 					<textarea name="noticeText" th:text="${notice.noticeText}"></textarea>

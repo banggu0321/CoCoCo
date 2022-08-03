@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 import java.util.UUID;
 
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import com.kos.CoCoCo.sol.repository.NoticeRepository;
 import com.kos.CoCoCo.sol.vo.NoticeDTO;
 import com.kos.CoCoCo.sol.vo.NoticeFile;
 import com.kos.CoCoCo.vo.NoticeVO;
+import com.kos.CoCoCo.vo.UserVO;
 
 @Service
 public class NoticeService {
@@ -26,7 +28,7 @@ public class NoticeService {
 	private NoticeFileRepository noticeFRepo;
 		
 	public void insert(NoticeVO notice, MultipartFile[] files) throws Exception {
-				
+
 		NoticeVO newNotice = noticeRepo.save(notice);
 		String filePath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\noticefiles";
 		UUID uuid = UUID.randomUUID();

@@ -3,9 +3,9 @@
 
 <div th:fragment = "side" class="side_list">
 	<div id="teamList">
-		<a th:href="@{/main/}+${tu.teamUserId.team.teamId}" th:each="tu:${session.teamList}"
-				data-toggle="tooltip" data-placement="right" th:title="${tu.teamUserId.team.teamName}">
-			<img th:src="${tu.teamUserId.team.teamImg}?:@{/images/teamImg.png}" class="img-rounded">
+		<a th:href="@{/main/}+${tu.teamUserId.team.teamId}" th:each="tu:${session.teamList}">
+			<img th:src="${tu.teamUserId.team.teamImg}?:@{/images/teamImg.png}" class="rounded"
+				data-toggle="tooltip" th:title="${tu.teamUserId.team.teamName}">
 		</a>
 	</div>
 	<div id="myMenu">

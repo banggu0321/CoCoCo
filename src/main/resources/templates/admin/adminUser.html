@@ -5,8 +5,6 @@
 	  layout:decorate="~{/layout/layout1.html}">
 <head>
 <meta charset="UTF-8">
-<meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
-<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
 
 <link rel="stylesheet" th:href="@{/css/ja0/admincss.css}" />
 <link rel="stylesheet" th:href="@{/css/ja0/adminUsercss.css}" />
@@ -106,7 +104,7 @@
 				
 				<td th:if="${user.teamUserId.user.userId == user.teamUserId.team.user.userId || user.teamUserId.user.userId == session.user.userId}"></td>
 				<td th:if="${user.teamUserId.user.userId != user.teamUserId.team.user.userId && user.teamUserId.user.userId != session.user.userId}" 
-						data-toggle="modal" data-target="#myModal" class="roleModel">
+						data-toggle="modal" data-target="#myModal">
 					<img th:src="@{/images/updateRole.svg}" class="updateUser" th:user-data="${user.teamUserId.user.userId}" alt="update">
 				</td>
 				
@@ -118,15 +116,15 @@
 		</table>
 	</div>
 	
-	<!-- Modal -->
-    <div id="myModal" class="modal fade" role="dialog">
-		<div class="model_dialog">
-	        <div class="modal-content">
-	        	<div class="modal-header">
-	           		<h4 class="modal-title">권한 변경하기</h4>
-	       		</div>
-	       		
-	        	<div class="modal-body">
+	<!-- 권한변경 모달 -->
+	<div class="modal fade" id="myModal">
+		<div class="modal-dialog">
+			<!-- Modal content -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">권한 변경하기</h4>
+				</div>
+				<div class="modal-body">
 					<input type="hidden" name="userId">
 					
 					<label>USER</label> 
@@ -137,15 +135,14 @@
 		        		<option>ADMIN</option>
 		        		<option>USER</option>
 		        	</select>
-		        </div>
-			
+				</div>
 				<div class="modal-footer">
-			    	<button id = "updateBtn" class="btn btn-cococo">변경</button>
-			    	<button type="button" class="btn btn-default" data-dismiss="modal" >취소</button>
-	        	</div>
-	        </div>
-    	</div>
-    </div> <!-- 모달끝  -->
+					<button id = "updateBtn" class="btn btn-cococo">변경</button>
+	    			<button type="button" class="btn btn-light" data-dismiss="modal">취소</button> <!--  id="sprintSettingModalClose" -->
+				</div>
+			</div>
+		</div>
+	</div><!-- Modal -->
 </div>
 </body>
 </html>

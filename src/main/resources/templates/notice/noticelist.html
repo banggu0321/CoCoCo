@@ -78,7 +78,7 @@ a {
 	<div layout:fragment="inner_content">
 		<div class="wrap_notice">
 			<h1>공지사항</h1>
-			<button class="insertnotice">Write</button>
+			<a th:if="${session.teamUser.userRole == 'ADMIN'}" href="notice/insert" class="insertnotice">Write</a>
 			<div class="wrap_noticelist">
 				<table class="notice_table" th:with="noticelist=${noticelist}">
 					<thead>
@@ -153,7 +153,6 @@ a {
 				<button id="searchBtn">검색</button>
 			</div>
 
-			<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 			<script>
 				function changeInput() {
 					var searchType = document.getElementById("searchType");
@@ -171,21 +170,6 @@ a {
 				}
 
 				$(function() {
-					
-					var token = $("meta[name='_csrf']").attr("content");
-					var header = $("meta[name='_csrf_header']").attr("content");
-
-					$('.insertnotice').click(function() {
-						$.ajax({
-							url : "/notice/insert",
-							beforeSend : function(xhr)
-				            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
-								xhr.setRequestHeader(header, token);  },
-							success : function(responseData) {
-								$(".wrap_notice").html(responseData);
-							}
-						});
-					});
 
 					var formObj = $("#myfrm");
 

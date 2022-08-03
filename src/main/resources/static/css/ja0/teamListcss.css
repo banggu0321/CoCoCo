@@ -50,6 +50,7 @@
 	width: 150px;
 	height: 150px;
 }
+
 .box .delBtn {
 	position: absolute;
 	top: 85%;
@@ -58,26 +59,15 @@
 	height: 30px;
 }
 
-#myModal, #myModal2, #myModal3 {
-	position: fixed;
-	top: 30%;
-	left: 20%;
-	right: 20%;
-}
-
 .showImg {
-	margin-right: 30px;
 	width: 200px;
-}
-
-.showImg , #addTeamFrom {
-	float: left;
+	height: 200px;
 }
 
 .modalBody1 {
-	display: flex;
+    display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-evenly;
 }
 
 #mainTitle {
@@ -101,6 +91,10 @@
 	display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.modal-dialog {
+    max-width: 700px;
 }
 
 input[type=file] {

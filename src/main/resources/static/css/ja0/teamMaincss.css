@@ -28,13 +28,6 @@
 	font-size: 17px;
 }
 
-#myModal {
-	position: fixed;
-	top: 30%;
-	left: 20%;
-	right: 20%;
-}
-
 img#status {
 	width: 20px;
 	height: 20px;
@@ -58,7 +51,7 @@ img#status {
 	width: 15px;
 	height: 15px;
 	position: absolute;
-	left: 10%;
+	left: 9%;
     top: -15%;
 }
 
@@ -98,7 +91,7 @@ img#status {
 .green, .red {
 	font-size: 20px;
 	position: absolute;
-	left: 14%;
+	left: 13%;
     top: 48%;
 }
 
@@ -135,7 +128,7 @@ img#status {
 #userInfo .admin {
 	position: absolute;
 	left: 12%;
-    top: 0%;
+    top: 4%
 }
 
 #myProfile img.admin {

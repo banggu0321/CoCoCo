@@ -2,19 +2,10 @@
 
 #teamInfo, #teamImg, div img {
 	float: left;
-	font-size: 18px;
-}
-
-#teamInfo label {
-	font-size: 20px;
-}
-
-#teamInfo p {
-	margin-bottom: 20px;
 }
 
 .showImg {
-	margin: 0px 70px;
+	margin: 0px 30px;
 	width: 280px;
 }
 

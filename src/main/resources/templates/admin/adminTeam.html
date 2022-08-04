@@ -67,10 +67,10 @@
 	<div class="inner_content">
 		<div id="box">
 			<div id="teamImg" th:if="${team.teamImg}">
-				<img th:src="${team.teamImg}" th:alt="${team.teamImg}" class="showImg img-rounded">
+				<img th:src="${team.teamImg}" th:alt="${team.teamImg}" class="showImg rounded">
 				<img id="delImg" th:src="@{/images/deleteTeamImg.svg}">
 			</div>
-			<img th:if="${team.teamImg==null}" th:src="@{/images/teamImg.png}" alt="null" class="showImg img-rounded">
+			<img th:if="${team.teamImg==null}" th:src="@{/images/teamImg.png}" alt="null" class="showImg rounded">
 			<div id="teamInfo">
 				<label>WORKSPACE NAME</label>
 					<p>[[${team.teamName}]]</p>
@@ -81,7 +81,7 @@
 				<label>CREATOR</label>
 					<p>[[${team.user.name}]] ([[${team.user.userId}]])</p>
 			<button class="btn btn-cococo" id="modifyForm">수정</button>
-			<button class="btn btn-default" id="deleteBtn">워크스페이스 삭제</button>
+			<button class="btn btn-light" id="deleteBtn">워크스페이스 삭제</button>
 			</div>
 		</div>
 	</div>

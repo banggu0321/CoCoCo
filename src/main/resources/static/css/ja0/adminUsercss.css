@@ -24,10 +24,3 @@ table{
 	width: 25px;
 	height: 25px;
 }
-
-#myModal {
-	position: fixed;
-	top: 30%;
-	left: 20%;
-	right: 20%;
-}

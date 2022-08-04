@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 import java.util.UUID;
 
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import com.kos.CoCoCo.sol.repository.NoticeRepository;
 import com.kos.CoCoCo.sol.vo.NoticeDTO;
 import com.kos.CoCoCo.sol.vo.NoticeFile;
 import com.kos.CoCoCo.vo.NoticeVO;
+import com.kos.CoCoCo.vo.UserVO;
 
 @Service
 public class NoticeService {
@@ -24,16 +26,17 @@ public class NoticeService {
 	
 	@Autowired
 	private NoticeFileRepository noticeFRepo;
-	
-	public void insert(NoticeVO notice) {
-		noticeRepo.save(notice);
-	}
+		
 	public void insert(NoticeVO notice, MultipartFile[] files) throws Exception {
-				
+
 		NoticeVO newNotice = noticeRepo.save(notice);
 		String filePath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\noticefiles";
 		UUID uuid = UUID.randomUUID();
 		for(MultipartFile file:files) {
+			String fname = file.getOriginalFilename();
+			if(fname==null || fname.equals("")) { 
+				continue;
+			}
 			String fileName = uuid + "_" + file.getOriginalFilename();
 			File saveFile = new File(filePath, fileName);
 			file.transferTo(saveFile); //upload 
@@ -50,24 +53,4 @@ public class NoticeService {
 	}
 		
 }
-	
-	/*	
-	@Transactional
-	public NoticeDTO getPost(Long noticeId) {
-		NoticeVO notice = noticeRepo.findById(noticeId).get();
-		
-		NoticeDTO noticeDTO = NoticeDTO.builder()
-				.noticeId(notice.getNoticeId())
-				.team(notice.getTeam())
-				.user(notice.getUser())
-				.noticeTitle(notice.getNoticeTitle())
-				.noticeText(notice.getNoticeText())
-				.noticeRegDate(notice.getNoticeRegDate())
-				.noticeUpdate(notice.getNoticeUpdate())
-				.fixedYN(notice.getFixedYN())
-				.build();
-		
-		return noticeDTO;
-	}*/
-	
 

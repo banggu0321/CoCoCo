@@ -10,6 +10,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
@@ -21,8 +22,19 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 
 @Repository
-public interface NoticeRepository extends JpaRepository<NoticeVO, Long>,PagingAndSortingRepository<NoticeVO, Long>,
+public interface NoticeRepository extends JpaRepository<NoticeVO, Long>, PagingAndSortingRepository<NoticeVO, Long>,
  QuerydslPredicateExecutor<NoticeVO> {
+	
+	public List<NoticeVO> findByTeam(TeamVO team);
+	
+	public Page<NoticeVO> findByTeam(TeamVO team, Pageable pageable);
+
+	public default Predicate makePredicate2(String type, String keyword, String keyword2, TeamVO team) {
+		BooleanBuilder builder = (BooleanBuilder) makePredicate(type, keyword, keyword2);
+		QNoticeVO notice = QNoticeVO.noticeVO;
+		builder.and(notice.team.eq(team));
+		return builder;
+	}
 	
    	public default Predicate makePredicate(String type, String keyword, String keyword2) {
 		BooleanBuilder builder = new BooleanBuilder();

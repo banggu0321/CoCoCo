@@ -18,6 +18,8 @@
 		$(".statusBtn").click(myStatus);
 		$("#statusUpdate").click(updateStatus);
 		$(".copyBtn").click(copyCode);
+		
+		$("#main3").load("/work/worklist");
 	})
 	
 	function myStatus() {
@@ -54,12 +56,12 @@
 <div layout:fragment="my_menu">
 	<div class="my_menu">
 		<div id="myProfile">
-			<img th:src="${session.user.image}?:@{/images/userImg.svg}" class="img-circle">
+			<img th:src="${session.user.image}?:@{/images/userImg.svg}" class="rounded-circle">
 			<img class="admin" th:if="${session.teamUser.userRole == 'ADMIN'}" th:src="@{/images/crown.svg}">
 					
 			<div id="myInfo">
 				<div id="myName">[[${session.user.name}]]
-					<button th:text="${session.user.status}?:상태설정" class="btn btn-default btn-sm statusBtn" data-toggle="modal" data-target="#myModal"></button>
+					<button th:text="${session.user.status}?:상태설정" class="btn btn-light btn-sm statusBtn" data-toggle="modal" data-target="#myModal"></button>
 				</div>
 				[[${session.user.company}]]
 			</div>
@@ -69,7 +71,7 @@
 		<h4 id="listTitle">팀원</h4>
 		<div id="proList">
 			<div class="userProfile" th:each="tu:${userList}" th:if="${tu.teamUserId.user.userId != session.user.userId}">
-				<img th:src="${tu.teamUserId.user.image}?:@{/images/userImg.svg}" class="img-circle img">
+				<img th:src="${tu.teamUserId.user.image}?:@{/images/userImg.svg}" class="rounded-circle img">
 				
 				<img class="admin" th:if="${tu.userRole == 'ADMIN'}" th:src="@{/images/crown.svg}">
 				<p class="status" th:classappend="${tu.teamUserId.user.status == '출근'}?green:red">●</p>
@@ -77,7 +79,7 @@
 				[[${tu.teamUserId.user.name}]]
 						
 				<div id="userInfo">
-					<img th:src="${tu.teamUserId.user.image}?:@{/images/userImg.svg}"class="img-circle img">
+					<img th:src="${tu.teamUserId.user.image}?:@{/images/userImg.svg}"class="rounded-circle img">
 					<img class="admin" th:if="${tu.userRole == 'ADMIN'}" th:src="@{/images/crown.svg}">
 							
 					<div id="uInfo">
@@ -90,12 +92,15 @@
 	</div>
 	
 	<!-- 상태변경 모달 -->
-	<div id="myModal" class="modal fade" role="dialog">
-		<div class="model_dialog">
+	<div id="myModal" class="modal fade">
+		<div class="modal-dialog">
 	    <!-- Modal content -->
 	        <div class="modal-content">
+	        	<div class="modal-header">
+					<label class="modal-title">상태변경</label>
+				</div>
+				
 	        	<div class="modal-body">
-					<label>상태변경</label>
 					<select class="form-control" name="status">
 						<option>출근</option>
 						<option>회의</option>
@@ -108,7 +113,7 @@
 		        
 				<div class="modal-footer">
 			    	<button id = "statusUpdate" class="btn btn-cococo">수정</button>
-			    	<button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+			    	<button type="button" class="btn btn-light" data-dismiss="modal">취소</button>
 	        	</div>
 	        </div>
 	   	</div>
@@ -122,7 +127,7 @@
 			<button class="btn btn-cococo copyBtn">초대코드</button>
 			
 			<div id="box">
-				<img th:src="${team.teamImg}?:@{/images/teamImg.png}" th:alt="${team.teamImg}" class="img-rounded">
+				<img th:src="${team.teamImg}?:@{/images/teamImg.png}" th:alt="${team.teamImg}" class="rounded">
 				<div id="ttt">
 					<div id="name">[[${team.teamName}]]</div>
 					<div id="tInfo">[[${team.teamInfo}]]</div>

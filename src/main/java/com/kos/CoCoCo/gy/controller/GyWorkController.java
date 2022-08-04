@@ -48,6 +48,10 @@ public class GyWorkController {
 	public String layout() {
 		return "work/layout/layout1";
 	}
+	@GetMapping("/worklist")
+	public String todayWork() {
+		return "work/todayWorklist";
+	}
 	@GetMapping("/workm")
 	public String workmanager() {
 		return "/work/workmanager";

@@ -3,14 +3,14 @@ package com.kos.CoCoCo.ja0;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.kos.CoCoCo.ja0.repository.UserRepository;
+import com.kos.CoCoCo.ja0.repository.UserRepositoryH;
 import com.kos.CoCoCo.vo.UserVO;
 
 @SpringBootTest
 public class ja0Test {
 
 	@Autowired
-	UserRepository uRepo;
+	UserRepositoryH uRepo;
 	
 	//@Test
 	public void test() {

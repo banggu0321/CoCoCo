@@ -31,8 +31,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kos.CoCoCo.ja0.repository.TeamRepository;
-import com.kos.CoCoCo.ja0.repository.TeamUserRepository;
-import com.kos.CoCoCo.ja0.repository.UserRepository;
+import com.kos.CoCoCo.ja0.repository.TeamUserRepositoryH;
+import com.kos.CoCoCo.ja0.repository.UserRepositoryH;
 import com.kos.CoCoCo.sol.repository.NoticeFileRepository;
 import com.kos.CoCoCo.sol.repository.NoticeRepository;
 import com.kos.CoCoCo.sol.service.NoticeService;
@@ -55,10 +55,10 @@ public class NoticeController {
 	TeamRepository tRepo;
 
 	@Autowired
-	TeamUserRepository tuRepo;
+	TeamUserRepositoryH tuRepo;
 	
 	@Autowired
-	UserRepository uRepo;
+	UserRepositoryH uRepo;
 	
 
 	@Autowired

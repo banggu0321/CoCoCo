@@ -8,12 +8,12 @@
 				
 			</div><!-- .team_logo -->
 			<div class="nav">
-				<div class="nav_menu1"><a th:href="@{/main/}+${session.teamId}"><span>메인</span></a></div>
+				<div class="nav_menu1"><a href="/main"><span>메인</span></a></div>
 				<div class="nav_menu2"><a href="/notice"><span>공지</span></a></div>
 				<div class="nav_menu3"><a href="#"><span>게시판</span></a></div>
 				<div class="nav_menu4"><a href="/work/work"><span>업무</span></a></div>
 				<div class="nav_menu5">
-					<a th:if="${session.teamUser.userRole == 'ADMIN'}" th:href="@{/admin/team}"><span>관리자</span></a>
+					<a th:if="${session.teamUser.userRole == 'ADMIN'}" href="/admin/team"><span>관리자</span></a>
 					<span th:if="${session.teamUser.userRole != 'ADMIN'}"></span>
 				</div>
 			</div><!-- .nav -->

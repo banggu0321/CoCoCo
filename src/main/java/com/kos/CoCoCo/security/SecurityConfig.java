@@ -44,6 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	protected void configure(HttpSecurity http) throws Exception {
 		log.info("!!!!!!security config..........");
+		http.headers().frameOptions().sameOrigin();
 		//http.csrf().disable();
 		// ****disable가 아니면 post,put, delete방식의 요청시 반드시 csrf 토큰을 가지고 post요청해야한다.
 		// antMatchers url 패턴에 대한 접근허용

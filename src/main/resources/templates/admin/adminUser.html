@@ -6,7 +6,6 @@
 <head>
 <meta charset="UTF-8">
 
-<link rel="stylesheet" th:href="@{/css/ja0/admincss.css}" />
 <link rel="stylesheet" th:href="@{/css/ja0/adminUsercss.css}" />
 
 <title>CoCoCo | [[${team.teamName}]]</title>
@@ -67,15 +66,8 @@
 </script>
 </head>
 <body>
-<div layout:fragment="my_menu">
-	<div class="my_menu">
-		<div>
-			<a th:href="@{/admin/team}" id="adminTeam">워크스페이스 관리</a>
-		</div>
-		<div>
-			<a th:href="@{/admin/user}" id="adminUser">유저관리</a>
-		</div>
-	</div>
+<div layout:fragment="my_menu" class="my_menu">
+	<div th:replace="~{admin/adminSide}"></div>
 </div>
 
 <div layout:fragment="inner_content">

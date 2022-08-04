@@ -151,7 +151,7 @@ public class AdminController {
 		Long teamId = (Long) session.getAttribute("teamId");
 		
 		tRepo.findById(teamId).ifPresent(i->{
-			//awsS3.delete(i.getTeamImg()); //s3에서도 삭제
+			awsS3.delete(i.getTeamImg()); //s3에서도 삭제
 			
 			i.setTeamImg("");
 			tRepo.save(i);

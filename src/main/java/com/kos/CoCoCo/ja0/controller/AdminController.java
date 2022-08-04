@@ -21,9 +21,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.kos.CoCoCo.fileUploader.S3Uploader;
+import com.kos.CoCoCo.ja0.repository.BoardCategoryRepositoryH;
+import com.kos.CoCoCo.ja0.repository.BoardRepositoryH;
+import com.kos.CoCoCo.ja0.repository.ChattingRepositoryH;
+import com.kos.CoCoCo.ja0.repository.NoticeRepositoryH;
+import com.kos.CoCoCo.ja0.repository.ReplyRepositoryH;
 import com.kos.CoCoCo.ja0.repository.TeamRepository;
-import com.kos.CoCoCo.ja0.repository.TeamUserRepository;
-import com.kos.CoCoCo.ja0.repository.UserRepository;
+import com.kos.CoCoCo.ja0.repository.TeamUserRepositoryH;
+import com.kos.CoCoCo.ja0.repository.UserRepositoryH;
+import com.kos.CoCoCo.ja0.repository.WorkManagerRepositoryH;
+import com.kos.CoCoCo.ja0.repository.WorkRepositoryH;
 import com.kos.CoCoCo.vo.TeamUserMultikey;
 import com.kos.CoCoCo.vo.TeamUserVO;
 import com.kos.CoCoCo.vo.TeamVO;
@@ -34,13 +41,34 @@ import com.kos.CoCoCo.vo.UserVO;
 public class AdminController {
 
 	@Autowired
-	TeamUserRepository tuRepo;
+	TeamUserRepositoryH tuRepo;
 	
 	@Autowired
 	TeamRepository tRepo;
 	
 	@Autowired
-	UserRepository uRepo;
+	UserRepositoryH uRepo;
+	
+	@Autowired
+	BoardCategoryRepositoryH bcRepo;
+	
+	@Autowired
+	BoardRepositoryH bRepo;
+	
+	@Autowired
+	ChattingRepositoryH cRepo;
+	
+	@Autowired
+	NoticeRepositoryH nRepo;
+	
+	@Autowired
+	ReplyRepositoryH rRepo;
+	
+	@Autowired
+	WorkManagerRepositoryH wmRepo;
+	
+	@Autowired
+	WorkRepositoryH wRepo;
 	
 	@Autowired
 	S3Uploader uploader;
@@ -138,14 +166,33 @@ public class AdminController {
 		List<TeamUserVO> teamUser = tuRepo.findByTeamId(teamId);
 		
 		if(teamUser.size() <= 1) {
-			//tuRepo.deleteByTeamId(teamId);
-			tRepo.deleteById(teamId);
+			deleteAll(teamId);
 			attr.addFlashAttribute("msg", "워크스페이스가 삭제되었습니다.");			
 			return "redirect:/CoCoCo";
 		}
 		
 		attr.addFlashAttribute("msg", "워크스페이스를 삭제할 수 없습니다.");	
 		return "redirect:/admin/team";
+	}
+	
+	public void deleteAll(Long teamId) {
+		nRepo.deleteByTeamId(teamId);
+		cRepo.deleteByTeamId(teamId);
+		
+		wRepo.findByTeamId(teamId).forEach(i -> {
+			wmRepo.deleteByWorkId(i.getWorkId());
+		});;
+		
+		wRepo.deleteByTeamId(teamId);
+		
+		bRepo.findByTeamId(teamId).forEach(i -> {
+			rRepo.deleteByBoardId(i.getBoardId());
+		});
+		
+		bRepo.deleteByTeamId(teamId);
+		bcRepo.deleteByTeamId(teamId);
+		tuRepo.deleteByTeamId(teamId);
+		tRepo.deleteById(teamId);
 	}
 	
 	@ResponseBody

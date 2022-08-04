@@ -53,13 +53,11 @@ public class GyWorkRestController {
 	
 	@Autowired
 	GyTeamUserRepository teamUserRepo;
-	//HttpSession session, HttpServletRequest request
 	
 	@GetMapping("/teamWorkList/{team_id}")
 	public List<WorkVO> worklist(Model model, @PathVariable Long team_id) {
 		TeamVO team = teamRepo.findById(team_id).get();
-		//System.out.println(team);
-		List<WorkVO> worklist = workRepo.findByTeam(team);
+		List<WorkVO> worklist = workRepo.findByTeamOrderByWorkId(team);
 		
 		for(WorkVO work:worklist) {
 			List<WorkManagerVO> workmanagerlist = workManagerRepo.findByWork(work.getWorkId());
@@ -74,7 +72,6 @@ public class GyWorkRestController {
 	}
 	@PostMapping(value="/addWork/{team_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public WorkVO addWork(@RequestBody WorkVO work , @PathVariable Long team_id) {
-		//System.out.println("오나요?");
 		TeamVO team = teamRepo.findById(team_id).get();
 		
 		log.info("Check: {}", work.toString());
@@ -96,10 +93,7 @@ public class GyWorkRestController {
 	}
 	@GetMapping("/teamUserList/{team_id}")
 	public List<String> workmanagerlist(Model model, @PathVariable Long team_id) {
-		//TeamVO team = teamRepo.findById(team_id).get();
-		//System.out.println(team);
 		List<TeamUserVO> user = teamUserRepo.findByTeam(team_id);
-		//System.out.println(user);
 		List<String> teamusernamelist = new ArrayList<>();
 		
 		for(TeamUserVO teamuser:user) {
@@ -116,8 +110,6 @@ public class GyWorkRestController {
 		WorkVO work = workRepo.findById(work_id).get();
 		List<WorkManagerVO> workmanagerlist = workManagerRepo.findByWork(work_id);
 
-		//(String[])workmanagerlist.toArray()
-		//work.setManager(workmanagerlist.stream().toArray(String[]::new));
 		String[] arr = new String[workmanagerlist.size()];
 		for(int i=0;i<workmanagerlist.size();i++) {
 			arr[i] = workmanagerlist.get(i).getWorkManagerId().getUser().getName();
@@ -138,15 +130,7 @@ public class GyWorkRestController {
 	@Transactional
 	@PutMapping(value="/updateWork/{work_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public WorkVO updateWork(@RequestBody WorkVO work , @PathVariable Long work_id) {
-		
-		//@PathVariable Long bno, @RequestBody WebReply reply
-		//WebBoard board = boardRepo.findById(bno).get();
-		//reply.setBoard(board);
-		//System.out.println(reply);
-		//replyRepo.save(reply);
-		//return replyRepo.getRepliesOfBoard2(bno);
-		
-		
+
 		WorkVO originalwork = workRepo.findById(work_id).get();
 		originalwork.setWorkTitle(work.getWorkTitle());
 		originalwork.setWorkText(work.getWorkText());
@@ -181,8 +165,6 @@ public class GyWorkRestController {
 	
 	@GetMapping("/myWorkList/{user_id}")
 	public List<WorkVO> myWork(Model model, @PathVariable String user_id) {
-		//System.out.println("오긴함?");
-		//UserVO user = userRepo.findById(user_id).get();
 		List<WorkVO> myworklist = workRepo.findByUser(user_id);
 		System.out.println(myworklist);
 		return myworklist;
@@ -191,7 +173,6 @@ public class GyWorkRestController {
 	@GetMapping("/teamTodayWorkList/{team_id}")
 	public List<WorkVO> todayWork(Model model, @PathVariable Long team_id) {
 		TeamVO team = teamRepo.findById(team_id).get();
-		//System.out.println(team);
 		List<WorkVO> worklist = workRepo.findByTeamOrderByWorkStart(team);
 		
 		for(WorkVO work:worklist) {

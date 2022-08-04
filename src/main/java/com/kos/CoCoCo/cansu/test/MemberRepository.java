@@ -1,4 +1,4 @@
-package com.kos.CoCoCo.cansu;
+package com.kos.CoCoCo.cansu.test;
 
 import org.springframework.data.repository.CrudRepository;
 

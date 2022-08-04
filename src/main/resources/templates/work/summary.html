@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
 <head>
     <script type="text/javascript">
       google.charts.load("current", {packages:["corechart"]});
@@ -44,7 +45,10 @@
 	<div>
 		<div class="wrap_notice">
 			<h2>업무진행률</h2>
-			<div id="donutchart"></div>
+			<div id="donutchart" th:with="wlist=${wlist}">
+				<p th:if="${wlist}==null">업무가 존재하지 않습니다.</p>
+			</div>
+			
 		</div>
 	</div>
 </body>

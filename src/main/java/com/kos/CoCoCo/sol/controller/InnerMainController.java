@@ -64,27 +64,16 @@ public class InnerMainController {
 		return "notice/noticedetail";
 	}
 	
-		
-	@GetMapping("/main/todayworks")
-	public String todayWorks(WorkVO work, HttpSession session, Model model) {
-		
-		Long teamId = (Long)session.getAttribute("teamId");
-		TeamVO t = tRepo.findById(teamId).get();
-		work.setTeam(t);
-		
-		List<WorkVO> wlist = wRepo.findByTeamOrderByWorkEnd(t);
-		
-		model.addAttribute("wlist", wlist);
-		return "work/main_todayworks";
-	}
-
 	
 	@GetMapping("/main/summary")
 	public String summaryWorks(WorkVO work, HttpSession session, Model model) {
 		
 		Long teamId = (Long)session.getAttribute("teamId");
 		TeamVO t = tRepo.findById(teamId).get();
+		List<WorkVO> wlist = wRepo.findByTeam(t);
 		work.setTeam(t);
+		
+		
 		
 		int numOngoing = wRepo.numOngoing(t);
 		int numPlan = wRepo.numPlan(t);
@@ -92,13 +81,9 @@ public class InnerMainController {
 			
 		Integer[] arr= { numPlan, numOngoing, numFinish};
 		model.addAttribute("arr", arr);
+		model.addAttribute("wlist", wlist);
 					
 		return "work/summary";
 	}
 	
-	public ModelAndView googleChart() {
-		
-		
-		return new ModelAndView();
-	}
 }

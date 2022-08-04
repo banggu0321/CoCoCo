@@ -11,15 +11,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.kos.CoCoCo.vo.UserVO;
 
 @Controller
-@RequestMapping("/user")
 public class UserControllerC {
 
     @Autowired
     @Qualifier("userService")
     private UserServiceC userService;
 
+    
     // 아이디 체크
-    @PostMapping("/idCheck")
+    @PostMapping("/auth/idCheck")
     @ResponseBody
     public int idCheck(@RequestParam("userId") String userId){
     	UserVO user = userService.idCheck(userId);
@@ -27,6 +27,8 @@ public class UserControllerC {
     	return user==null?0:1;
 
     }
+	
+   
 }
 
 //1.Controller ->2.Service ->3.Repository ->4.Mapper

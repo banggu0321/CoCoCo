@@ -32,8 +32,6 @@ public class GyWorkController {
 	
 	@GetMapping("/work")
 	public String workCalendar(){
-		//HttpSession session = request.getSession();(HttpSession request) throws Exception
-		
 		return "work/calendar";
 	}
 	

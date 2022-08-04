@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <!--
@@ -16,29 +16,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 -->
+<link rel="stylesheet" th:href="@{/css/gy/mainwork.css}" />
 
-<style type="text/css">
-.worklist{
-	margin-top : 0.65rem;
-	height: calc(1.5em + 0.75rem + 20px);
-	text-align: initial;
-}
-.workTitleText{
-	float:left;
-}
-#workShowBtn{
-	float:right;
-	margin-bottom: 0.2rem;
-	padding: 0.175rem 0.55rem;
-    font-size: 0.85rem;
-}
-.workListBox{
-	clear: both;
-}
-.workNoneText{
-	border: none;
-}
-</style>
 <script type="text/javascript">
 	$(function(){
 		var team_id = "[[${session.teamId}]]";
@@ -82,11 +61,11 @@
 						
 						if(start<=todaydate&&todaydate<=end){  //오늘날짜인 경우
 							if(data.manager=="none"){ //not mine
-								$(".workListBox").append(`<div class="form-control worklist" style="color:#BFBFBF" >${data.workTitle}<br>${data.workStart} ~ ${data.workEnd}</div>`); 
+								$(".workListBox").append(`<div class="form-control worklist" style="color:#BFBFBF"><span class="workListTitle">${data.workTitle}</span> - <span class="workListContent">${data.workText}</span><br><span>${data.workStart} ~ ${data.workEnd}</span></div>`); 
 							}else if(data.workStatus=="finish"){
-								$(".workListBox").append(`<div class="form-control worklist" style="color:black" >${data.workTitle}<br>${data.workStart} ~ ${data.workEnd}</div>`); 
+								$(".workListBox").append(`<div class="form-control worklist" style="color:black"><span class="workListTitle">${data.workTitle}</span> - <span class="workListContent">${data.workText}</span><br><span>${data.workStart} ~ ${data.workEnd}</span></div>`); 
 							}else {
-								$(".workListBox").append(`<div class="form-control worklist" style="color:tomato">${data.workTitle}<br>${data.workStart} ~ ${data.workEnd}</div>`); 
+								$(".workListBox").append(`<div class="form-control worklist" style="color:tomato"><span class="workListTitle">${data.workTitle}</span> - <span class="workListContent">${data.workText}</span><br><span>${data.workStart} ~ ${data.workEnd}</span></div>`); 
 							}
 							num += 1;
 							console.log(num);
@@ -109,7 +88,7 @@
 <body>
 	<div class="mainWork">
 		<div class="workTitleBox">
-			<h5 class="workTitleText">오늘의 업무(<span id="today"></span>)</h5>
+			<h4 class="workTitleText">오늘의 업무(<span id="today"></span>)</h4>
 			<button class="btn btn-cococo" id="workShowBtn">더보기</button>
 		</div>
 		<div class="workListBox">

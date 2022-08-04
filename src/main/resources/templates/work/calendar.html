@@ -236,7 +236,7 @@
 									alert("날짜를 입력하세요.");
 								} else if (new Date(end_date) - new Date(start_date) < 0) { // date 타입으로 변경 후 확인
 									alert("종료일이 시작일보다 먼저입니다.");
-								}  else if (manager == "") {
+								}  else if (manager == "" || manager == null) {
 									alert("업무 담당자를 입력하세요");
 								} else { // 정상적인 입력 시
 									var obj = {
@@ -403,7 +403,7 @@
 				alert("날짜를 입력하세요.");
 			} else if (new Date(end_date) - new Date(start_date) < 0) { // date 타입으로 변경 후 확인
 				alert("종료일이 시작일보다 먼저입니다.");
-			}  else if (manager == "") { 
+			}  else if (manager == "" || manager == null) { 
 				alert("업무 담당자를 입력하세요");
 			} else { // 정상적인 입력 시
 				var obj = {
@@ -489,9 +489,9 @@
 								<label for="taskId" class="col-form-label">일정 내용</label> 
 								<input type="text" class="form-control" id="calendar_content" name="calendar_content" value="내용"> 
 								<label for="taskId" class="col-form-label">시작 날짜</label> 
-								<input type="date" class="form-control" id="calendar_start_date" name="calendar_start_date" value="2022-08-01"> 
+								<input type="date" class="form-control" id="calendar_start_date" name="calendar_start_date" value="2022-08-22"> 
 								<label for="taskId" class="col-form-label">종료 날짜</label> 
-								<input type="date" class="form-control" id="calendar_end_date" name="calendar_end_date" value="2022-08-05">
+								<input type="date" class="form-control" id="calendar_end_date" name="calendar_end_date" value="2022-08-25">
 								<label for="taskId" class="col-form-label">업무 상태</label> 
 								<select class="form-control" id="calendar_status" name="calendar_status">
 									<option class="form-control" value="plan">대기</option>

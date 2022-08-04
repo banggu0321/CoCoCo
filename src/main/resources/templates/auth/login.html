@@ -36,18 +36,14 @@ input {
 			<div class="panel-body">
 				<h2 class="login">로그인</h2>
 	
-				<div th:if="${param.error != null}">
-					<h2>아이디와 비밀번호 틀림</h2>
-					<h2 th:value="${param.error}"></h2>
-				</div>
-	
 				<div th:if="${param.logout!= null}">
 					<h2>로그아웃됨</h2>
 				</div>
 	
 				<form method="post">
 					<p>
-						<label for="username"></label> <input type="text" id="username"
+						<label for="userId"></label>
+						<input type="text" id="userId"
 							name="username" placeholder="아이디" />
 						<!-- 이름변경불가  : username -->
 					</p>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <!--
@@ -16,26 +16,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 -->
+<link rel="stylesheet" th:href="@{/css/gy/mainwork.css}" />
 
-<style type="text/css">
-.worklist{
-	margin-top : 0.65rem;
-	height: calc(1.5em + 0.75rem + 20px);
-	text-align: initial;
-}
-.workTitleText{
-	float:left;
-}
-#workShowBtn{
-	float:right;
-	margin-bottom: 0.2rem;
-	padding: 0.175rem 0.55rem;
-    font-size: 0.85rem;
-}
-.workListBox{
-	clear: both;
-}
-</style>
 <script type="text/javascript">
 	$(function(){
 		var team_id = "[[${session.teamId}]]";
@@ -47,7 +29,7 @@
 	    var now = new Date();
 	    var year=now.getFullYear(); //연도
 	    var month=('00' + (now.getMonth()+1)).slice(-2); // 월 
-	    var date=('00' + now.getDate()).slice(-2); //일 
+	    var date=('00' + (now.getDate())).slice(-2); //일 
 	    //$("#today").text(now);
 	    $("#today").text(year+"."+month+"."+date);
 	    
@@ -59,7 +41,7 @@
 				teamWorkList = responseData;
 				var num = 0;
 				$.each(teamWorkList,function(index, data){ 
-					if(num<4){
+					if(num < 4){
 						workmanager = data.manager;
 						
 						if(workmanager.includes(user_id)){
@@ -68,13 +50,9 @@
 							data.manager = "none";
 						}
 						
-						var date_end1 = data.workEnd.substr(0,8); 
-						var date_end2 = String(Number(data.workEnd.substr(8))+1);
-						date_end2 = ('00' + date_end2).slice(-2);
-						
 						var todaydate = new Date(year+"-"+month+"-"+date);
 						var start = new Date(data.workStart);
-						var end = new Date(date_end1+date_end2);
+						var end = new Date(data.workEnd);
 						//console.log(data.workTitle);
 						//console.log(start<=todaydate&&todaydate<=end);
 						//console.log(start);
@@ -83,19 +61,22 @@
 						
 						if(start<=todaydate&&todaydate<=end){  //오늘날짜인 경우
 							if(data.manager=="none"){ //not mine
-								$(".workListBox").append(`<div class="form-control worklist" style="color:#BFBFBF" >${data.workTitle}<br>${data.workStart}~${date_end1+date_end2}</div>`); 
+								$(".workListBox").append(`<div class="form-control worklist" style="color:#BFBFBF"><span class="workListTitle">${data.workTitle}</span> - <span class="workListContent">${data.workText}</span><br><span>${data.workStart} ~ ${data.workEnd}</span></div>`); 
 							}else if(data.workStatus=="finish"){
-								$(".workListBox").append(`<div class="form-control worklist" style="color:black" >${data.workTitle}<br>${data.workStart}~${date_end1+date_end2}</div>`); 
+								$(".workListBox").append(`<div class="form-control worklist" style="color:black"><span class="workListTitle">${data.workTitle}</span> - <span class="workListContent">${data.workText}</span><br><span>${data.workStart} ~ ${data.workEnd}</span></div>`); 
 							}else {
-								$(".workListBox").append(`<div class="form-control worklist" style="color:tomato">${data.workTitle}<br>${data.workStart}~${date_end1+date_end2}</div>`); 
+								$(".workListBox").append(`<div class="form-control worklist" style="color:tomato"><span class="workListTitle">${data.workTitle}</span> - <span class="workListContent">${data.workText}</span><br><span>${data.workStart} ~ ${data.workEnd}</span></div>`); 
 							}
 							num += 1;
 							console.log(num);
 						}else{
-							
+							console.log(num);
 						}
 					}
 				});	
+				if(num==0){
+					$(".workListBox").append(`<div class="form-control workNoneText" style="color:gray" >업무가 존재하지 않습니다</div>`);
+				}
 			}
 		});
 		$("#workShowBtn").on("click", function() {
@@ -107,7 +88,7 @@
 <body>
 	<div class="mainWork">
 		<div class="workTitleBox">
-			<h5 class="workTitleText">오늘의 업무(<span id="today"></span>)</h5>
+			<h4 class="workTitleText">오늘의 업무(<span id="today"></span>)</h4>
 			<button class="btn btn-cococo" id="workShowBtn">더보기</button>
 		</div>
 		<div class="workListBox">

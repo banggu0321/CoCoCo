@@ -215,5 +215,6 @@ img#status {
 #main3 {
 	clear: both;
 	width: 100%;
+	height: auto;
 	margin-top: 1%;
 }

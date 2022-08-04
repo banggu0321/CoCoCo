@@ -1,0 +1,30 @@
+@charset "UTF-8";
+.worklist{
+	margin-top : 0.5rem;
+	/* height: calc(1.5em + 0.75rem + 20px); */
+	height: auto;
+	padding: 0.175rem 0.55rem;
+	text-align: initial;
+}
+.workTitleText{
+	float:left;
+}
+#workShowBtn{
+	float:right;
+	margin-bottom: 0.2rem;
+	padding: 0.175rem 0.55rem;
+    font-size: 0.85rem;
+}
+.workListBox{
+	padding: 0.175rem;
+	clear: both;
+}
+.workListTitle{
+	font-size: 1.2em;
+}
+.workListContent{
+	font-size: 0.8em;
+}
+.workNoneText{
+	border: none;
+}

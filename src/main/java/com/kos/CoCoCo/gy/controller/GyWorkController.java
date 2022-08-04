@@ -53,6 +53,4 @@ public class GyWorkController {
 	public String workmanager() {
 		return "/work/XXworkmanager";
 	}
-	
-	
 }

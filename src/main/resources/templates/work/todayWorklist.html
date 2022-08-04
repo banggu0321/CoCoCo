@@ -59,8 +59,8 @@
 			success:function(responseData){
 				teamWorkList = responseData;
 				var num = 0;
-				while(num<4){
-					$.each(teamWorkList,function(index, data){ 
+				$.each(teamWorkList,function(index, data){ 
+					if(num<4){
 						workmanager = data.manager;
 						
 						if(workmanager.includes("bang")){
@@ -76,26 +76,27 @@
 						var todaydate = new Date(year+"-"+month+"-"+date);
 						var start = new Date(data.workStart);
 						var end = new Date(date_end1+date_end2);
-						console.log(data.workTitle);
-						console.log(start<todaydate&&todaydate<=end);
-						console.log(start);
-						console.log(todaydate);
-						console.log(end);
+						//console.log(data.workTitle);
+						//console.log(start<=todaydate&&todaydate<=end);
+						//console.log(start);
+						//console.log(todaydate);
+						//console.log(end);
 						
-						if(start<=todaydate&&todaydate<=end){ //오늘날짜인 경우
-							if(data.manager=="none"){//not mine
+						if(start<=todaydate&&todaydate<=end){  //오늘날짜인 경우
+							if(data.manager=="none"){ //not mine
 								$(".workListBox").append(`<div class="form-control worklist" style="color:#BFBFBF" >${data.workTitle}<br>${data.workStart}~${date_end1+date_end2}</div>`); 
-								
-							}else{
+							}else if(data.workStatus=="finish"){
+								$(".workListBox").append(`<div class="form-control worklist" style="color:black" >${data.workTitle}<br>${data.workStart}~${date_end1+date_end2}</div>`); 
+							}else {
 								$(".workListBox").append(`<div class="form-control worklist" style="color:tomato">${data.workTitle}<br>${data.workStart}~${date_end1+date_end2}</div>`); 
 							}
 							num += 1;
+							console.log(num);
 						}else{
 							
 						}
-					});	
-				}
-				
+					}
+				});	
 			}
 		});
 		$("#workShowBtn").on("click", function() {

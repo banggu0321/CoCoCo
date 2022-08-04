@@ -23,6 +23,7 @@
 .worklist{
 	margin-top : 0.65rem;
 	height: calc(1.5em + 0.75rem + 20px);
+	text-align: initial;
 }
 .workTitleText{
 	float:left;
@@ -46,20 +47,20 @@
 		
 	    var now = new Date();
 	    var year=now.getFullYear(); //연도
-	    var month=now.getMonth()+1; //월
-	    var date=now.getDate(); //일
+	    var month=('00' + (now.getMonth()+1)).slice(-2); // 월 
+	    var date=('00' + now.getDate()).slice(-2); //일 
 	    //$("#today").text(now);
 	    $("#today").text(year+"."+month+"."+date);
 	    
-	  //해당 팀의 담당자 모두 가져오기
+	  //해당 팀의 전체 업무 가져오기
 		$.ajax({
 			url:"/work/teamTodayWorkList/"+team_id,
 			type:"get",
 			success:function(responseData){
 				teamWorkList = responseData;
-				//option에 해당 팀의 담당자 추가
-				$.each(teamWorkList,function(index, data){ 
-					if(index<4){
+				var num = 0;
+				while(num<4){
+					$.each(teamWorkList,function(index, data){ 
 						workmanager = data.manager;
 						
 						if(workmanager.includes("bang")){
@@ -72,15 +73,29 @@
 						var date_end2 = String(Number(data.workEnd.substr(8))+1);
 						date_end2 = ('00' + date_end2).slice(-2);
 						
-						if(data.manager=="none"){//자기꺼 아님
-							$(".workListBox").append(`<div class="form-control worklist" style="color:#BFBFBF" >${data.workTitle}<br>${data.workStart}~${date_end1+date_end2}</div>`); 
-							
+						var todaydate = new Date(year+"-"+month+"-"+date);
+						var start = new Date(data.workStart);
+						var end = new Date(date_end1+date_end2);
+						console.log(data.workTitle);
+						console.log(start<todaydate&&todaydate<=end);
+						console.log(start);
+						console.log(todaydate);
+						console.log(end);
+						
+						if(start<=todaydate&&todaydate<=end){ //오늘날짜인 경우
+							if(data.manager=="none"){//not mine
+								$(".workListBox").append(`<div class="form-control worklist" style="color:#BFBFBF" >${data.workTitle}<br>${data.workStart}~${date_end1+date_end2}</div>`); 
+								
+							}else{
+								$(".workListBox").append(`<div class="form-control worklist" style="color:tomato">${data.workTitle}<br>${data.workStart}~${date_end1+date_end2}</div>`); 
+							}
+							num += 1;
 						}else{
-							$(".workListBox").append(`<div class="form-control worklist" style="color:tomato">${data.workTitle}<br>${data.workStart}~${date_end1+date_end2}</div>`); 
+							
 						}
-					}
-					
-				});		
+					});	
+				}
+				
 			}
 		});
 		$("#workShowBtn").on("click", function() {

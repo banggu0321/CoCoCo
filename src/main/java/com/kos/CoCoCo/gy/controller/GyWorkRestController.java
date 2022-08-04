@@ -192,7 +192,7 @@ public class GyWorkRestController {
 	public List<WorkVO> todayWork(Model model, @PathVariable Long team_id) {
 		TeamVO team = teamRepo.findById(team_id).get();
 		//System.out.println(team);
-		List<WorkVO> worklist = workRepo.findByTeam(team);
+		List<WorkVO> worklist = workRepo.findByTeamOrderByWorkStart(team);
 		
 		for(WorkVO work:worklist) {
 			List<WorkManagerVO> workmanagerlist = workManagerRepo.findByWork(work.getWorkId());

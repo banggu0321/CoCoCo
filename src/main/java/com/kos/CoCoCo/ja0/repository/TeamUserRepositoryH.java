@@ -14,7 +14,7 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 
 
-public interface TeamUserRepository 
+public interface TeamUserRepositoryH 
 		extends PagingAndSortingRepository<TeamUserVO, TeamUserMultikey>, 
 				QuerydslPredicateExecutor<TeamUserVO> {
 

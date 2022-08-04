@@ -28,8 +28,8 @@ import com.kos.CoCoCo.fileUploader.S3Uploader;
 import com.kos.CoCoCo.ja0.VO.PageMaker;
 import com.kos.CoCoCo.ja0.VO.PageVO;
 import com.kos.CoCoCo.ja0.repository.TeamRepository;
-import com.kos.CoCoCo.ja0.repository.TeamUserRepository;
-import com.kos.CoCoCo.ja0.repository.UserRepository;
+import com.kos.CoCoCo.ja0.repository.TeamUserRepositoryH;
+import com.kos.CoCoCo.ja0.repository.UserRepositoryH;
 import com.kos.CoCoCo.vo.TeamUserMultikey;
 import com.kos.CoCoCo.vo.TeamUserVO;
 import com.kos.CoCoCo.vo.TeamVO;
@@ -43,10 +43,10 @@ public class MainController {
 	TeamRepository tRepo;
 
 	@Autowired
-	TeamUserRepository tuRepo;
+	TeamUserRepositoryH tuRepo;
 	
 	@Autowired
-	UserRepository uRepo;
+	UserRepositoryH uRepo;
 	
 	@Autowired
 	S3Uploader uploader;

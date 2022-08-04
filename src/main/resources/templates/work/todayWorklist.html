@@ -2,8 +2,6 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
-
 <!--
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
@@ -40,7 +38,8 @@
 </style>
 <script type="text/javascript">
 	$(function(){
-		var team_id = 1000;
+		var team_id = "[[${session.teamId}]]";
+		var user_id = "[[${session.user.userId}]]";
 		var teamWorkList;
 		var teamTodayWorkList;
 		var workmanager = [];
@@ -63,7 +62,7 @@
 					if(num<4){
 						workmanager = data.manager;
 						
-						if(workmanager.includes("bang")){
+						if(workmanager.includes(user_id)){
 							data.manager = "user";
 						}else{
 							data.manager = "none";

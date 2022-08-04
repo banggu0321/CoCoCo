@@ -68,7 +68,7 @@
 		</div>
 		
 				
-		<h4 id="listTitle">팀원</h4>
+		<h5 id="listTitle">팀원 ([[${userList.size()}]])</h5>
 		<div id="proList">
 			<div class="userProfile" th:each="tu:${userList}" th:if="${tu.teamUserId.user.userId != session.user.userId}">
 				<img th:src="${tu.teamUserId.user.image}?:@{/images/userImg.svg}" class="rounded-circle img">
@@ -124,7 +124,7 @@
 <div layout:fragment="inner_content">
 	<div class="inner_content">
 		<div id="info">
-			<button class="btn btn-cococo copyBtn">초대코드</button>
+			<button class="btn btn-outline-cococo btn-sm copyBtn">초대코드</button>
 			
 			<div id="box">
 				<img th:src="${team.teamImg}?:@{/images/teamImg.png}" th:alt="${team.teamImg}" class="rounded">

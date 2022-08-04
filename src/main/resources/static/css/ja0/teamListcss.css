@@ -46,17 +46,31 @@
 	padding: 130px 10px;
 }
 
+
+#addTeamForm label {
+    font-weight: bold;
+    margin: 0.5rem 0 0 0;
+}
+
 .box img{
 	width: 150px;
 	height: 150px;
 }
 
-.box .delBtn {
+.box .delMenu {
 	position: absolute;
-	top: 85%;
-	left: 85%;
-	width: 30px;
-	height: 30px;
+    top: 5%;
+    right: 2%;
+    width: 20px;
+    height: 20px;
+}
+
+.delBtn {
+	display: none;
+    position: absolute;
+    top: 45px;
+    right: -55px;
+    z-index: 1;
 }
 
 .showImg {

@@ -28,7 +28,8 @@
 		<div class="content">
 		
 			<div class="box" th:team-data="${team.teamUserId.team.teamId}" th:each="team:${paging.result.getContent()}">
-				<img th:if="${session.user.userId != team.teamUserId.team.user.userId}" th:src="@{/images/deleteImg.svg}" class="delBtn" th:team-data="${team.teamUserId.team.teamId}">
+				<img th:if="${session.user.userId != team.teamUserId.team.user.userId}" th:src="@{/images/menuDots.svg}" class="delMenu">
+				<button class="btn btn-outline-cococo delBtn" th:team-data="${team.teamUserId.team.teamId}">나가기</button>
 				
 				<img th:src="${team.teamUserId.team.teamImg}?:@{/images/teamImg.png}" th:alt="${team.teamUserId.team.teamImg}" class="rounded">
 				
@@ -151,10 +152,13 @@
 		$(".pagingBtn img").click(movePage);
 	 	$(".box").click(goTeamMain);
 	 	$("#enterBtn").click(enterTeam);
+	 	$(".delMenu").click(showMenu);
+	 	$("body").click(hideMenu);
 	 	$(".delBtn").click(deleteTeam);
 	 	$("#addTeamBtn").click(addTeam);
 	 	$("#img").change(makeView);
-	 	$(".valDel").click(valueDelete);
+	 	$(".addTeam").click(valueDelete);
+	 	$(".inviteBtn").click(valueDelete);
 	 	$("#statusUpdate").click(updateStatus);
 	 	
 	})
@@ -193,13 +197,24 @@
 		});
 	}
 		
+	function showMenu(e) {
+		e.stopPropagation();
+		hideMenu();
+		$(this).next().show();
+	}
+		
+	function hideMenu() {
+		$("button[class='btn btn-outline-cococo delBtn']").hide();
+	}
+		
 	function deleteTeam(e) {
 		e.stopPropagation();
 		var teamId = $(this).attr("team-data");
 		
-		if(confirm("해당 워크스페이스를 삭제하시겠습니까?")) {
+		if(confirm("해당 워크스페이스에서 나가시겠습니까?")) {
 			location.href = "/CoCoCo/deleteTeam/"+teamId;
 		}
+		hideMenu();
 	}
 		
 	function addTeam() {

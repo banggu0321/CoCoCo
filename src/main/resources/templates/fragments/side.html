@@ -3,10 +3,12 @@
 
 <div th:fragment = "side" class="side_list">
 	<div id="teamList">
-		<img th:each="tu:${session.teamList}" th:src="${tu.teamUserId.team.teamImg}?:@{/images/teamImg.png}"
-			class="rounded moveTeam"  th:team-data="${tu.teamUserId.team.teamId}"
-			data-toggle="tooltip" th:title="${tu.teamUserId.team.teamName}">
+		<div th:each="tu:${session.teamList}" class="moveTeam" th:team-data="${tu.teamUserId.team.teamId}">
+			<img th:src="${tu.teamUserId.team.teamImg}?:@{/images/teamImg.png}" class="rounded">
+			<span id="teamName" th:text="${tu.teamUserId.team.teamName}"></span>
+		</div>
 	</div>
+	
 	<div id="myMenu">
 		<img th:src="@{/images/home.svg}" alt="home" id="goHome">
 		<img th:src="@{/images/logout.svg}" alt="logout" id="logout">
@@ -16,8 +18,6 @@
 	
 	<script>
 	$(function() {
-		$('[data-toggle="tooltip"]').tooltip();
-		
 		$(".moveTeam").click(function() {
 			var teamId = $(this).attr("team-data");
 			

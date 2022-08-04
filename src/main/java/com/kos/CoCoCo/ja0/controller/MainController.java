@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,14 +18,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
-import com.kos.CoCoCo.fileUploader.S3Uploader;
 import com.kos.CoCoCo.ja0.VO.PageMaker;
 import com.kos.CoCoCo.ja0.VO.PageVO;
+import com.kos.CoCoCo.ja0.awsS3.AwsS3;
 import com.kos.CoCoCo.ja0.repository.TeamRepository;
 import com.kos.CoCoCo.ja0.repository.TeamUserRepositoryH;
 import com.kos.CoCoCo.ja0.repository.UserRepositoryH;
@@ -49,7 +47,7 @@ public class MainController {
 	UserRepositoryH uRepo;
 	
 	@Autowired
-	S3Uploader uploader;
+	AwsS3 awsS3;
 	
 	@GetMapping("/CoCoCo")
 	public String teamList(@ModelAttribute PageVO pageVO, HttpSession session, Model model, Principal principal, HttpServletRequest request) {
@@ -80,7 +78,7 @@ public class MainController {
 	@PostMapping("/addTeam")
 	public String addTeam(TeamVO team, MultipartFile teamPhoto, HttpSession session) throws IOException{
 		if (!teamPhoto.isEmpty()) {
-			String img = uploader.upload(teamPhoto, "uploads/teamImages/");
+			String img = awsS3.upload(teamPhoto, "uploads/teamImages/");
 			team.setTeamImg(img);
 	    }
 		

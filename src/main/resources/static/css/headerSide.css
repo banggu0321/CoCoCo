@@ -91,6 +91,11 @@ body, html {
 }
 
 .moveTeam {
+	position: relative;
+	
+}
+
+.moveTeam img {
 	margin: 10px;
 	width: 40px;
 	height: 40px;
@@ -98,6 +103,27 @@ body, html {
 
 .moveTeam:hover {
 	cursor: pointer;
+}
+
+#teamName {
+	position: absolute;
+    display: none;
+    top: 0%;
+    left: 0%;
+    width: 60px;
+    height: 60px;
+    background-color: rgba(231, 235, 242, 0.8);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 15px;
+    text-align: center;
+    padding: 19px 0;
+    font-weight: bold;
+}
+
+.moveTeam:hover #teamName{
+	display: block;
 }
 
 #myMenu img {

@@ -150,7 +150,6 @@ public class MainController {
 	@GetMapping("/setTeamId/{teamId}")
 	public void setTeamId(@PathVariable Long teamId, HttpSession session) {
 		session.setAttribute("teamId", teamId);
-		System.out.println("세션에 teamId 저장!!");
 	}
 	
 	@GetMapping("/main")

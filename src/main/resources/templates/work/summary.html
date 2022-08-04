@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript">
+      google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+    	var arr1 = "[[${arr[0]}]]";
+    	var arr2 = "[[${arr[1]}]]";
+    	var arr3 = "[[${arr[2]}]]";
+   
+    	 
+        var data = google.visualization.arrayToDataTable([
+          ['업무상태', '%'],
+          ['대기', Number("[[${arr[0]}]]")],
+     	  ['진행', Number("[[${arr[1]}]]")],
+          ['완료', Number("[[${arr[2]}]]")]
+        ]);
+
+        var options = {
+
+          pieHole: 0.4,
+          chartArea: {
+        	    /* 차트크기 */
+        	    width: 300,
+        	    height: 300
+        	    },
+        	   
+        	    /* 차트에 레이블 표시 (percentage, value or label)*/
+        	    pieSliceText: 'percentage',
+
+        	    /* 꼬리표 제거 */
+        	    legend: 'display'    
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+        chart.draw(data, options);
+      }
+    </script>
+<meta charset="UTF-8">
+<title>메인 | 업무진행률</title>
+</head>
+<body>
+	<div>
+		<div class="wrap_notice">
+			<h2>업무진행률</h2>
+			<div id="donutchart"></div>
+		</div>
+	</div>
+</body>
+
+</html>

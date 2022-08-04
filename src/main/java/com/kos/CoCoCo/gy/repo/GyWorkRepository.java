@@ -12,6 +12,8 @@ public interface GyWorkRepository extends CrudRepository<WorkVO, Long>{
 	
 	public List<WorkVO> findByTeam(TeamVO team);
 	
+	public List<WorkVO> findByTeamOrderByWorkId(TeamVO team);
+	
 	public List<WorkVO> findByTeamOrderByWorkStart(TeamVO team);
 
 	@Query(value="SELECT * FROM WORKS w JOIN WORK_MANAGER wm ON (wm.work_work_id = w.work_id) WHERE wm.USER_USER_ID=?1", nativeQuery = true)

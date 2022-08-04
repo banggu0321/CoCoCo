@@ -20,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
-import com.kos.CoCoCo.fileUploader.S3Uploader;
+import com.kos.CoCoCo.ja0.awsS3.AwsS3;
 import com.kos.CoCoCo.ja0.repository.BoardCategoryRepositoryH;
 import com.kos.CoCoCo.ja0.repository.BoardRepositoryH;
 import com.kos.CoCoCo.ja0.repository.ChattingRepositoryH;
@@ -71,7 +71,7 @@ public class AdminController {
 	WorkRepositoryH wRepo;
 	
 	@Autowired
-	S3Uploader uploader;
+	AwsS3 awsS3;
 
 	@GetMapping("/user")
 	public String userList(HttpSession session, Model model, HttpServletRequest request) {
@@ -125,7 +125,9 @@ public class AdminController {
 		tRepo.findById(team.getTeamId()).ifPresent(i->{		
 			if (!newPhoto.isEmpty()) {
 				try {
-					String img = uploader.upload(newPhoto, "uploads/teamImages/");
+					awsS3.delete(i.getTeamImg()); //s3에서도 삭제
+					
+					String img = awsS3.upload(newPhoto, "uploads/teamImages/");
 					i.setTeamImg(img);
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -149,6 +151,8 @@ public class AdminController {
 		Long teamId = (Long) session.getAttribute("teamId");
 		
 		tRepo.findById(teamId).ifPresent(i->{
+			awsS3.delete(i.getTeamImg()); //s3에서도 삭제
+			
 			i.setTeamImg("");
 			tRepo.save(i);
 		});
@@ -212,9 +216,8 @@ public class AdminController {
 		tuRepo.findById(id).ifPresent(i->{
 			i.setUserRole(newRole);
 			tuRepo.save(i);
-			
-			//session.setAttribute("teamUser", i);
 		});
+		
 		return "redirect:/admin/user";
 	}
 }

@@ -5,6 +5,7 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -36,7 +37,6 @@ import com.kos.CoCoCo.vo.UserVO;
 import com.querydsl.core.types.Predicate;
 
 @Controller
-@RequestMapping("/CoCoCo")
 public class MainController {
 
 	@Autowired
@@ -51,7 +51,7 @@ public class MainController {
 	@Autowired
 	S3Uploader uploader;
 	
-	@GetMapping("")
+	@GetMapping("/CoCoCo")
 	public String teamList(@ModelAttribute PageVO pageVO, HttpSession session, Model model, Principal principal, HttpServletRequest request) {
 		Map<String, Object> map = (Map<String, Object>) RequestContextUtils.getInputFlashMap(request);
 		
@@ -87,7 +87,7 @@ public class MainController {
 		UserVO user = (UserVO) session.getAttribute("user");
 		
 		team.setUser(user); 
-		team.setInviteCode(makeTeamCode());
+		team.setInviteCode(UUID.randomUUID().toString()); 
 		TeamVO newTeam =  tRepo.save(team);
 		TeamUserMultikey teamUserId = new TeamUserMultikey(newTeam, user);
 		
@@ -95,20 +95,6 @@ public class MainController {
 		tuRepo.save(teamUser);
 		
 		return "redirect:/CoCoCo";
-	}
-	
-	//초대코드 만들기
-	public String makeTeamCode() {
-		int leftLimit = 48;
-		int rightLimit = 122;
-		int targetStringLength = 20;
-		Random random = new Random();
-		String teamCode = random.ints(leftLimit, rightLimit + 1)
-		                                   .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-		                                   .limit(targetStringLength)
-		                                   .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-		                                   .toString();
-		return teamCode;
 	}
 	
 	@GetMapping("/deleteTeam/{teamId}")
@@ -133,8 +119,7 @@ public class MainController {
 		});
 		
 		if(str.equals("t")) {
-			Long teamId = (Long) session.getAttribute("teamId");
-			return "redirect:/main/"+teamId;
+			return "redirect:/main";
 		}
 		
 		return "redirect:/CoCoCo";
@@ -158,7 +143,29 @@ public class MainController {
 		});
 		
 		session.setAttribute("teamList", tuRepo.findByUserId(user.getUserId()));
+		session.setAttribute("teamId", team.getTeamId());
 		
 		return team.getTeamId();
+	}
+	
+	@ResponseBody
+	@GetMapping("/setTeamId/{teamId}")
+	public void setTeamId(@PathVariable Long teamId, HttpSession session) {
+		session.setAttribute("teamId", teamId);
+		System.out.println("세션에 teamId 저장!!");
+	}
+	
+	@GetMapping("/main")
+	public String teamMain(HttpSession session, Model model) {
+		UserVO user = (UserVO)session.getAttribute("user");
+		Long teamId = (Long) session.getAttribute("teamId");
+		TeamVO team = tRepo.findById(teamId).get();
+		TeamUserMultikey tuId = new TeamUserMultikey(team, user);
+		
+		session.setAttribute("teamUser", tuRepo.findById(tuId).get());
+		model.addAttribute("team", team);
+		model.addAttribute("userList", tuRepo.findByTeamId(teamId));
+		
+		return "main/teamMain";
 	}
 }

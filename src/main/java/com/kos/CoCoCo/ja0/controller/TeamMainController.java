@@ -16,7 +16,7 @@ import com.kos.CoCoCo.vo.TeamVO;
 import com.kos.CoCoCo.vo.UserVO;
 
 @Controller
-@RequestMapping("/main/*")
+//@RequestMapping("/main/*")
 public class TeamMainController {
 
 	@Autowired
@@ -25,7 +25,7 @@ public class TeamMainController {
 	@Autowired
 	TeamUserRepository tuRepo;
 	
-	@GetMapping("/{teamId}")
+	//@GetMapping("/{teamId}")
 	public String teamMain(@PathVariable Long teamId, HttpSession session, Model model) {
 		UserVO user = (UserVO)session.getAttribute("user");
 		TeamVO team = tRepo.findById(teamId).get();

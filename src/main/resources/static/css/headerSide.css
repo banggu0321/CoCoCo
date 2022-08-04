@@ -90,10 +90,14 @@ body, html {
 	padding: 0px 9px;
 }
 
-#teamList a img {
+.moveTeam {
 	margin: 10px;
 	width: 40px;
 	height: 40px;
+}
+
+.moveTeam:hover {
+	cursor: pointer;
 }
 
 #myMenu img {

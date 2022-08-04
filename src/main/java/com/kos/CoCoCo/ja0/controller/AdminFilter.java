@@ -41,7 +41,7 @@ public class AdminFilter implements Filter {
 			} else {
 				httpRes.setContentType("text/html; charset=UTF-8");
 				PrintWriter writer = response.getWriter();
-				writer.println("<script>alert('관리자 페이지 접근이 불가능합니다!');  location.href='/main/"+ teamUser.getTeamUserId().getTeam().getTeamId()+"';</script>");
+				writer.println("<script>alert('관리자 페이지 접근이 불가능합니다!');  location.href='/main';</script>");
 				writer.close();
 			}
 		}

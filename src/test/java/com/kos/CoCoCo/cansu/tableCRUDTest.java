@@ -7,6 +7,10 @@ import java.util.Random;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 
 import com.kos.CoCoCo.cansu.test.BoardCategoryRepositoryTestSu;
 import com.kos.CoCoCo.cansu.test.BoardRepositoryTestSu;
@@ -44,40 +48,67 @@ public class tableCRUDTest {
 	@Autowired
 	ReplyRepositoryTestSu replyRP;
 	
-	
 	@Test
-	public void categoryNameInsertByuserID() {
+	public void boardPageList() {
+		Pageable pageable = PageRequest.of(0, 4, Direction.DESC, "boardId");
+		Pageable pageableBeta = PageRequest.of(1, 4, Direction.DESC, "boardId");
+		//Page request [number: 0, size 10, sort: boardId: DESC]
+				
+		Page<BoardVO> result = boardRP.findAll(boardRP.makePredicate(null, null), pageable);
+		Page<BoardVO> result2 = boardRP.findAll(boardRP.makePredicate(null, null), pageableBeta);
 		
-		
-//		Long teamID = 21L; //teams -> team_id
-		String userID = "0720"; //user_id
-		String categoryName = "sample0802beta";	
-		
-		List<Long>categoryID = boardcateRP.selectIDByname(categoryName);
-		
-		System.out.println(categoryID);
-		if(categoryID.isEmpty()) {
-			categoryNameInsert(categoryName, userID, boardcateRP);
-		}
-	}
+		System.out.println("result: "+result.getPageable());
+		System.out.println("result2: "+result2.getPageable());
 
-	private void categoryNameInsert(String categoryName, String userID, BoardCategoryRepositoryTestSu boardcateRP2) {
-		//BoardCategoryMultikey -> generateValue not work
-		long gnrTemp =  new Random().nextLong();
-		if(gnrTemp <0) {
-			gnrTemp = -1*gnrTemp;
-		}
-		long gnrValue = Long.valueOf(String.valueOf(gnrTemp).substring(0, 6));
-//		System.out.println(gnrValue);
+		System.out.println("result1-----------------");
+		result.getContent().forEach(a->{
+			System.out.println("getContent: "+a);
+		});
 		
-		UserVO uservo = userRP.findById(userID).get();
-		TeamVO teamvo =  teamRP.selectByUserID(uservo.getUserId());
-		System.out.println(teamvo);
+		System.out.println("result2-----------------");
+		result2.getContent().forEach(a->{
+			System.out.println("getContent: "+a);
+		});
 		
-		BoardCategoryMultikey bcMultikey = BoardCategoryMultikey.builder().categoryId(gnrValue).team(teamvo).build();
-		BoardCategoryVO bcTemp = BoardCategoryVO.builder().boardCategoryId(bcMultikey).categoryName(categoryName).build();
-		boardcateRP.save(bcTemp);
+//		result3.getContent().forEach(a->{
+//			System.out.println("getContent: "+a);
+//		});
+		
 	}
+	
+//	@Test
+//	public void categoryNameInsertByuserID() {
+//		
+//		
+////		Long teamID = 21L; //teams -> team_id
+//		String userID = "0720"; //user_id
+//		String categoryName = "sample0802beta";	
+//		
+//		List<Long>categoryID = boardcateRP.selectIDByname(categoryName);
+//		
+//		System.out.println(categoryID);
+//		if(categoryID.isEmpty()) {
+//			categoryNameInsert(categoryName, userID, boardcateRP);
+//		}
+//	}
+//
+//	private void categoryNameInsert(String categoryName, String userID, BoardCategoryRepositoryTestSu boardcateRP2) {
+//		//BoardCategoryMultikey -> generateValue not work
+//		long gnrTemp =  new Random().nextLong();
+//		if(gnrTemp <0) {
+//			gnrTemp = -1*gnrTemp;
+//		}
+//		long gnrValue = Long.valueOf(String.valueOf(gnrTemp).substring(0, 6));
+////		System.out.println(gnrValue);
+//		
+//		UserVO uservo = userRP.findById(userID).get();
+//		TeamVO teamvo =  teamRP.selectByUserID(uservo.getUserId());
+//		System.out.println(teamvo);
+//		
+//		BoardCategoryMultikey bcMultikey = BoardCategoryMultikey.builder().categoryId(gnrValue).team(teamvo).build();
+//		BoardCategoryVO bcTemp = BoardCategoryVO.builder().boardCategoryId(bcMultikey).categoryName(categoryName).build();
+//		boardcateRP.save(bcTemp);
+//	}
 
 	
 //	@Test

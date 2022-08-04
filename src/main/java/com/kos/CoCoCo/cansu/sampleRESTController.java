@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,6 +52,20 @@ public class sampleRESTController {
 	
 	@Autowired
 	BoardCategoryRepositoryTestSu boardcateRP;
+	
+	@GetMapping("/getBoardPage/{pageNumber}")
+	public List<BoardVO> boardlistByPageNum(@PathVariable String pageNumber, Model model){
+		String userID = "0720";  //login -> id
+		System.out.println("page number: "+pageNumber);
+		
+		Pageable pageable = PageRequest.of(Integer.valueOf(pageNumber)-1, 4, Direction.DESC, "boardId");
+		Page<BoardVO> result = boardRP.findAll(boardRP.makePredicate(null, null), pageable);
+		
+		List<BoardVO> boardList = result.getContent();
+		System.out.println("board list: "+boardList);
+		
+		return boardList;
+	}
 	
 	@GetMapping("/boardList/insertName/{name}")
 	public List<BoardVO> categoryNameInsertFromBLBeta(@PathVariable String name,Model model) {

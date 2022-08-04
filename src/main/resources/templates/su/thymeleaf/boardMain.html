@@ -77,12 +77,16 @@ width:80%;
 	<div id="boardMain">
 		<div id="boardMain1">
 			<div id="boardMainSub1">
-				<button id="boardFormA">A form</button> - <button>B form</button>
+				<button id="boardFormA">A form</button>
+				-
+				<button>B form</button>
 			</div>
-			
+
 			<div id="boardMainSub2">
-			<button id="boardCategory" type="button" class="btn btn-primary">카테고리 선택</button>
-			<button id="insertBoard" type="button" class="btn btn-primary">게시판 만들기</button>
+				<button id="boardCategory" type="button" class="btn btn-primary">카테고리
+					선택</button>
+				<button id="insertBoard" type="button" class="btn btn-primary">게시판
+					만들기</button>
 			</div>
 		</div>
 		<hr>
@@ -99,6 +103,12 @@ width:80%;
 				</thead>
 				<tbody id="replyTable"></tbody>
 			</table>
+
+			<nav>
+				<ul class="pagination">
+					<li th:each="p:${result.pageList}"><a id="navPage">[[${p.pageNumber}+1]]</a></li>
+				</ul>
+			</nav>
 		</div>
 	</div>
 
@@ -144,7 +154,14 @@ width:80%;
 	var categoryResult;
 	var showCategory = document.getElementById("scName");
 	
-
+	var formObj = document.querySelectorAll("#navPage");
+	for(let i=0; i<formObj.length; i++){
+		formObj[i].addEventListener('click', ()=>{
+			alert("a tag clicked"+formObj[i].innerText);
+			replyREST.getBoardPage(formObj[i].innerText, printList);
+		});
+	}
+	
 	</script>
 
 	<script th:inline="javascript">

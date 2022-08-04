@@ -1,6 +1,10 @@
 var replyREST =(
 	function(){
 		
+		var getBoardPage = function(obj, callback){
+			$.getJSON('/BOARDrest/getBoardPage/'+obj, callback);
+		}
+		
 		var getAllBoard = function(obj, callback){
 			$.getJSON('/BOARDrest/'+obj,callback);
 			
@@ -21,7 +25,8 @@ var replyREST =(
 		return{
 			getAllBoard: getAllBoard,
 			getAllReply: getAllReply,
-			getAllCategory: getAllCategory
+			getAllCategory: getAllCategory,
+			getBoardPage: getBoardPage
 		}
 	}
 )();

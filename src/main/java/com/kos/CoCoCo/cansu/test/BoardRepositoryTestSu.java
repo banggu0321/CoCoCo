@@ -5,6 +5,7 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.CrudRepository;
 
 import com.kos.CoCoCo.vo.BoardVO;
+import com.kos.CoCoCo.vo.QBoardVO;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 
@@ -19,7 +20,21 @@ public interface BoardRepositoryTestSu extends CrudRepository<BoardVO, Long>, Qu
 	public default Predicate makePredicate(String type, String keyword) {
 		
 		BooleanBuilder builder = new BooleanBuilder();		
-		return null;
+		
+		QBoardVO board = QBoardVO.boardVO;
+		
+		if(type ==null) {
+			return builder;
+		}
+		
+		switch(type) {
+		case "t":
+//			builder.and(board.isNotNull());
+			break;
+		}
+		
+		
+		return builder;
 	}
 
 }

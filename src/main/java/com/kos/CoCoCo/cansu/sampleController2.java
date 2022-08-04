@@ -6,6 +6,8 @@ import java.util.Random;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.kos.CoCoCo.cansu.test.BoardCategoryRepositoryTestSu;
 import com.kos.CoCoCo.cansu.test.BoardRepositoryTestSu;
+import com.kos.CoCoCo.cansu.test.PageMaker;
+import com.kos.CoCoCo.cansu.test.PageVO;
 import com.kos.CoCoCo.cansu.test.ReplyRepositoryTestSu;
 import com.kos.CoCoCo.cansu.test.TeamRepositoryTestSu;
 import com.kos.CoCoCo.cansu.test.UserRepositoryTestSu;
@@ -42,8 +46,29 @@ public class sampleController2 {
 	@Autowired
 	BoardCategoryRepositoryTestSu boardcateRP;
 	
+//	@GetMapping("/boardSampleBeta")
+//	public String boardlist() {			
+//		return "su/thymeleaf/boardMain";
+//	}
+	
 	@GetMapping("/boardSampleBeta")
-	public String boardlist() {			
+	public String boardlist(PageVO vo, Model model) {	
+		
+		Pageable page = vo.makePageable(0, "boardId");
+		Page<BoardVO>  result = boardRP.findAll(boardRP.makePredicate(null, null), page);
+		
+		model.addAttribute("result", new PageMaker(result));
+		
+		
+		System.out.println("result.getSize: "+result.getSize());
+		System.out.println("result.getTotalPage: "+result.getTotalPages());
+		System.out.println("result.getTotalElements: "+result.getTotalElements());
+		System.out.println("result.nextPageable: "+result.nextPageable());
+		
+		System.out.println("result.getPageable: "+ result.getPageable());
+		System.out.println("result.getPageable.previoudOrFirst: "+result.getPageable().previousOrFirst());
+		System.out.println("result.getPageable.getPageNumber: "+result.getPageable().getPageNumber());
+		
 		return "su/thymeleaf/boardMain";
 	}
 		

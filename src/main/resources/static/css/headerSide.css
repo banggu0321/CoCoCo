@@ -1,4 +1,10 @@
 @charset "UTF-8";
+
+body, html {
+	height: 100vh;
+	width: 100%;
+}
+	
 /******************* header *******************/
 #top {
     position: fixed;
@@ -9,7 +15,7 @@
 	display:flex;
 	align-items: center;
    	box-shadow: 0 0px 0px -1px, 0 1px 4px -2px;
-   	z-index: 1;
+   	z-index: 999;
 }
 
 .nav {
@@ -38,7 +44,7 @@
 /******************* side *******************/
 #side_bar{
 	display: flex;
-	height: 95vh;
+	height: 94vh;
 }
 
 .side_list {
@@ -49,7 +55,7 @@
 
 .my_menu {
 	width: 318px;
-	height: 95vh;
+	height: 94vh;
 	background-color: #fff;
 }
 
@@ -62,7 +68,7 @@
 	
 .inner_content {
 	width: 850px;
-	height: 95vh;
+	height: 94vh;
 	padding-left: 51px;
 	padding-right: 51px;
 	background-color: #e7ebf2;
@@ -70,7 +76,7 @@
 
 .chat {
 	width: 318px;
-	height: 95vh;
+	height: 94vh;
 }
 
 /******************* cont *******************/
@@ -80,7 +86,7 @@
     display: flex;
     position: absolute;
     flex-direction: column;
-	bottom: 10%;
+	bottom: 5%;
 	padding: 0px 9px;
 }
 
@@ -144,6 +150,18 @@
 	color: #fff;
 	background-color: #f26100;
     border-color: #f26100;
+}
+	
+.btn-outline-cococo {
+	color: #FF7F27;
+    background-color: #fff;
+    border: 2px solid #FF7F27;
+}
+
+.btn-outline-cococo:hover {
+	color: #fff;
+	background-color: #FF7F27;
+    border-color: #FF7F27;
 	
 }
 /******************* button *******************/

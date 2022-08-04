@@ -10,7 +10,6 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
@@ -25,7 +24,7 @@ import com.querydsl.core.types.Predicate;
 public interface NoticeRepository extends JpaRepository<NoticeVO, Long>, PagingAndSortingRepository<NoticeVO, Long>,
  QuerydslPredicateExecutor<NoticeVO> {
 	
-	public List<NoticeVO> findByTeam(TeamVO team);
+	public List<NoticeVO> findByTeamOrderByNoticeRegDateDesc(TeamVO team);
 	
 	public Page<NoticeVO> findByTeam(TeamVO team, Pageable pageable);
 

@@ -5,7 +5,7 @@
 	  layout:decorate="~{/layout/layout1.html}">
 <head>
 <meta charset="UTF-8">
-
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <link rel="stylesheet" th:href="@{/css/ja0/teamMaincss.css}" />
 
 <title>CoCoCo | [[${team.teamName}]]</title>
@@ -19,6 +19,8 @@
 		$("#statusUpdate").click(updateStatus);
 		$(".copyBtn").click(copyCode);
 		
+		$("#main1").load("/main/notice");
+		$("#main2").load("/main/summary");
 		$("#main3").load("/work/worklist");
 	})
 	

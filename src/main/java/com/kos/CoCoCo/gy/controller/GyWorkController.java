@@ -1,7 +1,5 @@
 package com.kos.CoCoCo.gy.controller;
 
-import javax.servlet.http.HttpSession;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,6 @@ import com.kos.CoCoCo.gy.repo.GyWorkRepository;
 @Controller
 @RequestMapping("/work/*")
 public class GyWorkController {
-	
 	private static final Logger log = LoggerFactory.getLogger(GyWorkController.class);
 	
 	@Autowired
@@ -42,7 +39,7 @@ public class GyWorkController {
 	
 	@GetMapping("/workc")
 	public String cal() {
-		return "work/calendarConnect";
+		return "work/XXcalendarConnect";
 	}
 	@GetMapping("/layout")
 	public String layout() {
@@ -54,7 +51,7 @@ public class GyWorkController {
 	}
 	@GetMapping("/workm")
 	public String workmanager() {
-		return "/work/workmanager";
+		return "/work/XXworkmanager";
 	}
 	
 	

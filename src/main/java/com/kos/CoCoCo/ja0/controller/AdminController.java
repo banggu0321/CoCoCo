@@ -125,7 +125,7 @@ public class AdminController {
 		tRepo.findById(team.getTeamId()).ifPresent(i->{		
 			if (!newPhoto.isEmpty()) {
 				try {
-					//awsS3.delete(i.getTeamImg()); //s3에서도 삭제
+					awsS3.delete(i.getTeamImg()); //s3에서도 삭제
 					
 					String img = awsS3.upload(newPhoto, "uploads/teamImages/");
 					i.setTeamImg(img);

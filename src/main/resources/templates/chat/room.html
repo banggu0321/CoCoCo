@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<style>
+.col{
+	border:2px solid gray;
+	border-radius:5px;
+	overflow:auto;
+	overflow-x:hidden;
+	width:500px; 
+	height:500px;
+}
+.search-in-body {
+	display: flex;
+	flex-direction: row;
+	background-color: #eee;
+	z-index: 999;
+}
+.search-box {
+	width: 40%;
+	border: 1px solid #eee;
+	padding: 3px 3px 3px 3px;
+	margin: 5px 3px 5px 5px;
+}
+.next-btn,
+.prev-btn,
+.clear-btn {
+	width: 10%;
+	padding: 0px 3px 0px 3px;
+	margin: 5px 3px 5px 3px;
+	border: 2px solid white;
+}
+.kwt-count {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 30%;
+	padding: 0px 3px 0px 3px;
+	margin: 5px 5px 5px 3px;
+	border: 2px solid white;
+}
+mark {
+	background: yellow;
+}
+mark.current {
+	background: orange;
+}
+</style>
+</head>
+<body>
+	<!-- <th:block th:replace="~{/layout/basic :: setContent(~{this :: content})}"> -->
+	<th:block th:fragment="content">
+
+		<div class="container">
+			<div class="col-6">
+				<h1>[[${room.name}]]</h1>
+			</div>
+			<div class="search-in-body">
+				<input type="search" class="search-box" placeholder="채팅 찾기">
+				<button data-search="next" class="next-btn">∨</button>
+				<button data-search="prev" class="prev-btn">∧</button>
+				<button data-search="clear" class="clear-btn">Ⅹ</button>
+				<span class="kwt-count">-</span>
+			</div>
+			<div>
+				<div id="msgArea" class="col">
+					<p th:each="chat:${chatlist}">
+						<b> [[${chat.writer}]] : [[${chat.message}]]
+						
+						    <span th:if="${chat.writer} == ${session.user.username}"> 
+							   <button type="button" class="button-del" th:data="${chat.id}"  >삭제</button> 
+							</span>
+						</b>
+					</p>
+				</div>
+				<div class="col-6">
+					<div class="input-group mb-3">
+						<input type="text" id="msg" class="form-control">
+						<div class="input-group-append">
+							<button class="btn btn-outline-secondary" type="button"
+								id="button-send">전송</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-6"></div>
+		</div>
+
+
+		<script
+			src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js"></script>
+
+	</th:block>
+	<!-- </th:block> -->
+	<script th:inline="javascript">
+            $(document).ready(function(){
+
+                var roomName = /*[[${room.name}]]*/'';
+                var roomId = /*[[${room.roomId}]]*/'';
+                var username = /*[[${session.user.username}]]*/'';
+
+                console.log(roomName + ", " + roomId + ", " + username);
+                $(".col").scrollTop($(".col")[0].scrollHeight);
+
+                var sockJs = new SockJS("/stomp/chat");
+                //1. SockJS를 내부에 들고있는 stomp를 내어줌
+                var stomp = Stomp.over(sockJs);
+
+                //2. connection이 맺어지면 실행
+                stomp.connect({}, function (){
+                   console.log("STOMP Connection")
+
+                   //4. subscribe(path, callback)으로 메세지를 받을 수 있음
+                   stomp.subscribe("/sub/chat/room/" + roomId, function (chat) {
+                       var content = JSON.parse(chat.body);
+						
+                       var writer = content.writer;
+                       var message = content.message;
+                       var str = '';
+                 
+                       if(writer === username){
+                           str = "<div class='col-6'>";
+                           str += "<div class='alert alert-secondary'>";
+                           str += "<b>" + writer + " : " + message + "</b>";
+                           str += '<button type="button" class="button-del">삭제</button></div></div>';
+                           $("#msgArea").append(str);
+                           $(".col").scrollTop($(".col")[0].scrollHeight);
+                       }
+                       else{
+                           str = "<div class='col-6'>";
+                           str += "<div class='alert alert-warning'>";
+                           str += "<b>" + writer + " : " + message + "</b>";
+                           str += "</div></div>";
+                           $("#msgArea").append(str);
+                           $(".col").scrollTop($(".col")[0].scrollHeight);
+                       }
+
+                       /* $("#msgArea").append(str); */
+                   });
+
+                   //3. send(path, header, message)로 메세지를 보낼 수 있음
+                   //stomp.send('/pub/chat/enter', {}, JSON.stringify({roomId: roomId, writer: username}))
+                });
+
+                $("#button-send").on("click", function(e){
+                    var msg = document.getElementById("msg");
+
+                    console.log(username + ":" + msg.value);
+                    stomp.send('/pub/chat/message', {}, JSON.stringify({roomId: roomId, message: msg.value, writer: username}));
+                    msg.value = '';
+                });
+                
+                $("#msg").on("keyup",function(e){
+                	if(e.keyCode==13){
+                		var msg = document.getElementById("msg");
+
+                        console.log(username + ":" + msg.value);
+                        stomp.send('/pub/chat/message', {}, JSON.stringify({roomId: roomId, message: msg.value, writer: username}));
+                        msg.value = '';
+                	}
+                });
+                
+                $(".button-del").on("click", function(e){
+                	var id = $(this).attr("data");
+                	
+                	location.href = "/chat/del?chatId=" + id + "&roomId=" + roomId;
+                	/*
+                	
+                	alert(id);
+                	$.ajax({
+                		url:"/chat/del",
+                		data:{chatId:id},
+                		success:function(responseData){
+                			alert(responseData);
+                		}
+                	});*/
+                });
+                
+           
+            });
+            
+            
+            
+            /* 검색 구현 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
+            document.body.onload = function() {
+        		var $input = document.querySelector("input[type='search']"),
+        				$clearBtn = document.querySelector("button[data-search='clear']"),
+        				$prevBtn = document.querySelector("button[data-search='prev']"),
+        				$nextBtn = document.querySelector("button[data-search='next']"),
+        				$content = document.querySelector(".col"),
+        				$contentMark = new Mark($content),
+        				$results,
+        				currentClass = "current",
+        				offsetTop = 200,
+        				currentIndex = 0;
+        		var variableCounter = 0;
+        		var totalCount = 0;
+        		
+        		
+        		$input.addEventListener("input", function() {
+        			var searchVal = this.value;
+        			$contentMark.unmark( {
+        				done: function(totalMatches) {
+        					$contentMark.mark(searchVal, {
+        						separateWordSearch: false,
+        						acrossElements: true,
+        						done: function(totalMatches) {
+        							$results = $content.querySelectorAll("mark");
+        							totalCount = totalMatches;
+        							if (totalCount) {
+        								variableCounter = 1;
+        								$(".kwt-count").html(variableCounter+ " / " +totalCount);
+        							}
+        						}
+        					});
+        				}
+        			});
+        		});
+        		$nextBtn.addEventListener("click", prevNextHandler);
+        		$prevBtn.addEventListener("click", prevNextHandler);
+        		$nextBtn.after($prevBtn);
+        		function prevNextHandler() {
+        			if ($results.length) {
+        				currentIndex += (this.dataset.search === "prev" ? -1 : 1);
+        				if (currentIndex < 0) {
+        					currentIndex = $results.length - 1;
+        				}
+        				if (currentIndex > $results.length - 1) {
+        					currentIndex = 0;
+        				}
+        				jumpTo();
+        			}
+        		}
+        		
+        		$("[data-search=next]").click(function() {
+        			if (variableCounter < totalCount)
+        				variableCounter = variableCounter + 1;
+        			else
+        				variableCounter = 1;
+        			$(".kwt-count").html(variableCounter+ " / " +totalCount);
+        		})
+
+        		$("[data-search=prev]").click(function() {
+        			if (variableCounter > 1)
+        				variableCounter = variableCounter - 1;
+        			else
+        				variableCounter = totalCount;
+        			$(".kwt-count").html(variableCounter+ " / " +totalCount);
+        		})
+        		
+        		function jumpTo() {
+					if ($results.length) {
+						var position,
+								$current = $results[currentIndex];
+						$results.forEach($result => $result.classList.remove(currentClass));
+						if ($current) {
+							$current.classList.add(currentClass);
+							position = $current.offsetTop - offsetTop;
+							$content.scrollTo(0, position);
+						}
+					}
+				}
+        		$clearBtn.addEventListener("click", function() {
+        			$contentMark.unmark();
+        			$input.value = ""
+        			$input.focus();
+        			variableCounter = 0;
+        			totalCount = 0;
+        			$(".kwt-count").html("-");
+        		});
+        	};
+        </script>
+</body>
+</html>

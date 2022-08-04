@@ -46,6 +46,12 @@
 	padding: 130px 10px;
 }
 
+
+#addTeamForm label {
+    font-weight: bold;
+    margin: 0.5rem 0 0 0;
+}
+
 .box img{
 	width: 150px;
 	height: 150px;
@@ -63,7 +69,7 @@
 	display: none;
     position: absolute;
     top: 45px;
-    right: -40px;
+    right: -55px;
     z-index: 1;
 }
 

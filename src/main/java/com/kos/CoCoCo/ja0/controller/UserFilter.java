@@ -15,7 +15,7 @@ import javax.servlet.http.HttpSession;
 
 import com.kos.CoCoCo.vo.TeamUserVO;
 
-@WebFilter(urlPatterns = {"/main/*", "/admin/*", "/work/*", "/notice/*"})
+@WebFilter(urlPatterns = {"/admin/*", "/work/*", "/notice/*"})
 public class UserFilter implements Filter {
 
 	@Override
@@ -27,9 +27,10 @@ public class UserFilter implements Filter {
 		
 		HttpSession session = httpReq.getSession();
 		
+		Long teamId = (Long) session.getAttribute("teamId");
 		String getClass = session.getAttribute("user").getClass().getSimpleName();
 		
-		if(!getClass.equals("UserVO")) {
+		if(!getClass.equals("UserVO") || teamId == null) {
 			httpRes.setContentType("text/html; charset=UTF-8");
 			PrintWriter writer = response.getWriter();
 			writer.println("<script>location.href='/CoCoCo';</script>");

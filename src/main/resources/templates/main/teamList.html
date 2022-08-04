@@ -29,7 +29,7 @@
 		
 			<div class="box" th:team-data="${team.teamUserId.team.teamId}" th:each="team:${paging.result.getContent()}">
 				<img th:if="${session.user.userId != team.teamUserId.team.user.userId}" th:src="@{/images/menuDots.svg}" class="delMenu">
-				<button class="btn btn-cococo delBtn" th:team-data="${team.teamUserId.team.teamId}">나가기</button>
+				<button class="btn btn-outline-cococo delBtn" th:team-data="${team.teamUserId.team.teamId}">나가기</button>
 				
 				<img th:src="${team.teamUserId.team.teamImg}?:@{/images/teamImg.png}" th:alt="${team.teamUserId.team.teamImg}" class="rounded">
 				
@@ -157,7 +157,8 @@
 	 	$(".delBtn").click(deleteTeam);
 	 	$("#addTeamBtn").click(addTeam);
 	 	$("#img").change(makeView);
-	 	$(".valDel").click(valueDelete);
+	 	$(".addTeam").click(valueDelete);
+	 	$(".inviteBtn").click(valueDelete);
 	 	$("#statusUpdate").click(updateStatus);
 	 	
 	})
@@ -203,7 +204,7 @@
 	}
 		
 	function hideMenu() {
-		$("button[class='btn btn-cococo delBtn']").hide();
+		$("button[class='btn btn-outline-cococo delBtn']").hide();
 	}
 		
 	function deleteTeam(e) {

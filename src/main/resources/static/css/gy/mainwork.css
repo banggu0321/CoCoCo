@@ -23,7 +23,12 @@
 	font-size: 1.2em;
 }
 .workListContent{
+	width:700px; 
 	font-size: 0.8em;
+	overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
 }
 .workNoneText{
 	border: none;

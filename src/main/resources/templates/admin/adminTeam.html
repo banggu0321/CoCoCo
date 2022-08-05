@@ -6,7 +6,6 @@
 <head>
 <meta charset="UTF-8">
 
-<link rel="stylesheet" th:href="@{/css/ja0/admincss.css}" />
 <link rel="stylesheet" th:href="@{/css/ja0/adminTeamcss.css}" />
 
 <title>CoCoCo | [[${team.teamName}]]</title>
@@ -45,22 +44,15 @@
 	}
 	
 	function deleteTeam() {
-		if(confirm("워크스페이스를 삭제하시겠습니까?")) {
+		if(confirm("워크스페이스를 삭제하시겠습니까?\n삭제된 정보는 복구되지않습니다.")) {
 			location.href="/admin/delete";
 		}
 	}
 </script>
 </head>
 <body>
-<div layout:fragment="my_menu">
-	<div class="my_menu">
-		<div>
-			<a th:href="@{/admin/team}" id="adminTeam">워크스페이스 관리</a>
-		</div>
-		<div>
-			<a th:href="@{/admin/user}" id="adminUser">유저관리</a>
-		</div>
-	</div>
+<div layout:fragment="my_menu" class="my_menu">
+	<div th:replace="~{admin/adminSide}"></div>
 </div>
 
 <div layout:fragment="inner_content">
@@ -73,15 +65,19 @@
 			<img th:if="${team.teamImg==null}" th:src="@{/images/teamImg.png}" alt="null" class="showImg rounded">
 			<div id="teamInfo">
 				<label>WORKSPACE NAME</label>
-					<p>[[${team.teamName}]]</p>
+				<p>[[${team.teamName}]]</p>
+				
 				<label>WORKSPACE INFO</label>
-					<p id="info">[[${team.teamInfo}]]</p>
+				<p id="info">[[${team.teamInfo}]]</p>
+				
 				<label>CREATED DATE</label>
-					<p>[[${#dates.format(team.createDate,'yyyy-MM-dd')}]]</p>
+				<p>[[${#dates.format(team.createDate,'yyyy-MM-dd')}]]</p>
+				
 				<label>CREATOR</label>
-					<p>[[${team.user.name}]] ([[${team.user.userId}]])</p>
-			<button class="btn btn-cococo" id="modifyForm">수정</button>
-			<button class="btn btn-light" id="deleteBtn">워크스페이스 삭제</button>
+				<p>[[${team.user.name}]] ([[${team.user.userId}]])</p>
+				
+				<button class="btn btn-cococo" id="modifyForm">수정</button>
+				<button class="btn btn-light" id="deleteBtn">워크스페이스 삭제</button>
 			</div>
 		</div>
 	</div>

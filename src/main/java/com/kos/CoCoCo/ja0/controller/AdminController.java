@@ -24,6 +24,7 @@ import com.kos.CoCoCo.ja0.awsS3.AwsS3;
 import com.kos.CoCoCo.ja0.repository.BoardCategoryRepositoryH;
 import com.kos.CoCoCo.ja0.repository.BoardRepositoryH;
 import com.kos.CoCoCo.ja0.repository.ChattingRepositoryH;
+import com.kos.CoCoCo.ja0.repository.NoticeFileRepositoryH;
 import com.kos.CoCoCo.ja0.repository.NoticeRepositoryH;
 import com.kos.CoCoCo.ja0.repository.ReplyRepositoryH;
 import com.kos.CoCoCo.ja0.repository.TeamRepository;
@@ -62,6 +63,9 @@ public class AdminController {
 	NoticeRepositoryH nRepo;
 	
 	@Autowired
+	NoticeFileRepositoryH nfRepo;
+	
+	@Autowired
 	ReplyRepositoryH rRepo;
 	
 	@Autowired
@@ -75,11 +79,7 @@ public class AdminController {
 
 	@GetMapping("/user")
 	public String userList(HttpSession session, Model model, HttpServletRequest request) {
-		Map<String, Object> map = (Map<String, Object>) RequestContextUtils.getInputFlashMap(request);
-		if(map != null) {
-			String msg = (String) map.get("msg");
-			model.addAttribute("msg", msg);
-		}
+		model.addAttribute("msg", getRedirectMsg(request));
 		
 		Long teamId = (Long) session.getAttribute("teamId");
 		model.addAttribute("team", tRepo.findById(teamId).get()); //title
@@ -101,15 +101,11 @@ public class AdminController {
 	
 	@GetMapping("/team")
 	public String team(HttpSession session, Model model, HttpServletRequest request) {
+		model.addAttribute("msg", getRedirectMsg(request));
+		
 		Long teamId = (Long) session.getAttribute("teamId");
-		
-		Map<String, Object> map = (Map<String, Object>) RequestContextUtils.getInputFlashMap(request);
-		if(map != null) {
-			String msg = (String) map.get("msg");
-			model.addAttribute("msg", msg);
-		}
-		
 		model.addAttribute("team", tRepo.findById(teamId).get());
+		
 		return "admin/adminTeam";
 	}
 	
@@ -153,7 +149,7 @@ public class AdminController {
 		tRepo.findById(teamId).ifPresent(i->{
 			awsS3.delete(i.getTeamImg()); //s3에서도 삭제
 			
-			i.setTeamImg("");
+			i.setTeamImg(null);
 			tRepo.save(i);
 		});
 		
@@ -179,24 +175,29 @@ public class AdminController {
 		return "redirect:/admin/team";
 	}
 	
-	public void deleteAll(Long teamId) {
-		nRepo.deleteByTeamId(teamId);
-		cRepo.deleteByTeamId(teamId);
+	private void deleteAll(Long teamId) {
+		cRepo.deleteByTeamId(teamId); //채팅
 		
-		wRepo.findByTeamId(teamId).forEach(i -> {
-			wmRepo.deleteByWorkId(i.getWorkId());
-		});;
-		
-		wRepo.deleteByTeamId(teamId);
-		
-		bRepo.findByTeamId(teamId).forEach(i -> {
-			rRepo.deleteByBoardId(i.getBoardId());
+		nRepo.findByTeamId(teamId).forEach(i -> {//공지파일
+			nfRepo.deleteByNoticeId(i.getNoticeId());
 		});
 		
-		bRepo.deleteByTeamId(teamId);
-		bcRepo.deleteByTeamId(teamId);
-		tuRepo.deleteByTeamId(teamId);
-		tRepo.deleteById(teamId);
+		nRepo.deleteByTeamId(teamId); //공지
+
+		wRepo.findByTeamId(teamId).forEach(i -> {
+			wmRepo.deleteByWorkId(i.getWorkId()); //업무 담당자
+		});;
+		
+		wRepo.deleteByTeamId(teamId); //업무
+		
+		bRepo.findByTeamId(teamId).forEach(i -> {
+			rRepo.deleteByBoardId(i.getBoardId()); //댓글
+		});
+		
+		bRepo.deleteByTeamId(teamId); //게시글
+		bcRepo.deleteByTeamId(teamId); //카테고리
+		tuRepo.deleteByTeamId(teamId); //teamUser
+		tRepo.deleteById(teamId); //team
 	}
 	
 	@ResponseBody
@@ -219,5 +220,16 @@ public class AdminController {
 		});
 		
 		return "redirect:/admin/user";
+	}
+	
+	private String getRedirectMsg(HttpServletRequest request) {
+		Map<String, Object> map = (Map<String, Object>) RequestContextUtils.getInputFlashMap(request);
+		
+		String msg = "";
+		if(map != null) {
+			msg = (String) map.get("msg");
+		}
+		
+		return msg;
 	}
 }

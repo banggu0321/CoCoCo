@@ -31,13 +31,9 @@ public class UserFilter implements Filter {
 		String getClass = session.getAttribute("user").getClass().getSimpleName();
 		
 		if(!getClass.equals("UserVO") || teamId == null) {
-			httpRes.setContentType("text/html; charset=UTF-8");
-			PrintWriter writer = response.getWriter();
-			writer.println("<script>location.href='/CoCoCo';</script>");
-			writer.close();
+			httpRes.sendRedirect("/CoCoCo");
 		} else {
 			chain.doFilter(request, response);
 		}
 	}
-
 }

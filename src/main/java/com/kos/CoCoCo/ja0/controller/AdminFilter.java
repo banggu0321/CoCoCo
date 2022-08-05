@@ -28,8 +28,6 @@ public class AdminFilter implements Filter {
 		HttpSession session = httpReq.getSession();
 		TeamUserVO teamUser = (TeamUserVO) session.getAttribute("teamUser");
 		
-		//System.out.println("adminfilter 지나감!");		
-		
 		if(teamUser == null) {
 			httpRes.setContentType("text/html; charset=UTF-8");
 			PrintWriter writer = response.getWriter();

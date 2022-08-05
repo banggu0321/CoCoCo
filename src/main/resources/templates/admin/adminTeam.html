@@ -65,15 +65,19 @@
 			<img th:if="${team.teamImg==null}" th:src="@{/images/teamImg.png}" alt="null" class="showImg rounded">
 			<div id="teamInfo">
 				<label>WORKSPACE NAME</label>
-					<p>[[${team.teamName}]]</p>
+				<p>[[${team.teamName}]]</p>
+				
 				<label>WORKSPACE INFO</label>
-					<p id="info">[[${team.teamInfo}]]</p>
+				<p id="info">[[${team.teamInfo}]]</p>
+				
 				<label>CREATED DATE</label>
-					<p>[[${#dates.format(team.createDate,'yyyy-MM-dd')}]]</p>
+				<p>[[${#dates.format(team.createDate,'yyyy-MM-dd')}]]</p>
+				
 				<label>CREATOR</label>
-					<p>[[${team.user.name}]] ([[${team.user.userId}]])</p>
-			<button class="btn btn-cococo" id="modifyForm">수정</button>
-			<button class="btn btn-light" id="deleteBtn">워크스페이스 삭제</button>
+				<p>[[${team.user.name}]] ([[${team.user.userId}]])</p>
+				
+				<button class="btn btn-cococo" id="modifyForm">수정</button>
+				<button class="btn btn-light" id="deleteBtn">워크스페이스 삭제</button>
 			</div>
 		</div>
 	</div>

@@ -106,23 +106,6 @@ public class MainController {
 		return "redirect:/CoCoCo";
 	}
 	
-	@GetMapping("/updateStatus/{str}/{status}")
-	public String updateStatus(@PathVariable String str, @PathVariable String status, HttpSession session) {
-		UserVO user = (UserVO) session.getAttribute("user");
-		
-		uRepo.findById(user.getUserId()).ifPresent(i->{
-			i.setStatus(status);
-			uRepo.save(i);
-			session.setAttribute("user", i);
-		});
-		
-		if(str.equals("t")) {
-			return "redirect:/main";
-		}
-		
-		return "redirect:/CoCoCo";
-	}
-	
 	@ResponseBody
 	@PostMapping("/findTeam/{code}")
 	public Long findTeam(@PathVariable String code, HttpSession session, Model model) {

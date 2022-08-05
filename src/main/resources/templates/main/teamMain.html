@@ -15,6 +15,10 @@
 
 <script type="text/javascript">
 	$(function() {
+		$(".showForm").click(setModalVal);
+		$("#myProfileUpdate").click(myProfileUpdate);
+		$("#delImg").click(delMyImg);
+		$("#img").change(makeView);
 		$(".statusBtn").click(myStatus);
 		$("#statusUpdate").click(updateStatus);
 		$(".copyBtn").click(copyCode);
@@ -23,6 +27,40 @@
 		$("#main2").load("/main/summary");
 		$("#main3").load("/work/worklist");
 	})
+	
+	function setModalVal() {
+		var name = "[[${session.user.name}]]";
+		var userId = "[[${session.user.userId}]]";
+		var company = "[[${session.user.company}]]";
+		var img = "[[${session.user.image}]]";
+		
+		$("input[name='name']").val(name);
+		$("input[name='userId']").val(userId);
+		$("input[name='company']").val(company);
+		$("input[name='newPhoto']").val("");
+		$(".myImg").attr("src", img?img:"/images/userImg.svg");
+		
+	}
+	
+	function myProfileUpdate() {
+		$("#modifyForm").submit();
+	}
+	
+	function delMyImg() {
+		if(confirm("프로필 사진을 삭제하시겠습니까?")) {
+			location.href = "/user/deleteImg";
+		}
+	}
+	
+	function makeView(event) {
+		var reader = new FileReader();
+
+		reader.onload = function(event) {
+			$(".myImg").attr("src", event.target.result);
+		};
+
+		reader.readAsDataURL(event.target.files[0]);
+	}
 	
 	function myStatus() {
 		var status = "[[${session.user.status}]]";
@@ -59,6 +97,7 @@
 	<div class="my_menu">
 		<div id="myProfile">
 			<img th:src="${session.user.image}?:@{/images/userImg.svg}" class="rounded-circle">
+			<img id="editProfile" class="rounded-circle" th:src="@{/images/editProfile.png}" data-toggle="modal" data-target="#myModal2">
 			<img class="admin" th:if="${session.teamUser.userRole == 'ADMIN'}" th:src="@{/images/crown.svg}">
 					
 			<div id="myInfo">
@@ -92,6 +131,97 @@
 			</div>
 		</div>
 	</div>
+	
+	<!-- user profile 모달 -->
+	<div id="myModal2" class="modal fade">
+		<div class="modal-dialog">
+	    <!-- Modal content -->
+	        <div class="modal-content">
+	        	<div class="modal-header">
+					<h5 class="modal-title">MY PROFILE</h5>
+				</div>
+				
+	        	<div class="modal-body">
+					<div id="modalMyImg">
+						<img th:src="${session.user.image}?:@{/images/userImg.svg}" class="myProfileImg rounded-circle">
+						<img th:if="${session.user.image}" id="delImg" th:src="@{/images/deleteTeamImg.svg}">
+					</div>
+					
+					<div id="modalMyInfo">
+						<div class="form-group">
+							<label>NAME</label>
+							<p class="form-control" >[[${session.user.name}]]</p>
+						</div>
+						
+						<div class="form-group">
+							<label>EMAIL</label>
+							<p class="form-control" >[[${session.user.userId}]]</p>
+						</div>
+						
+						<div class="form-group">
+							<label>COMPANY</label>
+							<p class="form-control" >[[${session.user.company}]]</p>
+						</div>
+						
+						<div class="form-group">
+							<label>JOIN DATE</label>
+							<p class="form-control" >[[${#dates.format(session.user.regDate,'yyyy-MM-dd')}]]</p>
+						</div>
+					</div>
+		        </div>
+		        
+				<div class="modal-footer">
+			    	<button class="btn btn-cococo showForm" data-toggle="modal" data-target="#myModal3">수정</button>
+			    	<button type="button" class="btn btn-light" data-dismiss="modal">취소</button>
+	        	</div>
+	        </div>
+	   	</div>
+	</div> <!-- Modal --> 
+	
+	<!-- user profile 수정 모달 -->
+	<div id="myModal3" class="modal fade">
+		<div class="modal-dialog">
+	    <!-- Modal content -->
+	        <div class="modal-content">
+	        	<div class="modal-header">
+					<h5 class="modal-title">MY PROFILE</h5>
+				</div>
+				
+	        	<div class="modal-body">
+					<img class="myImg rounded-circle">
+					
+					<form id="modifyForm" action="/user/modify" method="post" enctype="multipart/form-data">
+						<div class="form-group">
+							<label>NAME</label>
+							<input type="text" name="name" class="form-control">
+						</div>
+						
+						<div class="form-group">
+							<label>EMAIL</label>
+							<input type="text" name="userId" class="form-control"readonly="readonly">
+						</div>
+						
+						<div class="form-group">
+							<label>COMPANY</label>
+							<input type="text" name="company" class="form-control">
+						</div>
+						
+						<div class="form-group">
+							<label>MY IMAGE</label>
+							<input type="file" name="newPhoto" id="img" class="form-control" accept="image/*">
+						</div>
+						
+						<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+					</form>
+		        </div>
+		        
+				<div class="modal-footer">
+			    	<button id = "myProfileUpdate" class="btn btn-cococo">수정</button>
+			    	<button type="button" class="btn btn-light" data-dismiss="modal">취소</button>
+	        	</div>
+	        </div>
+	   	</div>
+	</div> <!-- Modal --> 
 	
 	<!-- 상태변경 모달 -->
 	<div id="myModal" class="modal fade">

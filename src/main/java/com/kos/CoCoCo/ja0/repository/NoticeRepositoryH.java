@@ -13,6 +13,9 @@ public interface NoticeRepositoryH extends CrudRepository<NoticeVO, Long>{
 	
 	@Query(value = "select * from notice where user_user_id = ?1", nativeQuery = true)
 	List<NoticeVO> findByUserId(String userId);
+	
+	@Query(value = "select * from notice where team_team_id = ?1", nativeQuery = true)
+	List<NoticeVO> findByTeamId(Long teamId);
 
 	@Modifying
 	@Query(value = "delete from notice where team_team_id = ?1", nativeQuery = true)

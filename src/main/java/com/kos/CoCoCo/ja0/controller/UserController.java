@@ -2,6 +2,7 @@ package com.kos.CoCoCo.ja0.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
@@ -29,7 +30,9 @@ import com.kos.CoCoCo.ja0.repository.WorkManagerRepositoryH;
 import com.kos.CoCoCo.ja0.repository.WorkRepositoryH;
 import com.kos.CoCoCo.vo.TeamUserVO;
 import com.kos.CoCoCo.vo.UserVO;
+import com.kos.CoCoCo.vo.WorkManagerMultikey;
 import com.kos.CoCoCo.vo.WorkManagerVO;
+import com.kos.CoCoCo.vo.WorkVO;
 
 @Controller
 public class UserController {
@@ -130,19 +133,29 @@ public class UserController {
 	public String deleteUser(HttpSession session, RedirectAttributes attr) {
 		System.out.println("!!!탈퇴!!!");
 		
+		Optional<UserVO> none = uRepo.findById("XXXXX");
+		UserVO userNone;
+		if(none.isPresent()) {
+			userNone = none.get();
+			System.out.println("userNone 있음!!");
+		} else {
+			userNone = UserVO.builder().userId("XXXXX").name("알수없음").build();
+		}
+		
+		
 		UserVO user = (UserVO) session.getAttribute("user");
-		if(!adminCounter(user.getUserId())) {
+		if(!adminCounter(user.getUserId(), userNone)) {
 			attr.addFlashAttribute("msg", "관리자 권한을 모두 넘긴 후 탈퇴가 가능합니다!");
 		}
 		
-		changeAll(user.getUserId()); 
+		changeAll(user.getUserId(), userNone); 
 		
 		/* if(user != null) */ return "redirect:/main";
 		
 		//return "redirect:/logout";
 	}
 
-	private boolean adminCounter(String userId) {
+	private boolean adminCounter(String userId, UserVO userNone) {
 		List<TeamUserVO> adminTeam = tuRepo.findAdminByUserId(userId);
 		
 		if(!adminTeam.isEmpty()) {
@@ -150,7 +163,6 @@ public class UserController {
 				List<TeamUserVO> teamAdmin = tuRepo.findAdminByTeamId(t.getTeamUserId().getTeam().getTeamId());
 				if(teamAdmin.size() == 1) return false;//관리자가 나밖에 없으면 탈퇴 불가
 				
-				UserVO userNone = uRepo.findById("XXXXX").get();
 				for(TeamUserVO a:teamAdmin) {
 					tRepo.findById(a.getTeamUserId().getTeam().getTeamId()).ifPresent(i->{
 						String creator = i.getUser().getUserId();
@@ -165,9 +177,7 @@ public class UserController {
 		return true;
 	}
 	
-	private void changeAll(String userId) {
-		UserVO userNone = uRepo.findById("XXXXX").get();
-		
+	private void changeAll(String userId, UserVO userNone) {
 		//공지
 		nRepo.findByUserId(userId).forEach(i->{
 			i.setUser(userNone);
@@ -188,8 +198,13 @@ public class UserController {
 		
 		//업무 담당자
 		wmRepo.findByUserId(userId).forEach(i->{
-			i.getWorkManagerId().setUser(userNone);
-			wmRepo.save(i);
+			WorkVO work = i.getWorkManagerId().getWork();
+			WorkManagerMultikey wmId = new WorkManagerMultikey(work, userNone);
+			
+			wmRepo.deleteByWorkId(work.getWorkId()); //원래있던거 지우기
+			
+			WorkManagerVO newWork = new WorkManagerVO(wmId);
+			wmRepo.save(newWork); //담당자 새로 저장
 		});
 		
 		//채팅

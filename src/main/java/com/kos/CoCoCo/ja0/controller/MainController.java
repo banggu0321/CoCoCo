@@ -51,12 +51,7 @@ public class MainController {
 	
 	@GetMapping("/CoCoCo")
 	public String teamList(@ModelAttribute PageVO pageVO, HttpSession session, Model model, Principal principal, HttpServletRequest request) {
-		Map<String, Object> map = (Map<String, Object>) RequestContextUtils.getInputFlashMap(request);
-		
-		if(map != null) {
-			String msg = (String) map.get("msg");
-			model.addAttribute("msg", msg);
-		}
+		model.addAttribute("msg", getRedirectMsg(request));
 		
 		UserVO user = uRepo.findById(principal.getName()).get();
 		List<TeamUserVO> teamList = tuRepo.findByUserId(user.getUserId());
@@ -137,12 +132,7 @@ public class MainController {
 	
 	@GetMapping("/main")
 	public String teamMain(HttpSession session, Model model, HttpServletRequest request) {
-		Map<String, Object> map = (Map<String, Object>) RequestContextUtils.getInputFlashMap(request);
-		
-		if(map != null) {
-			String msg = (String) map.get("msg");
-			model.addAttribute("msg", msg);
-		}
+		model.addAttribute("msg", getRedirectMsg(request));
 		
 		UserVO user = (UserVO)session.getAttribute("user");
 		Long teamId = (Long) session.getAttribute("teamId");
@@ -154,5 +144,16 @@ public class MainController {
 		model.addAttribute("userList", tuRepo.findByTeamId(teamId));
 		
 		return "main/teamMain";
+	}
+	
+	private String getRedirectMsg(HttpServletRequest request) {
+		Map<String, Object> map = (Map<String, Object>) RequestContextUtils.getInputFlashMap(request);
+		
+		String msg = "";
+		if(map != null) {
+			msg = (String) map.get("msg");
+		}
+		
+		return msg;
 	}
 }

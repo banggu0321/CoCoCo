@@ -6,6 +6,17 @@
 <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script>
+	$(function() {
+		$(".user_id_input").on("keyup", login_id_check);
+		$(".user_id_input").on("keyup", login_id_check);
+		
+	});
+	
+	function login_id_check() {
+		
+	}
+</script>
 <style>
 body {
 	text-align: center;
@@ -43,7 +54,7 @@ input {
 				<form method="post">
 					<p>
 						<label for="userId"></label>
-						<input type="text" id="userId"
+						<input type="text" id="userId" class="user_id_input"
 							name="username" placeholder="아이디" />
 						<!-- 이름변경불가  : username -->
 					</p>

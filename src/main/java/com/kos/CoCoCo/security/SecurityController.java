@@ -34,6 +34,7 @@ public class SecurityController {
 		System.out.println("/auth/accessDenied");
 		return "auth/accessDenied";
 	}
+	
 	@GetMapping("/auth/join")
 	public String join() {
 	  return "auth/joinForm";	
@@ -49,16 +50,8 @@ public class SecurityController {
 	  return "redirect:/auth/login";	
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	@RequestMapping("/auth/test")
+
+	@GetMapping("/test1")
 	public void test() {
 		System.out.println("/auth/test1");
 	}

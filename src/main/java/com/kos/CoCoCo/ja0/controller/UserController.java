@@ -131,28 +131,26 @@ public class UserController {
 	@Transactional
 	@GetMapping("/user/delete")
 	public String deleteUser(HttpSession session, RedirectAttributes attr) {
-		System.out.println("!!!탈퇴!!!");
-		
 		Optional<UserVO> none = uRepo.findById("XXXXX");
 		UserVO userNone;
 		if(none.isPresent()) {
 			userNone = none.get();
-			System.out.println("userNone 있음!!");
 		} else {
 			userNone = UserVO.builder().userId("XXXXX").name("알수없음").build();
 		}
 		
-		
 		UserVO user = (UserVO) session.getAttribute("user");
 		if(!adminCounter(user.getUserId(), userNone)) {
 			attr.addFlashAttribute("msg", "관리자 권한을 모두 넘긴 후 탈퇴가 가능합니다!");
+			return "redirect:/main";
 		}
 		
 		changeAll(user.getUserId(), userNone); 
 		
-		/* if(user != null) */ return "redirect:/main";
+		tuRepo.deleteByUserId(user.getUserId());
+		uRepo.deleteById(user.getUserId());
 		
-		//return "redirect:/logout";
+		return "redirect:/logout";
 	}
 
 	private boolean adminCounter(String userId, UserVO userNone) {
@@ -197,15 +195,16 @@ public class UserController {
 		});
 		
 		//업무 담당자
-		wmRepo.findByUserId(userId).forEach(i->{
-			WorkVO work = i.getWorkManagerId().getWork();
-			WorkManagerMultikey wmId = new WorkManagerMultikey(work, userNone);
+		List<WorkManagerVO> wmList =  wmRepo.findByUserId(userId);
+		for(WorkManagerVO wm:wmList) {
+			WorkManagerMultikey wmId = new WorkManagerMultikey(wm.getWorkManagerId().getWork(), userNone);
 			
-			wmRepo.deleteByWorkId(work.getWorkId()); //원래있던거 지우기
+			wmRepo.delete(wm); //원래있던거 지우기
+			//System.out.println("[delete workManager]"+wm);
 			
 			WorkManagerVO newWork = new WorkManagerVO(wmId);
 			wmRepo.save(newWork); //담당자 새로 저장
-		});
+		}
 		
 		//채팅
 		cRepo.findByUserId(userId).forEach(i->{

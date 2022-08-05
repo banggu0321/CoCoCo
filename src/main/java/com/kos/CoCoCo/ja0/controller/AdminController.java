@@ -179,7 +179,7 @@ public class AdminController {
 		cRepo.deleteByTeamId(teamId); //채팅
 		
 		nRepo.findByTeamId(teamId).forEach(i -> {//공지파일
-			nfRepo.deleteByNoticeId(teamId);
+			nfRepo.deleteByNoticeId(i.getNoticeId());
 		});
 		
 		nRepo.deleteByTeamId(teamId); //공지

@@ -35,6 +35,10 @@ public interface TeamUserRepositoryH
 	List<TeamUserVO> findAdminByTeamId(Long teamId);
 	
 	@Modifying
+	@Query(value = "delete from team_user where user_user_id = ?1", nativeQuery = true)
+	void deleteByUserId(String userId);
+	
+	@Modifying
 	@Query(value = "delete from team_user where team_team_id = ?1", nativeQuery = true)
 	void deleteByTeamId(Long teamId);
 	

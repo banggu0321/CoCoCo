@@ -16,6 +16,10 @@ public interface WorkManagerRepositoryH extends CrudRepository<WorkManagerVO, Wo
 	List<WorkManagerVO> findByUserId(String userId);
 	
 	@Modifying
+	@Query(value="delete from work_manager where user_user_id=?1", nativeQuery = true)
+	void deleteByUserId(String userId);
+	
+	@Modifying
 	@Query(value="delete from work_manager where work_work_id=?1", nativeQuery = true)
 	void deleteByWorkId(Long workId);
 }

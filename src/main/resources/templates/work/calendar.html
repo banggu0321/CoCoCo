@@ -136,9 +136,9 @@
 				initialView : 'dayGridMonth',
 				events : totaleventlist,
 				headerToolbar: {
-				      left: 'today myWorkButton,totalButton' , //dayGridMonth,timeGridWeek,timeGridDay,list
+				      left: 'totalButton,myWorkButton' , //dayGridMonth,timeGridWeek,timeGridDay,list
 				      center: 'prev,title,next',
-				      right: 'addEventButton'
+				      right: 'today addEventButton'
 				    },
 				customButtons : {
 					myWorkButton:{
@@ -165,13 +165,15 @@
 										start : data.workStart,
 										end : date_end,
 										color : 'green',
+										groupId : data.workStatus,
 									});
-								}else{
+								}else{ //대기
 									myeventlist.push({
 										id: data.workId,
 										title : data.workTitle,
 										start : data.workStart,
-										end : date_end
+										end : date_end,
+										groupId : data.workStatus, //plan,ongoing
 									});
 								}
 							});
@@ -179,8 +181,13 @@
 							calendar.removeAllEvents(); //event 초기화
 							calendar.addEventSource(myeventlist); //event 추가
 							calendar.render(); //다시 렌더링
-							$(".fc-myWorkButton-button").hide();
-							$(".fc-totalButton-button").show();
+
+							$(".fc-totalButton-button").removeClass("btn-cococo");
+							$(".fc-totalButton-button").addClass("btn-outline-cococo");
+							$(".fc-myWorkButton-button").removeClass("btn-outline-cococo");
+							$(".fc-myWorkButton-button").addClass("btn-cococo");
+							/* $(".fc-myWorkButton-button").hide();
+							$(".fc-totalButton-button").show(); */
 						}
 					},
 					totalButton:{
@@ -192,8 +199,13 @@
 							calendar.removeAllEvents(); //event 초기화
 							calendar.addEventSource(totaleventlist); //event 추가
 							calendar.render(); //다시 렌더링
-							$(".fc-myWorkButton-button").show();
-							$(".fc-totalButton-button").hide();
+
+							$(".fc-totalButton-button").removeClass("btn-outline-cococo");
+							$(".fc-totalButton-button").addClass("btn-cococo");
+							$(".fc-myWorkButton-button").removeClass("btn-cococo");
+							$(".fc-myWorkButton-button").addClass("btn-outline-cococo");
+							/* $(".fc-myWorkButton-button").show();
+							$(".fc-totalButton-button").hide(); */
 						}
 					},
 					addEventButton : {
@@ -211,11 +223,12 @@
 				editable : false, // false로 변경 시 draggable 작동 x 
 				displayEventTime : false, // 시간 표시 x
 				//navLinks : true, //달력상의 날짜를 클릭할 수 있는지 여부, 클릭시 일달력/주달력으로 넘어감
-				//dayMaxEventRows: 4, // for all non-TimeGrid views(more) 행길이 설정 가능->contentHeight로 설정
+				dayMaxEventRows: true, // for all non-TimeGrid views(more) 행길이 설정 가능->contentHeight로 설정
 				//dayMaxEvents:4, //X
 				//contentHeight: 600, //행 길이
-				height: "auto",
-				//locale: 'ko' //한국어
+				//height: "auto",
+				aspectRatio: 1.5,//종횡비 설정
+				//locale: 'ko', //한국어
 				selectable: true, //날짜 선택 가능
 				select: function(info) {
 					var date_end = dateEndMinus(info.endStr);
@@ -261,16 +274,34 @@
 						}
 					});	
 					//alert(eventObj.groupId);
-					if(eventObj.groupId == "plan" || eventObj.groupId == "ongoing"){
-						//$(".WorkStatusUpdateModalBtn").disabled = false;
+					if(eventObj.groupId == "plan"){
 						$(".WorkStatusUpdateModalBtn").attr("disabled", false);
+						$(".WorkStatusUpdateModalBtn").html('->진행');
+					}else if(eventObj.groupId == "ongoing"){
+						$(".WorkStatusUpdateModalBtn").attr("disabled", false);		
+						$(".WorkStatusUpdateModalBtn").html('->완료');				
 					}else{
 						$(".WorkStatusUpdateModalBtn").attr("disabled", true);
+						$(".WorkStatusUpdateModalBtn").html('완료됨');		
 					}
-				}
+				},
+				/* viewSkeletonRender: function(info) {
+			    	calendar.querySelectorAll('.fc-button').forEach((button) => {
+			    		if(button.innerText == '업무 추가') {
+			    			button.classList.add('btn-outline-cococo');
+			    		}
+			    	});
+			    } */
 			});
 			calendar.render(); //다시 렌더링
-			$(".fc-totalButton-button").hide();
+			//$(".fc-today-button").addClass("btn-cococo");
+			$(".fc-totalButton-button").addClass("btn-cococo");
+			$(".fc-myWorkButton-button").addClass("btn-outline-cococo");
+			$(".fc-addEventButton-button").addClass("btn-outline-cococo");
+			$(".fc-prev-button").addClass("btn-chevron");
+			$(".fc-next-button").addClass("btn-chevron");
+			/* $(".fc-totalButton-button").hide(); */
+			//.fc-prev-button, .fc-next-button
 		});
 		
 		//응답실패시

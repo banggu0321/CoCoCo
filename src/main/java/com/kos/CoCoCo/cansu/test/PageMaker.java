@@ -32,16 +32,22 @@ public class PageMaker {
 		this.totalPageNum = result.getTotalPages();
 		this.pageList = new ArrayList<>();
 		calcPages();
+//		calcPagesBeta();
 	}
 	
+	private void calcPagesBeta() {
+		//보여줄 페이지 개수 설정
+	}
+
 	private void calcPages() {
 		int tempEndNum = (int)(Math.ceil(this.currentPageNum/10.0)*10);
 		int startNum = tempEndNum - 9;
 		Pageable startPage = this.currentPage;
-		
+				
 		//move to start Pageble
 		for(int i=startNum; i<this.currentPageNum; i++) {
 			startPage = startPage.previousOrFirst();
+			System.out.println("calcPage.startPage: "+startPage);
 		}
 		this.prevPage = startPage.getPageNumber() <= 0 ? null : startPage.previousOrFirst();
 		

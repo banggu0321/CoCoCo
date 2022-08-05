@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kos.CoCoCo.cansu.test.BoardCategoryRepositoryTestSu;
 import com.kos.CoCoCo.cansu.test.BoardRepositoryTestSu;
+import com.kos.CoCoCo.cansu.test.PageVO;
 import com.kos.CoCoCo.cansu.test.ReplyRepositoryTestSu;
 import com.kos.CoCoCo.cansu.test.TeamRepositoryTestSu;
 import com.kos.CoCoCo.cansu.test.UserRepositoryTestSu;
@@ -55,11 +56,16 @@ public class sampleRESTController {
 	BoardCategoryRepositoryTestSu boardcateRP;
 	
 	@GetMapping("/getBoardPage/{pageNumber}")
-	public List<BoardVO> boardlistByPageNum(@PathVariable String pageNumber, Model model){
-		String userID = "0720";  //login -> id
+	public List<BoardVO> boardlistByPageNum(@PathVariable String pageNumber, Model model, Principal principal){
+		
+		System.out.println("principal.getName():" + principal.getName());
+		String userID = principal.getName();  //login -> id
 		System.out.println("page number: "+pageNumber);
 		
-		Pageable pageable = PageRequest.of(Integer.valueOf(pageNumber)-1, 4, Direction.DESC, "boardId");
+		PageVO pageTemp = new PageVO();
+		int pageSize = pageTemp.getSize();
+		
+		Pageable pageable = PageRequest.of(Integer.valueOf(pageNumber)-1, pageSize, Direction.DESC, "boardId");
 		Page<BoardVO> result = boardRP.findAll(boardRP.makePredicate(null, null), pageable);
 		
 		List<BoardVO> boardList = result.getContent();

@@ -1,18 +1,26 @@
 <!DOCTYPE html>
-<html xmlns:th="www.thymeleaf.org">
+<html xmlns:th="www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="~{/layout/layout1}"
+>
 <head>
 <style>
+
 #boardMain{
-margin: 0 auto;
-width: 70%;
+	width: 900px;
+	margin: 0 auto;
+	margin-top: 5%;
 }
+
 #boardMain1{
 display: flex;
 margin-bottom: -15px;  
+
 }
 #boardMainSub1{
 position:relative;
 left:10%;
+;
 }
 #boardMainSub2{
 text-align:right;
@@ -23,6 +31,11 @@ left:45%;
 #boardMain2{
 margin: 0 auto;
 width:80%;
+background: white
+}
+#boardMainNav{
+display: flex;
+justify-content: center;
 }
 </style>
 <style>
@@ -67,13 +80,12 @@ width:80%;
 }
 </style>
 <meta charset="utf-8">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <title>board main page</title>
 </head>
 <body>
 
+
+<div layout:fragment="inner_content"  class="inner_content">
 	<div id="boardMain">
 		<div id="boardMain1">
 			<div id="boardMainSub1">
@@ -88,9 +100,8 @@ width:80%;
 				<button id="insertBoard" type="button" class="btn btn-primary">게시판
 					만들기</button>
 			</div>
-		</div>
-		<hr>
-
+		</div><br><br>
+		
 		<div id="boardMain2">
 			<table class="table table-hover">
 				<thead>
@@ -104,9 +115,12 @@ width:80%;
 				<tbody id="replyTable"></tbody>
 			</table>
 
-			<nav>
+			<nav id="boardMainNav">
 				<ul class="pagination">
-					<li th:each="p:${result.pageList}"><a id="navPage">[[${p.pageNumber}+1]]</a></li>
+				
+					<li th:if="${result.prevPage}" class="page-item"><a href="#" class="page-link">PREV</a></li>
+					<li th:each="p:${result.pageList}" class="page-item"><a id="navPage" class="page-link">[[${p.pageNumber}+1]]</a></li>
+					<li th:if="${result.nextPage}" class="page-item"><a id="nextPagelist" class="page-link">[[${result.nextPage.getPageNumber()}]]</a></li>
 				</ul>
 			</nav>
 		</div>
@@ -119,8 +133,8 @@ width:80%;
 		<!-- Modal content -->
 		<div class="modal-content">
 			<div class="modal-header">
-				<span id="closeModal" class="close">&times;</span>
-				<h5>카테고리 목록</h5>
+			<h5>카테고리 목록</h5>
+			<span id="closeModal" class="close">&times;</span>	
 			</div>
 			<div class="modal-body">
 			카테고리 이름: 
@@ -162,12 +176,21 @@ width:80%;
 		});
 	}
 	
+	var navPageList = document.getElementById("nextPagelist");	
 	</script>
 
 	<script th:inline="javascript">
 		formA.onclick = function() {
 			alert("form clicked");
 		}
+		
+		navPageList.onclick = function(){
+			let temp = navPageList.text;
+			alert("next pagelist clicked: "+temp);
+			
+			//location.href="/getNextBoard/"+temp;
+		}
+
 
 		insertNameBtn.onclick = function() {
 			alert(insertName.value);
@@ -247,5 +270,6 @@ width:80%;
 					+ date.getDate();
 		}
 	</script>
+</div>
 </body>
 </html>

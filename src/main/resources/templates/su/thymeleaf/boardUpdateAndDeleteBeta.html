@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="www.thymeleaf.org">
+<html xmlns:th="www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="~{/layout/layout1}"
+>
 <head>
 <style>
-#boardDetail{
-margin: 0 auto;
-width: 70%;
-}
 #insertReply{
 position: relative;
 left:10%;
@@ -27,7 +26,6 @@ width:60%;
 float:left;
 width:20%;
 }
-
 #replyContent{
 width:60%;
 }
@@ -35,36 +33,32 @@ width:60%;
 padding-top: 2%;
 }
 </style>
+
 <meta charset="utf-8">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-
 <title>board UD beta page</title>
-<script type="text/javascript">
-	window.onload = function() {
-		document.getElementById("boardDeleteBtn").addEventListener('click',
-				hello);
-		document.getElementById("boardUCancel").addEventListener('click',updateCancle);
-	}
-	
-	function updateCancle(){
-		window.location.href = "/boardSampleBeta";
-	}
-	
-	function hello() {
-		var boardID = document.getElementById("bid").value;
-		window.location.href = "/boardDeleteBeta?bid=" + boardID;
-	}
-</script>
-
 <script th:inline="javascript" th:src="@{'js/RESTreply.js'}"></script>
 <script th:inline="javascript">
 $(document).ready(function() {
+});
+
+window.onload = function() {
+	
 	var boardID = "[[${boardDetail.boardId}]]"; 	
 	replyREST.getAllReply(boardID,printList);
-});
+	
+	document.getElementById("boardDeleteBtn").addEventListener('click',
+			hello);
+	document.getElementById("boardUCancel").addEventListener('click',updateCancle);
+}
+
+function updateCancle(){
+	window.location.href = "/boardSampleBeta";
+}
+
+function hello() {
+	var boardID = document.getElementById("bid").value;
+	window.location.href = "/boardDeleteBeta?bid=" + boardID;
+}
 
 
 function printList(list) {
@@ -99,8 +93,10 @@ function formatDate(timeValue) {
 </script>
 </head>
 <body>
-<div id="boardDetail">
 
+<div layout:fragment="inner_content" class="inner_content">
+
+<div id="boardDetail">
 		<div id="boardUpdate">
 			<form method="post" action="/postBoardUpdateBeta" class="form-group">
 				<input id="bid" name="boardID" type="hidden" th:value="${boardDetail.boardId}">
@@ -165,6 +161,6 @@ function formatDate(timeValue) {
 			</div>
 		</div>
 	</div>
-	
+</div>
 </body>
 </html>

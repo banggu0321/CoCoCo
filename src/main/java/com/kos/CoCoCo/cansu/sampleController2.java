@@ -8,7 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,10 +50,27 @@ public class sampleController2 {
 	@Autowired
 	BoardCategoryRepositoryTestSu boardcateRP;
 	
-//	@GetMapping("/boardSampleBeta")
-//	public String boardlist() {			
+
+	@GetMapping("/getNextBoard/{pageNumber}")
+	public String boardListByPageList(@PathVariable String pageNumber, PageVO vo, Model model, Principal principal){
+		
+		String userID = principal.getName();
+		PageVO voTemp = new PageVO();
+		
+//		Pageable page = vo.makePageable(Integer.valueOf(pageNumber), "boardId");
+//		Pageable page = PageRequest.of(Integer.valueOf(pageNumber), voTemp.getSize(), Direction.DESC, "boardId");
+//		Page<BoardVO>  result = boardRP.findAll(boardRP.makePredicate(null, null), page);
+		
+//		model.addAttribute("result", new PageMaker(result));
+		
+//		System.out.println("pageNumber: "+pageNumber);
+//		System.out.println("page: "+page);
+//		System.out.println("result: "+result);
+//		System.out.println("userID: "+userID);
+		
 //		return "su/thymeleaf/boardMain";
-//	}
+		return null;
+	}
 	
 	@GetMapping("/boardSampleBeta")
 	public String boardlist(PageVO vo, Model model) {	

@@ -116,12 +116,12 @@
 	<div class="my_menu">
 		<div id="myProfile">
 			<img th:src="${session.user.image}?:@{/images/userImg.svg}" class="rounded-circle">
-			<img id="editProfile" class="rounded-circle" th:src="@{/images/editProfile.png}" data-toggle="modal" data-target="#myModal2">
+			<img id="editProfile" class="rounded-circle" th:src="@{/images/editProfile.png}" data-toggle="modal" data-target="#MyPageModal">
 			<img class="admin" th:if="${session.teamUser.userRole == 'ADMIN'}" th:src="@{/images/crown.svg}">
 					
 			<div id="myInfo">
 				<div id="myName">[[${session.user.name}]]
-					<button th:text="${session.user.status}?:상태설정" class="btn btn-light btn-sm statusBtn" data-toggle="modal" data-target="#myModal"></button>
+					<button th:text="${session.user.status}?:상태설정" class="btn btn-light btn-sm statusBtn" data-toggle="modal" data-target="#statusUpdateModal"></button>
 				</div>
 				[[${session.user.company}]]
 			</div>
@@ -152,7 +152,7 @@
 	</div>
 	
 	<!-- user profile 모달 -->
-	<div id="myModal2" class="modal fade">
+	<div id="MyPageModal" class="modal fade">
 		<div class="modal-dialog">
 	    <!-- Modal content -->
 	        <div class="modal-content">
@@ -190,7 +190,7 @@
 		        </div>
 		        
 				<div class="modal-footer">
-			    	<button class="btn btn-cococo showForm" data-toggle="modal" data-target="#myModal3">수정</button>
+			    	<button class="btn btn-cococo showForm" data-toggle="modal" data-target="#updateMyProfileModal">수정</button>
 			    	<button type="button" class="btn btn-light" data-dismiss="modal">취소</button>
 	        	</div>
 	        </div>
@@ -198,7 +198,7 @@
 	</div> <!-- Modal --> 
 	
 	<!-- user profile 수정 모달 -->
-	<div id="myModal3" class="modal fade">
+	<div id="updateMyProfileModal" class="modal fade">
 		<div class="modal-dialog">
 	    <!-- Modal content -->
 	        <div class="modal-content">
@@ -244,7 +244,7 @@
 	</div> <!-- Modal --> 
 	
 	<!-- 상태변경 모달 -->
-	<div id="myModal" class="modal fade">
+	<div id="statusUpdateModal" class="modal fade">
 		<div class="modal-dialog">
 	    <!-- Modal content -->
 	        <div class="modal-content">

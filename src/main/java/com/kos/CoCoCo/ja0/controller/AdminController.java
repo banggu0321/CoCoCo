@@ -179,24 +179,24 @@ public class AdminController {
 		return "redirect:/admin/team";
 	}
 	
-	public void deleteAll(Long teamId) {
-		nRepo.deleteByTeamId(teamId);
-		cRepo.deleteByTeamId(teamId);
+	private void deleteAll(Long teamId) {
+		nRepo.deleteByTeamId(teamId); //공지
+		cRepo.deleteByTeamId(teamId); //채팅
 		
 		wRepo.findByTeamId(teamId).forEach(i -> {
-			wmRepo.deleteByWorkId(i.getWorkId());
+			wmRepo.deleteByWorkId(i.getWorkId()); //업무 담당자
 		});;
 		
-		wRepo.deleteByTeamId(teamId);
+		wRepo.deleteByTeamId(teamId); //업무
 		
 		bRepo.findByTeamId(teamId).forEach(i -> {
-			rRepo.deleteByBoardId(i.getBoardId());
+			rRepo.deleteByBoardId(i.getBoardId()); //댓글
 		});
 		
-		bRepo.deleteByTeamId(teamId);
-		bcRepo.deleteByTeamId(teamId);
-		tuRepo.deleteByTeamId(teamId);
-		tRepo.deleteById(teamId);
+		bRepo.deleteByTeamId(teamId); //게시글
+		bcRepo.deleteByTeamId(teamId); //카테고리
+		tuRepo.deleteByTeamId(teamId); //teamUser
+		tRepo.deleteById(teamId); //team
 	}
 	
 	@ResponseBody

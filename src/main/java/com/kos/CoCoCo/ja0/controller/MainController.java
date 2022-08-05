@@ -136,7 +136,14 @@ public class MainController {
 	}
 	
 	@GetMapping("/main")
-	public String teamMain(HttpSession session, Model model) {
+	public String teamMain(HttpSession session, Model model, HttpServletRequest request) {
+		Map<String, Object> map = (Map<String, Object>) RequestContextUtils.getInputFlashMap(request);
+		
+		if(map != null) {
+			String msg = (String) map.get("msg");
+			model.addAttribute("msg", msg);
+		}
+		
 		UserVO user = (UserVO)session.getAttribute("user");
 		Long teamId = (Long) session.getAttribute("teamId");
 		TeamVO team = tRepo.findById(teamId).get();

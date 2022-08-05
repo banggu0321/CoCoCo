@@ -3,6 +3,8 @@ package com.kos.CoCoCo.ja0.awsS3;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -50,9 +52,17 @@ public class AwsS3 {
     	if(targetFile == null) return;
     	
     	String key = targetFile.substring(54);
+//    	String encodeKey="";
+//    	
+//    	try {
+//			encodeKey = URLDecoder.decode(key, "utf-8"); //한글 변환
+//			amazonS3.deleteObject(bucket, encodeKey);
+//		} catch (UnsupportedEncodingException e) {
+//			e.printStackTrace();
+//		}
+		
+    	amazonS3.deleteObject(bucket, key);
     	
-        amazonS3.deleteObject(bucket, key);
-        
         System.out.println("[delete file] " + key);
     }
 }

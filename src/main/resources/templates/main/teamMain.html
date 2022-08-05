@@ -15,8 +15,14 @@
 
 <script type="text/javascript">
 	$(function() {
+		var msg = "[[${msg}]]";
+		if(msg!="") {
+			alert(msg);
+		}
+		
 		$(".showForm").click(setModalVal);
 		$("#myProfileUpdate").click(myProfileUpdate);
+		$("#userDelete").click(userDelete);
 		$("#delImg").click(delMyImg);
 		$("#img").change(makeView);
 		$(".statusBtn").click(myStatus);
@@ -39,11 +45,24 @@
 		$("input[name='company']").val(company);
 		$("input[name='newPhoto']").val("");
 		$(".myImg").attr("src", img?img:"/images/userImg.svg");
-		
 	}
 	
 	function myProfileUpdate() {
+		var name = $("input[name='name']");
+		
+		if(name.val() == "") {
+			alert("이름은 필수입니다!");
+			name.focus();
+			return;
+		}
+		
 		$("#modifyForm").submit();
+	}
+	
+	function userDelete() {
+		if(confirm("정말 탈퇴하시겠습니까?\n삭제된 정보는 복구되지않습니다.")){
+			location.href="/user/delete";
+		}
 	}
 	
 	function delMyImg() {
@@ -216,7 +235,8 @@
 		        </div>
 		        
 				<div class="modal-footer">
-			    	<button id = "myProfileUpdate" class="btn btn-cococo">수정</button>
+			    	<button id="myProfileUpdate" class="btn btn-cococo">수정</button>
+			    	<button id="userDelete" class="btn btn-outline-cococo">탈퇴</button>
 			    	<button type="button" class="btn btn-light" data-dismiss="modal">취소</button>
 	        	</div>
 	        </div>

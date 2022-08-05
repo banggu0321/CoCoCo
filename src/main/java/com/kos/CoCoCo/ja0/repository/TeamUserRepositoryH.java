@@ -26,6 +26,14 @@ public interface TeamUserRepositoryH
 			nativeQuery = true)
 	List<TeamUserVO> findByUserId(String userId);
 	
+	@Query(value = "select * from team_user where user_user_id = ?1 and user_role = 'ADMIN' order by 1",
+			nativeQuery = true)
+	List<TeamUserVO> findAdminByUserId(String userId);
+	
+	@Query(value = "select * from team_user where team_team_id = ?1 and user_role = 'ADMIN' order by 1",
+			nativeQuery = true)
+	List<TeamUserVO> findAdminByTeamId(Long teamId);
+	
 	@Modifying
 	@Query(value = "delete from team_user where team_team_id = ?1", nativeQuery = true)
 	void deleteByTeamId(Long teamId);

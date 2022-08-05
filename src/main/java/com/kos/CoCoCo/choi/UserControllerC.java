@@ -27,9 +27,7 @@ public class UserControllerC {
     	return user==null?0:1;
 
     }
-	
    
 }
-
 //1.Controller ->2.Service ->3.Repository ->4.Mapper
 //5.Mapper ->6.Repository ->7.Service  ->8.Controller

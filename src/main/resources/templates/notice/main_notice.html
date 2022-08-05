@@ -14,8 +14,9 @@
 	<div>
 		<div class="wrap_notice">
 			<h2>공지사항</h2>
-			<div class="wrap_noticelist">
-							<table class="notice_table" th:with="mnlist=${mnlist}">
+			<div class="wrap_noticelist"  th:with="mnlist=${mnlist}">
+				<table class="notice_table">
+					<thead id="noticenull" th:if="${mnlist}==null"><tr><td>등록된 공지가 없습니다.</td></tr></thead>
 					<tbody>
 						<tr th:each="notice:${mnlist}" th:if="${noticeStat.index}<3">
 							<td class="fixed" th:if="${notice.fixedYN}==1" th:title="${notice.noticeText}">

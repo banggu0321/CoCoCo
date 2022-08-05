@@ -6,7 +6,6 @@
 <head>
 <meta charset="UTF-8">
 
-<link rel="stylesheet" th:href="@{/css/ja0/admincss.css}" />
 <link rel="stylesheet" th:href="@{/css/ja0/adminUsercss.css}" />
 
 <title>CoCoCo | [[${team.teamName}]]</title>
@@ -67,15 +66,8 @@
 </script>
 </head>
 <body>
-<div layout:fragment="my_menu">
-	<div class="my_menu">
-		<div>
-			<a th:href="@{/admin/team}" id="adminTeam">워크스페이스 관리</a>
-		</div>
-		<div>
-			<a th:href="@{/admin/user}" id="adminUser">유저관리</a>
-		</div>
-	</div>
+<div layout:fragment="my_menu" class="my_menu">
+	<div th:replace="~{admin/adminSide}"></div>
 </div>
 
 <div layout:fragment="inner_content">
@@ -104,7 +96,7 @@
 				
 				<td th:if="${user.teamUserId.user.userId == user.teamUserId.team.user.userId || user.teamUserId.user.userId == session.user.userId}"></td>
 				<td th:if="${user.teamUserId.user.userId != user.teamUserId.team.user.userId && user.teamUserId.user.userId != session.user.userId}" 
-						data-toggle="modal" data-target="#myModal">
+						data-toggle="modal" data-target="#updateUserRoleModal">
 					<img th:src="@{/images/updateRole.svg}" class="updateUser" th:user-data="${user.teamUserId.user.userId}" alt="update">
 				</td>
 				
@@ -117,7 +109,7 @@
 	</div>
 	
 	<!-- 권한변경 모달 -->
-	<div class="modal fade" id="myModal">
+	<div class="modal fade" id="updateUserRoleModal">
 		<div class="modal-dialog">
 			<!-- Modal content -->
 			<div class="modal-content">
@@ -138,7 +130,7 @@
 				</div>
 				<div class="modal-footer">
 					<button id = "updateBtn" class="btn btn-cococo">변경</button>
-	    			<button type="button" class="btn btn-light" data-dismiss="modal">취소</button> <!--  id="sprintSettingModalClose" -->
+	    			<button type="button" class="btn btn-light" data-dismiss="modal">취소</button> 
 				</div>
 			</div>
 		</div>

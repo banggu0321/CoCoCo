@@ -16,11 +16,46 @@
     text-align: center;
     position: relative;
     border-bottom: 1px solid #eee;
+    height: 230px;
 }
 
 #myProfile img{
 	width: 100px;
 	height: 100px;
+}
+
+#modalMyImg {
+	position: relative;
+    width: 160px;
+    height: 160px;
+}
+
+.myImg, .myProfileImg {
+	width: 150px;
+	height: 150px;
+	margin: 0px 160px;
+}
+
+#delImg {
+	width: 25px;
+	height: 25px;
+	position: absolute;
+    right: -105%;
+    top: 0%;
+}
+
+#delImg:hover {
+	cursor: pointer;
+}
+
+#modalMyInfo label, #modifyForm label {
+	font-size: 18px;
+    font-weight: bold;
+    margin: 0.5rem 0 0 0;
+}
+
+input[type=file] {
+    padding: 3px;
 }
 
 #myName, #userName {
@@ -137,6 +172,18 @@ img#status {
     top: 0%;
     width: 30px;
     height: 30px;
+}
+
+#myProfile img#editProfile {
+	position: absolute;
+    right: 32%;
+    bottom: 38%;
+    width: 23px;
+    height: 23px;
+}
+
+#editProfile:hover {
+	cursor: pointer;
 }
 
 .userProfile:hover #userInfo {

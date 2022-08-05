@@ -15,7 +15,7 @@
 <body>
 <div layout:fragment="content">
 	<div id="mainTitle">
-		<button data-toggle="modal" data-target="#myModal2" class="btn btn-cococo inviteBtn">초대코드</button>
+		<button data-toggle="modal" data-target="#enterTeamModal" class="btn btn-cococo inviteBtn">초대코드</button>
 		<h3 id="title">WORKSPACE LIST</h3>
 	</div>
 	
@@ -38,7 +38,7 @@
 				<p class="info">[[${team.teamUserId.team.teamInfo}]]</p>	
 			</div>
 			
-			<div class="addTeam" data-toggle="modal" data-target="#myModal">+</div>
+			<div class="addTeam" data-toggle="modal" data-target="#addTeamModal">+</div>
 		
 		</div>
 		
@@ -55,7 +55,7 @@
 	</form>
 	
 	<!-- 워크스페이스 등록 모달 -->
-    <div class="modal fade" id="myModal">
+    <div class="modal fade" id="addTeamModal">
 		<div class="modal-dialog">
 	        <!-- Modal content -->
 	        <div class="modal-content">
@@ -63,7 +63,7 @@
 	           		<h4 class="modal-title">NEW WORKSPACE</h4>
 	       		</div>
 	       		
-	        	<div class="modal-body modalBody1">
+	        	<div class="modal-body">
 	        		<img th:src="@{/images/teamImg.png}" class="showImg rounded">
 	        		
 	        		<form id="addTeamForm" method="post" enctype="multipart/form-data">
@@ -91,7 +91,7 @@
     </div> <!-- Modal --> 
     
 	<!-- 초대코드 입력 모달 -->
-    <div class="modal fade" id="myModal2">
+    <div class="modal fade" id="enterTeamModal">
 		<div class="modal-dialog">
 	        <!-- Modal content -->
 	        <div class="modal-content">
@@ -110,7 +110,7 @@
     </div> <!-- Modal --> 
     
     <!-- 상태변경 모달 -->
-	<div class="modal fade" id="myModal3">
+	<div class="modal fade" id="updateStatusModal">
 		<div class="modal-dialog">
 	        <!-- Modal content -->
 	        <div class="modal-content">
@@ -146,7 +146,7 @@
 		}
 		
 		if("[[${session.user.status}]]" == "") {
-			$("#myModal3").modal("show");
+			$("#updateStatusModal").modal("show");
 		}
 		
 		$(".pagingBtn img").click(movePage);

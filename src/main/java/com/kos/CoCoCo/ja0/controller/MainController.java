@@ -51,12 +51,7 @@ public class MainController {
 	
 	@GetMapping("/CoCoCo")
 	public String teamList(@ModelAttribute PageVO pageVO, HttpSession session, Model model, Principal principal, HttpServletRequest request) {
-		Map<String, Object> map = (Map<String, Object>) RequestContextUtils.getInputFlashMap(request);
-		
-		if(map != null) {
-			String msg = (String) map.get("msg");
-			model.addAttribute("msg", msg);
-		}
+		model.addAttribute("msg", getRedirectMsg(request));
 		
 		UserVO user = uRepo.findById(principal.getName()).get();
 		List<TeamUserVO> teamList = tuRepo.findByUserId(user.getUserId());
@@ -106,23 +101,6 @@ public class MainController {
 		return "redirect:/CoCoCo";
 	}
 	
-	@GetMapping("/updateStatus/{str}/{status}")
-	public String updateStatus(@PathVariable String str, @PathVariable String status, HttpSession session) {
-		UserVO user = (UserVO) session.getAttribute("user");
-		
-		uRepo.findById(user.getUserId()).ifPresent(i->{
-			i.setStatus(status);
-			uRepo.save(i);
-			session.setAttribute("user", i);
-		});
-		
-		if(str.equals("t")) {
-			return "redirect:/main";
-		}
-		
-		return "redirect:/CoCoCo";
-	}
-	
 	@ResponseBody
 	@PostMapping("/findTeam/{code}")
 	public Long findTeam(@PathVariable String code, HttpSession session, Model model) {
@@ -150,11 +128,12 @@ public class MainController {
 	@GetMapping("/setTeamId/{teamId}")
 	public void setTeamId(@PathVariable Long teamId, HttpSession session) {
 		session.setAttribute("teamId", teamId);
-		System.out.println("세션에 teamId 저장!!");
 	}
 	
 	@GetMapping("/main")
-	public String teamMain(HttpSession session, Model model) {
+	public String teamMain(HttpSession session, Model model, HttpServletRequest request) {
+		model.addAttribute("msg", getRedirectMsg(request));
+		
 		UserVO user = (UserVO)session.getAttribute("user");
 		Long teamId = (Long) session.getAttribute("teamId");
 		TeamVO team = tRepo.findById(teamId).get();
@@ -165,5 +144,16 @@ public class MainController {
 		model.addAttribute("userList", tuRepo.findByTeamId(teamId));
 		
 		return "main/teamMain";
+	}
+	
+	private String getRedirectMsg(HttpServletRequest request) {
+		Map<String, Object> map = (Map<String, Object>) RequestContextUtils.getInputFlashMap(request);
+		
+		String msg = "";
+		if(map != null) {
+			msg = (String) map.get("msg");
+		}
+		
+		return msg;
 	}
 }

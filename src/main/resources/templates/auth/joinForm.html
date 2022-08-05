@@ -36,26 +36,30 @@
 		var pw1 = $(".pw_input").val(); // pw 입력란
 		var pw2 = $(".pw2_input").val(); // pw 확인 입력란
 		var name = $(".name_input").val(); // 이름 입력란
+		var idCheck = $("#idCheckBtn").val();
 
-		/* 아이디 유효성검사 */
-		if (id.length == 0 || id == '') {
-		alert("아이디를 입력하세요")
-		
-		/* 이름 유효성검사 */
-		} else if (name.length == 0 || name == '') {
-		alert("이름을 입력하세요")
-		
-		/* 비밀번호 유효성검사 */
-		} else if (pw.length == 0 || pw == '') {
-		alert("비밀번호를 입력하세요")
-		
-		/* 비밀번호 확인 유효성검사 */
-		} else if (pw2.length == 0 || pw2 == '') {
-		alert("비밀번호를 확인하세요")
-		
-		} else {
-		$("#btn").attr('type', 'submit');
-		} 
+			/* 아이디 유효성검사 */
+			if (id.length == 0 || id == '') {
+			alert("아이디를 입력하세요")
+
+			} else if (idCheck == "N") {
+			alert("이미 사용중인 아이디 입니다.")
+			
+			/* 이름 유효성검사 */
+			} else if (name.length == 0 || name == '') {
+			alert("이름을 입력하세요")
+			
+			/* 비밀번호 유효성검사 */
+			} else if (pw.length == 0 || pw == '') {
+			alert("비밀번호를 입력하세요")
+			
+			/* 비밀번호 확인 유효성검사 */
+			} else if (pw2.length == 0 || pw2 == '') {
+			alert("비밀번호를 확인하세요")
+			
+			} else {
+			$("#btn").attr('type', 'submit');
+			} 
 		
 	}
 
@@ -63,8 +67,6 @@
 	function checkPW() {
 		var pw1 = $("#pw").val();
 		var pw2 = $("#pw2").val();
-		console.log(pw1);
-		console.log(pw2);
 
 		if (pw1 == pw2) {
 
@@ -99,10 +101,13 @@
 			success : function(data) {
 				if (data == 1) {
 					alert("이미 사용중인 아이디 입니다.")
-					$("#idCheck").attr("value", "N")
+					$("#idCheckBtn").attr("value", "N")
+					console.log("N")
+					
 				} else if (data == 0) {
-					$("#idCheck").attr("value", "Y");
+					$("#idCheckBtn").attr("value", "Y");
 					alert("사용 가능한 아이디 입니다.");
+					console.log("Y")
 				}
 
 			}
@@ -167,7 +172,7 @@ input {
 				</p>
 				<input type="hidden" th:name="${_csrf.parameterName}"
 					th:value="${_csrf.token}" />
-				<button id="btn" type="button" class="join_btn">가입</button>
+				<button id="btn" type="button" class="join_btn" value="N">가입</button>
 			</form>
 
 		</div>

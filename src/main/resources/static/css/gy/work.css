@@ -20,7 +20,10 @@
 }
 
 .fc-toolbar-title {
+	width: 240px;
 	float: left;
+	text-align: center;
+	font-size: 2em !important;
 }
 
 .fc-button {
@@ -30,3 +33,55 @@
 .inner_content {
 	width: 1418px;
 }
+
+.btn-cococo {
+	color: #fff !important;
+    background-color: #FF7F27 !important;
+    border-color: #FF7F27 !important;
+}
+
+.btn-cococo:hover {
+	color: #fff !important;
+	background-color: #f26100 !important;
+    border-color: #f26100 !important;
+}
+	
+.btn-outline-cococo {
+	color: #FF7F27 !important;
+    background-color: #fff !important;
+    border: 2px solid #FF7F27 !important;
+}
+
+.btn-outline-cococo:hover {
+	color: #fff !important;
+	background-color: #FF7F27 !important;
+    border-color: #FF7F27 !important;
+	
+}
+
+.btn-chevron{
+	color: #2C3E50 !important;
+	background-color: #fff !important;
+    border: 2px solid #fff !important;
+}
+.fc-myWorkButton-button,.fc-totalButton-button{
+	width: 90px;
+}
+/* 
+.fc-myWorkButton-button, .fc-addEventButton-button{
+    background-color: #FF7F27 !important;
+    border-color: #FF7F27 !important;
+}
+.fc-totalButton-button{
+	color: #FF7F27 !important;
+    background-color: #fff !important;
+    border: 2px solid #FF7F27 !important;
+}
+.btn-outline-cococo:hover {
+    color: #fff !important;
+    background-color: #FF7F27 !important;
+    border-color: #FF7F27 !important;
+}
+.fc-icon-chevron-left, .fc-icon-chevron-right, .fc-today-button {
+} 
+.fc-prev-button, .fc-next-button */

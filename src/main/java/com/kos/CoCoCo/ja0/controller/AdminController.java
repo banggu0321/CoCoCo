@@ -153,7 +153,7 @@ public class AdminController {
 		tRepo.findById(teamId).ifPresent(i->{
 			awsS3.delete(i.getTeamImg()); //s3에서도 삭제
 			
-			i.setTeamImg("");
+			i.setTeamImg(null);
 			tRepo.save(i);
 		});
 		

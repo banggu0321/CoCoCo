@@ -15,7 +15,6 @@ import com.kos.CoCoCo.ja0.awsS3.AwsS3;
 import com.kos.CoCoCo.ja0.repository.TeamRepository;
 import com.kos.CoCoCo.ja0.repository.TeamUserRepositoryH;
 import com.kos.CoCoCo.ja0.repository.UserRepositoryH;
-import com.kos.CoCoCo.vo.TeamVO;
 import com.kos.CoCoCo.vo.UserVO;
 
 @Controller
@@ -82,7 +81,7 @@ public class UserController {
 		uRepo.findById(user.getUserId()).ifPresent(i->{
 			awsS3.delete(i.getImage()); //s3에서도 삭제
 			
-			i.setImage("");
+			i.setImage(null);
 			uRepo.save(i);
 			
 			session.setAttribute("user", i);

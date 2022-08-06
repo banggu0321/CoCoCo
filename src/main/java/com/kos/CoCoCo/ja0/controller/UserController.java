@@ -136,24 +136,27 @@ public class UserController {
 		if(none.isPresent()) {
 			userNone = none.get();
 		} else {
-			userNone = UserVO.builder().userId("XXXXX").name("알수없음").build();
+			UserVO newUser = UserVO.builder().userId("XXXXX").name("알수없음").build();
+			userNone = uRepo.save(newUser);
 		}
 		
 		UserVO user = (UserVO) session.getAttribute("user");
-		if(!adminCounter(user.getUserId(), userNone)) {
+		if(!adminCounter(user.getUserId())) {
 			attr.addFlashAttribute("msg", "관리자 권한을 모두 넘긴 후 탈퇴가 가능합니다!");
 			return "redirect:/main";
 		}
 		
-		changeAll(user.getUserId(), userNone); 
+		changeAll(user.getUserId()); 
 		
 		tuRepo.deleteByUserId(user.getUserId());
+		
+		awsS3.delete(user.getImage()); //탈퇴회원 이미지 삭제
 		uRepo.deleteById(user.getUserId());
 		
 		return "redirect:/logout";
 	}
 
-	private boolean adminCounter(String userId, UserVO userNone) {
+	private boolean adminCounter(String userId) {
 		List<TeamUserVO> adminTeam = tuRepo.findAdminByUserId(userId);
 		
 		if(!adminTeam.isEmpty()) {
@@ -165,6 +168,7 @@ public class UserController {
 					tRepo.findById(a.getTeamUserId().getTeam().getTeamId()).ifPresent(i->{
 						String creator = i.getUser().getUserId();
 						if(creator.equals(userId)) { //내가 만든 워크스페이스의 생성자 정보 변경
+							UserVO userNone = uRepo.findById("XXXXX").get();
 							i.setUser(userNone);
 							tRepo.save(i);
 						}
@@ -175,7 +179,9 @@ public class UserController {
 		return true;
 	}
 	
-	private void changeAll(String userId, UserVO userNone) {
+	private void changeAll(String userId) {
+		UserVO userNone = uRepo.findById("XXXXX").get();
+		
 		//공지
 		nRepo.findByUserId(userId).forEach(i->{
 			i.setUser(userNone);
@@ -200,7 +206,6 @@ public class UserController {
 			WorkManagerMultikey wmId = new WorkManagerMultikey(wm.getWorkManagerId().getWork(), userNone);
 			
 			wmRepo.delete(wm); //원래있던거 지우기
-			//System.out.println("[delete workManager]"+wm);
 			
 			WorkManagerVO newWork = new WorkManagerVO(wmId);
 			wmRepo.save(newWork); //담당자 새로 저장

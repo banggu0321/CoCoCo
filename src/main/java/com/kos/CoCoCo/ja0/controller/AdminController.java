@@ -197,6 +197,9 @@ public class AdminController {
 		bRepo.deleteByTeamId(teamId); //게시글
 		bcRepo.deleteByTeamId(teamId); //카테고리
 		tuRepo.deleteByTeamId(teamId); //teamUser
+		
+		TeamVO team = tRepo.findById(teamId).get();
+		awsS3.delete(team.getTeamImg()); //워크스페이스 이미지 삭제
 		tRepo.deleteById(teamId); //team
 	}
 	

@@ -3,6 +3,7 @@ package com.kos.CoCoCo.cansu;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,34 +48,64 @@ public class tableCRUDTest {
 	
 	@Autowired
 	ReplyRepositoryTestSu replyRP;
-	
-	@Test
-	public void boardPageList() {
-		Pageable pageable = PageRequest.of(0, 4, Direction.DESC, "boardId");
-		Pageable pageableBeta = PageRequest.of(1, 4, Direction.DESC, "boardId");
-		//Page request [number: 0, size 10, sort: boardId: DESC]
-				
-		Page<BoardVO> result = boardRP.findAll(boardRP.makePredicate(null, null), pageable);
-		Page<BoardVO> result2 = boardRP.findAll(boardRP.makePredicate(null, null), pageableBeta);
-		
-		System.out.println("result: "+result.getPageable());
-		System.out.println("result2: "+result2.getPageable());
 
-		System.out.println("result1-----------------");
-		result.getContent().forEach(a->{
-			System.out.println("getContent: "+a);
-		});
+	@Test
+	public void insertBoard() {
 		
-		System.out.println("result2-----------------");
-		result2.getContent().forEach(a->{
-			System.out.println("getContent: "+a);
-		});
+		IntStream.rangeClosed(1, 100).forEach(a->{
+			
+		// board category insert + board insert
+		long gnrTemp =  new Random().nextLong();
+		if(gnrTemp <0) {
+			gnrTemp = -1*gnrTemp;
+		}
+		long gnrValue = Long.valueOf(String.valueOf(gnrTemp).substring(0, 6));
+//		System.out.println(gnrValue);
 		
-//		result3.getContent().forEach(a->{
+		UserVO uservo = userRP.findById("su0804").get();
+		TeamVO teamvo =  teamRP.selectByUserID(uservo.getUserId());
+		System.out.println(teamvo);
+		
+		BoardCategoryMultikey bctemp = BoardCategoryMultikey.builder().categoryId(gnrValue).team(teamvo).build();
+		BoardCategoryVO bcvotemp = BoardCategoryVO.builder().boardCategoryId(bctemp).categoryName("0805").build();
+//		System.out.println(bcvotemp);
+		boardcateRP.save(bcvotemp);
+
+		
+		BoardVO boardTemp = BoardVO.builder().category(bcvotemp).user(uservo).boardTitle("pageable sample 0805").build(); 
+		boardRP.save(boardTemp);
+		
+		
+		});
+	}
+	
+//	@Test
+//	public void boardPageList() {
+//		Pageable pageable = PageRequest.of(0, 4, Direction.DESC, "boardId");
+//		Pageable pageableBeta = PageRequest.of(1, 4, Direction.DESC, "boardId");
+//		//Page request [number: 0, size 10, sort: boardId: DESC]
+//				
+//		Page<BoardVO> result = boardRP.findAll(boardRP.makePredicate(null, null), pageable);
+//		Page<BoardVO> result2 = boardRP.findAll(boardRP.makePredicate(null, null), pageableBeta);
+//		
+//		System.out.println("result: "+result.getPageable());
+//		System.out.println("result2: "+result2.getPageable());
+//
+//		System.out.println("result1-----------------");
+//		result.getContent().forEach(a->{
 //			System.out.println("getContent: "+a);
 //		});
-		
-	}
+//		
+//		System.out.println("result2-----------------");
+//		result2.getContent().forEach(a->{
+//			System.out.println("getContent: "+a);
+//		});
+//		
+////		result3.getContent().forEach(a->{
+////			System.out.println("getContent: "+a);
+////		});
+//		
+//	}
 	
 //	@Test
 //	public void categoryNameInsertByuserID() {

@@ -1,14 +1,25 @@
 var replyREST =(
 	function(){
 				
+		var getPageNumber = function(obj, callback){
+			$.getJSON('/BOARDrest/'+obj,callback);
+		}
 		var getBoardPage = function(obj, callback){
 			$.getJSON('/BOARDrest/getBoardPage/'+obj,callback);
+		}
+		
+		var getFirstBoardByPageable = function(obj,callback){
+			$.getJSON('/BOARDrest/boardList/'+obj,callback);
 		}
 		
 		var getAllBoard = function(obj, callback){
 			$.getJSON('/BOARDrest/'+obj,callback);
 			
 		};
+		
+		
+		
+		
 		
 		var getAllReply = function(obj, callback){
 			$.getJSON('/BOARDrest/'+obj,callback);
@@ -26,7 +37,9 @@ var replyREST =(
 			getAllBoard: getAllBoard,
 			getAllReply: getAllReply,
 			getAllCategory: getAllCategory,
-			getBoardPage: getBoardPage
+			getBoardPage: getBoardPage,
+			getFirstBoardByPageable:getFirstBoardByPageable,
+			getPageNumber:getPageNumber
 		}
 	}
 )();

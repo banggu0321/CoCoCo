@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kos.CoCoCo.cansu.test.BoardCategoryRepositoryTestSu;
 import com.kos.CoCoCo.cansu.test.BoardRepositoryTestSu;
+import com.kos.CoCoCo.cansu.test.PageMaker;
 import com.kos.CoCoCo.cansu.test.PageVO;
 import com.kos.CoCoCo.cansu.test.ReplyRepositoryTestSu;
 import com.kos.CoCoCo.cansu.test.TeamRepositoryTestSu;
@@ -54,6 +56,18 @@ public class sampleRESTController {
 	
 	@Autowired
 	BoardCategoryRepositoryTestSu boardcateRP;
+	
+	@GetMapping("/boardList/fromMain")
+	public List<BoardVO> boardListByPageable(PageVO vo, Model model){
+		
+//		public Pageable makePageable(int direction, String... props) {
+//			Sort.Direction dir = direction == 0 ? Sort.Direction.DESC : Sort.Direction.ASC;
+//			return PageRequest.of(this.page-1, this.size, dir, props);  //page-1 = 1-1;  //this.size = DEFAULT_SIZE;
+//		}
+		Pageable page = vo.makePageable(0, "boardId");
+		Page<BoardVO>  result = boardRP.findAll(boardRP.makePredicate(null, null), page);
+		return result.getContent();  //board list
+	}
 	
 	@GetMapping("/getBoardPage/{pageNumber}")
 	public List<BoardVO> boardlistByPageNum(@PathVariable String pageNumber, Model model, Principal principal){

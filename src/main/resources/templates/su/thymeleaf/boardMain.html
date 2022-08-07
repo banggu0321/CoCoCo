@@ -112,15 +112,30 @@ justify-content: center;
 						<th>작성자</th>
 					</tr>
 				</thead>
-				<tbody id="replyTable"></tbody>
+							
+				<tbody id="replyTable">
+				<tr th:each="board:${boardList}">
+				<td><a href="/boardUDsampleBeta?id=${board.boardId}">[[${board.boardTitle}]]</a></td>
+				<td th:text="${#dates.format(board.boardRegDate, 'yyyy-MM-dd')}"></td>
+				<td th:text="${#dates.format(board.boardUpdate, 'yyyy-MM-dd')}"></td>
+				<td>[[${board.user.name}]]</td>
+				</tr>				
+				</tbody>
 			</table>
 
 			<nav id="boardMainNav">
-				<ul class="pagination">
-				
-					<li th:if="${result.prevPage}" class="page-item"><a href="#" class="page-link">PREV</a></li>
+				<ul class="pagination">		
+					<li th:if="${result.prevPage}" class="page-item">
+					<input id="nextPLvalue" type="hidden" th:value="${result.prevPage.getPageNumber()}">
+					<a id="nextPLprev" class="page-link">	&#171;</a>
+					</li>
+					
 					<li th:each="p:${result.pageList}" class="page-item"><a id="navPage" class="page-link">[[${p.pageNumber}+1]]</a></li>
-					<li th:if="${result.nextPage}" class="page-item"><a id="nextPagelist" class="page-link">[[${result.nextPage.getPageNumber()}]]</a></li>
+					
+					<li th:if="${result.nextPage}" class="page-item" >
+					<input id="nextPLvalue" type="hidden" th:value="${result.nextPage.getPageNumber()}">
+					<a id="nextPLnext" class="page-link">&#187;</a>
+					</li>
 				</ul>
 			</nav>
 		</div>
@@ -150,7 +165,7 @@ justify-content: center;
 	</div>
 
 
-	<script th:inline="javascript" th:src="@{'js/RESTreply.js'}"></script>
+	<script th:inline="javascript" th:src="@{'/js/RESTreply.js'}"></script>
 	<script th:inline="javascript">	
 	var insertName = document.getElementById("cNameInsert");
 	var insertNameBtn = document.getElementById("cNameInsertBtn");
@@ -176,7 +191,13 @@ justify-content: center;
 		});
 	}
 	
-	var navPageList = document.getElementById("nextPagelist");	
+	var navPageList = document.getElementById("nextPLprev");	
+	var navPListNext = document.getElementById("nextPLnext");	
+	var navNumber = document.getElementById("nextPLvalue");
+	
+	//var replyReg = document.getElementById("replyRegDate");
+	//var replyUp = document.getElementById("replyUpDate");
+	
 	</script>
 
 	<script th:inline="javascript">
@@ -184,12 +205,26 @@ justify-content: center;
 			alert("form clicked");
 		}
 		
-		navPageList.onclick = function(){
-			let temp = navPageList.text;
-			alert("next pagelist clicked: "+temp);
-			
-			//location.href="/getNextBoard/"+temp;
+		if(navPageList!= null){
+			navPageList.onclick = function(){
+				let temp = navNumber.value;
+				console.log(temp);
+				alert("next pagelist clicked: "+temp);
+				
+				location.href="/getNext/"+temp;
+			}	
 		}
+		if(navPListNext != null){
+			navPListNext.onclick = function(){
+				let temp = navNumber.value;
+				console.log(temp);
+				alert("next pagelist clicked: "+temp);
+				
+				location.href="/getNext/"+temp;
+			}	
+		}
+		
+
 
 
 		insertNameBtn.onclick = function() {
@@ -226,10 +261,9 @@ justify-content: center;
 		};
 
 		$(document).ready(function() {
-			replyREST.getAllBoard("boardList", printList);
 		});
 	</script>
-	<script th:inline="javascript">		
+	<script th:inline="javascript">			
 		function printCategory(list) {
 			var result = "";
 			var obj;
@@ -266,8 +300,10 @@ justify-content: center;
 		}
 		function formatDate(timeValue) {
 			var date = new Date(timeValue);
-			return date.getFullYear() + "-" + (date.getMonth() + 1) + "-"
-					+ date.getDate();
+			
+			return date.getFullYear() + "-" 
+			+ ( (date.getMonth() + 1)>9?(date.getMont()+1):("0"+(date.getMonth()+1)) ) + "-"
+					+ ( date.getDate()>9?date.getDate():("0"+date.getDate()));
 		}
 	</script>
 </div>

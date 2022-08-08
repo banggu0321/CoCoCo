@@ -5,7 +5,7 @@
 <head>
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-<title>calendar</title>
+<title>CoCoCo | [[${session.teamUser.teamUserId.team.teamName}]] | Work</title>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <!-- csrf 
 <meta name="_csrf" th:content="${_csrf.token}"/>
@@ -29,6 +29,8 @@
 	var token = $("meta[name='_csrf']").attr("content");
 	var header = $("meta[name='_csrf_header']").attr("content");
 	
+	var session = /*[[${session}]]*/'';
+	console.log("session 정보",session);
 	var team_id = /*[[${session.teamId}]]*/'';
 	var user_id = /*[[${session.user.userId}]]*/'';
 	var totaleventlist = [];
@@ -51,6 +53,7 @@
 			type:"get",
 			success:function(responseData){
 				teamUserlist = responseData;
+				console.log("teamUserList",responseData);
 			}
 		});
 		
@@ -60,7 +63,7 @@
 			type:"get",
 			success:function(responseData){
 				myWorklist = responseData;
-				console.log("my events", myWorklist)
+				console.log("my events", myWorklist);
 			}
 		});
 		
@@ -72,20 +75,31 @@
 		});
 		
 		//전체 리스트 응답시
-		request.done(function(responseData){
+		request.done(function(responseData){			
 			$.each(responseData, function(index,data){
-				workmanager = data.manager;
-				//console.log("원래 data : "+ workmanager);
-				if(workmanager.includes("bang")){
-					data.manager = "user";
+				workmanager = [];
+				//console.log("data : "+ data.manager.length);
+				for(var index in data.manager){
+					workmanager.push(data.manager[index].userId);
+					//console.log(workmanager);
+				}
+				//console.log("원래 data : ", workmanager);
+				
+				/* var result = workmanager.filter(function(item){
+					return item.userId == "bang";
+				}); */
+				//console.log("workid",data.workId+"**"+result);
+				
+				if(workmanager.includes("bang")){ //**************************************************************
+					workmanager = "user";
 				}else{
-					data.manager = "none";
+					workmanager = "none";
 				}
 				
 				var date_end = dateEndPlus(data.workEnd);
 				
 				//console.log("조건 결과 data : "+ data.manager);
-				if(data.manager=="none"){//not user
+				if(workmanager=="none"){//not user
 					totaleventlist.push({
 						id: data.workId,
 						title : data.workTitle,
@@ -186,8 +200,6 @@
 							$(".fc-totalButton-button").addClass("btn-outline-cococo");
 							$(".fc-myWorkButton-button").removeClass("btn-outline-cococo");
 							$(".fc-myWorkButton-button").addClass("btn-cococo");
-							/* $(".fc-myWorkButton-button").hide();
-							$(".fc-totalButton-button").show(); */
 						}
 					},
 					totalButton:{
@@ -204,8 +216,6 @@
 							$(".fc-totalButton-button").addClass("btn-cococo");
 							$(".fc-myWorkButton-button").removeClass("btn-cococo");
 							$(".fc-myWorkButton-button").addClass("btn-outline-cococo");
-							/* $(".fc-myWorkButton-button").show();
-							$(".fc-totalButton-button").hide(); */
 						}
 					},
 					addEventButton : {
@@ -267,10 +277,21 @@
 								$(".detail_workStatus").val('진행');
 							}else{
 								$(".detail_workStatus").val('완료');
-								//$(".detail_workStatus").val(workDatail.workStatus);
 							}
-							//console.log(responseData.manager);
-							$(".detail_workMannager").val(workDatail.manager);
+							//console.log("manager 전체",workDatail.manager);
+							workmanager = [];
+							var workmanagername = [];
+							for(var index in workDatail.manager){
+								//console.log("id하나씩",workDatail.manager[index].userId);
+								workmanager.push(workDatail.manager[index].userId);
+								workmanagername.push(workDatail.manager[index].name);
+							}
+							var workmanagerfull = [];
+							for(i=0;i<workmanager.length;i++){
+								workmanagerfull.push(workmanagername[i]+"["+workmanager[i]+"]");
+							}
+							//console.log("Id만",workmanager);
+							$(".detail_workMannager").text(workmanagerfull);
 						}
 					});	
 					//alert(eventObj.groupId);
@@ -300,8 +321,6 @@
 			$(".fc-addEventButton-button").addClass("btn-outline-cococo");
 			$(".fc-prev-button").addClass("btn-chevron");
 			$(".fc-next-button").addClass("btn-chevron");
-			/* $(".fc-totalButton-button").hide(); */
-			//.fc-prev-button, .fc-next-button
 		});
 		
 		//응답실패시
@@ -320,12 +339,11 @@
 				console.log("옵션이 존재하지 않았음");
 			}
 			//option에 해당 팀의 담당자 추가
-			$.each(teamUserlist,function(index, data){//jquery로 해결하기
-				
-				if(workDatail.manager.includes(data)){ //해당 user가 포함되어 있는 경우
-					$(".update_workMannager").append("<option class=\"form-control updatemanageroption managerselected\" value=\'"+data+"'>"+data+"</option>"); 
+			$.each(teamUserlist,function(index, data){//jquery로 해결하기				
+				if(workmanager.includes(data.userId)){ //해당 user가 포함되어 있는 경우
+					$(".update_workMannager").append(`<option class= "form-control updatemanageroption managerselected" value="${data.userId}">${data.name}[${data.userId}]</option>`); 
 				}else{ //해당 user가 포함되지 않은 경우
-					$(".update_workMannager").append("<option class=\"form-control updatemanageroption\" value=\'"+data+"'>"+data+"</option>"); 
+					$(".update_workMannager").append(`<option class= "form-control updatemanageroption" value="${data.userId}">${data.name}[${data.userId}]</option>`); 
 				}
 			});			
 		});
@@ -381,6 +399,8 @@
 				alert("제목을 입력하세요.");
 			} else if (content == null || content == "") {
 				alert("내용을 입력하세요.");
+			} else if (content.length > 120) {
+				alert("최대 입력 제한");
 			} else if (start_date == "" || end_date == "") {
 				alert("날짜를 입력하세요.");
 			} else if (new Date(end_date) - new Date(start_date) < 0) { // date 타입으로 변경 후 확인
@@ -394,7 +414,7 @@
 					"workStart" : start_date,
 					"workEnd" : end_date,
 					"workStatus" : status,
-					"manager" :manager
+					"managerid" :manager
 				}//전송할 객체 생성
 				console.log("update object", obj); //서버로 해당 객체를 전달해서 DB 연동 가능
 				
@@ -422,7 +442,7 @@
 			var work_id = $(".detail_workId").val();
 			if(confirm("해당업무[" + work_id + "]를 삭제하시겠습니까?")){
 				$.ajax({
-					type:'delete',   //post 방식으로 전송
+					type:'delete',
 					url:'/work/deleteWork/'+work_id,   //데이터를 주고받을 파일 주소
 					//data:JSON.stringify( obj),   //위의 변수에 담긴 데이터를 전송해준다.
 					//dataType:'application/json',   //html 파일 형식으로 값을 담아온다.
@@ -433,7 +453,7 @@
 		            },
 		            success : function(data){   //파일 주고받기가 성공했을 경우. data 변수 안에 값을 담아온다.
 						//console.log(data);
-						alert("업무가 삭제되었습니다.");  //현재 화면 위 id="message" 영역 안에 data안에 담긴 html 코드를 넣어준다.
+						alert("업무가 삭제되었습니다.");
 						location.reload();
 					}
 				});
@@ -451,7 +471,8 @@
 			
 			//option에 해당 팀의 담당자 추가
 			$.each(teamUserlist,function(index, data){
-				$("#calendar_manager").append("<option class=\"form-control addmanageroption\" value=\'"+data+"'>"+data+"</option>"); 
+				//console.log(data.name);
+				$("#calendar_manager").append(`<option class="form-control addmanageroption" value="${data.userId}">${data.name}[${data.userId}]</option>`); 
 				});
 			
 			// modal의 추가 버튼 클릭 시
@@ -468,6 +489,8 @@
 					alert("제목을 입력하세요.");
 				} else if (content == null || content == "") {
 					alert("내용을 입력하세요.");
+				} else if (content.length > 120) {
+					alert("최대 입력 제한");
 				} else if (start_date == "" || end_date == "") {
 					alert("날짜를 입력하세요.");
 				} else if (new Date(end_date) - new Date(start_date) < 0) { // date 타입으로 변경 후 확인
@@ -481,7 +504,7 @@
 						"workStart" : start_date,
 						"workEnd" : end_date,
 						"workStatus" : status,
-						"manager" :manager
+						"managerid" :manager
 					}//전송할 객체 생성
 					console.log("insert object", obj); //서버로 해당 객체를 전달해서 DB 연동 가능
 					
@@ -520,7 +543,6 @@
 			return date_end1+date_end2;
 		}
 	});
-	//WorkUpdateBtn
 </script>
 </head>
 <body>
@@ -601,7 +623,7 @@
 								<label for="taskId" class="col-form-label">업무상태</label> 
 								<input type="text" class="form-control detail_workStatus" id="calendar_status" name="calendar_status" readonly="readonly"> 
 								<label for="taskId" class="col-form-label">담당자</label> 
-								<input type="text" class="form-control detail_workMannager" id="calendar_manager" name="calendar_manager" readonly="readonly"> 
+								<textarea class="form-control detail_workMannager" id="calendar_manager" name="calendar_manager" readonly="readonly"></textarea>
 							</div>
 						</div>
 						<div class="modal-footer">

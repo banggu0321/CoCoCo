@@ -5,6 +5,9 @@
 	height: auto;
 	padding: 0.175rem 0.55rem;
 	text-align: initial;
+	display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 .workTitleText{
 	float:left;
@@ -32,4 +35,7 @@
 }
 .workNoneText{
 	border: none;
+}
+.finishStatus{
+	background-color: black;
 }

@@ -30,7 +30,7 @@
 	    var now = new Date();
 	    var year=now.getFullYear(); //연도
 	    var month=('00' + (now.getMonth()+1)).slice(-2); // 월 
-	    var date=('00' + (now.getDate())).slice(-2); //일 
+	    var date=('00' + (now.getDate()-4)).slice(-2); //일 
 	    
 	    //$("#today").text(now);
 	    $("#today").text(year+"."+month+"."+date);
@@ -43,12 +43,12 @@
 				teamWorkList = responseData;
 				var num = 0;
 				$.each(teamWorkList,function(index, data){ 
-					workmanager = data.manager;
+					workmanager = data.managerid;
 					
 					if(workmanager.includes(user_id)){
-						data.manager = "user";
+						data.managerid = "user";
 					}else{
-						data.manager = "none";
+						data.managerid = "none";
 					}
 					var todaydate = new Date(year+"-"+month+"-"+date);
 					var start = new Date(data.workStart);
@@ -61,12 +61,12 @@
 						//console.log(todaydate);
 						//console.log(end);
 						if(start<=todaydate&&todaydate<=end){  //오늘날짜인 경우
-							if(data.manager=="none"){ //not mine
-								$(".workListBox").append(`<div class="form-control worklist" style="color:#BFBFBF"><span class="workListTitle">${data.workTitle}</span>  <span class="workListContent">${data.workText}</span><span>${data.workStart} ~ ${data.workEnd}</span></div>`); 
+							if(data.managerid=="none"){ //not mine
+								$(".workListBox").append(`<div class="form-control worklist" style="color:#BFBFBF"><span class="workinfo"><span class="workListTitle">${data.workTitle}</span>  <span class="workListContent">${data.workText}</span><span>${data.workStart} ~ ${data.workEnd}</span></span></div>`);
 							}else if(data.workStatus=="finish"){
-								$(".workListBox").append(`<div class="form-control worklist" style="color:black"><span class="workListTitle">${data.workTitle}</span>  <span class="workListContent">${data.workText}</span><span>${data.workStart} ~ ${data.workEnd}</span></div>`); 
+								$(".workListBox").append(`<div class="form-control worklist" style="color:black"><span class="workinfo"><span class="workListTitle">${data.workTitle}</span>  <span class="workListContent">${data.workText}</span><span>${data.workStart} ~ ${data.workEnd}</span></span><div class="btn-cococo finishStatus btn">완료</div></div>`);
 							}else {
-								$(".workListBox").append(`<div class="form-control worklist" style="color:tomato"><span class="workListTitle">${data.workTitle}</span>  <span class="workListContent">${data.workText}</span><span>${data.workStart} ~ ${data.workEnd}</span></div>`); 
+								$(".workListBox").append(`<div class="form-control worklist" style="color:tomato"><span class="workinfo"><span class="workListTitle">${data.workTitle}</span>  <span class="workListContent">${data.workText}</span><span>${data.workStart} ~ ${data.workEnd}</span></span><div class="btn-cococo statusBtn btn">버튼</div></div>`);
 							}
 							num += 1;
 						}else{

@@ -3,6 +3,7 @@ package com.kos.CoCoCo.cansu;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,32 +50,98 @@ public class tableCRUDTest {
 	ReplyRepositoryTestSu replyRP;
 	
 	@Test
-	public void boardPageList() {
-		Pageable pageable = PageRequest.of(0, 4, Direction.DESC, "boardId");
-		Pageable pageableBeta = PageRequest.of(1, 4, Direction.DESC, "boardId");
-		//Page request [number: 0, size 10, sort: boardId: DESC]
-				
-		Page<BoardVO> result = boardRP.findAll(boardRP.makePredicate(null, null), pageable);
-		Page<BoardVO> result2 = boardRP.findAll(boardRP.makePredicate(null, null), pageableBeta);
+	public void selectBoardBycategoryID() {
+		List<Long> categoryID = new ArrayList<>();
+		categoryID.add(459222L);
+		categoryID.add(997132L);
+		categoryID.add(351303L);
+		categoryID.add(412403L);
 		
-		System.out.println("result: "+result.getPageable());
-		System.out.println("result2: "+result2.getPageable());
-
-		System.out.println("result1-----------------");
-		result.getContent().forEach(a->{
-			System.out.println("getContent: "+a);
-		});
+		System.out.println(categoryID);
 		
-		System.out.println("result2-----------------");
-		result2.getContent().forEach(a->{
-			System.out.println("getContent: "+a);
-		});
+//		List<BoardVO> boardList = boardRP.selectBoardByIDbeta(categoryID,null);
+//		System.out.println(boardList);
+	}
+	
+//	@Test
+//	public void insertBoard() {
+//		
+//		IntStream.rangeClosed(1, 60).forEach(a->{
+//			
+//		// board category insert + board insert
+//		long gnrTemp =  new Random().nextLong();
+//		if(gnrTemp <0) {
+//			gnrTemp = -1*gnrTemp;
+//		}
+//		long gnrValue = Long.valueOf(String.valueOf(gnrTemp).substring(0, 6));
+////		System.out.println(gnrValue);
+//		
+//		UserVO uservo = userRP.findById("su0804").get();
+//		TeamVO teamvo =  teamRP.selectByUserID(uservo.getUserId());
+//		System.out.println(teamvo);
+//		
+//		BoardCategoryMultikey bctemp = BoardCategoryMultikey.builder().categoryId(gnrValue).team(teamvo).build();
+//		BoardCategoryVO bcvotemp = BoardCategoryVO.builder().boardCategoryId(bctemp).categoryName("0805").build();
+////		System.out.println(bcvotemp);
+//		boardcateRP.save(bcvotemp);
+//
+//		
+//		BoardVO boardTemp = BoardVO.builder().category(bcvotemp).user(uservo).boardTitle("pageable sample 0805"+a).build(); 
+//		boardRP.save(boardTemp);
+//		});
+//	}
+	
+//	@Test
+//	public void teamInsert() {
+//		UserVO uservo = userRP.findById("su0804").get();
+//		TeamVO teamvo = TeamVO.builder().teamName("sample").user(uservo)
+//				.build();
+//		teamRP.save(teamvo);
 		
-//		result3.getContent().forEach(a->{
+		// (insert team_user table)
+//		UserVO uservo = userRP.findById("su0804").get();
+//		TeamVO teamteamp = teamRP.selectByUserID(uservo.getUserId());
+//		
+//		TeamUserMultikey tuMultikey = TeamUserMultikey.builder().team(teamteamp).user(uservo).build();
+//		TeamUserVO temp = TeamUserVO.builder().teamUserId(tuMultikey).userRole("sample").build(); 
+//		
+//		teamUserRP.save(temp);
+//	}
+	
+//	@Test
+//	public void userInsert() {
+//		UserVO temp = UserVO.builder().userId("su0804").pw("2022").name("kosta")
+//				.build();
+//		userRP.save(temp);
+//	}
+	
+//	@Test
+//	public void boardPageList() {
+//		Pageable pageable = PageRequest.of(0, 4, Direction.DESC, "boardId");
+//		Pageable pageableBeta = PageRequest.of(1, 4, Direction.DESC, "boardId");
+//		//Page request [number: 0, size 10, sort: boardId: DESC]
+//				
+//		Page<BoardVO> result = boardRP.findAll(boardRP.makePredicate(null, null), pageable);
+//		Page<BoardVO> result2 = boardRP.findAll(boardRP.makePredicate(null, null), pageableBeta);
+//		
+//		System.out.println("result: "+result.getPageable());
+//		System.out.println("result2: "+result2.getPageable());
+//
+//		System.out.println("result1-----------------");
+//		result.getContent().forEach(a->{
 //			System.out.println("getContent: "+a);
 //		});
-		
-	}
+//		
+//		System.out.println("result2-----------------");
+//		result2.getContent().forEach(a->{
+//			System.out.println("getContent: "+a);
+//		});
+//		
+////		result3.getContent().forEach(a->{
+////			System.out.println("getContent: "+a);
+////		});
+//		
+//	}
 	
 //	@Test
 //	public void categoryNameInsertByuserID() {
@@ -245,25 +312,7 @@ public class tableCRUDTest {
 //		boardcateRP.save(bcTemp);
 //		
 ////		System.out.println(bcMultikey);
-//	}
-	
-//	@Test
-//	public void teamInsert() {
-////		UserVO uservo = userRP.findById("0720").get();
-////		TeamVO teamvo = TeamVO.builder().teamName("0720sample").user(uservo)
-////				.build();
-////		teamRP.save(teamvo);
-//		
-//		// (insert team_user table)
-////		UserVO uservo = userRP.findById("0720").get();
-////		TeamVO teamteamp = teamRP.selectByUserID(uservo.getUserId());
-////		
-////		TeamUserMultikey tuMultikey = TeamUserMultikey.builder().team(teamteamp).user(uservo).build();
-////		TeamUserVO temp = TeamUserVO.builder().teamUserId(tuMultikey).userRole("sample").build(); 
-////		
-////		teamUserRP.save(temp);
-//	}
-	
+//	}	
 	
 //	@Test
 //	public void userSelect() {
@@ -271,13 +320,5 @@ public class tableCRUDTest {
 //		userList.forEach(a->{
 //			System.out.println(a);
 //		});
-//	}
-	
-//	@Test
-//	public void userInsert() {
-//		UserVO temp = UserVO.builder().userId("0720").pw("0720").name("kosta")
-//				.build();
-//		userRP.save(temp);
-//	}
-	
+//	}	
 }

@@ -1,5 +1,6 @@
 package com.kos.CoCoCo.cansu;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Random;
 
@@ -7,7 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,10 +49,23 @@ public class sampleController2 {
 	@Autowired
 	BoardCategoryRepositoryTestSu boardcateRP;
 	
-//	@GetMapping("/boardSampleBeta")
-//	public String boardlist() {			
-//		return "su/thymeleaf/boardMain";
-//	}
+	@GetMapping("/getNext/{pageNumber}")
+	public String boardMainNavByPageNum(@PathVariable String pageNumber, Model model){
+		
+		PageVO voTemp = new PageVO();
+		
+
+		Pageable page = PageRequest.of(Integer.valueOf(pageNumber), voTemp.getSize(), Direction.DESC, "boardId");
+		Page<BoardVO>  result = boardRP.findAll(boardRP.makePredicate(null, null), page);
+		
+		model.addAttribute("result", new PageMaker(result));
+		model.addAttribute("boardList", result.getContent());
+		
+		System.out.println("pageNumber: "+pageNumber);
+		System.out.println("page size: "+voTemp.getSize());
+		
+		return "su/thymeleaf/boardMain";
+	}
 	
 	@GetMapping("/boardSampleBeta")
 	public String boardlist(PageVO vo, Model model) {	
@@ -57,31 +73,22 @@ public class sampleController2 {
 		Pageable page = vo.makePageable(0, "boardId");
 		Page<BoardVO>  result = boardRP.findAll(boardRP.makePredicate(null, null), page);
 		
-		model.addAttribute("result", new PageMaker(result));
-		
-		
-		System.out.println("result.getSize: "+result.getSize());
-		System.out.println("result.getTotalPage: "+result.getTotalPages());
-		System.out.println("result.getTotalElements: "+result.getTotalElements());
-		System.out.println("result.nextPageable: "+result.nextPageable());
-		
-		System.out.println("result.getPageable: "+ result.getPageable());
-		System.out.println("result.getPageable.previoudOrFirst: "+result.getPageable().previousOrFirst());
-		System.out.println("result.getPageable.getPageNumber: "+result.getPageable().getPageNumber());
+		model.addAttribute("result", new PageMaker(result));		
+		model.addAttribute("boardList", result.getContent());
 		
 		return "su/thymeleaf/boardMain";
 	}
 		
 	//void - error, insert는 controller.method가 필요
 	@PostMapping("/postReplyInsertBeta")
-	public String replyInsertBeta(HttpServletRequest request) {
+	public String replyInsertBeta(HttpServletRequest request, Principal principal) {
 		
 		String text = request.getParameter("replyText");		
 		String boardID = request.getParameter("replyBid");
 //		System.out.println(boardID);
 //		System.out.println(text);
 		
-		UserVO uservo = userRP.findById("0720").get();  //log in
+		UserVO uservo = userRP.findById(principal.getName()).get();  //log in
 		BoardVO boardTemp = boardRP.findById(Long.valueOf(boardID)).get();  //selected board
 		
 		ReplyVO rvo = ReplyVO.builder().board(boardTemp).user(uservo).replyText(text).build();
@@ -134,9 +141,9 @@ public class sampleController2 {
 		String text = request.getParameter("boardText");
 		String id = request.getParameter("boardID");
 		
-//		System.out.println("post title: "+title);
-//		System.out.println("post text: "+text);
-//		System.out.println("post id: "+id);
+		System.out.println("post title: "+title);
+		System.out.println("post text: "+text);
+		System.out.println("post id: "+id);
 		
 		BoardVO bvo = boardRP.findById(Long.valueOf(id)).get();
 		bvo.setBoardTitle(title);
@@ -147,7 +154,7 @@ public class sampleController2 {
 	}
 
 	@PostMapping("/postBoardInsertSample2")
-	public String boardInsertPostBeta(HttpServletRequest request) {
+	public String boardInsertPostBeta(HttpServletRequest request, Principal principal) {
 
 //		System.out.println("title: "+request.getParameter("title"));
 //		System.out.println("content: "+request.getParameter("content"));
@@ -156,13 +163,19 @@ public class sampleController2 {
 		String title = request.getParameter("title");
 		String content =request.getParameter("content");
 		String category = request.getParameter("category");
+		String userID = principal.getName();
+		
+		System.out.println("title: "+title);
+		System.out.println("content: "+content);
+		System.out.println("category: "+category);
+		System.out.println("userID: "+userID);
 
-		makeBoardSample(title, content,category);
+		makeBoardSample(title, content,category,userID);
 
 		return "redirect:/boardSampleBeta";
 	}
 
-	private void makeBoardSample(String title, String content, String category) {
+	private void makeBoardSample(String title, String content, String category, String userID) {
 		long gnrTemp =  new Random().nextLong();
 		if(gnrTemp <0) {
 			gnrTemp = -1*gnrTemp;
@@ -171,7 +184,7 @@ public class sampleController2 {
 		//		System.out.println(gnrValue);
 
 		//(log in info)user->team
-		UserVO uservo = userRP.findById("0720").get();  
+		UserVO uservo = userRP.findById(userID).get();  
 		TeamVO teamvo =  teamRP.selectByUserID(uservo.getUserId());
 		System.out.println(teamvo);
 

@@ -1,5 +1,6 @@
 package com.kos.CoCoCo.cansu;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kos.CoCoCo.cansu.test.BoardCategoryRepositoryTestSu;
 import com.kos.CoCoCo.cansu.test.BoardRepositoryTestSu;
+import com.kos.CoCoCo.cansu.test.PageVO;
 import com.kos.CoCoCo.cansu.test.ReplyRepositoryTestSu;
 import com.kos.CoCoCo.cansu.test.TeamRepositoryTestSu;
 import com.kos.CoCoCo.cansu.test.UserRepositoryTestSu;
@@ -53,12 +56,30 @@ public class sampleRESTController {
 	@Autowired
 	BoardCategoryRepositoryTestSu boardcateRP;
 	
+	@GetMapping("/boardList/fromMain")
+	public List<BoardVO> boardListByPageable(PageVO vo, Model model){
+		
+//		public Pageable makePageable(int direction, String... props) {
+//			Sort.Direction dir = direction == 0 ? Sort.Direction.DESC : Sort.Direction.ASC;
+//			return PageRequest.of(this.page-1, this.size, dir, props);  //page-1 = 1-1;  //this.size = DEFAULT_SIZE;
+//		}
+		Pageable page = vo.makePageable(0, "boardId");
+		Page<BoardVO>  result = boardRP.findAll(boardRP.makePredicate(null, null), page);
+		return result.getContent();  //board list
+	}
+	
 	@GetMapping("/getBoardPage/{pageNumber}")
-	public List<BoardVO> boardlistByPageNum(@PathVariable String pageNumber, Model model){
-		String userID = "0720";  //login -> id
+	public List<BoardVO> boardlistByPageNum(@PathVariable String pageNumber, Model model, Principal principal){
+		
+//		System.out.println("principal.getName():" + principal.getName());
+//		String userID = principal.getName();  //login -> id
+		String userID = "su0804"; 
 		System.out.println("page number: "+pageNumber);
 		
-		Pageable pageable = PageRequest.of(Integer.valueOf(pageNumber)-1, 4, Direction.DESC, "boardId");
+		PageVO pageTemp = new PageVO();
+		int pageSize = pageTemp.getSize();
+		
+		Pageable pageable = PageRequest.of(Integer.valueOf(pageNumber)-1, pageSize, Direction.DESC, "boardId");
 		Page<BoardVO> result = boardRP.findAll(boardRP.makePredicate(null, null), pageable);
 		
 		List<BoardVO> boardList = result.getContent();
@@ -68,8 +89,10 @@ public class sampleRESTController {
 	}
 	
 	@GetMapping("/boardList/insertName/{name}")
-	public List<BoardVO> categoryNameInsertFromBLBeta(@PathVariable String name,Model model) {
-		String userID = "0720"; //user_id
+	public List<BoardVO> categoryNameInsertFromBLBeta(@PathVariable String name,Model model, Principal principal) {
+		
+		System.out.println("principal.getName():" + principal.getName());
+		String userID = principal.getName(); //user_id
 		System.out.println("category name: "+name);
 		
 		if(name==null) {
@@ -87,6 +110,23 @@ public class sampleRESTController {
 			if(temp != null) {
 				boardList.add(temp);
 			}
+		});
+		
+		return boardList;
+	}
+	
+	@GetMapping("/boardListBycategory/{name}")
+	public List<BoardVO> boardlistByCategory(@PathVariable String name,Model model) {
+		
+		if(name==null) {
+			return (List<BoardVO>)boardRP.findAll();
+		}
+		
+		Pageable pageable = PageRequest.of(0, 5, Sort.by(Direction.DESC, "board_id"));
+		List<Long>categoryID = boardcateRP.selectIDByname(name);
+		List<BoardVO> boardList = boardRP.selectBoardByIDbeta(categoryID, pageable);
+		boardList.forEach(a->{
+			System.out.println(a);
 		});
 		
 		return boardList;

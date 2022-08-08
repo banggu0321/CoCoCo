@@ -2,17 +2,22 @@
 <html xmlns:th="www.thymeleaf.org">
 <head>
 <style>
+
 #boardMain{
-margin: 0 auto;
-width: 70%;
+	width: 900px;
+	margin: 0 auto;
+	margin-top: 5%;
 }
+
 #boardMain1{
 display: flex;
 margin-bottom: -15px;  
+
 }
 #boardMainSub1{
 position:relative;
 left:10%;
+;
 }
 #boardMainSub2{
 text-align:right;
@@ -23,6 +28,11 @@ left:45%;
 #boardMain2{
 margin: 0 auto;
 width:80%;
+background: white
+}
+#boardMainNav{
+display: flex;
+justify-content: center;
 }
 </style>
 <style>
@@ -88,9 +98,8 @@ width:80%;
 				<button id="insertBoard" type="button" class="btn btn-primary">게시판
 					만들기</button>
 			</div>
-		</div>
-		<hr>
-
+		</div><br><br>
+		
 		<div id="boardMain2">
 			<table class="table table-hover">
 				<thead>
@@ -101,12 +110,30 @@ width:80%;
 						<th>작성자</th>
 					</tr>
 				</thead>
-				<tbody id="replyTable"></tbody>
+							
+				<tbody id="replyTable">
+				<tr th:each="board:${boardList}">
+				<td><a href="/boardUDsampleBeta?id=${board.boardId}">[[${board.boardTitle}]]</a></td>
+				<td th:text="${#dates.format(board.boardRegDate, 'yyyy-MM-dd')}"></td>
+				<td th:text="${#dates.format(board.boardUpdate, 'yyyy-MM-dd')}"></td>
+				<td>[[${board.user.name}]]</td>
+				</tr>				
+				</tbody>
 			</table>
 
-			<nav>
-				<ul class="pagination">
-					<li th:each="p:${result.pageList}"><a id="navPage">[[${p.pageNumber}+1]]</a></li>
+			<nav id="boardMainNav">
+				<ul class="pagination">		
+					<li th:if="${result.prevPage}" class="page-item">
+					<input id="nextPLvalue" type="hidden" th:value="${result.prevPage.getPageNumber()}">
+					<a id="nextPLprev" class="page-link">	&#171;</a>
+					</li>
+					
+					<li th:each="p:${result.pageList}" class="page-item"><a id="navPage" class="page-link">[[${p.pageNumber}+1]]</a></li>
+					
+					<li th:if="${result.nextPage}" class="page-item" >
+					<input id="nextPLvalue" type="hidden" th:value="${result.nextPage.getPageNumber()}">
+					<a id="nextPLnext" class="page-link">&#187;</a>
+					</li>
 				</ul>
 			</nav>
 		</div>
@@ -119,8 +146,8 @@ width:80%;
 		<!-- Modal content -->
 		<div class="modal-content">
 			<div class="modal-header">
-				<span id="closeModal" class="close">&times;</span>
-				<h5>카테고리 목록</h5>
+			<h5>카테고리 목록</h5>
+			<span id="closeModal" class="close">&times;</span>	
 			</div>
 			<div class="modal-body">
 			카테고리 이름: 
@@ -136,7 +163,7 @@ width:80%;
 	</div>
 
 
-	<script th:inline="javascript" th:src="@{'js/RESTreply.js'}"></script>
+	<script th:inline="javascript" th:src="@{'/js/RESTreply.js'}"></script>
 	<script th:inline="javascript">	
 	var insertName = document.getElementById("cNameInsert");
 	var insertNameBtn = document.getElementById("cNameInsertBtn");
@@ -162,12 +189,41 @@ width:80%;
 		});
 	}
 	
+	var navPageList = document.getElementById("nextPLprev");	
+	var navPListNext = document.getElementById("nextPLnext");	
+	var navNumber = document.getElementById("nextPLvalue");
+	
+	//var replyReg = document.getElementById("replyRegDate");
+	//var replyUp = document.getElementById("replyUpDate");
+	
 	</script>
 
 	<script th:inline="javascript">
 		formA.onclick = function() {
 			alert("form clicked");
 		}
+		
+		if(navPageList!= null){
+			navPageList.onclick = function(){
+				let temp = navNumber.value;
+				console.log(temp);
+				alert("next pagelist clicked: "+temp);
+				
+				location.href="/getNext/"+temp;
+			}	
+		}
+		if(navPListNext != null){
+			navPListNext.onclick = function(){
+				let temp = navNumber.value;
+				console.log(temp);
+				alert("next pagelist clicked: "+temp);
+				
+				location.href="/getNext/"+temp;
+			}	
+		}
+		
+
+
 
 		insertNameBtn.onclick = function() {
 			alert(insertName.value);
@@ -184,7 +240,7 @@ width:80%;
 
 		cNameBtn.onclick = function() {
 			categoryResult = categoryName.options[categoryName.selectedIndex].text;
-			replyREST.getAllBoard("boardList/" + categoryResult, printList);
+			replyREST.getAllBoard("boardListBycategory/" + categoryResult, printList);
 
 			modal.style.display = "none";
 		};
@@ -203,10 +259,9 @@ width:80%;
 		};
 
 		$(document).ready(function() {
-			replyREST.getAllBoard("boardList", printList);
 		});
 	</script>
-	<script th:inline="javascript">		
+	<script th:inline="javascript">			
 		function printCategory(list) {
 			var result = "";
 			var obj;
@@ -243,8 +298,10 @@ width:80%;
 		}
 		function formatDate(timeValue) {
 			var date = new Date(timeValue);
-			return date.getFullYear() + "-" + (date.getMonth() + 1) + "-"
-					+ date.getDate();
+			
+			return date.getFullYear() + "-" 
+			+ ( (date.getMonth() + 1)>9?(date.getMont()+1):("0"+(date.getMonth()+1)) ) + "-"
+					+ ( date.getDate()>9?date.getDate():("0"+date.getDate()));
 		}
 	</script>
 </body>

@@ -51,8 +51,8 @@ public class SecurityController {
 	}
 	
 
-	@GetMapping("/test1")
+	@GetMapping("/auth/Xtest2X")
 	public void test() {
-		System.out.println("/auth/test1");
+		System.out.println("/auth/Xtest2X");
 	}
 }

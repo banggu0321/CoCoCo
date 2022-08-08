@@ -142,8 +142,9 @@ public class AdminController {
 		return "redirect:/admin/team";
 	}
 	
+	@ResponseBody
 	@GetMapping("/deleteImg")
-	public String deleteImg(HttpSession session) {
+	public void deleteImg(HttpSession session) {
 		Long teamId = (Long) session.getAttribute("teamId");
 		
 		tRepo.findById(teamId).ifPresent(i->{
@@ -155,8 +156,6 @@ public class AdminController {
 		
 		UserVO user = (UserVO) session.getAttribute("user");
 		session.setAttribute("teamList", tuRepo.findByUserId(user.getUserId()));
-		
-		return "redirect:/admin/team";
 	}
 	
 	@Transactional

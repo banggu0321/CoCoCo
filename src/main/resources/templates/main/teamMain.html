@@ -38,13 +38,13 @@
 		var name = "[[${session.user.name}]]";
 		var userId = "[[${session.user.userId}]]";
 		var company = "[[${session.user.company}]]";
-		var img = "[[${session.user.image}]]";
+		var img = $(".myProfileImg").attr("src");
 		
 		$("input[name='name']").val(name);
 		$("input[name='userId']").val(userId);
 		$("input[name='company']").val(company);
 		$("input[name='newPhoto']").val("");
-		$(".myImg").attr("src", img?img:"/images/userImg.svg");
+		$(".myImg").attr("src", img);
 	}
 	
 	function myProfileUpdate() {
@@ -67,18 +67,27 @@
 	
 	function delMyImg() {
 		if(confirm("프로필 사진을 삭제하시겠습니까?")) {
-			location.href = "/user/deleteImg";
+			$.ajax({
+				type:"get",
+				url:"/user/deleteImg",
+				success: function() {
+					$(".myProImg").attr("src", "/images/userImg.svg");
+					$(".myProfileImg").attr("src", "/images/userImg.svg");
+					$(".myImg").attr("src", "/images/userImg.svg");
+					$("#delImg").hide();
+				}
+			});
 		}
 	}
 	
-	function makeView(event) {
+	function makeView(e) {
 		var reader = new FileReader();
 
-		reader.onload = function(event) {
-			$(".myImg").attr("src", event.target.result);
+		reader.onload = function(e) {
+			$(".myImg").attr("src", e.target.result);
 		};
 
-		reader.readAsDataURL(event.target.files[0]);
+		reader.readAsDataURL(e.target.files[0]);
 	}
 	
 	function myStatus() {
@@ -115,7 +124,7 @@
 <div layout:fragment="my_menu">
 	<div class="my_menu">
 		<div id="myProfile">
-			<img th:src="${session.user.image}?:@{/images/userImg.svg}" class="rounded-circle">
+			<img th:src="${session.user.image}?:@{/images/userImg.svg}" class="rounded-circle myProImg">
 			<img id="editProfile" class="rounded-circle" th:src="@{/images/editProfile.png}" data-toggle="modal" data-target="#MyPageModal">
 			<img class="admin" th:if="${session.teamUser.userRole == 'ADMIN'}" th:src="@{/images/crown.svg}">
 					
@@ -161,11 +170,8 @@
 				</div>
 				
 	        	<div class="modal-body">
-					<div id="modalMyImg">
-						<img th:src="${session.user.image}?:@{/images/userImg.svg}" class="myProfileImg rounded-circle">
-						<img th:if="${session.user.image}" id="delImg" th:src="@{/images/deleteTeamImg.svg}">
-					</div>
-					
+					<img th:src="${session.user.image}?:@{/images/userImg.svg}" class="myProfileImg rounded-circle">
+						
 					<div id="modalMyInfo">
 						<div class="form-group">
 							<label>NAME</label>
@@ -207,8 +213,10 @@
 				</div>
 				
 	        	<div class="modal-body">
-					<img class="myImg rounded-circle">
-					
+		        	<div id="modalMyImg">
+						<img class="myImg rounded-circle">
+						<img th:if="${session.user.image}" id="delImg" th:src="@{/images/deleteTeamImg.svg}">
+					</div>
 					<form id="modifyForm" action="/user/modify" method="post" enctype="multipart/form-data">
 						<div class="form-group">
 							<label>NAME</label>

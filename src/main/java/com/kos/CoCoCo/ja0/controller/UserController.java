@@ -112,8 +112,9 @@ public class UserController {
 		return "redirect:/main";
 	}
 	
+	@ResponseBody
 	@GetMapping("/user/deleteImg")
-	public String deleteImg(HttpSession session) {
+	public void deleteImg(HttpSession session) {
 		UserVO user = (UserVO) session.getAttribute("user");
 		
 		uRepo.findById(user.getUserId()).ifPresent(i->{
@@ -124,20 +125,15 @@ public class UserController {
 			
 			session.setAttribute("user", i);
 		});
-		
-		return "redirect:/main";
 	}
 	
 	@Transactional
 	@GetMapping("/user/delete")
 	public String deleteUser(HttpSession session, RedirectAttributes attr) {
 		Optional<UserVO> none = uRepo.findById("XXXXX");
-		UserVO userNone;
-		if(none.isPresent()) {
-			userNone = none.get();
-		} else {
+		if(!none.isPresent()) { //없으면 만들기
 			UserVO newUser = UserVO.builder().userId("XXXXX").name("알수없음").build();
-			userNone = uRepo.save(newUser);
+			uRepo.save(newUser);
 		}
 		
 		UserVO user = (UserVO) session.getAttribute("user");

@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-	<img th:src="${team.teamImg}?:@{/images/teamImg.png}" class="showImg rounded" th:alt="${team.teamImg}">
+	<div id="teamImg" th:if="${team.teamImg}">
+		<img th:src="${team.teamImg}" th:alt="${team.teamImg}" class="showImg rounded">
+		<img id="delImg" th:src="@{/images/deleteTeamImg.svg}">
+	</div>
+	<img th:if="${team.teamImg==null}" th:src="@{/images/teamImg.png}" alt="null" class="showImg rounded">
 	
 	<div id="teamInfo">
 		<form id="modifyForm" action="/admin/modify" method="post" enctype="multipart/form-data">
@@ -37,6 +41,7 @@ input[type=file] {
 <script>
 $(function() {
 	$("#modifyForm").submit(isEmpty);
+	$("#delImg").click(deleteImg);
 	$(".reloadBtn").click(reload);
 	$("#img").change(makeView);
 })
@@ -50,18 +55,31 @@ function isEmpty() {
 	}
 }
 
+function deleteImg() {
+	if(confirm("이미지를 삭제하시겠습니까?")) {
+		$.ajax({
+			type:"get",
+			url:"/admin/deleteImg",
+			success: function() {
+				$(".showImg").attr("src", "/images/teamImg.png");
+				$("#delImg").hide();
+			}
+		});
+	}
+}
+
 function reload() {
 	location.reload();
 }
 	
-function makeView(event) {
+function makeView(e) {
 	var reader = new FileReader();
 
-	reader.onload = function(event) {
-		$(".showImg").attr("src", event.target.result);
+	reader.onload = function(e) {
+		$(".showImg").attr("src", e.target.result);
 	};
 
-	reader.readAsDataURL(event.target.files[0]);
+	reader.readAsDataURL(e.target.files[0]);
 }
 	
 </script>

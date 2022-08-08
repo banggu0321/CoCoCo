@@ -61,17 +61,18 @@ public class GyWorkRestController {
 		
 		for(WorkVO work:worklist) {
 			List<WorkManagerVO> workmanagerlist = workManagerRepo.findByWork(work.getWorkId());
-			String[] arr = new String[workmanagerlist.size()];
+			UserVO[] arr = new UserVO[workmanagerlist.size()];
 			for(int i=0;i<workmanagerlist.size();i++) {
-				arr[i] = workmanagerlist.get(i).getWorkManagerId().getUser().getUserId();
+				arr[i] = workmanagerlist.get(i).getWorkManagerId().getUser();
 			}
 			work.setManager(arr);
+			System.out.println("*******"+work);
 		}
-		System.out.println(worklist);
 		return worklist;
 	}
 	@PostMapping(value="/addWork/{team_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public WorkVO addWork(@RequestBody WorkVO work , @PathVariable Long team_id) {
+		System.out.println(work);
 		TeamVO team = teamRepo.findById(team_id).get();
 		
 		log.info("Check: {}", work.toString());
@@ -82,8 +83,8 @@ public class GyWorkRestController {
 		WorkVO insertwork = workRepo.save(work);
 		System.out.println(insertwork);
 		
-		for(String m:work.getManager()) {
-			UserVO user = userRepo.findByName(m);
+		for(String m:work.getManagerid()) {
+			UserVO user = userRepo.findById(m).get();
 			WorkManagerMultikey multikey = new WorkManagerMultikey(insertwork, user);
 			WorkManagerVO workmanager = new WorkManagerVO(multikey);
 			WorkManagerVO insertworkmanager = workManagerRepo.save(workmanager);
@@ -92,15 +93,15 @@ public class GyWorkRestController {
 		return work;
 	}
 	@GetMapping("/teamUserList/{team_id}")
-	public List<String> workmanagerlist(Model model, @PathVariable Long team_id) {
+	public List<UserVO> workmanagerlist(Model model, @PathVariable Long team_id) {
 		List<TeamUserVO> user = teamUserRepo.findByTeam(team_id);
-		List<String> teamusernamelist = new ArrayList<>();
+		List<UserVO> teamusernamelist = new ArrayList<>();
 		
 		for(TeamUserVO teamuser:user) {
 			//System.out.println("담당자들2 : "+teamuser);
 			UserVO uservo = teamuser.getTeamUserId().getUser();
 			//System.out.println("담당자1" + uservo);
-			teamusernamelist.add(uservo.getName());
+			teamusernamelist.add(uservo);
 		}
 		System.out.println(teamusernamelist);
 		return teamusernamelist;
@@ -110,9 +111,9 @@ public class GyWorkRestController {
 		WorkVO work = workRepo.findById(work_id).get();
 		List<WorkManagerVO> workmanagerlist = workManagerRepo.findByWork(work_id);
 
-		String[] arr = new String[workmanagerlist.size()];
+		UserVO[] arr = new UserVO[workmanagerlist.size()];
 		for(int i=0;i<workmanagerlist.size();i++) {
-			arr[i] = workmanagerlist.get(i).getWorkManagerId().getUser().getName();
+			arr[i] = workmanagerlist.get(i).getWorkManagerId().getUser();
 		}
 		work.setManager(arr);
 		return work;
@@ -143,8 +144,8 @@ public class GyWorkRestController {
 		
 		if(work.getManager()!=null) {
 			workManagerRepo.workManagerDelete(work_id);
-			for(String m:updatework.getManager()) {
-				UserVO user = userRepo.findByName(m);
+			for(String m:updatework.getManagerid()) {
+				UserVO user = userRepo.findById(m).get();
 				WorkManagerMultikey multikey = new WorkManagerMultikey(updatework, user);
 				WorkManagerVO workmanager = new WorkManagerVO(multikey);
 				WorkManagerVO modifyworkmanager = workManagerRepo.save(workmanager);
@@ -181,7 +182,7 @@ public class GyWorkRestController {
 			for(int i=0;i<workmanagerlist.size();i++) {
 				arr[i] = workmanagerlist.get(i).getWorkManagerId().getUser().getUserId();
 			}
-			work.setManager(arr);
+			work.setManagerid(arr);
 		}
 		System.out.println(worklist);
 		return worklist;

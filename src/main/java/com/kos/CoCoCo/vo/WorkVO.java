@@ -41,6 +41,8 @@ public class WorkVO {
 	private String workStatus;
 	
 	@Transient
-	String[] manager;
+	UserVO[] manager;
 
+	@Transient
+	String[] managerid;
 }

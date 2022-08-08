@@ -88,9 +88,10 @@ public class UserController {
 	}
 	
 	@PostMapping("/user/modify")
-	public String modifyMyProfile(UserVO user, MultipartFile newPhoto, HttpSession session) {
+	public String modifyMyProfile(UserVO user, String fileName, MultipartFile newPhoto, HttpSession session) {
 		uRepo.findById(user.getUserId()).ifPresent(i->{
-			if(!newPhoto.isEmpty()) {
+			if(!newPhoto.isEmpty() && newPhoto.getOriginalFilename().equals(fileName)) {
+				//이미지 변경
 				try {
 					awsS3.delete(i.getImage()); //s3에서도 삭제
 					
@@ -99,6 +100,11 @@ public class UserController {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+				
+			} else if(fileName.trim().equals("")) {
+				//이미지 삭제
+				awsS3.delete(i.getImage()); //s3에서도 삭제
+				i.setImage(null);
 			}
 			
 			i.setCompany(user.getCompany());
@@ -110,21 +116,6 @@ public class UserController {
 		});
 		
 		return "redirect:/main";
-	}
-	
-	@ResponseBody
-	@GetMapping("/user/deleteImg")
-	public void deleteImg(HttpSession session) {
-		UserVO user = (UserVO) session.getAttribute("user");
-		
-		uRepo.findById(user.getUserId()).ifPresent(i->{
-			awsS3.delete(i.getImage()); //s3에서도 삭제
-			
-			i.setImage(null);
-			uRepo.save(i);
-			
-			session.setAttribute("user", i);
-		});
 	}
 	
 	@Transactional

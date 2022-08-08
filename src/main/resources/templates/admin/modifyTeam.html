@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-	<div id="teamImg" th:if="${team.teamImg}">
-		<img th:src="${team.teamImg}" th:alt="${team.teamImg}" class="showImg rounded">
-		<img id="delImg" th:src="@{/images/deleteTeamImg.svg}">
+	<div id="teamImg">
+		<img th:src="${team.teamImg}?:@{/images/teamImg.png}" class="showImg rounded">
+		<label for="img">
+			<img th:src="@{/images/addFile.png}" id="addImgBtn" class="rounded-circle">
+		</label>
 	</div>
-	<img th:if="${team.teamImg==null}" th:src="@{/images/teamImg.png}" alt="null" class="showImg rounded">
 	
 	<div id="teamInfo">
 		<form id="modifyForm" action="/admin/modify" method="post" enctype="multipart/form-data">
+			<input type="file" name="newPhoto" id="img" class="form-control" accept="image/*">
 			<input type="hidden" name="teamId" th:value="${team.teamId}">
+			
 			<div class="form-group">
 				<label>WORKSPACE NAME</label>
 				<input type="text" name="teamName" class="form-control" th:value="${team.teamName}">
@@ -22,7 +25,9 @@
 			
 			<div class="form-group">
 				<label>WORKSPACE IMAGE</label>
-				<input type="file" name="newPhoto" id="img" class="form-control" accept="image/*">
+				<img id="delImg" th:src="@{/images/deleteTeamImg.svg}">
+				<input type="text" name="fileName" id="fileName" class="form-control"
+					th:value="${team.teamImg}?${team.teamImg.substring(110)}:null" readonly="readonly">
 			</div>
 			
 			<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
@@ -32,14 +37,13 @@
 		</form>
 	</div>
 	
-<style>
-input[type=file] {
-    padding: 3px;
-}
-</style>
 
 <script>
 $(function() {
+	if("${team.teamImg}" != "") {
+		$("#delImg").show();
+	}
+	
 	$("#modifyForm").submit(isEmpty);
 	$("#delImg").click(deleteImg);
 	$(".reloadBtn").click(reload);
@@ -56,16 +60,9 @@ function isEmpty() {
 }
 
 function deleteImg() {
-	if(confirm("이미지를 삭제하시겠습니까?")) {
-		$.ajax({
-			type:"get",
-			url:"/admin/deleteImg",
-			success: function() {
-				$(".showImg").attr("src", "/images/teamImg.png");
-				$("#delImg").hide();
-			}
-		});
-	}
+	$(".showImg").attr("src", "/images/teamImg.png");
+	$("#fileName").val(null);
+	$("#delImg").hide();
 }
 
 function reload() {
@@ -73,6 +70,7 @@ function reload() {
 }
 	
 function makeView(e) {
+	//썸네일
 	var reader = new FileReader();
 
 	reader.onload = function(e) {
@@ -80,6 +78,10 @@ function makeView(e) {
 	};
 
 	reader.readAsDataURL(e.target.files[0]);
+	
+	//파일 이름
+	var fileName = $(this).val().split("\\").pop();
+	$("#fileName").val(fileName);
 }
 	
 </script>

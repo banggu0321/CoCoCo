@@ -28,6 +28,22 @@
 			
 			</div><!-- .team_logo -->
 			
+			<div>
+				<img th:src="@{/images/logout.svg}" alt="logout" id="logout">
+				<form id="logoutForm" method="post" th:action="@{/logout}"></form>
+			</div>
+			
+			<div>
+			
+			</div>
 		</div><!-- #top -->
+		
+		<script>
+		$(function() {
+			$("#logout").click(function() {
+				$("#logoutForm").submit();
+			});
+		})
+		</script>
 </div>
 </html>

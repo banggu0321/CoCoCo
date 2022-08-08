@@ -117,9 +117,10 @@ public class AdminController {
 	}
 	
 	@PostMapping("/modify")
-	public String modifyTeam(TeamVO team, MultipartFile newPhoto, HttpSession session) {
+	public String modifyTeam(TeamVO team, String fileName, MultipartFile newPhoto, HttpSession session) {
 		tRepo.findById(team.getTeamId()).ifPresent(i->{		
-			if (!newPhoto.isEmpty()) {
+			if (!newPhoto.isEmpty() && newPhoto.getOriginalFilename().equals(fileName)) {
+				//이미지 변경
 				try {
 					awsS3.delete(i.getTeamImg()); //s3에서도 삭제
 					
@@ -128,6 +129,11 @@ public class AdminController {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+				
+			}else if(fileName.trim().equals("")) {
+				//이미지 삭제
+				awsS3.delete(i.getTeamImg()); //s3에서도 삭제
+				i.setTeamImg(null);
 			}
 			
 			i.setTeamInfo(team.getTeamInfo());
@@ -140,22 +146,6 @@ public class AdminController {
 		session.setAttribute("teamList", tuRepo.findByUserId(user.getUserId()));
 		
 		return "redirect:/admin/team";
-	}
-	
-	@ResponseBody
-	@GetMapping("/deleteImg")
-	public void deleteImg(HttpSession session) {
-		Long teamId = (Long) session.getAttribute("teamId");
-		
-		tRepo.findById(teamId).ifPresent(i->{
-			awsS3.delete(i.getTeamImg()); //s3에서도 삭제
-			
-			i.setTeamImg(null);
-			tRepo.save(i);
-		});
-		
-		UserVO user = (UserVO) session.getAttribute("user");
-		session.setAttribute("teamList", tuRepo.findByUserId(user.getUserId()));
 	}
 	
 	@Transactional

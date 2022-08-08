@@ -16,7 +16,7 @@
 <div layout:fragment="content">
 	<div id="mainTitle">
 		<button data-toggle="modal" data-target="#enterTeamModal" class="btn btn-cococo inviteBtn">초대코드</button>
-		<h3 id="title">WORKSPACE LIST</h3>
+		<h2 id="title">WORKSPACE LIST</h2>
 	</div>
 	
 	<div id="pagingBody">
@@ -65,8 +65,13 @@
 	       		
 	        	<div class="modal-body">
 	        		<img th:src="@{/images/teamImg.png}" class="showImg rounded">
+	        		<label for="teamPhoto">
+						<img th:src="@{/images/addFile.png}" id="addImg" class="rounded-circle">
+					</label>
 	        		
 	        		<form id="addTeamForm" method="post" enctype="multipart/form-data">
+						<input type="file" name="teamPhoto" id="teamPhoto" class="form-control" accept="image/*">
+						
 			        	<label>WORKSPACE NAME</label>
 			        	<input type="text" name="teamName" class="form-control">
 			        	
@@ -74,9 +79,13 @@
 			         	<textarea class="form-control body1" name="teamInfo" rows="2"></textarea>
 						
 						<div>
-							<label>WORKSPACE IMG</label> 
-							<input type="file" name="teamPhoto" id="img" class="form-control" accept="image/*">
+							<label>WORKSPACE IMG</label>
+							<img id="deleteImg" th:src="@{/images/deleteTeamImg.svg}">
+				        	<input type="text" name="fileName" id="imgName" class="form-control" readonly="readonly">
 						</div>
+						
+						<input type="hidden" name="page" th:value="${paging.totalPageNum}">
+						<input type="hidden" name="size" th:value="${paging.currentPage.pageSize}">
 						
 						<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 		        	</form>
@@ -84,7 +93,7 @@
 			
 				<div class="modal-footer">
 			    	<button id = "addTeamBtn" class="btn btn-cococo">워크스페이스 만들기</button>
-			    	<button type="button" class="btn btn-light valDel" data-dismiss="modal">취소</button>
+			    	<button type="button" class="btn btn-light" data-dismiss="modal">취소</button>
 	        	</div>
 	        </div>
     	</div>
@@ -103,7 +112,7 @@
 		        </div>
 				<div class="modal-footer">
 			    	<button id = "enterBtn" class="btn btn-cococo">워크스페이스 입장</button>
-			    	<button type="button" class="btn btn-light valDel" data-dismiss="modal">취소</button>
+			    	<button type="button" class="btn btn-light" data-dismiss="modal">취소</button>
 	        	</div>
 	        </div>
     	</div>
@@ -121,7 +130,7 @@
 	        	<div class="modal-body">
 					<select class="form-control" name="status">
 						<option>출근</option>
-						<option>회의중</option>
+						<option>회의</option>
 						<option>자리비움</option>
 						<option>외근</option>
 						<option>퇴근</option>
@@ -149,6 +158,8 @@
 			$("#updateStatusModal").modal("show");
 		}
 		
+		$("input[name='from']").val("m");
+		
 		$(".pagingBtn img").click(movePage);
 	 	$(".box").click(goTeamMain);
 	 	$("#enterBtn").click(enterTeam);
@@ -156,7 +167,8 @@
 	 	$("body").click(hideMenu);
 	 	$(".delBtn").click(deleteTeam);
 	 	$("#addTeamBtn").click(addTeam);
-	 	$("#img").change(makeView);
+	 	$("#deleteImg").click(deleteMyImg);
+	 	$("#teamPhoto").change(showImg);
 	 	$(".addTeam").click(valueDelete);
 	 	$(".inviteBtn").click(valueDelete);
 	 	$("#statusUpdate").click(updateStatus);
@@ -211,7 +223,7 @@
 	}
 		
 	function hideMenu() {
-		$("button[class='btn btn-outline-cococo delBtn']").hide();
+		$(".delBtn").hide();
 	}
 		
 	function deleteTeam(e) {
@@ -236,8 +248,16 @@
 		addForm.attr("action","/addTeam");
 		addForm.submit();
 	}
-		
-	function makeView(event) {
+	
+	function deleteMyImg() {
+		$(".showImg").attr("src", "/images/userImg.svg");
+		$("#imgName").val(null);
+		$("#deleteImg").hide();
+	}
+	
+	function showImg(event) {
+		$("#deleteImg").show();
+		//썸네일
 		var reader = new FileReader();
 
 		reader.onload = function(event) {
@@ -245,12 +265,17 @@
 		};
 
 		reader.readAsDataURL(event.target.files[0]);
+		
+		//파일 이름
+		var imgName = $(this).val().split("\\").pop();
+		$("#imgName").val(imgName);
 	}
 		
 	function valueDelete() {
 		$("#code").val("");
 		$("input[name='teamName']").val("");
 		$("input[name='teamPhoto']").val("");
+		$("input[name='imgName']").val("");
 		$("textarea").val("");
 		$(".showImg").attr("src", "/images/teamImg.png");
 	}

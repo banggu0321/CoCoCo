@@ -1,11 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-	<img th:src="${team.teamImg}?:@{/images/teamImg.png}" class="showImg rounded" th:alt="${team.teamImg}">
+	<div id="teamImg">
+		<img th:src="${team.teamImg}?:@{/images/teamImg.png}" class="showImg rounded">
+		<label for="img">
+			<img th:src="@{/images/addFile.png}" id="addImgBtn" class="rounded-circle">
+		</label>
+	</div>
 	
 	<div id="teamInfo">
 		<form id="modifyForm" action="/admin/modify" method="post" enctype="multipart/form-data">
+			<input type="file" name="newPhoto" id="img" class="form-control" accept="image/*">
 			<input type="hidden" name="teamId" th:value="${team.teamId}">
+			
 			<div class="form-group">
 				<label>WORKSPACE NAME</label>
 				<input type="text" name="teamName" class="form-control" th:value="${team.teamName}">
@@ -18,7 +25,9 @@
 			
 			<div class="form-group">
 				<label>WORKSPACE IMAGE</label>
-				<input type="file" name="newPhoto" id="img" class="form-control" accept="image/*">
+				<img id="delImg" th:src="@{/images/deleteTeamImg.svg}">
+				<input type="text" name="fileName" id="fileName" class="form-control"
+					th:value="${team.teamImg}?${team.teamImg.substring(110)}:null" readonly="readonly">
 			</div>
 			
 			<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
@@ -28,15 +37,15 @@
 		</form>
 	</div>
 	
-<style>
-input[type=file] {
-    padding: 3px;
-}
-</style>
 
 <script>
 $(function() {
+	if("${team.teamImg}" != "") {
+		$("#delImg").show();
+	}
+	
 	$("#modifyForm").submit(isEmpty);
+	$("#delImg").click(deleteImg);
 	$(".reloadBtn").click(reload);
 	$("#img").change(makeView);
 })
@@ -50,18 +59,29 @@ function isEmpty() {
 	}
 }
 
+function deleteImg() {
+	$(".showImg").attr("src", "/images/teamImg.png");
+	$("#fileName").val(null);
+	$("#delImg").hide();
+}
+
 function reload() {
 	location.reload();
 }
 	
-function makeView(event) {
+function makeView(e) {
+	//썸네일
 	var reader = new FileReader();
 
-	reader.onload = function(event) {
-		$(".showImg").attr("src", event.target.result);
+	reader.onload = function(e) {
+		$(".showImg").attr("src", e.target.result);
 	};
 
-	reader.readAsDataURL(event.target.files[0]);
+	reader.readAsDataURL(e.target.files[0]);
+	
+	//파일 이름
+	var fileName = $(this).val().split("\\").pop();
+	$("#fileName").val(fileName);
 }
 	
 </script>

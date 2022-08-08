@@ -1,22 +1,26 @@
 <!DOCTYPE html>
-<html xmlns:th="www.thymeleaf.org">
+<html xmlns:th="www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="~{/layout/layout1}"
+>
 <head>
 <meta charset="utf-8">
 <title>board insert</title>
 <style>
-
 #boardInsert{
-margin: 0 auto;
-width: 70%;
+	width: 900px;
+	margin: 0 auto;
+	margin-top: 40px;
+	
+	padding: 1%;
+	background:white;
 }
 </style>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
 </head>
 <body>
 
+<div layout:fragment="inner_content" class="inner_content">
 <div id="boardInsert">
 <form method="post" action="/postBoardInsertSample2" class="form-group">
 
@@ -57,5 +61,7 @@ cancelBtn.onclick=function(){
 }
 
 </script>
+
+</div>
 </body>
 </html>

@@ -8,7 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,10 +50,23 @@ public class sampleController2 {
 	@Autowired
 	BoardCategoryRepositoryTestSu boardcateRP;
 	
-//	@GetMapping("/boardSampleBeta")
-//	public String boardlist() {			
-//		return "su/thymeleaf/boardMain";
-//	}
+	@GetMapping("/getNext/{pageNumber}")
+	public String boardMainNavByPageNum(@PathVariable String pageNumber, Model model){
+		
+		PageVO voTemp = new PageVO();
+		
+
+		Pageable page = PageRequest.of(Integer.valueOf(pageNumber), voTemp.getSize(), Direction.DESC, "boardId");
+		Page<BoardVO>  result = boardRP.findAll(boardRP.makePredicate(null, null), page);
+		
+		model.addAttribute("result", new PageMaker(result));
+		model.addAttribute("boardList", result.getContent());
+		
+		System.out.println("pageNumber: "+pageNumber);
+		System.out.println("page size: "+voTemp.getSize());
+		
+		return "su/thymeleaf/boardMain";
+	}
 	
 	@GetMapping("/boardSampleBeta")
 	public String boardlist(PageVO vo, Model model) {	
@@ -59,17 +74,8 @@ public class sampleController2 {
 		Pageable page = vo.makePageable(0, "boardId");
 		Page<BoardVO>  result = boardRP.findAll(boardRP.makePredicate(null, null), page);
 		
-		model.addAttribute("result", new PageMaker(result));
-		
-		
-		System.out.println("result.getSize: "+result.getSize());
-		System.out.println("result.getTotalPage: "+result.getTotalPages());
-		System.out.println("result.getTotalElements: "+result.getTotalElements());
-		System.out.println("result.nextPageable: "+result.nextPageable());
-		
-		System.out.println("result.getPageable: "+ result.getPageable());
-		System.out.println("result.getPageable.previoudOrFirst: "+result.getPageable().previousOrFirst());
-		System.out.println("result.getPageable.getPageNumber: "+result.getPageable().getPageNumber());
+		model.addAttribute("result", new PageMaker(result));		
+		model.addAttribute("boardList", result.getContent());
 		
 		return "su/thymeleaf/boardMain";
 	}

@@ -40,14 +40,14 @@
 		var userId = "[[${session.user.userId}]]";
 		var company = "[[${session.user.company}]]";
 		var fileName = "[[${session.user.image}]]".substring(110);
-		var img = $(".myProfileImg").attr("src");
+		var img = "[[${session.user.image}]]";
 		
 		$("input[name='name']").val(name);
 		$("input[name='userId']").val(userId);
 		$("input[name='company']").val(company);
 		$("#fileName").val(fileName);
 		$("input[name='newPhoto']").val("");
-		$(".myImg").attr("src", img);
+		$(".myImg").attr("src", img?img:"/images/userImg.svg");
 		
 		if(img != "/images/userImg.svg") {
 			$("#delImg").show();

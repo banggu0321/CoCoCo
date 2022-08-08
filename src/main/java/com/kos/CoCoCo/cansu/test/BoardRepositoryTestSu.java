@@ -1,5 +1,6 @@
 package com.kos.CoCoCo.cansu.test;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
@@ -39,12 +40,21 @@ public interface BoardRepositoryTestSu extends PagingAndSortingRepository<BoardV
 		
 		switch(type) {
 		case "t":
-//			builder.and(board.isNotNull());
+			builder.and(board.boardTitle.like("%"+keyword+"%"));
+			break;
+		case "w":
+			builder.and(board.user.name.like("%"+keyword+"%"));
+			break;
+		case "c":
+			builder.and(board.boardText.like("%"+keyword+"%"));
+			break;
+			
+			
+			
+		case "d":
+			builder.and(board.boardUpdate.after(Timestamp.valueOf(keyword)));
 			break;
 		}
-		
-		
 		return builder;
 	}
-
 }

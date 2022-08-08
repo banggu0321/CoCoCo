@@ -136,6 +136,18 @@ justify-content: center;
 					</li>
 				</ul>
 			</nav>
+			
+			<div id="boardMainSearch">
+			<select id="searchType">
+			<option></option>
+			<option value='t'>Title</option>
+			<option value='c'>Content</option>
+			<option value='w'>Writer</option>						
+			</select>
+			
+			<input type='text' id='searchKeyword'>
+			<button id='searchBtn'>검색</button>						
+			</div>
 		</div>
 	</div>
 
@@ -193,14 +205,20 @@ justify-content: center;
 	var navPListNext = document.getElementById("nextPLnext");	
 	var navNumber = document.getElementById("nextPLvalue");
 	
-	//var replyReg = document.getElementById("replyRegDate");
-	//var replyUp = document.getElementById("replyUpDate");
+	var searchBtn = document.getElementById("searchBtn");
+	var searchKW = document.getElementById("searchKeyword");
+	var searchType = document.getElementById("searchType");
 	
 	</script>
 
 	<script th:inline="javascript">
 		formA.onclick = function() {
 			alert("form clicked");
+		}
+		
+		searchBtn.onclick=function(){
+			alert("search button clicked input value: "+searchKW.value+
+					", type:"+searchType.options[searchType.selectedIndex].value);
 		}
 		
 		if(navPageList!= null){

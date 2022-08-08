@@ -30,6 +30,17 @@
     height: 160px;
 }
 
+#addImgBtn{
+	width: 35px;
+	position: absolute;
+    bottom: 7%;
+    right: -90%;
+}
+
+#img {
+	display: none;
+}
+
 .myImg, .myProfileImg {
 	width: 150px;
 	height: 150px;
@@ -37,14 +48,13 @@
 }
 
 #delImg {
-	width: 25px;
-	height: 25px;
-	position: absolute;
-    right: -105%;
-    top: 0%;
+	display: none;
+	width: 20px;
+    height: 20px;
+    padding-bottom: 2px;
 }
 
-#delImg:hover {
+#delImg:hover, #addImgBtn:hover {
 	cursor: pointer;
 }
 

@@ -71,8 +71,8 @@ public class MainController {
 	}
 	
 	@PostMapping("/addTeam")
-	public String addTeam(TeamVO team, MultipartFile teamPhoto, HttpSession session) throws IOException{
-		if (!teamPhoto.isEmpty()) {
+	public String addTeam(TeamVO team, PageVO pageVO, String fileName, MultipartFile teamPhoto, HttpSession session) throws IOException{
+		if (!teamPhoto.isEmpty() && teamPhoto.getOriginalFilename().equals(fileName)) {
 			String img = awsS3.upload(teamPhoto, "uploads/teamImages/");
 			team.setTeamImg(img);
 	    }
@@ -87,7 +87,7 @@ public class MainController {
 		TeamUserVO teamUser = TeamUserVO.builder().teamUserId(teamUserId).userRole("ADMIN").build();
 		tuRepo.save(teamUser);
 		
-		return "redirect:/CoCoCo";
+		return "redirect:/CoCoCo?page=" + pageVO.getPage() +"&size=" + pageVO.getSize();
 	}
 	
 	@GetMapping("/deleteTeam/{teamId}")

@@ -16,7 +16,7 @@
 <div layout:fragment="content">
 	<div id="mainTitle">
 		<button data-toggle="modal" data-target="#enterTeamModal" class="btn btn-cococo inviteBtn">초대코드</button>
-		<h3 id="title">WORKSPACE LIST</h3>
+		<h2 id="title">WORKSPACE LIST</h2>
 	</div>
 	
 	<div id="pagingBody">
@@ -65,8 +65,13 @@
 	       		
 	        	<div class="modal-body">
 	        		<img th:src="@{/images/teamImg.png}" class="showImg rounded">
+	        		<label for="img">
+						<img th:src="@{/images/addFile.png}" id="addImgBtn" class="rounded-circle">
+					</label>
 	        		
 	        		<form id="addTeamForm" method="post" enctype="multipart/form-data">
+						<input type="file" name="teamPhoto" id="img" class="form-control" accept="image/*">
+						
 			        	<label>WORKSPACE NAME</label>
 			        	<input type="text" name="teamName" class="form-control">
 			        	
@@ -74,9 +79,13 @@
 			         	<textarea class="form-control body1" name="teamInfo" rows="2"></textarea>
 						
 						<div>
-							<label>WORKSPACE IMG</label> 
-							<input type="file" name="teamPhoto" id="img" class="form-control" accept="image/*">
+							<label>WORKSPACE IMG</label>
+							<img id="delImg" th:src="@{/images/deleteTeamImg.svg}">
+				        	<input type="text" name="fileName" id="fileName" class="form-control" readonly="readonly">
 						</div>
+						
+						<input type="hidden" name="page" th:value="${paging.totalPageNum}">
+						<input type="hidden" name="size" th:value="${paging.currentPage.pageSize}">
 						
 						<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 		        	</form>
@@ -121,7 +130,7 @@
 	        	<div class="modal-body">
 					<select class="form-control" name="status">
 						<option>출근</option>
-						<option>회의중</option>
+						<option>회의</option>
 						<option>자리비움</option>
 						<option>외근</option>
 						<option>퇴근</option>
@@ -156,6 +165,7 @@
 	 	$("body").click(hideMenu);
 	 	$(".delBtn").click(deleteTeam);
 	 	$("#addTeamBtn").click(addTeam);
+	 	$("#delImg").click(delMyImg);
 	 	$("#img").change(makeView);
 	 	$(".addTeam").click(valueDelete);
 	 	$(".inviteBtn").click(valueDelete);
@@ -211,7 +221,7 @@
 	}
 		
 	function hideMenu() {
-		$("button[class='btn btn-outline-cococo delBtn']").hide();
+		$(".delBtn").hide();
 	}
 		
 	function deleteTeam(e) {
@@ -236,8 +246,16 @@
 		addForm.attr("action","/addTeam");
 		addForm.submit();
 	}
-		
+	
+	function delMyImg() {
+		$(".showImg").attr("src", "/images/userImg.svg");
+		$("#fileName").val(null);
+		$("#delImg").hide();
+	}
+	
 	function makeView(event) {
+		$("#delImg").show();
+		//썸네일
 		var reader = new FileReader();
 
 		reader.onload = function(event) {
@@ -245,12 +263,17 @@
 		};
 
 		reader.readAsDataURL(event.target.files[0]);
+		
+		//파일 이름
+		var fileName = $(this).val().split("\\").pop();
+		$("#fileName").val(fileName);
 	}
 		
 	function valueDelete() {
 		$("#code").val("");
 		$("input[name='teamName']").val("");
 		$("input[name='teamPhoto']").val("");
+		$("input[name='fileName']").val("");
 		$("textarea").val("");
 		$(".showImg").attr("src", "/images/teamImg.png");
 	}

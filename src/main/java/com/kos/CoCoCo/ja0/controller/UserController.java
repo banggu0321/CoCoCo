@@ -88,9 +88,10 @@ public class UserController {
 	}
 	
 	@PostMapping("/user/modify")
-	public String modifyMyProfile(UserVO user, MultipartFile newPhoto, HttpSession session) {
+	public String modifyMyProfile(UserVO user, String fileName, MultipartFile newPhoto, HttpSession session) {
 		uRepo.findById(user.getUserId()).ifPresent(i->{
-			if(!newPhoto.isEmpty()) {
+			if(!newPhoto.isEmpty() && newPhoto.getOriginalFilename().equals(fileName)) {
+				//이미지 변경
 				try {
 					awsS3.delete(i.getImage()); //s3에서도 삭제
 					
@@ -99,6 +100,11 @@ public class UserController {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+				
+			} else if(fileName.trim().equals("")) {
+				//이미지 삭제
+				awsS3.delete(i.getImage()); //s3에서도 삭제
+				i.setImage(null);
 			}
 			
 			i.setCompany(user.getCompany());
@@ -112,32 +118,13 @@ public class UserController {
 		return "redirect:/main";
 	}
 	
-	@GetMapping("/user/deleteImg")
-	public String deleteImg(HttpSession session) {
-		UserVO user = (UserVO) session.getAttribute("user");
-		
-		uRepo.findById(user.getUserId()).ifPresent(i->{
-			awsS3.delete(i.getImage()); //s3에서도 삭제
-			
-			i.setImage(null);
-			uRepo.save(i);
-			
-			session.setAttribute("user", i);
-		});
-		
-		return "redirect:/main";
-	}
-	
 	@Transactional
 	@GetMapping("/user/delete")
 	public String deleteUser(HttpSession session, RedirectAttributes attr) {
 		Optional<UserVO> none = uRepo.findById("XXXXX");
-		UserVO userNone;
-		if(none.isPresent()) {
-			userNone = none.get();
-		} else {
+		if(!none.isPresent()) { //없으면 만들기
 			UserVO newUser = UserVO.builder().userId("XXXXX").name("알수없음").build();
-			userNone = uRepo.save(newUser);
+			uRepo.save(newUser);
 		}
 		
 		UserVO user = (UserVO) session.getAttribute("user");

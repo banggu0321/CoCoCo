@@ -72,40 +72,42 @@
 
 <div layout:fragment="inner_content">
 	<div class="inner_content">
-		<table id="userList" class="table">
-			<tr class="head">
-				<td></td>
-				<td>이름</td>
-				<td>이메일</td>
-				<td>소속</td>
-				<td>상태</td>
-				<td>참여일자</td>
-				<td>권한</td>
-				<td></td>
-				<td></td>
-			</tr>
-			
-			<tr id="teamUser" th:each="user, rowStatus:${userList}">
-				<td th:text="${rowStatus.count}">순서</td>
-				<td th:text="${user.teamUserId.user.name}">이름</td>
-				<td th:text="${user.teamUserId.user.userId}">이메일</td>
-				<td th:text="${user.teamUserId.user.company}">소속</td>
-				<td th:text="${user.teamUserId.user.status}">상태</td>
-				<td th:text="${#dates.format(user.joinDate,'yyyy-MM-dd')}">참여일자</td>
-				<td th:text="${user.userRole}">권한</td>
+		<div id="listTable">
+			<table id="userList" class="table">
+				<tr class="head">
+					<td></td>
+					<td>이름</td>
+					<td>이메일</td>
+					<td>소속</td>
+					<td>상태</td>
+					<td>참여일자</td>
+					<td>권한</td>
+					<td></td>
+					<td></td>
+				</tr>
 				
-				<td th:if="${user.teamUserId.user.userId == user.teamUserId.team.user.userId || user.teamUserId.user.userId == session.user.userId}"></td>
-				<td th:if="${user.teamUserId.user.userId != user.teamUserId.team.user.userId && user.teamUserId.user.userId != session.user.userId}" 
-						data-toggle="modal" data-target="#updateUserRoleModal">
-					<img th:src="@{/images/updateRole.svg}" class="updateUser" th:user-data="${user.teamUserId.user.userId}" alt="update">
-				</td>
-				
-				<td th:if="${user.teamUserId.user.userId == user.teamUserId.team.user.userId || user.teamUserId.user.userId == session.user.userId}"></td>
-				<td th:if="${user.teamUserId.user.userId != user.teamUserId.team.user.userId && user.teamUserId.user.userId != session.user.userId}">
-					<img th:src="@{/images/deleteImg.svg}" class="delUser" th:user-data="${user.teamUserId.user.userId}" alt="delete">
-				</td>
-			</tr>
-		</table>
+				<tr id="teamUser" th:each="user, rowStatus:${userList}">
+					<td th:text="${rowStatus.count}">순서</td>
+					<td th:text="${user.teamUserId.user.name}">이름</td>
+					<td th:text="${user.teamUserId.user.userId}">이메일</td>
+					<td th:text="${user.teamUserId.user.company}">소속</td>
+					<td th:text="${user.teamUserId.user.status}">상태</td>
+					<td th:text="${#dates.format(user.joinDate,'yyyy-MM-dd')}">참여일자</td>
+					<td th:text="${user.userRole}">권한</td>
+					
+					<td th:if="${user.teamUserId.user.userId == user.teamUserId.team.user.userId || user.teamUserId.user.userId == session.user.userId}"></td>
+					<td th:if="${user.teamUserId.user.userId != user.teamUserId.team.user.userId && user.teamUserId.user.userId != session.user.userId}" 
+							data-toggle="modal" data-target="#updateUserRoleModal">
+						<img th:src="@{/images/updateRole.svg}" class="updateUser" th:user-data="${user.teamUserId.user.userId}" alt="update">
+					</td>
+					
+					<td th:if="${user.teamUserId.user.userId == user.teamUserId.team.user.userId || user.teamUserId.user.userId == session.user.userId}"></td>
+					<td th:if="${user.teamUserId.user.userId != user.teamUserId.team.user.userId && user.teamUserId.user.userId != session.user.userId}">
+						<img th:src="@{/images/deleteImg.svg}" class="delUser" th:user-data="${user.teamUserId.user.userId}" alt="delete">
+					</td>
+				</tr>
+			</table>
+		</div>
 	</div>
 	
 	<!-- 권한변경 모달 -->

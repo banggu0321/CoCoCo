@@ -22,7 +22,6 @@
 		}
 		
 		$("#modifyForm").click(modifyForm);
-		$("#delImg").click(deleteImg);
 		$("#deleteBtn").click(deleteTeam);
 	})
 	
@@ -36,13 +35,7 @@
 			}
 		})
 	}
-	
-	function deleteImg() {
-		if(confirm("이미지를 삭제하시겠습니까?")) {
-			location.href="/admin/deleteImg";
-		}
-	}
-	
+
 	function deleteTeam() {
 		if(confirm("워크스페이스를 삭제하시겠습니까?\n삭제된 정보는 복구되지않습니다.")) {
 			location.href="/admin/delete";
@@ -58,11 +51,8 @@
 <div layout:fragment="inner_content">
 	<div class="inner_content">
 		<div id="box">
-			<div id="teamImg" th:if="${team.teamImg}">
-				<img th:src="${team.teamImg}" th:alt="${team.teamImg}" class="showImg rounded">
-				<img id="delImg" th:src="@{/images/deleteTeamImg.svg}">
-			</div>
-			<img th:if="${team.teamImg==null}" th:src="@{/images/teamImg.png}" alt="null" class="showImg rounded">
+			<img th:src="${team.teamImg}?:@{/images/teamImg.png}" class="showImg rounded" th:alt="${team.teamImg}">
+			
 			<div id="teamInfo">
 				<label>WORKSPACE NAME</label>
 				<p>[[${team.teamName}]]</p>

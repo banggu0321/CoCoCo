@@ -15,7 +15,7 @@ import lombok.ToString;
 @Builder
 @ToString
 public class PageVO {
-	private static final int DEFAULT_SIZE = 9;
+	private static final int DEFAULT_SIZE = 4;
 	private static final int DEFAULT_MAX_SIZE = 50;
 
 	int page;

@@ -4,11 +4,15 @@
 	flex-direction: row-reverse;
 }
 
-#logout {
+.topMenu {
+	padding: 0px 20px;
+}
+
+#logout, #myProfile {
 	width: 30px;	
 }
 
-#logout:hover {
+#logout:hover, #myProfile:hover {
 	cursor: pointer;
 }
 
@@ -77,18 +81,18 @@
     height: 20px;
 }
 
-#addImgBtn{
+#addImg{
 	width: 40px;
     position: absolute;
     bottom: 9%;
     left: 37%;
 }
 
-#img {
+#teamPhoto {
 	display: none;
 }
 
-#delImg {
+#deleteImg {
 	display: none;
 	width: 20px;
     height: 20px;
@@ -128,7 +132,7 @@
 	width: 30px;
 }
 
-.pagingBtn img:hover, #addImgBtn:hover, #delImg:hover {
+.pagingBtn img:hover, #addImg:hover, #deleteImg:hover {
 	cursor: pointer;
 }
 
@@ -138,7 +142,7 @@
     align-items: center;
 }
 
-.modal-dialog {
+#addTeamModal .modal-dialog {
     max-width: 700px;
 }
 

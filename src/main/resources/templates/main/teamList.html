@@ -65,12 +65,12 @@
 	       		
 	        	<div class="modal-body">
 	        		<img th:src="@{/images/teamImg.png}" class="showImg rounded">
-	        		<label for="img">
-						<img th:src="@{/images/addFile.png}" id="addImgBtn" class="rounded-circle">
+	        		<label for="teamPhoto">
+						<img th:src="@{/images/addFile.png}" id="addImg" class="rounded-circle">
 					</label>
 	        		
 	        		<form id="addTeamForm" method="post" enctype="multipart/form-data">
-						<input type="file" name="teamPhoto" id="img" class="form-control" accept="image/*">
+						<input type="file" name="teamPhoto" id="teamPhoto" class="form-control" accept="image/*">
 						
 			        	<label>WORKSPACE NAME</label>
 			        	<input type="text" name="teamName" class="form-control">
@@ -80,8 +80,8 @@
 						
 						<div>
 							<label>WORKSPACE IMG</label>
-							<img id="delImg" th:src="@{/images/deleteTeamImg.svg}">
-				        	<input type="text" name="fileName" id="fileName" class="form-control" readonly="readonly">
+							<img id="deleteImg" th:src="@{/images/deleteTeamImg.svg}">
+				        	<input type="text" name="fileName" id="imgName" class="form-control" readonly="readonly">
 						</div>
 						
 						<input type="hidden" name="page" th:value="${paging.totalPageNum}">
@@ -93,7 +93,7 @@
 			
 				<div class="modal-footer">
 			    	<button id = "addTeamBtn" class="btn btn-cococo">워크스페이스 만들기</button>
-			    	<button type="button" class="btn btn-light valDel" data-dismiss="modal">취소</button>
+			    	<button type="button" class="btn btn-light" data-dismiss="modal">취소</button>
 	        	</div>
 	        </div>
     	</div>
@@ -112,7 +112,7 @@
 		        </div>
 				<div class="modal-footer">
 			    	<button id = "enterBtn" class="btn btn-cococo">워크스페이스 입장</button>
-			    	<button type="button" class="btn btn-light valDel" data-dismiss="modal">취소</button>
+			    	<button type="button" class="btn btn-light" data-dismiss="modal">취소</button>
 	        	</div>
 	        </div>
     	</div>
@@ -165,8 +165,8 @@
 	 	$("body").click(hideMenu);
 	 	$(".delBtn").click(deleteTeam);
 	 	$("#addTeamBtn").click(addTeam);
-	 	$("#delImg").click(delMyImg);
-	 	$("#img").change(makeView);
+	 	$("#deleteImg").click(deleteMyImg);
+	 	$("#teamPhoto").change(showImg);
 	 	$(".addTeam").click(valueDelete);
 	 	$(".inviteBtn").click(valueDelete);
 	 	$("#statusUpdate").click(updateStatus);
@@ -247,14 +247,14 @@
 		addForm.submit();
 	}
 	
-	function delMyImg() {
+	function deleteMyImg() {
 		$(".showImg").attr("src", "/images/userImg.svg");
-		$("#fileName").val(null);
-		$("#delImg").hide();
+		$("#imgName").val(null);
+		$("#deleteImg").hide();
 	}
 	
-	function makeView(event) {
-		$("#delImg").show();
+	function showImg(event) {
+		$("#deleteImg").show();
 		//썸네일
 		var reader = new FileReader();
 
@@ -265,15 +265,15 @@
 		reader.readAsDataURL(event.target.files[0]);
 		
 		//파일 이름
-		var fileName = $(this).val().split("\\").pop();
-		$("#fileName").val(fileName);
+		var imgName = $(this).val().split("\\").pop();
+		$("#imgName").val(imgName);
 	}
 		
 	function valueDelete() {
 		$("#code").val("");
 		$("input[name='teamName']").val("");
 		$("input[name='teamPhoto']").val("");
-		$("input[name='fileName']").val("");
+		$("input[name='imgName']").val("");
 		$("textarea").val("");
 		$(".showImg").attr("src", "/images/teamImg.png");
 	}

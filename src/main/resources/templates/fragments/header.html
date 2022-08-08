@@ -24,20 +24,17 @@
 
 <div th:fragment="header2">
 		<div id="top">
-			<div class="team_logo">
-			
-			</div><!-- .team_logo -->
-			
-			<div>
+			<div class = "topMenu">
 				<img th:src="@{/images/logout.svg}" alt="logout" id="logout">
 				<form id="logoutForm" method="post" th:action="@{/logout}"></form>
 			</div>
 			
-			<div>
-			
+			<div class = "topMenu">
+				<img th:src="@{/images/myProfile.svg}" id="myProfile" data-toggle="modal" data-target="#MyPageModal">
 			</div>
 		</div><!-- #top -->
 		
+		<div th:replace="~{/main/myProfileModal}"></div>
 		<script>
 		$(function() {
 			$("#logout").click(function() {

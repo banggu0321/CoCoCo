@@ -50,34 +50,48 @@ public class tableCRUDTest {
 	ReplyRepositoryTestSu replyRP;
 
 	@Test
-	public void insertBoard() {
+	public void selectBoardBycategoryID() {
+		List<Long> categoryID = new ArrayList<>();
+		categoryID.add(459222L);
+		categoryID.add(997132L);
+		categoryID.add(351303L);
+		categoryID.add(412403L);
 		
-		IntStream.rangeClosed(1, 100).forEach(a->{
-			
-		// board category insert + board insert
-		long gnrTemp =  new Random().nextLong();
-		if(gnrTemp <0) {
-			gnrTemp = -1*gnrTemp;
-		}
-		long gnrValue = Long.valueOf(String.valueOf(gnrTemp).substring(0, 6));
-//		System.out.println(gnrValue);
+		System.out.println(categoryID);
 		
-		UserVO uservo = userRP.findById("su0804").get();
-		TeamVO teamvo =  teamRP.selectByUserID(uservo.getUserId());
-		System.out.println(teamvo);
-		
-		BoardCategoryMultikey bctemp = BoardCategoryMultikey.builder().categoryId(gnrValue).team(teamvo).build();
-		BoardCategoryVO bcvotemp = BoardCategoryVO.builder().boardCategoryId(bctemp).categoryName("0805").build();
-//		System.out.println(bcvotemp);
-		boardcateRP.save(bcvotemp);
-
-		
-		BoardVO boardTemp = BoardVO.builder().category(bcvotemp).user(uservo).boardTitle("pageable sample 0805").build(); 
-		boardRP.save(boardTemp);
-		
-		
-		});
+//		List<BoardVO> boardList = boardRP.selectBoardByIDbeta(categoryID,null);
+//		System.out.println(boardList);
 	}
+	
+//	@Test
+//	public void insertBoard() {
+//		
+//		IntStream.rangeClosed(1, 100).forEach(a->{
+//			
+//		// board category insert + board insert
+//		long gnrTemp =  new Random().nextLong();
+//		if(gnrTemp <0) {
+//			gnrTemp = -1*gnrTemp;
+//		}
+//		long gnrValue = Long.valueOf(String.valueOf(gnrTemp).substring(0, 6));
+////		System.out.println(gnrValue);
+//		
+//		UserVO uservo = userRP.findById("su0804").get();
+//		TeamVO teamvo =  teamRP.selectByUserID(uservo.getUserId());
+//		System.out.println(teamvo);
+//		
+//		BoardCategoryMultikey bctemp = BoardCategoryMultikey.builder().categoryId(gnrValue).team(teamvo).build();
+//		BoardCategoryVO bcvotemp = BoardCategoryVO.builder().boardCategoryId(bctemp).categoryName("0805").build();
+////		System.out.println(bcvotemp);
+//		boardcateRP.save(bcvotemp);
+//
+//		
+//		BoardVO boardTemp = BoardVO.builder().category(bcvotemp).user(uservo).boardTitle("pageable sample 0805").build(); 
+//		boardRP.save(boardTemp);
+//		
+//		
+//		});
+//	}
 	
 //	@Test
 //	public void boardPageList() {

@@ -115,6 +115,24 @@ public class sampleRESTController {
 		return boardList;
 	}
 	
+	@GetMapping("/boardListBycategory/{name}")
+	public List<BoardVO> boardlistByCategory(@PathVariable String name,Model model) {
+		
+		if(name==null) {
+			return (List<BoardVO>)boardRP.findAll();
+		}
+		
+		Pageable pageable = PageRequest.of(0, 5, Sort.by(Direction.DESC, "board_id"));
+		List<Long>categoryID = boardcateRP.selectIDByname(name);
+//		Page<BoardVO> result = boardRP.selectBoardByIDbeta(categoryID, pageable);
+		List<BoardVO> boardList = boardRP.selectBoardByIDbeta(categoryID, pageable);
+		boardList.forEach(a->{
+			System.out.println(a);
+		});
+		
+		return boardList;
+	}
+	
 	@GetMapping("/boardList/{name}")
 	public List<BoardVO> boardlistbeta(@PathVariable String name,Model model) {
 		

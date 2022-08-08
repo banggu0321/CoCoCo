@@ -80,15 +80,12 @@ public class UserController {
 			session.setAttribute("user", i);
 		});
 		
-		if(str.equals("t")) {
-			return "redirect:/main";
-		}
-		
+		if(str.equals("t")) return "redirect:/main";
 		return "redirect:/CoCoCo";
 	}
 	
 	@PostMapping("/user/modify")
-	public String modifyMyProfile(UserVO user, String fileName, MultipartFile newPhoto, HttpSession session) {
+	public String modifyMyProfile(UserVO user, String fileName, String from, MultipartFile newPhoto, HttpSession session) {
 		uRepo.findById(user.getUserId()).ifPresent(i->{
 			if(!newPhoto.isEmpty() && newPhoto.getOriginalFilename().equals(fileName)) {
 				//이미지 변경
@@ -115,7 +112,8 @@ public class UserController {
 			session.setAttribute("user", i);
 		});
 		
-		return "redirect:/main";
+		if(from.equals("t")) return "redirect:/main";
+		return "redirect:/CoCoCo";
 	}
 	
 	@Transactional

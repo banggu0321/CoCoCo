@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kos.CoCoCo.cansu.test.BoardCategoryRepositoryTestSu;
@@ -175,7 +176,7 @@ public class sampleController2 {
 	}
 	
 	@PostMapping("/postBoardUpdateBeta")
-	public String boardUpdate(HttpServletRequest request){
+	public String boardUpdate(HttpServletRequest request, @RequestParam("insertFile2") MultipartFile[] insertFile) throws IllegalStateException, IOException{
 		
 		String title = request.getParameter("boardTitle");
 		String text = request.getParameter("boardText");
@@ -185,9 +186,12 @@ public class sampleController2 {
 		System.out.println("post text: "+text);
 		System.out.println("post id: "+id);
 		
+		System.out.println("insertFile: "+insertFile);
+		List<String> boardFileName = boardService.uploadFile(insertFile);
 		BoardVO bvo = boardRP.findById(Long.valueOf(id)).get();
 		bvo.setBoardTitle(title);
-		bvo.setBoardText(text);
+		bvo.setBoardText(text); 
+		bvo.setBoardFile(boardFileName.get(0)); //.boardFile(boardFileName.get(0));
 		boardRP.save(bvo);
 		
 		return "redirect:/boardSampleBeta";

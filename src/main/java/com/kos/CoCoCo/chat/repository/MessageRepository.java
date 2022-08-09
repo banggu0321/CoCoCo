@@ -8,6 +8,6 @@ import com.kos.CoCoCo.chat.dto.ChatMessageDTO;
 
 public interface MessageRepository extends CrudRepository<ChatMessageDTO, Long>{
 	
-	List<ChatMessageDTO> findByTeamId(Long teamId);
+	List<ChatMessageDTO> findByTeamIdOrderById(Long teamId);
 
 }

@@ -10,6 +10,7 @@
 <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" th:href="@{/css/login.css}" />
 <head>
 <style>
 #userId {
@@ -152,7 +153,7 @@ input {
 				<p>
 					<label for="userId"></label> <input type="text" id="userId"
 						class="id_input" name="userId" placeholder="아이디">
-					<button id="idCheckBtn" type="button" class="idCheck"
+					<button id="idCheckBtn" type="button" class="idCheck btn-outline-cococo"
 						onclick="idCheckFunc();" value="N">중복확인</button>
 				</p>
 				
@@ -177,7 +178,7 @@ input {
 				</p>
 				<input type="hidden" th:name="${_csrf.parameterName}"
 					th:value="${_csrf.token}" />
-				<button id="btn" type="button" class="join_btn" value="N">가입</button>
+				<button id="btn " type="button" class="join_btn btn-cococo" value="N">가입</button>
 			</form>
 
 		</div>

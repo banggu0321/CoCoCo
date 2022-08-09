@@ -5,23 +5,6 @@
 <meta charset="UTF-8">
 <title>메인 | 공지사항</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
-
-@font-face {
-  font-family: "Noto Sans KR";
-  font-style: normal;
-  font-weight: 300;
-  font-display: swap;
-  src: url(https://fonts.gstatic.com/s/notosanskr/v13/PbykFmXiEBPT4ITbgNA5Cgm203Tq4JJWq209pU0DPdWuqxJFA4GNDCBYtw.0.woff2)
-    format("woff2");
-}
-
-@font-face {
-    font-family: 'LeferiPoint-WhiteObliqueA';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/LeferiPoint-WhiteObliqueA.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
 
 .wrap_notice {
 	font-family: "Noto Sans KR", sans-serif;
@@ -39,6 +22,7 @@ font-family: "Noto Sans KR", sans-serif;
 .wrap_notice a:hover {
 	text-decoration: none;
 	font-weight: 800;
+	font-size: 18px;
 }
 
 .wrap_notice_title {
@@ -49,12 +33,7 @@ font-family: "Noto Sans KR", sans-serif;
 	font-weight: 200;
 	
 }
-
 .wrap_notice h2 {
-	margin-top: 8px;
-	font-family: "LeferiPoint-WhiteObliqueA", sans-serif;
-	font-size: 1.2em;
-	font-weight: 600;
 	float: left;
 }
 
@@ -101,7 +80,7 @@ font-family: "Noto Sans KR", sans-serif;
 	<div>
 		<div class="wrap_notice">
 			<div class="wrap_notice_title">
-				<h2>공지사항</h2>
+				<h2 class="cococo-title-text">공지사항</h2>
 				<a class="btn-cococo" id="btnMoreNotice" th:href="@{/notice}">더보기</a>
 			</div>
 			

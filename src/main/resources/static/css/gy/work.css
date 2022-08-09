@@ -1,5 +1,9 @@
 @charset "UTF-8";
 
+.nav_menu4{
+	border-bottom: 3px solid tomato;
+}
+
 .managerselected {
 	background-color: #E3E3E3;
 }

@@ -1,5 +1,8 @@
 @charset "UTF-8";
 
+.nav_menu1{
+	border-bottom: 3px solid tomato;
+}
 .inner_content {
 	padding-top: 10px;
 }	

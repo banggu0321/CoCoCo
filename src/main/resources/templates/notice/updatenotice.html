@@ -7,13 +7,18 @@
 <meta charset="UTF-8">
 <title>글 작성하기</title>
 <style>
-.my_menu{
+.nav_menu2{
+	border-bottom: 3px solid tomato;
+}
+
+/* .my_menu{
  display:none;
 }
 
 .inner_content {
   width: 1418px;
-}
+} */
+
 .wrap_notice {
 	width: 700px;
 	margin: 0 auto;
@@ -63,6 +68,12 @@
 </head>
 
 <body>
+
+	<div layout:fragment="my_menu">
+		<div th:replace="~{/main/teamUserList}"></div>
+	</div>
+
+
 <div  class="inner_content" layout:fragment="inner_content">
 	<div class="wrap_notice">
 		<div class="wrap_notice_update">

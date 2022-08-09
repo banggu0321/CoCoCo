@@ -22,8 +22,8 @@
           pieHole: 0.4,
           chartArea: {
         	    /* 차트크기 */
-        	    width: 300,
-        	    height: 300
+        	    width: 290,
+        	    height: 290
         	    },
         	   
         	    width: 300,
@@ -42,8 +42,8 @@
 </script>
 <style>
 #donutchart {
-   	margin:0 auto;
-    
+   	display: flex;
+    justify-content: center;
 }
 
 text {
@@ -58,9 +58,9 @@ text {
 	<div>
 		<div class="wrap_notice">
 			<div class="wrap_notice_title">
-			<h2>업무진행률</h2>
+			<h2 class="cococo-title-text">업무진행률</h2>
 			</div>
-			<div id="donutchart" th:each="work : ${wlist}">
+			<div id="donutchart">
 				<p th:if="${work} == null">업무가 존재하지 않습니다.</p>
 			</div>
 			

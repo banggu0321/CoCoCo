@@ -22,7 +22,7 @@
 
 .wrap_notice .notice_detail{
 	font-family: "Noto Sans KR";
-	width: 700px;
+	width: 850px;
 	margin: 0 auto;
 	margin-top: 40px;
 }
@@ -147,8 +147,8 @@ textarea:focus{
 					<label>첨부파일</label>
 					<ul th:each="file : ${nflist}">
 						<li th:if="${nflist} != null" >
-							<!-- <a th:href="@{'/noticefiles/' + ${file.filename}}">[[${file.originFname}]]</a> -->
-							<a th:href="${file.filename}">[[${file.originFname}]]</a>
+							<!-- <a th:href="@{'/notice/downloadFile/' + ${file.fileId}}">[[${file.originFname}]]</a> -->
+							<a th:href="@{/notice/download/}+${file.fileId}">[[${file.originFname}]]</a>
 						</li>
 					</ul>
 				</div>
@@ -156,7 +156,7 @@ textarea:focus{
 				<div class="btn">
 					<a class="btn-style" id="btnUpdate" th:if="${session.teamUser.userRole == 'ADMIN'}" 
 					th:href="@{/notice/update(noticeId=${notice.noticeId})}">수정</a>
-					<a class="btn-style" id="btnDel" th:if="${session.teamUser.userRole == 'ADMIN'}" 
+					<a class="btn-style" id="btnDel" h:if="${session.teamUser.userRole == 'ADMIN'}" 
 						th:href="@{/notice/delete(noticeId=${notice.noticeId})}">삭제</a>
 					<input type="hidden" th:name="${_csrf.parameterName}"
 						th:value="${_csrf.token}" />
@@ -171,14 +171,5 @@ textarea:focus{
 
 	</div>
 </div>
-	<script>
-		$(function() {
-			$("#btnDel").click(function(e) {
-				if (confirm("글을 삭제하시겠습니까?") == false) {
-					e.preventDefault();
-				}
-			});
-		});
-	</script>
 </body>
 </html>

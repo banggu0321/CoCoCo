@@ -5,39 +5,125 @@
 <meta charset="UTF-8">
 <title>메인 | 공지사항</title>
 <style>
-#paing {
-	display:hidden;
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+
+@font-face {
+  font-family: "Noto Sans KR";
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/notosanskr/v13/PbykFmXiEBPT4ITbgNA5Cgm203Tq4JJWq209pU0DPdWuqxJFA4GNDCBYtw.0.woff2)
+    format("woff2");
+}
+
+@font-face {
+    font-family: 'LeferiPoint-WhiteObliqueA';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/LeferiPoint-WhiteObliqueA.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.wrap_notice {
+	font-family: "Noto Sans KR", sans-serif;
+	text-align: left;
+	letter-spacing: -0.95px;
+	overflow: hidden;
+}
+.wrap_notice a {
+font-family: "Noto Sans KR", sans-serif;
+	text-align: left;
+	letter-spacing: -0.5px;
+	color: #000000;
+	font-size: 17px;
+}
+.wrap_notice a:hover {
+	text-decoration: none;
+	font-weight: 800;
+}
+
+.wrap_notice_title {
+	height: 30px;
+}
+.notice_table {
+	
+	font-weight: 200;
+	
+}
+
+.wrap_notice h2 {
+	margin-top: 8px;
+	font-family: "LeferiPoint-WhiteObliqueA", sans-serif;
+	font-size: 1.2em;
+	font-weight: 600;
+	float: left;
+}
+
+.wrap_notice #btnMoreNotice {
+	font-weight: 300;
+	float: right;
+	padding: 0.175rem 0.55rem;
+	font-size: 0.85rem;
+	border-radius: 0.25rem;
+	cursor: pointer;
+	width: 64px;
+	height: 30px;
+	text-align: center;
+	color: #ffffff;
+	
+	
+}
+
+
+.notice_table {
+	width: 100%;
+}
+
+.notice_table .main_notice_title {
+	display: block;
+	width: 270px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	padding: 15px 10px;
+	
+}
+
+.notice_table .main_notice_date {
+	width: 20%;
+}
+
+.notice_table {
+	list-style: none;
 }
 </style>
 </head>
 <body>
 	<div>
 		<div class="wrap_notice">
-			<h2>공지사항</h2>
+			<div class="wrap_notice_title">
+				<h2>공지사항</h2>
+				<a class="btn-cococo" id="btnMoreNotice" th:href="@{/notice}">더보기</a>
+			</div>
+			
 			<div class="wrap_noticelist"  th:with="mnlist=${mnlist}">
 				<table class="notice_table">
 					<thead id="noticenull" th:if="${mnlist}==null"><tr><td>등록된 공지가 없습니다.</td></tr></thead>
 					<tbody>
 						<tr th:each="notice:${mnlist}" th:if="${noticeStat.index}<3">
-							<td class="fixed" th:if="${notice.fixedYN}==1" th:title="${notice.noticeText}">
+							<td class="fixed main_notice_title" th:if="${notice.fixedYN}==1" th:title="${notice.noticeText}">
 								<a class="noticelink" th:href="@{/main/notice/detail/}+${notice.noticeId}"><img
 									src="/images/pin-icon-black.png" alt="fixed"
 									width="15" height="15"> [[${notice.noticeTitle}]]</a></td>
-							<td class="title" th:if="${notice.fixedYN}!=1"
+							<td class="main_notice_title" th:if="${notice.fixedYN}!=1"
 								th:title="${notice.noticeText}"><a class="noticelink"
 								th:href="@{/main/notice/detail/}+${notice.noticeId}"> [[${notice.noticeTitle}]]</a></td>
-							<td
-								th:text="${#dates.format(notice.noticeRegDate, 'yy-MM-dd HH:mm')}"></td>
+							<td class="main_notice_date"
+								th:text="${#dates.format(notice.noticeRegDate, 'yy-MM-dd')}"></td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
-			
-			<a th:href="@{/notice}">더보기</a>
 		</div>
-
-	
-		
 	</div>
 
 </body>

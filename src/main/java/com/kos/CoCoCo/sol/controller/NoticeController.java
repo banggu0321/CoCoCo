@@ -1,32 +1,42 @@
 package com.kos.CoCoCo.sol.controller;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
-
 import org.springframework.data.domain.Pageable;
-
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.amazonaws.auth.AWS3Signer;
+import com.kos.CoCoCo.ja0.awsS3.AwsS3;
 import com.kos.CoCoCo.ja0.repository.TeamRepository;
 import com.kos.CoCoCo.ja0.repository.TeamUserRepositoryH;
 import com.kos.CoCoCo.ja0.repository.UserRepositoryH;
@@ -57,6 +67,8 @@ public class NoticeController {
 	@Autowired
 	UserRepositoryH uRepo;
 	
+	@Autowired
+	AwsS3 aws;
 
 	@Autowired
 	NoticeService noticeService;
@@ -103,6 +115,11 @@ public class NoticeController {
 		
 		model.addAttribute("pageVO", pageVO);
 		model.addAttribute("notice", noticeRepo.findById(noticeId).get());
+		
+		String folderPath="/static/noticefiles";
+		File folder = new File(folderPath);
+		File[] listOfFiles = folder.listFiles();
+		model.addAttribute("nfiles",listOfFiles);
 		
 		List<NoticeFile> nflist = noticeFRepo.findByNotice(notice);
 		System.out.println("nflist : " + nflist);
@@ -171,12 +188,43 @@ public class NoticeController {
 	@GetMapping("/delete")
 	public String delete(NoticePageVO pageVO, NoticeVO notice, NoticeFile file, RedirectAttributes attr) {
 		
-		noticeFRepo.deleteByNotice(notice);
+		System.out.println("NOTICE "+ notice);
+		
+		List<NoticeFile> files = noticeFRepo.findByNotice(notice);
+		for(NoticeFile f:files) {
+			aws.delete(f.getFilename());
+		}
+		noticeFRepo.deleteByNoticeId(notice.getNoticeId());
 		noticeRepo.deleteById(notice.getNoticeId());
 		
 		return "redirect:/notice";
 	}
 	
+	
+	
+	
+	/*@Value("${spring.servlet.multipart.location}")
+	String filePath;
+
+	@GetMapping("/download")
+	public ResponseEntity<Resource> download(@ModelAttribute NoticeFile file) throws IOException {
+		
+		Path path = Paths.get(filePath + "/" + file.getFileName());
+		String contentType = Files.probeContentType(path);
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentDisposition(
+		ContentDisposition.builder("attachment")
+			.filename(file.getFileName(), StandardCharsets.UTF_8)
+			.build());
+		headers.add(HttpHeaders.CONTENT_TYPE, contentType);
+
+		Resource resource = new InputStreamResource(Files.newInputStream(path));
+
+		return new ResponseEntity<>(resource, headers, HttpStatus.OK);
+
+	}*/
+		
 
 }
 

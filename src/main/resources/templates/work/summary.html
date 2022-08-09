@@ -2,14 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org">
 <head>
-    <script type="text/javascript">
+<script type="text/javascript">
       google.charts.load("current", {packages:["corechart"]});
       google.charts.setOnLoadCallback(drawChart);
       function drawChart() {
     	var arr1 = "[[${arr[0]}]]";
     	var arr2 = "[[${arr[1]}]]";
     	var arr3 = "[[${arr[2]}]]";
-   
     	 
         var data = google.visualization.arrayToDataTable([
           ['업무상태', '%'],
@@ -19,7 +18,7 @@
         ]);
 
         var options = {
-
+		  colors:['#dedede', '#FF7F27', '#0275d8'],
           pieHole: 0.4,
           chartArea: {
         	    /* 차트크기 */
@@ -27,6 +26,9 @@
         	    height: 300
         	    },
         	   
+        	    width: 300,
+        	    height: 300,
+        	    
         	    /* 차트에 레이블 표시 (percentage, value or label)*/
         	    pieSliceText: 'percentage',
 
@@ -37,16 +39,29 @@
         var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
         chart.draw(data, options);
       }
-    </script>
+</script>
+<style>
+#donutchart {
+   	margin:0 auto;
+    
+}
+
+text {
+	font-size: 12px;
+}
+
+</style>
 <meta charset="UTF-8">
 <title>메인 | 업무진행률</title>
 </head>
 <body>
 	<div>
 		<div class="wrap_notice">
+			<div class="wrap_notice_title">
 			<h2>업무진행률</h2>
-			<div id="donutchart" th:with="wlist=${wlist}">
-				<p th:if="${wlist}==null">업무가 존재하지 않습니다.</p>
+			</div>
+			<div id="donutchart" th:each="work : ${wlist}">
+				<p th:if="${work} == null">업무가 존재하지 않습니다.</p>
 			</div>
 			
 		</div>

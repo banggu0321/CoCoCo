@@ -1,5 +1,8 @@
 var replyREST =(
 	function(){
+		var getReplyAfterDelete = function(obj, callback){
+			$.getJSON('/BOARDrest/replyDeleteByID/'+obj,callback);
+		}
 				
 		var getPageNumber = function(obj, callback){
 			$.getJSON('/BOARDrest/'+obj,callback);
@@ -16,10 +19,6 @@ var replyREST =(
 			$.getJSON('/BOARDrest/'+obj,callback);
 			
 		};
-		
-		
-		
-		
 		
 		var getAllReply = function(obj, callback){
 			$.getJSON('/BOARDrest/'+obj,callback);
@@ -39,7 +38,8 @@ var replyREST =(
 			getAllCategory: getAllCategory,
 			getBoardPage: getBoardPage,
 			getFirstBoardByPageable:getFirstBoardByPageable,
-			getPageNumber:getPageNumber
+			getPageNumber:getPageNumber,
+			getReplyAfterDelete:getReplyAfterDelete
 		}
 	}
 )();

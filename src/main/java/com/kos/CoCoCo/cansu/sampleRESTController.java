@@ -57,6 +57,31 @@ public class sampleRESTController {
 	@Autowired
 	BoardCategoryRepositoryTestSu boardcateRP;
 	
+	@Autowired
+	ReplyRepositoryTestSu replyRP;
+	
+	@GetMapping("/replyDeleteByID/{replyid}")
+	public List<ReplyVO> deleteReply(@PathVariable String replyid, Principal principal){
+		System.out.println("principal: "+principal.getName());
+		System.out.println("reply id: "+replyid);
+		
+			
+		ReplyVO reply = replyRP.findById(Long.valueOf(replyid)).get();  //selected reply
+		System.out.println("reply.userid: "+reply.getUser().getUserId());
+		String replyUser = reply.getUser().getUserId();
+		
+		if(replyUser.equals(principal.getName())) {
+			replyRP.delete(reply);
+		}			
+		
+		Long bno = reply.getBoard().getBoardId();
+		BoardVO board = BoardVO.builder().boardId(bno).build();
+		
+		List<ReplyVO> replyList = replyRP.selectByboardID(board.getBoardId().intValue());
+		
+		return replyList;
+	}
+	
 	@GetMapping("/boardList/fromMain")
 	public List<BoardVO> boardListByPageable(PageVO vo, Model model){
 		

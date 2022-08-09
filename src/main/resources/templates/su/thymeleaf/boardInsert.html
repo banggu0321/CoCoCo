@@ -27,7 +27,7 @@ display:none;
 <div id="boardInsert">
 <form method="post" action="/postBoardInsertSample2" enctype="multipart/form-data" class="form-group">
 
-	<input type="text" name="teamid" th:value="${teamid}">
+	<input type="hidden" name="teamid" th:value="${teamid}">
 	<p>카테고리: [[${categoryName}]]<p>
 	<hr>
 

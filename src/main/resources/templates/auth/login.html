@@ -33,12 +33,15 @@ input {
 	height: 52px;
 	padding-left: 20px;
 }
+
+.cacaoBtn {
+	background-color: rgb(224, 259, 0);
+}
 </style>
 <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script>
-
 	/* 아이디 확인 */
 	function idCheckFunc() {
 		//ajax csrf//		
@@ -47,19 +50,60 @@ input {
 		var id_pass = $("#userId").val();
 		var pw_pass = $("#pw").val();
 		console.log(id_pass, pw_pass);
-		if(id_pass==""){
+		if (id_pass == "") {
 			alert("아이디는 필수입력");
-			 $("#userId").focus();
-			 return false;
+			$("#userId").focus();
+			return false;
 		}
-		if(pw_pass==""){
-			alert("pw_pass는 필수입력");
-			 $("#pw").focus();
-			 return false;
+		if (pw_pass == "") {
+			alert("비밀번호는 필수입력");
+			$("#pw").focus();
+			return false;
 		}
-	} 
-	
-	
+	}
+</script>
+<!-- 카카오 스크립트 -->
+<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+<script>
+	Kakao.init('707d89bd38970b27612ab9e6309e7dd6'); //발급받은 키 중 javascript키를 사용해준다.
+	/* 	
+	 console.log(Kakao.isInitialized()); // sdk초기화여부판단
+	 */
+
+	//카카오로그인
+	function kakaoLogin() {
+		Kakao.Auth.login({
+			success : function(response) {
+				Kakao.API.request({
+					url : '/v2/user/me',
+					success : function(response) {
+						console.log(response)
+					},
+					fail : function(error) {
+						console.log(error)
+					},
+				})
+			},
+			fail : function(error) {
+				console.log(error)
+			},
+		})
+	}
+	//카카오로그아웃  
+	function kakaoLogout() {
+		if (Kakao.Auth.getAccessToken()) {
+			Kakao.API.request({
+				url : '/v1/user/unlink',
+				success : function(response) {
+					console.log(response)
+				},
+				fail : function(error) {
+					console.log(error)
+				},
+			})
+			Kakao.Auth.setAccessToken(undefined)
+		}
+	}
 </script>
 <meta charset="UTF-8">
 <title>로그인</title>
@@ -77,25 +121,30 @@ input {
 			<form method="post" th:onsubmit="return idCheckFunc()">
 				<p>
 					<label for="userId"></label> <input type="text" id="userId"
-						class="user_id_input" name="username" placeholder="아이디"   />
+						class="user_id_input" name="username" placeholder="아이디" />
 					<!-- 이름변경불가  : username -->
 				</p>
 				<p>
 					<label for="password"></label> <input type="password" id="pw"
-						name="password" placeholder="비밀번호"   />
+						name="password" placeholder="비밀번호" />
 					<!-- 이름변경불가  : password -->
 				</p>
 
 				<input type="hidden" th:name="${_csrf.parameterName}"
-					th:value="${_csrf.token}" />
-				<input type="submit" id="login_btn"   class="btn btn-primary"
-					 value="로그인" > 
+					th:value="${_csrf.token}" /> <input type="submit" id="login_btn"
+					class="btn btn-primary" value="로그인">
 
 			</form>
 			<button class="btn btn-primary" onclick="location.href='/auth/join'">회원가입</button>
 		</div>
-			<button class="btn btn-primary" onclick="location.href='/auth/cacao_join'">카카오 회원가입</button>
+		<button class="cacaoBtn" onclick="kakaoLogin();">카카오로 시작하기</button>
+
+		<div onclick="kakaoLogout();">
+			<a href="javascript:void(0)"> <span>카카오 로그아웃</span>
+			</a>
+		</div>
 	</div>
+
 	<!-- auth_section -->
 </body>
 </html>

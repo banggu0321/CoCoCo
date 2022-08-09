@@ -18,11 +18,42 @@
 
 /* 아이디 중복체크 */
 .idCheck {
-	margin: 0;
 	padding: 0;
 	width: 60px;
 	height: 52px;
 }
+
+body {
+	margin: 0 auto;
+}
+
+.join_section {
+	width: 490px;
+	margin: 0 auto;
+	padding: 145px 0px 200px;
+}
+
+.join {
+	text-align: center;
+	margin-bottom: 20px;
+}
+
+.join_btn {
+	margin: 0 0 0 4px;
+}
+
+button {
+	width: 486px;
+	height: 52px;
+	margin-top: 20px;
+}
+
+input {
+	width: 486px;
+	height: 52px;
+	padding-left: 20px;
+}
+
 </style>
 <script>
 	$(function() {
@@ -38,29 +69,29 @@
 		var name = $(".name_input").val(); // 이름 입력란
 		var idCheck = $("#idCheckBtn").val();
 
-			/* 아이디 유효성검사 */
-			if (id.length == 0 || id == '') {
+		/* 아이디 유효성검사 */
+		if (id.length == 0 || id == '') {
 			alert("아이디를 입력하세요")
 
-			} else if (idCheck == "N") {
+		} else if (idCheck == "N") {
 			alert("이미 사용중인 아이디 입니다.")
-			
+
 			/* 이름 유효성검사 */
-			} else if (name.length == 0 || name == '') {
+		} else if (name.length == 0 || name == '') {
 			alert("이름을 입력하세요")
-			
+
 			/* 비밀번호 유효성검사 */
-			} else if (pw.length == 0 || pw == '') {
+		} else if (pw.length == 0 || pw == '') {
 			alert("비밀번호를 입력하세요")
-			
+
 			/* 비밀번호 확인 유효성검사 */
-			} else if (pw2.length == 0 || pw2 == '') {
+		} else if (pw1!=pw2) {
 			alert("비밀번호를 확인하세요")
-			
-			} else {
+
+		} else {
 			$("#btn").attr('type', 'submit');
-			} 
-		
+		}
+
 	}
 
 	/* 비밀번호 확인 */
@@ -71,12 +102,13 @@
 		if (pw1 == pw2) {
 
 			if (pw1.length == 0 || pw1 == '') {
-				$("#btn").css('background-color', '#f0f0f0')
+				$("#pwMsg").html(" ")
 			} else {
-				$("#btn").css('background-color', '#9acd32')
+				$("#pwMsg").html("비밀번호가 일치합니다.")
+				$("#btn").attr("value", "N")
 			}
 		} else {
-			$("#btn").css('background-color', '#ff6347')
+				$("#pwMsg").html("비밀번호가 일치하지 않습니다.")
 		}
 	}
 
@@ -103,7 +135,7 @@
 					alert("이미 사용중인 아이디 입니다.")
 					$("#idCheckBtn").attr("value", "N")
 					console.log("N")
-					
+
 				} else if (data == 0) {
 					$("#idCheckBtn").attr("value", "Y");
 					alert("사용 가능한 아이디 입니다.");
@@ -114,39 +146,12 @@
 		})
 	}
 </script>
-
-<style>
-body {
-	text-align: center;
-}
-
-.join_section {
-	padding: 145px 0px 200px;
-}
-
-.join {
-	margin-bottom: 20px;
-}
-
-button {
-	width: 486px;
-	height: 52px;
-	margin-top: 20px;
-}
-
-input {
-	width: 486px;
-	height: 52px;
-	padding-left: 20px;
-}
-</style>
 <title>회원가입 페이지</title>
 <meta charset="utf-8" />
 </head>
 <body>
 	<div class="join_section">
-		<div class="panel-body">
-
+		<div class=pannel-body>
 			<h2 class="join">회원가입</h2>
 			<form method="post" action="joinProc">
 				<p>
@@ -155,10 +160,10 @@ input {
 					<button id="idCheckBtn" type="button" class="idCheck"
 						onclick="idCheckFunc();" value="N">중복확인</button>
 				</p>
-				
+
 				<p>
 					<label for="company"></label> <input type="text" id="company"
-					class="company" name="company" placeholder="소속" />				
+						class="company" name="company" placeholder="소속" />
 				</p>
 
 				<p>
@@ -174,12 +179,14 @@ input {
 				<p>
 					<label for="pw2"></label> <input type="password" class="pw2_input"
 						id="pw2" name="pw2" placeholder="비밀번호 확인" />
+					<span id="pwMsg"></span>		
 				</p>
-				<input type="hidden" th:name="${_csrf.parameterName}"
-					th:value="${_csrf.token}" />
+				
+				
+				<input type="hidden"
+					th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 				<button id="btn" type="button" class="join_btn" value="N">가입</button>
 			</form>
-
 		</div>
 	</div>
 	<!-- join_section -->

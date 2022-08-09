@@ -45,23 +45,23 @@ public class RoomController {
     }
 
     //채팅방 개설
-    @PostMapping(value = "/room")
-    public String create(@RequestParam String name, RedirectAttributes rttr){
-
-        log.info("# Create Chat Room , name: " + name);
-        ChatRoomDTO room = ChatRoomDTO.create(name);
-        roomRepo.save(room);
-        rttr.addFlashAttribute("roomName",name);
-        return "redirect:/chat/rooms";
-    }
+//    @PostMapping(value = "/room")
+//    public String create(@RequestParam String name, RedirectAttributes rttr){
+//
+//        log.info("# Create Chat Room , name: " + name);
+//        ChatRoomDTO room = ChatRoomDTO.create(name);
+//        roomRepo.save(room);
+//        rttr.addFlashAttribute("roomName",name);
+//        return "redirect:/chat/rooms";
+//    }
 
     //채팅방 조회
     @GetMapping("/room")
-    public void getRoom(String roomId, Model model){
+    public void getRoom(Long teamId, Model model){
 
-        log.info("# get Chat Room, roomID : " + roomId);
-        model.addAttribute("room", roomRepo.findById(roomId).get());
-        model.addAttribute("chatlist",mRepo.findByRoomId(roomId));
+        log.info("# get Chat Room, teamID : " + teamId);
+        model.addAttribute("team", roomRepo.findById(teamId).get());
+        model.addAttribute("chatlist",mRepo.findByTeamId(teamId));
         
     }
 }

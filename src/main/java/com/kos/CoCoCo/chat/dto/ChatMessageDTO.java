@@ -29,15 +29,17 @@ public class ChatMessageDTO {
 	@Column(name = "chat_id")
 	private Long id;
 	
-    private String roomId;
+    private Long teamId;
 	
     private String writer;
 
     private String message;
+    
+    private String KoreanName;
 
 	@Override
 	public String toString() {
-		return "ChatMessageDTO [id=" + id + ", roomId=" + roomId + ", writer=" + writer + ", message=" + message + "]";
+		return "ChatMessageDTO [id=" + id + ", roomId=" + teamId + ", writer=" + writer + ", message=" + message + "]";
 	}
    
     

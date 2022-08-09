@@ -85,7 +85,7 @@
 	width: 40px;
     position: absolute;
     bottom: 9%;
-    left: 37%;
+    left: 31%;
 }
 
 #teamPhoto {
@@ -116,6 +116,11 @@
     display: flex;
     align-items: center;
     justify-content: space-evenly;
+}
+
+
+#addTeamForm {
+    width: 55%;
 }
 
 #mainTitle {

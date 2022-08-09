@@ -142,12 +142,18 @@ public class UserController {
 	}
 
 	private boolean adminCounter(String userId) {
-		List<TeamUserVO> adminTeam = tuRepo.findAdminByUserId(userId);
+		List<TeamUserVO> adminTeam = tuRepo.findAdminByUserId(userId); 
 		
 		if(!adminTeam.isEmpty()) {
 			for(TeamUserVO t:adminTeam) {
 				List<TeamUserVO> teamAdmin = tuRepo.findAdminByTeamId(t.getTeamUserId().getTeam().getTeamId());
-				if(teamAdmin.size() == 1) return false;//관리자가 나밖에 없으면 탈퇴 불가
+				if(teamAdmin.size() == 1) {
+					Long tid = teamAdmin.get(0).getTeamUserId().getTeam().getTeamId();
+					if(tuRepo.findAdminByTeamId(tid).size() != 1) return false; //관리자가 나밖에 없으면 탈퇴 불가
+					
+					tuRepo.delete(teamAdmin.get(0)); //관리자가 나밖에 없는데 팀원도 나만있으면 
+					tRepo.deleteById(tid);
+				}
 				
 				for(TeamUserVO a:teamAdmin) {
 					tRepo.findById(a.getTeamUserId().getTeam().getTeamId()).ifPresent(i->{

@@ -87,6 +87,7 @@ public class MainController {
 		TeamUserVO teamUser = TeamUserVO.builder().teamUserId(teamUserId).userRole("ADMIN").build();
 		tuRepo.save(teamUser);
 		
+		if(pageVO.getPage() == 0) return "redirect:/CoCoCo";
 		return "redirect:/CoCoCo?page=" + pageVO.getPage() +"&size=" + pageVO.getSize();
 	}
 	

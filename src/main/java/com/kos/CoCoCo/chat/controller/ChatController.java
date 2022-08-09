@@ -1,4 +1,4 @@
-package com.kos.CoCoCo.chat;
+package com.kos.CoCoCo.chat.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

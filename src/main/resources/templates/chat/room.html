@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<style>
+.chat {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.chat li {
+	margin-bottom: 10px;
+	padding-bottom: 5px;
+	border-bottom: 1px dotted #B3A9A9;
+}
+
+.chat li.left .chat-body {
+	margin-left: 130px;
+}
+
+.chat li.right .chat-body {
+	margin-right: 60px;
+}
+
+.chat li .chat-body p {
+	margin: 0;
+	color: #777777;
+}
+
+.panel .slidedown .glyphicon, .chat .glyphicon {
+	margin-right: 5px;
+}
+
+.panel-body {
+	overflow-y: scroll;
+	height: 250px;
+}
+
+::-webkit-scrollbar-track {
+	-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+	background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar {
+	width: 12px;
+	background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb {
+	-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+	background-color: #555;
+}
+
+.col {
+	border: 2px solid gray;
+	border-radius: 5px;
+	overflow: auto;
+	overflow-x: hidden;
+	width: 500px;
+	height: 600px;
+}
+
+.search-in-body {
+	display: flex;
+	flex-direction: row;
+	background-color: orange;
+	z-index: 999;
+}
+
+.search-box {
+	width: 40%;
+	border: 1px solid #eee;
+	padding: 3px 3px 3px 3px;
+	margin: 5px 3px 5px 5px;
+}
+
+.next-btn, .prev-btn, .clear-btn {
+	width: 10%;
+	padding: 0px 3px 0px 3px;
+	margin: 5px 3px 5px 3px;
+	border: 2px solid white;
+}
+
+.kwt-count {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 30%;
+	padding: 0px 3px 0px 3px;
+	margin: 5px 5px 5px 3px;
+	border: 2px solid white;
+}
+
+mark {
+	background: yellow;
+}
+
+mark.current {
+	background: orange;
+}
+</style>
+</head>
+<body>
+	<!-- <th:block th:replace="~{/layout/basic :: setContent(~{this :: content})}"> -->
+	<th:block th:fragment="content">
+
+		<div class="container">
+			<div class="search-in-body">
+				<input type="search" class="search-box" placeholder="채팅 찾기">
+				<button data-search="next" class="next-btn">∨</button>
+				<button data-search="prev" class="prev-btn">∧</button>
+				<button data-search="clear" class="clear-btn">Ⅹ</button>
+				<span class="kwt-count">-</span>
+			</div>
+			<div>
+				<div class="col">
+						<ul class="chat" id="msgArea">
+							<li th:each="chat:${chatlist}"
+								th:class="${chat.writer == session.user.userId?'left':'right'}">
+								 <span
+								th:class="${chat.writer == session.user.userId?'chat-img pull-right':'chat-img pull-left'}">
+									<img src="http://placehold.it/50/55C1E7/fff&text=U"
+									alt="User Avatar" class="img-circle" />
+									<span th:if="${chat.writer} == ${session.user.userId}">
+									<button type="button" class="button-del" th:data="${chat.id}">삭제</button>
+							</span>
+							</span>
+								<div class="chat-body clearfix">
+									<div class="header">
+										<strong class="primary-font"> [[${chat.koreanName}]]
+										</strong>
+									</div>
+									<p>[[${chat.message}]]</p>
+								</div>
+							</li>
+						</ul>
+				</div>
+				<div class="col-6">
+					<div class="input-group mb-3">
+						<input type="text" id="msg" class="form-control">
+						<div class="input-group-append">
+							<button class="btn btn-outline-secondary" type="button"
+								id="button-send">전송</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-6"></div>
+		</div>
+
+	</th:block>
+	<!-- </th:block> -->
+	<script th:inline="javascript">
+            $(document).ready(function(){
+
+                var teamName = /*[[${team.teamName}]]*/'';
+                var teamId = /*[[${team.teamId}]]*/'';
+                var username = /*[[${session.user.userId}]]*/'';
+               	var koreanName = /*[[${session.user.name}]]*/'';
+
+                console.log(teamName + ", " + teamId + ", " + username);
+                $(".col").scrollTop($(".col")[0].scrollHeight);
+
+                var sockJs = new SockJS("/stomp/chat");
+                //1. SockJS를 내부에 들고있는 stomp를 내어줌
+                var stomp = Stomp.over(sockJs);
+
+                //2. connection이 맺어지면 실행
+                stomp.connect({}, function (){
+                   console.log("STOMP Connection")
+
+                   //4. subscribe(path, callback)으로 메세지를 받을 수 있음
+                   stomp.subscribe("/sub/chat/room/" + teamId, function (chat) {
+                       var content = JSON.parse(chat.body);
+						
+                       var writer = content.writer;
+                       var message = content.message;
+                       var koreanName = content.koreanName;
+                       var str = '';
+                 
+                       if(writer === username){
+                           
+                           str = "<li class='left'>";
+                           str += '<button type="button" class="button-del">삭제</button>';
+                           str += "<span class='chat-img pull-right'>";
+                           str += "<img src='http://placehold.it/50/55C1E7/fff&text=U' alt='User Avatar' class='img-circle'/></span>";
+                           str += "<b> " + koreanName + " : " + message + " </b></li>";
+                           
+                           $("#msgArea").append(str);
+                           $(".col").scrollTop($(".col")[0].scrollHeight);
+                       }
+                       else{
+                    	   
+                           str = "<li class='right'>";
+                           str += "<span class='chat-img pull-left'>";
+                           str += "<img src='http://placehold.it/50/55C1E7/fff&text=U' alt='User Avatar' class='img-circle'/></span>";
+                           str += "<b> " + koreanName + " : " + message + " </b>";
+                           str += "</li>";
+                           $("#msgArea").append(str);
+                           $(".col").scrollTop($(".col")[0].scrollHeight);
+                       }
+
+                       /* $("#msgArea").append(str); */
+                   });
+
+                   //3. send(path, header, message)로 메세지를 보낼 수 있음
+                   //stomp.send('/pub/chat/enter', {}, JSON.stringify({roomId: roomId, writer: username}))
+                });
+
+                $("#button-send").on("click", function(e){
+                    var msg = document.getElementById("msg");
+                    console.log(username + ":" + msg.value);
+                    stomp.send('/pub/chat/message', {}, JSON.stringify({teamId: teamId, message: msg.value, writer: username, koreanName: koreanName}));
+                    msg.value = '';
+                });
+                
+                $("#msg").on("keypress",function(e){
+                	if(e.keyCode==13){
+                		
+                        console.log(username + ":" + msg.value);
+                        stomp.send('/pub/chat/message', {}, JSON.stringify({teamId: teamId, message: msg.value, writer: username, koreanName: koreanName}));
+                        msg.value = ''; 
+                	}
+                });
+                
+                $(".button-del").on("click", function(e){
+                	var id = $(this).attr("data");
+                	
+                	location.href = "/chat/del?chatId=" + id + "&teamId=" + teamId;
+                	/*
+                	
+                	alert(id);
+                	$.ajax({
+                		url:"/chat/del",
+                		data:{chatId:id},
+                		success:function(responseData){
+                			alert(responseData);
+                		}
+                	});*/
+                });
+                
+                
+                
+                /* 검색 구현 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
+                
+                var $input = document.querySelector("input[type='search']"),
+				$clearBtn = document.querySelector("button[data-search='clear']"),
+				$prevBtn = document.querySelector("button[data-search='prev']"),
+				$nextBtn = document.querySelector("button[data-search='next']"),
+				$content = document.querySelector(".col"),
+				$contentMark = new Mark($content),
+				$results,
+				currentClass = "current",
+				offsetTop = 200,
+				currentIndex = 0;
+				var variableCounter = 0;
+				var totalCount = 0;
+				
+				
+				$input.addEventListener("input", function() {
+					var searchVal = this.value;
+					$contentMark.unmark( {
+						done: function(totalMatches) {
+							$contentMark.mark(searchVal, {
+								separateWordSearch: false,
+								acrossElements: true,
+								done: function(totalMatches) {
+									$results = $content.querySelectorAll("mark");
+									totalCount = totalMatches;
+									if (totalCount) {
+										variableCounter = 1;
+										$(".kwt-count").html(variableCounter+ " / " +totalCount);
+									}
+								}
+							});
+						}
+					});
+				});
+				$nextBtn.addEventListener("click", prevNextHandler);
+				$prevBtn.addEventListener("click", prevNextHandler);
+				$nextBtn.after($prevBtn);
+				function prevNextHandler() {
+					if ($results.length) {
+						currentIndex += (this.dataset.search === "prev" ? -1 : 1);
+						if (currentIndex < 0) {
+							currentIndex = $results.length - 1;
+						}
+						if (currentIndex > $results.length - 1) {
+							currentIndex = 0;
+						}
+						jumpTo();
+					}
+				}
+				
+				$("[data-search=next]").click(function() {
+					if (variableCounter < totalCount)
+						variableCounter = variableCounter + 1;
+					else
+						variableCounter = 1;
+					$(".kwt-count").html(variableCounter+ " / " +totalCount);
+				})
+		
+				$("[data-search=prev]").click(function() {
+					if (variableCounter > 1)
+						variableCounter = variableCounter - 1;
+					else
+						variableCounter = totalCount;
+					$(".kwt-count").html(variableCounter+ " / " +totalCount);
+				})
+				
+				function jumpTo() {
+					if ($results.length) {
+						var position,
+								$current = $results[currentIndex];
+						$results.forEach($result => $result.classList.remove(currentClass));
+						if ($current) {
+							$current.classList.add(currentClass);
+							position = $current.offsetTop - offsetTop;
+							$content.scrollTo(0, position);
+						}
+					}
+				}
+				$clearBtn.addEventListener("click", function() {
+					$contentMark.unmark();
+					$input.value = ""
+					$input.focus();
+					variableCounter = 0;
+					totalCount = 0;
+					$(".kwt-count").html("-");
+				});
+            });
+            
+            
+            
+            
+        </script>
+</body>
+</html>

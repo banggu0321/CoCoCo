@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -57,6 +58,7 @@ public class sampleController2 {
 	
 	@Autowired
 	boardUDFileService boardService;
+	
 	
 	@GetMapping("/getNext/{pageNumber}")
 	public String boardMainNavByPageNum(@PathVariable String pageNumber, Model model){
@@ -139,20 +141,32 @@ public class sampleController2 {
 	}
 	
 	@GetMapping("/boardUDsampleBeta")
-	public String boardUDBeta(HttpServletRequest request, Model model) {
+	public String boardUDBeta(HttpServletRequest request, Model model, Principal principal) {
 		
-		//main list selected board get -> error
+		String userid = principal.getName();
 		String boardID = request.getParameter("id");
+		
+		
+//		model.addAttribute("replyInsertID", userid);
+		
+		
 //		System.out.println(boardID);
 		
 		BoardVO bvo = boardRP.findById(Long.valueOf(boardID)).get();
 		model.addAttribute("boardDetail", bvo);
 		
 		List<ReplyVO> rlist = replyRP.selectByboardID(Integer.valueOf(boardID));
-		model.addAttribute("replyList", rlist);		
-//		System.out.println(bvo.getBoardText());
+		model.addAttribute("replyList", rlist);
 		
-		return "su/thymeleaf/boardUpdateAndDeleteBeta";
+		System.out.println("userid: "+userid);
+		System.out.println("board.user.id: "+bvo.getUser().getUserId());
+		if(bvo.getUser().getUserId().equals(userid)) {
+			System.out.println("true");
+			return "su/thymeleaf/boardUpdateAndDeleteBeta";
+		} else{
+			System.out.println("false");
+			return "su/thymeleaf/boardDisableUpdate";
+		}
 	}
 	
 	@GetMapping("/boardInsertSample2/{name}/{teamid}")

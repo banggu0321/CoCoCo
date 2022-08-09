@@ -19,6 +19,9 @@
   src: url(https://fonts.gstatic.com/s/notosanskr/v13/PbykFmXiEBPT4ITbgNA5Cgm203Tq4JJWq209pU0DPdWuqxJFA4GNDCBYtw.0.woff2)
     format("woff2");
 }
+.nav_menu2{
+	border-bottom: 3px solid tomato;
+}
 
 .wrap_notice .notice_detail{
 	font-family: "Noto Sans KR";
@@ -26,15 +29,15 @@
 	margin: 0 auto;
 	margin-top: 40px;
 }
-.my_menu{
+/* .my_menu{
  display:none;
 }
 
 .inner_content {
   width: 1418px;
-}
+} */
 
-input {border: none; background-color: #e7ebf2;}
+input {border: none; background-color: FFF;}
 input:focus {outline: none;}	
 #noticeTitle {
 	width: 100%;
@@ -66,7 +69,7 @@ input:focus {outline: none;}
 }
 .wrap_notice textarea {
 	width: 100%;
-	background-color: #e7ebf2;
+	background-color: fff;
 	height: 300px;
 	margin-top: 15px;
 	border: none;
@@ -90,7 +93,7 @@ textarea:focus{
 	color: #ffffff;
 }
 
-.btn {
+.btnBox {
  width: 100%;
  margin-top: 30px;
  padding: 0;
@@ -109,6 +112,11 @@ textarea:focus{
 </head>
 
 <body>
+
+	<div layout:fragment="my_menu">
+		<div th:replace="~{/main/teamUserList}"></div>
+	</div>
+
 <div class="inner_content" layout:fragment="inner_content">
 	<div class="wrap_notice">
 		<div class="notice_detail">
@@ -153,7 +161,7 @@ textarea:focus{
 					</ul>
 				</div>
 				
-				<div class="btn">
+				<div class="btnBox">
 					<a class="btn-style" id="btnUpdate" th:if="${session.teamUser.userRole == 'ADMIN'}" 
 					th:href="@{/notice/update(noticeId=${notice.noticeId})}">수정</a>
 					<a class="btn-style" id="btnDel" h:if="${session.teamUser.userRole == 'ADMIN'}" 

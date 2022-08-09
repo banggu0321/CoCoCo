@@ -4,6 +4,22 @@ body, html {
 	height: 100vh;
 	width: 100%;
 }
+
+/******************* Header font *******************/
+@font-face {
+    font-family: 'LeferiPoint-WhiteObliqueA';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/LeferiPoint-WhiteObliqueA.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+.cococo-title-text {
+    margin-top: 8px;
+    font-family: "LeferiPoint-WhiteObliqueA", sans-serif;
+    font-size: 1.2em;
+    font-weight: 600;
+    }
+    
+/******************* Header font *******************/
 	
 /******************* header *******************/
 #top {
@@ -21,6 +37,10 @@ body, html {
 .nav {
 	display:flex;
 	padding-left: 365px;
+	padding-top: 15px;
+}
+.nav > div{
+    padding-bottom: 15px;
 }
 
 .nav span {
@@ -71,7 +91,7 @@ body, html {
 	height: 94vh;
 	padding-left: 51px;
 	padding-right: 51px;
-	background-color: #e7ebf2;
+	background-color: #F5F5F6;
 }
 
 .chat {

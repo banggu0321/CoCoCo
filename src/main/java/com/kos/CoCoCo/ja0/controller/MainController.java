@@ -141,8 +141,8 @@ public class MainController {
 		TeamUserMultikey tuId = new TeamUserMultikey(team, user);
 		
 		session.setAttribute("teamUser", tuRepo.findById(tuId).get());
+		session.setAttribute("userList", tuRepo.findByTeamId(teamId));
 		model.addAttribute("team", team);
-		model.addAttribute("userList", tuRepo.findByTeamId(teamId));
 		
 		return "main/teamMain";
 	}

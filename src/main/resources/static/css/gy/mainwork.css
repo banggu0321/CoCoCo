@@ -9,6 +9,13 @@
     justify-content: space-between;
     align-items: center;
 }
+.workTitleBox h2 {
+    margin-top: 8px;
+    font-family: "LeferiPoint-WhiteObliqueA", sans-serif;
+    font-size: 1.2em;
+    font-weight: 600;
+    float: left;
+}
 .workTitleText{
 	float:left;
 }
@@ -35,7 +42,4 @@
 }
 .workNoneText{
 	border: none;
-}
-.finishStatus{
-	background-color: black;
 }

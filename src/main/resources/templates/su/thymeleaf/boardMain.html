@@ -37,30 +37,45 @@ background: white
 display: flex;
 justify-content: center;
 }
+
+#tableScall{
+height: 330px;
+overflow:auto;
+}
+
+#boardMainSearch{
+position: relative;
+left: 25%;
+}
+
+#categoryTable{
+width:150px;
+}
+#cNameInsert{
+width:150px;
+}
 </style>
 <style>
 /* The Modal (background) */
 .modal {
   display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
-  padding-top: 100px; /* Location of the box */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    
+  position: fixed; /* Stay in place */
+  left: 30%;
+  top: 15%;
+  
+  width: 850px; /* Full width */
+  height: 600px; /* Full height */
 }
 
 /* Modal Content */
 .modal-content {
   position: relative;
   background-color: #fefefe;
-  margin: auto;
-  padding: 0;
-  width: 70%;
+
+  width: 90%;
+  height: 90%;
   
   -webkit-animation-name: animatetop;
   -webkit-animation-duration: 0.4s;
@@ -95,6 +110,7 @@ justify-content: center;
 			</div>
 
 			<div id="boardMainSub2">
+				<input id="categoryMenu" type="hidden">
 				<button id="boardCategory" type="button" class="btn btn-primary">카테고리
 					선택</button>
 				<button id="insertBoard" type="button" class="btn btn-primary">게시판
@@ -103,6 +119,7 @@ justify-content: center;
 		</div><br><br>
 		
 		<div id="boardMain2">
+		<div id="tableScall">
 			<table class="table table-hover">
 				<thead>
 					<tr>
@@ -112,7 +129,8 @@ justify-content: center;
 						<th>작성자</th>
 					</tr>
 				</thead>
-							
+				
+						
 				<tbody id="replyTable">
 				<tr th:each="board:${boardList}">
 				<td><a href="/boardUDsampleBeta?id=${board.boardId}">[[${board.boardTitle}]]</a></td>
@@ -122,6 +140,7 @@ justify-content: center;
 				</tr>				
 				</tbody>
 			</table>
+			</div>	
 
 			<nav id="boardMainNav">
 				<ul class="pagination">		
@@ -148,7 +167,7 @@ justify-content: center;
 			</select>
 			
 			<input type='text' id='searchKeyword'>
-			<button id='searchBtn'>검색</button>						
+			<button id='searchBtn' class="btn btn-primary">검색</button>						
 			</div>
 		</div>
 	</div>
@@ -166,11 +185,11 @@ justify-content: center;
 			<div class="modal-body">
 			카테고리 이름: 
 			<select id="categoryTable"></select>
-			<button id="categoryNameBtn">선택</button><br><br>
+			<button id="categoryNameBtn" class="btn btn-primary">선택</button><br><br>
 			
 			카테고리 이름: 
 			<input type="text" id="cNameInsert">
-			<button id="cNameInsertBtn">적용하기</button>
+			<button id="cNameInsertBtn" class="btn btn-primary">적용하기</button>
 			</div>
 		</div>
 
@@ -190,6 +209,7 @@ justify-content: center;
 	
 	var categoryName = document.getElementById("categoryTable");
 	var cNameBtn = document.getElementById("categoryNameBtn");
+	var cMenuname = document.getElementById("categoryMenu");
 	
 	var formA = document.getElementById("boardFormA");
 	var categoryResult;
@@ -203,6 +223,7 @@ justify-content: center;
 		});
 	}
 	
+	var boardMainNav = document.getElementById("boardMainNav");
 	var navPageList = document.getElementById("nextPLprev");	
 	var navPListNext = document.getElementById("nextPLnext");	
 	var navNumber = document.getElementById("nextPLvalue");
@@ -252,6 +273,7 @@ justify-content: center;
 			replyREST.getAllBoard("boardList/insertName/" + insertName.value,
 					printList);
 			modal.style.display = "none";
+			boardMainNav.style.display = "none";
 		}
 
 		categoryBtn.onclick = function() {
@@ -261,9 +283,12 @@ justify-content: center;
 
 		cNameBtn.onclick = function() {
 			categoryResult = categoryName.options[categoryName.selectedIndex].text;
-			replyREST.getAllBoard("boardListBycategory/" + categoryResult, printList);
+			replyREST.getAllBoard("boardList/" + categoryResult, printList);
+			
+			cMenuname.setAttribute("value", categoryResult);
 			
 			modal.style.display = "none";
+			boardMainNav.style.display = "none";
 			//alert(categoryResult);
 			
 			//location.href="/boardSampleBeta/"+categoryResult;
@@ -286,6 +311,7 @@ justify-content: center;
 		});
 	</script>
 	<script th:inline="javascript">			
+	
 		function printCategory(list) {
 			var result = "";
 			var obj;

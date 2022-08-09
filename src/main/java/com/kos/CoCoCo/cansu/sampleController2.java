@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.kos.CoCoCo.cansu.test.BoardCategoryRepositoryTestSu;
 import com.kos.CoCoCo.cansu.test.BoardRepositoryTestSu;
@@ -189,7 +190,7 @@ public class sampleController2 {
 	}
 
 	@PostMapping("/postBoardInsertSample2")
-	public String boardInsertPostBeta(HttpServletRequest request, Principal principal) {
+	public String boardInsertPostBeta(HttpServletRequest request, Principal principal, MultipartFile[] insertFile) {
 
 //		System.out.println("title: "+request.getParameter("title"));
 //		System.out.println("content: "+request.getParameter("content"));
@@ -205,7 +206,7 @@ public class sampleController2 {
 		System.out.println("category: "+category);
 		System.out.println("userID: "+userID);
 
-		makeBoardSample(title, content,category,userID);
+		//makeBoardSample(title, content,category,userID);
 
 		return "redirect:/boardSampleBeta";
 	}

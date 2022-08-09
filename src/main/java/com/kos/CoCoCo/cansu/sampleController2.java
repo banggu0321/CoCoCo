@@ -155,9 +155,10 @@ public class sampleController2 {
 		return "su/thymeleaf/boardUpdateAndDeleteBeta";
 	}
 	
-	@GetMapping("/boardInsertSample2/{name}")
-	public String boardInsertBeta(@PathVariable String name, Model model) {
+	@GetMapping("/boardInsertSample2/{name}/{teamid}")
+	public String boardInsertBeta(@PathVariable String teamid, @PathVariable String name, Model model) {
 		model.addAttribute("categoryName", name);
+		model.addAttribute("teamid", teamid);
 		return "su/thymeleaf/boardInsert";
 	}
 	
@@ -200,26 +201,23 @@ public class sampleController2 {
 	@PostMapping("/postBoardInsertSample2")
 	public String boardInsertPostBeta(HttpServletRequest request, Principal principal, MultipartFile[] insertFile) throws IllegalStateException, IOException {
 
-//		System.out.println("title: "+request.getParameter("title"));
-//		System.out.println("content: "+request.getParameter("content"));
-//		System.out.println("category name: "+request.getParameter("category"));
-
 		String title = request.getParameter("title");
 		String content =request.getParameter("content");
 		String category = request.getParameter("category");
 		String userID = principal.getName();
+		String teamid = request.getParameter("teamid");
 		
 		System.out.println("title: "+title);
 		System.out.println("content: "+content);
 		System.out.println("category: "+category);
 		System.out.println("userID: "+userID);
+		System.out.println("team id: "+teamid);
 		
-		makeBoardSample(title, content,category,userID, insertFile);
+		makeBoardSample(teamid, title, content,category,userID, insertFile);
 
 		return "redirect:/boardSampleBeta";
 	}
-
-	private void makeBoardSample(String title, String content, String category, String userID, MultipartFile[] insertFile) throws IllegalStateException, IOException {
+	private void makeBoardSample(String teamid, String title, String content, String category, String userID, MultipartFile[] insertFile) throws IllegalStateException, IOException {
 		long gnrTemp =  new Random().nextLong();
 		if(gnrTemp <0) {
 			gnrTemp = -1*gnrTemp;
@@ -229,7 +227,8 @@ public class sampleController2 {
 
 		//(log in info)user->team
 		UserVO uservo = userRP.findById(userID).get();  
-		TeamVO teamvo =  teamRP.selectByUserID(uservo.getUserId());
+//		TeamVO teamvo =  teamRP.selectByUserID(uservo.getUserId());
+		TeamVO teamvo = teamRP.findById(Long.valueOf(teamid)).get();
 		System.out.println(teamvo);
 
 		//categoryName 

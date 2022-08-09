@@ -20,7 +20,7 @@
 } */
 
 .wrap_notice {
-	width: 700px;
+	width: 850px;
 	margin: 0 auto;
 	margin-top: 40px;
 }
@@ -99,6 +99,7 @@
 						<li th:if="${nflist} == null" th:text="첨부파일 없음"></li>
 						<li th:if="${nflist} != null" >
 							<a th:href="@{'/noticefiles/' + ${file.filename}}">[[${file.originFname}]]</a>
+							<button id="btnDelFile">파일삭제</button>
 						</li>
 					</ul>
 					<input type="file" multiple="multiple" name="files">
@@ -128,6 +129,15 @@
 					success : function(responseData) {
 						$(".wrap_notice").html(responseData);
 					}
+				});
+			});
+			
+			$('#btnDelFile').click(function(){
+				
+				$.ajax({
+				
+					
+					
 				});
 			});
 		});

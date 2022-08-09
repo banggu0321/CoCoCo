@@ -1,5 +1,6 @@
 package com.kos.CoCoCo.cansu;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 import java.util.Random;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.kos.CoCoCo.cansu.test.BoardCategoryRepositoryTestSu;
 import com.kos.CoCoCo.cansu.test.BoardRepositoryTestSu;
@@ -51,6 +53,9 @@ public class sampleController2 {
 	
 	@Autowired
 	BoardCategoryRepositoryTestSu boardcateRP;
+	
+	@Autowired
+	boardUDFileService boardService;
 	
 	@GetMapping("/getNext/{pageNumber}")
 	public String boardMainNavByPageNum(@PathVariable String pageNumber, Model model){
@@ -189,7 +194,7 @@ public class sampleController2 {
 	}
 
 	@PostMapping("/postBoardInsertSample2")
-	public String boardInsertPostBeta(HttpServletRequest request, Principal principal) {
+	public String boardInsertPostBeta(HttpServletRequest request, Principal principal, MultipartFile[] insertFile) throws IllegalStateException, IOException {
 
 //		System.out.println("title: "+request.getParameter("title"));
 //		System.out.println("content: "+request.getParameter("content"));
@@ -204,13 +209,13 @@ public class sampleController2 {
 		System.out.println("content: "+content);
 		System.out.println("category: "+category);
 		System.out.println("userID: "+userID);
-
-		makeBoardSample(title, content,category,userID);
+		
+		makeBoardSample(title, content,category,userID, insertFile);
 
 		return "redirect:/boardSampleBeta";
 	}
 
-	private void makeBoardSample(String title, String content, String category, String userID) {
+	private void makeBoardSample(String title, String content, String category, String userID, MultipartFile[] insertFile) throws IllegalStateException, IOException {
 		long gnrTemp =  new Random().nextLong();
 		if(gnrTemp <0) {
 			gnrTemp = -1*gnrTemp;
@@ -230,7 +235,8 @@ public class sampleController2 {
 		//		System.out.println(bcvotemp);
 		boardcateRP.save(bcvotemp);
 
-		BoardVO boardTemp = BoardVO.builder().category(bcvotemp).user(uservo).boardTitle(title).boardText(content).build(); 
+		List<String> boardFileName = boardService.uploadFile(insertFile);
+		BoardVO boardTemp = BoardVO.builder().category(bcvotemp).user(uservo).boardTitle(title).boardText(content).boardFile(boardFileName.get(0)).build(); 
 		boardRP.save(boardTemp);
 	}
 }

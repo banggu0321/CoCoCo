@@ -31,6 +31,7 @@ import com.kos.CoCoCo.cansu.test.PageVO;
 import com.kos.CoCoCo.cansu.test.ReplyRepositoryTestSu;
 import com.kos.CoCoCo.cansu.test.TeamRepositoryTestSu;
 import com.kos.CoCoCo.cansu.test.UserRepositoryTestSu;
+import com.kos.CoCoCo.ja0.awsS3.AwsS3;
 import com.kos.CoCoCo.vo.BoardCategoryMultikey;
 import com.kos.CoCoCo.vo.BoardCategoryVO;
 import com.kos.CoCoCo.vo.BoardVO;
@@ -58,6 +59,9 @@ public class sampleController2 {
 	
 	@Autowired
 	boardUDFileService boardService;
+	
+	@Autowired
+	AwsS3 awsS3;
 	
 	
 	@GetMapping("/getNext/{pageNumber}")
@@ -253,6 +257,9 @@ public class sampleController2 {
 		boardcateRP.save(bcvotemp);
 
 		List<String> boardFileName = boardService.uploadFile(insertFile);
+//		String fileName = awsS3.upload(insertFile[0], "uploads/teamImages/");
+//		System.out.println("file name: "+fileName);
+		
 		BoardVO boardTemp = BoardVO.builder().category(bcvotemp).user(uservo).boardTitle(title).boardText(content).boardFile(boardFileName.get(0)).build(); 
 		boardRP.save(boardTemp);
 	}

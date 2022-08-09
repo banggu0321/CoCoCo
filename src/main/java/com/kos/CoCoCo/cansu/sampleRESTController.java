@@ -130,6 +130,8 @@ public class sampleRESTController {
 			System.out.println(a);
 		});
 		
+		model.addAttribute("category", name);
+		
 		return boardList;
 	}
 	

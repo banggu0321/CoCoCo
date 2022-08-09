@@ -70,9 +70,9 @@ public class InnerMainController {
 		
 		Long teamId = (Long)session.getAttribute("teamId");
 		TeamVO t = tRepo.findById(teamId).get();
-		System.out.println("팀vo : "+t);
+
 		List<WorkVO> wlist = wRepo.findByTeam(t);
-		System.out.println("wlist : " + wlist);
+
 		work.setTeam(t);
 		
 		int numOngoing = wRepo.numOngoing(t);

@@ -221,6 +221,7 @@ a {
 						type="hidden" name="keyword" th:value="${pageVO.keyword}">
 					<input type="hidden" name="keyword2" th:value="${pageVO.keyword2}">
 				</form>
+				
 				<select id="searchType" onchange="changeInput()">
 					<option value="noticeTitleAndText"
 						th:selected="${pageVO.type=='noticeTitleAndText'}">전체</option>
@@ -230,10 +231,10 @@ a {
 						th:selected="${pageVO.type=='noticeText'}">내용</option>
 					<option value="noticeRegDate"
 						th:selected="${pageVO.type=='noticeRegDate'}">날짜</option>
-				</select> <input type="text" id="searchKeyword"> <input type="date"
-					id="sdate" name="keyword" style="display: none" class="typeDate">
-				<input type="date" id="edate" name="keyword2" style="display: none"
-					class="typeDate">
+				</select>
+				<input type="text" id="searchKeyword">
+				<input type="date" id="sdate" name="keyword" style="display: none" class="date-type">
+				<input type="date" id="edate" name="keyword2" style="display: none" class="date-type">
 				<button id="searchBtn">검색</button>	
 			</div>
 

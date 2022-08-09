@@ -4,7 +4,6 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 <style>
 .chat {
 	list-style: none;
@@ -123,7 +122,8 @@ mark.current {
 								th:class="${chat.writer == session.user.userId?'left':'right'}">
 								 <span
 								th:class="${chat.writer == session.user.userId?'chat-img pull-right':'chat-img pull-left'}">
-									<img  class="img-circle" />
+									<img src="http://placehold.it/50/55C1E7/fff&text=U"
+									alt="User Avatar" class="img-circle" />
 									<span th:if="${chat.writer} == ${session.user.userId}">
 									<button type="button" class="button-del" th:data="${chat.id}">삭제</button>
 							</span>

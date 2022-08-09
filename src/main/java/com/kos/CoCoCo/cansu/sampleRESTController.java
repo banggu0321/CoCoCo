@@ -57,6 +57,31 @@ public class sampleRESTController {
 	@Autowired
 	BoardCategoryRepositoryTestSu boardcateRP;
 	
+	@Autowired
+	ReplyRepositoryTestSu replyRP;
+	
+	@GetMapping("/replyDeleteByID/{replyid}")
+	public List<ReplyVO> deleteReply(@PathVariable String replyid, Principal principal){
+		System.out.println("principal: "+principal.getName());
+		System.out.println("reply id: "+replyid);
+		
+			
+		ReplyVO reply = replyRP.findById(Long.valueOf(replyid)).get();  //selected reply
+		System.out.println("reply.userid: "+reply.getUser().getUserId());
+		String replyUser = reply.getUser().getUserId();
+		
+		if(replyUser.equals(principal.getName())) {
+			replyRP.delete(reply);
+		}			
+		
+		Long bno = reply.getBoard().getBoardId();
+		BoardVO board = BoardVO.builder().boardId(bno).build();
+		
+		List<ReplyVO> replyList = replyRP.selectByboardID(board.getBoardId().intValue());
+		
+		return replyList;
+	}
+	
 	@GetMapping("/boardList/fromMain")
 	public List<BoardVO> boardListByPageable(PageVO vo, Model model){
 		
@@ -88,11 +113,14 @@ public class sampleRESTController {
 		return boardList;
 	}
 	
-	@GetMapping("/boardList/insertName/{name}")
-	public List<BoardVO> categoryNameInsertFromBLBeta(@PathVariable String name,Model model, Principal principal) {
+	@GetMapping("/boardList/insertName/{name}/{teamid}")
+	public List<BoardVO> categoryNameInsertFromBLBeta(@PathVariable String teamid, @PathVariable String name,Model model, Principal principal) {
 		
 		System.out.println("principal.getName():" + principal.getName());
 		String userID = principal.getName(); //user_id
+		String teamID = teamid;
+		
+		System.out.println("team id: "+teamID);
 		System.out.println("category name: "+name);
 		
 		if(name==null) {
@@ -101,7 +129,7 @@ public class sampleRESTController {
 		
 		List<Long>categoryID = boardcateRP.selectIDByname(name);
 		if(categoryID.isEmpty()) {
-			categoryNameInsert(name, userID, boardcateRP);
+			categoryNameInsert(teamID, name, userID, boardcateRP);
 		}
 		
 		List<BoardVO> boardList = new ArrayList<>();
@@ -116,7 +144,7 @@ public class sampleRESTController {
 	}
 	
 	@GetMapping("/boardListBycategory/{name}")
-	public List<BoardVO> boardlistByCategory(@PathVariable String name,Model model) {
+	public List<BoardVO> boardlistByCategory( @PathVariable String name,Model model) {
 		
 		if(name==null) {
 			return (List<BoardVO>)boardRP.findAll();
@@ -176,7 +204,7 @@ public class sampleRESTController {
 		return (List<BoardVO>)boardRP.findAll();
 	}
 	
-	private void categoryNameInsert(String categoryName, String userID, BoardCategoryRepositoryTestSu boardcateRP2) {
+	private void categoryNameInsert(String teamID, String categoryName, String userID, BoardCategoryRepositoryTestSu boardcateRP2) {
 		//BoardCategoryMultikey -> generateValue not work
 		long gnrTemp =  new Random().nextLong();
 		if(gnrTemp <0) {
@@ -186,7 +214,8 @@ public class sampleRESTController {
 //		System.out.println(gnrValue);
 		
 		UserVO uservo = userRP.findById(userID).get();
-		TeamVO teamvo =  teamRP.selectByUserID(uservo.getUserId());
+//		TeamVO teamvo =  teamRP.selectByUserID(uservo.getUserId());
+		TeamVO teamvo = teamRP.findById(Long.valueOf(teamID)).get();
 		System.out.println(teamvo);
 		
 		BoardCategoryMultikey bcMultikey = BoardCategoryMultikey.builder().categoryId(gnrValue).team(teamvo).build();

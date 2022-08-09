@@ -7,15 +7,20 @@
 <meta charset="UTF-8">
 <title>글 작성하기</title>
 <style>
-.my_menu{
+.nav_menu2{
+	border-bottom: 3px solid tomato;
+}
+
+/* .my_menu{
  display:none;
 }
 
 .inner_content {
   width: 1418px;
-}
+} */
+
 .wrap_notice {
-	width: 700px;
+	width: 850px;
 	margin: 0 auto;
 	margin-top: 40px;
 }
@@ -63,6 +68,12 @@
 </head>
 
 <body>
+
+	<div layout:fragment="my_menu">
+		<div th:replace="~{/main/teamUserList}"></div>
+	</div>
+
+
 <div  class="inner_content" layout:fragment="inner_content">
 	<div class="wrap_notice">
 		<div class="wrap_notice_update">
@@ -88,6 +99,7 @@
 						<li th:if="${nflist} == null" th:text="첨부파일 없음"></li>
 						<li th:if="${nflist} != null" >
 							<a th:href="@{'/noticefiles/' + ${file.filename}}">[[${file.originFname}]]</a>
+							<button id="btnDelFile">파일삭제</button>
 						</li>
 					</ul>
 					<input type="file" multiple="multiple" name="files">
@@ -117,6 +129,15 @@
 					success : function(responseData) {
 						$(".wrap_notice").html(responseData);
 					}
+				});
+			});
+			
+			$('#btnDelFile').click(function(){
+				
+				$.ajax({
+				
+					
+					
 				});
 			});
 		});

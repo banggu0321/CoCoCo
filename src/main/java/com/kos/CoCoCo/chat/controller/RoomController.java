@@ -61,7 +61,7 @@ public class RoomController {
 
         log.info("# get Chat Room, teamID : " + teamId);
         model.addAttribute("team", roomRepo.findById(teamId).get());
-        model.addAttribute("chatlist",mRepo.findByTeamId(teamId));
+        model.addAttribute("chatlist",mRepo.findByTeamIdOrderById(teamId));
         
     }
 }

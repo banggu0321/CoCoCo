@@ -50,8 +50,12 @@ public class tableCRUDTest {
 	ReplyRepositoryTestSu replyRP;
 	
 	@Test
-	public void selectBoardFileName() {
-		
+	public void delteReply() {
+	UserVO uservo = userRP.findById("su0809").get();  //log in info check delete able
+	System.out.println(uservo);
+	
+//	ReplyVO reply = replyRP.findById(47L).get();  //selected reply
+//	replyRP.delete(reply);	
 	}
 
 //	@Test

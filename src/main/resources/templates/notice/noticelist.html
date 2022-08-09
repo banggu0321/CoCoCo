@@ -7,20 +7,23 @@
 <title>CoCoCo | [[${session.teamUser.teamUserId.team.teamName}]]</title>
 <meta charset="UTF-8">
 <style>
-.my_menu{
+.nav_menu2{
+	border-bottom: 3px solid tomato;
+}
+/* .my_menu{
  display:none;
 }
 
 .inner_content {
   width: 1418px;
-}
+} */
 
 a {
 	text-decoration: none;
 }
 
 .wrap_notice {
-	width: 700px;
+	width: 850px;
 	margin: 0 auto;
 	margin-top: 40px;
 }
@@ -89,6 +92,10 @@ a {
 
 </head>
 <body>
+	<div layout:fragment="my_menu">
+		<div th:replace="~{/main/teamUserList}"></div>
+	</div>
+
 	<div class="inner_content" layout:fragment="inner_content">
 		<div class="wrap_notice">
 			<h1>공지사항</h1>

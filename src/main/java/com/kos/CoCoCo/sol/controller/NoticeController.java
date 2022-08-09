@@ -28,6 +28,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -204,26 +205,18 @@ public class NoticeController {
 	
 	
 	/*@Value("${spring.servlet.multipart.location}")
-	String filePath;
+	String filePath;*/
 
-	@GetMapping("/download")
-	public ResponseEntity<Resource> download(@ModelAttribute NoticeFile file) throws IOException {
+	@GetMapping("/download/{fileId}")
+	public ResponseEntity<byte[]> download(@PathVariable Long fileId) throws IOException {
+		String dir = "uploads/noticefiles/";
+		NoticeFile file = noticeFRepo.findById(fileId).get();
 		
-		Path path = Paths.get(filePath + "/" + file.getFileName());
-		String contentType = Files.probeContentType(path);
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentDisposition(
-		ContentDisposition.builder("attachment")
-			.filename(file.getFileName(), StandardCharsets.UTF_8)
-			.build());
-		headers.add(HttpHeaders.CONTENT_TYPE, contentType);
-
-		Resource resource = new InputStreamResource(Files.newInputStream(path));
-
-		return new ResponseEntity<>(resource, headers, HttpStatus.OK);
-
-	}*/
+		aws.copy(file.getFilename(), dir, file.getOriginFname());
+		System.out.println("복사 성공!");
+		
+		return aws.download(dir, file.getOriginFname());
+	}
 		
 
 }

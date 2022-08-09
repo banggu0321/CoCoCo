@@ -5,11 +5,15 @@
 	layout:decorator="~{/layout/layout1}">
 <head>
 <meta charset="UTF-8">
-<meta name="_csrf" th:content="${_csrf.token}" />
-<meta name="_csrf_header" th:content="${_csrf.headerName}" />
-<title>글 작성하기</title>
-</head>
 <style>
+.my_menu{
+ display:none;
+}
+
+.inner_content {
+  width: 1418px;
+}
+
 	.wrap_notice {
 		width: 700px;
 		margin: 0 auto;
@@ -28,8 +32,11 @@
 	}
 	
 </style>
+<title>글 작성하기</title>
+</head>
+
 <body>
-<div layout:fragment="inner_content">
+<div  class="inner_content" layout:fragment="inner_content">
 	<div class="wrap_notice">
 		<div class="wrap_notice_insert">
 			<form action="/notice/insert" method="post" enctype="multipart/form-data">
@@ -56,7 +63,7 @@
 				
 				<button type="submit">등록</button>
 			</form>
-			<a class="btnViewList" th:href="@{list}">목록</a>
+			<a class="btnViewList" th:href="@{/notice}">목록</a>
 		</div>		
 	</div>
 </div>

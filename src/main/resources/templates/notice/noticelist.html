@@ -4,10 +4,17 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorator="~{/layout/layout1}">
 <head>
-<title>공지사항</title>
+<title>CoCoCo | [[${session.teamUser.teamUserId.team.teamName}]]</title>
 <meta charset="UTF-8">
-
 <style>
+.my_menu{
+ display:none;
+}
+
+.inner_content {
+  width: 1418px;
+}
+
 a {
 	text-decoration: none;
 }
@@ -19,15 +26,24 @@ a {
 }
 
 .insertnotice {
-	text-decoration: none;
-	padding: 5px;
+
 	background-color: #FF7637;
 	color: #ffffff;
-	margin: 15px;
+	border-radius: 0.25rem;
 	float: right;
-	border-radius: 5px;
+	padding: 0.3rem 0.5rem;
+	font-weight: 300;
+	font-size: 0.85rem;
+	letter-spacing: -0.9px;
+	text-align: center;
+	margin-bottom: 15px;
+	
+	
 }
-
+.insertnotice:hover {
+	text-decoration: none;
+	color: #ffffff;
+}
 .notice_table {
 	width: 100%;
 }
@@ -70,12 +86,13 @@ a {
 	margin: 0 auto;
 }
 </style>
+
 </head>
 <body>
-	<div layout:fragment="inner_content">
+	<div class="inner_content" layout:fragment="inner_content">
 		<div class="wrap_notice">
 			<h1>공지사항</h1>
-			<a th:if="${session.teamUser.userRole == 'ADMIN'}" href="notice/insert" class="insertnotice">Write</a>
+			<a th:if="${session.teamUser.userRole == 'ADMIN'}" href="/notice/insert" class="insertnotice">작성하기</a>
 			<div class="wrap_noticelist">
 				<table class="notice_table" th:with="noticelist=${noticelist}">
 					<thead>

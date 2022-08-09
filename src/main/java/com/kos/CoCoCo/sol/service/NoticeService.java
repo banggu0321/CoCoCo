@@ -1,22 +1,17 @@
 package com.kos.CoCoCo.sol.service;
 
 import java.io.File;
-import java.util.List;
 import java.util.UUID;
-
-import javax.servlet.http.HttpSession;
-import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kos.CoCoCo.ja0.awsS3.AwsS3;
 import com.kos.CoCoCo.sol.repository.NoticeFileRepository;
 import com.kos.CoCoCo.sol.repository.NoticeRepository;
-import com.kos.CoCoCo.sol.vo.NoticeDTO;
 import com.kos.CoCoCo.sol.vo.NoticeFile;
 import com.kos.CoCoCo.vo.NoticeVO;
-import com.kos.CoCoCo.vo.UserVO;
 
 @Service
 public class NoticeService {
@@ -26,31 +21,36 @@ public class NoticeService {
 	
 	@Autowired
 	private NoticeFileRepository noticeFRepo;
+	
+	@Autowired
+	private AwsS3 awsS3;
 		
 	public void insert(NoticeVO notice, MultipartFile[] files) throws Exception {
 
 		NoticeVO newNotice = noticeRepo.save(notice);
-		String filePath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\noticefiles";
-		UUID uuid = UUID.randomUUID();
+		
 		for(MultipartFile file:files) {
-			String fname = file.getOriginalFilename();
-			if(fname==null || fname.equals("")) { 
-				continue;
-			}
-			String fileName = uuid + "_" + file.getOriginalFilename();
-			File saveFile = new File(filePath, fileName);
-			file.transferTo(saveFile); //upload 
 			
-			NoticeFile noticefile = NoticeFile.builder()
-					.filename(fileName)
-					.originFname(file.getOriginalFilename())
-					.notice(newNotice)
-					.build();
+			if (!file.isEmpty()) {
+				String uploadfile = awsS3.upload(file, "uploads/noticefiles/");
+				
+				System.out.println("filepath : " + uploadfile);
+				
+				NoticeFile noticefile = NoticeFile.builder()
+						.filename(uploadfile)
+						.originFname(file.getOriginalFilename())
+						.notice(newNotice)
+						.build();
+
+				noticeFRepo.save(noticefile);
+		    }
 			
-			noticeFRepo.save(noticefile);
+			
+			
 		}
 		
 	}
+
 		
 }
 

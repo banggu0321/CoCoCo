@@ -11,6 +11,6 @@ public interface ReplyRepositoryTestSu extends CrudRepository<ReplyVO, Long> {
 
 	
 	//@query
-	@Query(value="select*from replies where board_board_id=?1", nativeQuery = true)
+	@Query(value="select*from replies where board_board_id=?1 order by reply_reg_date desc", nativeQuery = true)
 	List<ReplyVO> selectByboardID(int id);
 }

@@ -23,6 +23,7 @@ public class boardUDFileService {
 		List<String> fileNames = new ArrayList<>();
 		for(MultipartFile file: files) {
 			String name = file.getOriginalFilename();
+			System.out.println("file name: "+name);
 			
 			if(name==null || name.equals("")) { 
 				continue;

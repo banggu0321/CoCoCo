@@ -48,20 +48,25 @@ public class tableCRUDTest {
 	
 	@Autowired
 	ReplyRepositoryTestSu replyRP;
-
+	
 	@Test
-	public void selectBoardBycategoryID() {
-		List<Long> categoryID = new ArrayList<>();
-		categoryID.add(459222L);
-		categoryID.add(997132L);
-		categoryID.add(351303L);
-		categoryID.add(412403L);
+	public void selectBoardFileName() {
 		
-		System.out.println(categoryID);
-		
-//		List<BoardVO> boardList = boardRP.selectBoardByIDbeta(categoryID,null);
-//		System.out.println(boardList);
 	}
+
+//	@Test
+//	public void selectBoardBycategoryID() {
+//		List<Long> categoryID = new ArrayList<>();
+//		categoryID.add(459222L);
+//		categoryID.add(997132L);
+//		categoryID.add(351303L);
+//		categoryID.add(412403L);
+//		
+//		System.out.println(categoryID);
+//		
+////		List<BoardVO> boardList = boardRP.selectBoardByIDbeta(categoryID,null);
+////		System.out.println(boardList);
+//	}
 	
 //	@Test
 //	public void insertBoard() {

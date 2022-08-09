@@ -3,42 +3,51 @@
 	xmlns:th="http://www.thymeleaf.org">
 <head>
 <script type="text/javascript">
-      google.charts.load("current", {packages:["corechart"]});
-      google.charts.setOnLoadCallback(drawChart);
-      function drawChart() {
-    	var arr1 = "[[${arr[0]}]]";
-    	var arr2 = "[[${arr[1]}]]";
-    	var arr3 = "[[${arr[2]}]]";
-    	 
-        var data = google.visualization.arrayToDataTable([
-          ['업무상태', '%'],
-          ['대기', Number("[[${arr[0]}]]")],
-     	  ['진행', Number("[[${arr[1]}]]")],
-          ['완료', Number("[[${arr[2]}]]")]
-        ]);
+	$(function(){
+		var work = "[[${wlist}]]";
+		if(work.length>2) {
 
-        var options = {
-		  colors:['#dedede', '#FF7F27', '#0275d8'],
-          pieHole: 0.4,
-          chartArea: {
-        	    /* 차트크기 */
-        	    width: 290,
-        	    height: 290
-        	    },
-        	   
-        	    width: 300,
-        	    height: 300,
-        	    
-        	    /* 차트에 레이블 표시 (percentage, value or label)*/
-        	    pieSliceText: 'percentage',
+			 google.charts.load("current", {packages:["corechart"]});
+		      google.charts.setOnLoadCallback(drawChart);
+		      function drawChart() {
+		    	var arr1 = "[[${arr[0]}]]";
+		    	var arr2 = "[[${arr[1]}]]";
+		    	var arr3 = "[[${arr[2]}]]";
+		    	 
+		        var data = google.visualization.arrayToDataTable([
+		          ['업무상태', '%'],
+		          ['대기', Number("[[${arr[0]}]]")],
+		     	  ['진행', Number("[[${arr[1]}]]")],
+		          ['완료', Number("[[${arr[2]}]]")]
+		        ]);
 
-        	    /* 꼬리표 제거 */
-        	    legend: 'display'    
-        };
+		        var options = {
+				  colors:['#dedede', '#FF7F27', '#0275d8'],
+		          pieHole: 0.4,
+		          chartArea: {
+		        	    /* 차트크기 */
+		        	    width: 290,
+		        	    height: 290
+		        	    },
+		        	   
+		        	    width: 300,
+		        	    height: 300,
+		        	    
+		        	    /* 차트에 레이블 표시 (percentage, value or label)*/
+		        	    pieSliceText: 'percentage',
 
-        var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
-        chart.draw(data, options);
-      }
+		        	    /* 꼬리표 제거 */
+		        	    legend: 'display'    
+		        };
+
+		        var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+		        chart.draw(data, options);
+		      }
+		}
+		
+		
+	});
+     
 </script>
 <style>
 #donutchart {
@@ -60,10 +69,9 @@ text {
 			<div class="wrap_notice_title">
 			<h2 class="cococo-title-text">업무진행률</h2>
 			</div>
-			<div id="donutchart">
-				<p th:if="${work} == null">업무가 존재하지 않습니다.</p>
+			<p class="msg-null" th:if="${#lists.isEmpty(wlist)}">업무가 존재하지 않습니다.</p>
+			<div id="donutchart" th:if="${!#lists.isEmpty(wlist)}">
 			</div>
-			
 		</div>
 	</div>
 </body>

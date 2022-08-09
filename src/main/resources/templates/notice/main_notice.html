@@ -3,7 +3,6 @@
 	xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>메인 | 공지사항</title>
 <style>
 
 .wrap_notice {
@@ -74,6 +73,13 @@ font-family: "Noto Sans KR", sans-serif;
 .notice_table {
 	list-style: none;
 }
+
+.msg-null {
+	box-sizing: content-box;
+	font-size: 1rem;
+	text-align: center;
+	color: #808080;
+}
 </style>
 </head>
 <body>
@@ -85,8 +91,8 @@ font-family: "Noto Sans KR", sans-serif;
 			</div>
 			
 			<div class="wrap_noticelist"  th:with="mnlist=${mnlist}">
-				<table class="notice_table">
-					<thead id="noticenull" th:if="${mnlist}==null"><tr><td>등록된 공지가 없습니다.</td></tr></thead>
+				<div class="msg-null" th:if="${#lists.isEmpty(mnlist)}">공지가 존재하지 않습니다.</div>
+				<table class="notice_table" th:if="${!#lists.isEmpty(mnlist)}"> 
 					<tbody>
 						<tr th:each="notice:${mnlist}" th:if="${noticeStat.index}<3">
 							<td class="fixed main_notice_title" th:if="${notice.fixedYN}==1" th:title="${notice.noticeText}">

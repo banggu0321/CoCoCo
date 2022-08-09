@@ -81,13 +81,8 @@ public class NoticeController {
 	NoticeFileRepository noticeFRepo;
 
 	@GetMapping("")
-	public String noticelist(NoticePageVO pageVO, NoticeVO notice, Model model, HttpSession session,
-			HttpServletRequest requestPrinc, Principal principal) {
-		System.out.println("principal.getName():" + principal.getName());
-		UserVO user =uRepo.findById(principal.getName()).get();
-		
-		//TeamVO team = tRepo.findById(186L).get();
-		//session.setAttribute("teamId", 186L);
+	public String noticelist(NoticePageVO pageVO, NoticeVO notice, Model model, HttpSession session) {
+				
 	    Long teamId = (Long)session.getAttribute("teamId");
 		TeamVO team = tRepo.findById(teamId).get();
 		notice.setTeam(team);
@@ -105,6 +100,8 @@ public class NoticeController {
 		model.addAttribute("noticelist", pgmaker);
 		model.addAttribute("pageVO", pageVO);
 		
+		//model.addAttribute("noticefile", noticeFRepo.findByNotice(notice));
+		
 		return "notice/noticelist";
 	}
 	
@@ -112,18 +109,14 @@ public class NoticeController {
 	@GetMapping("/detail")
 	public String detail(NoticePageVO pageVO, NoticeVO notice, Long noticeId, Model model) {
 		
-		log.info("공지번호 : " + noticeId);
-		
 		model.addAttribute("pageVO", pageVO);
-		model.addAttribute("notice", noticeRepo.findById(noticeId).get());
 		
-		String folderPath="/static/noticefiles";
+		/*String folderPath="/static/noticefiles";
 		File folder = new File(folderPath);
 		File[] listOfFiles = folder.listFiles();
-		model.addAttribute("nfiles",listOfFiles);
+		model.addAttribute("nfiles",listOfFiles);*/
 		
 		List<NoticeFile> nflist = noticeFRepo.findByNotice(notice);
-		System.out.println("nflist : " + nflist);
 		model.addAttribute("nflist", nflist);
 		
 		
@@ -131,9 +124,8 @@ public class NoticeController {
 	}
 	
 		
-	
 	@GetMapping("/insert")
-	public String insert(UserVO user, HttpSession session, Principal principal) {
+	public String insert() {
 				
 		return "notice/insertnotice";
 	}
@@ -203,10 +195,6 @@ public class NoticeController {
 	
 	
 	
-	
-	/*@Value("${spring.servlet.multipart.location}")
-	String filePath;*/
-
 	@GetMapping("/download/{fileId}")
 	public ResponseEntity<byte[]> download(@PathVariable Long fileId) throws IOException {
 		String dir = "uploads/noticefiles/";

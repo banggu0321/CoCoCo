@@ -63,13 +63,13 @@ public class PageMaker {
 		this.nextPage = startPage.getPageNumber()+1 <= totalPageNum? startPage: null;
 		
 		
-		System.out.println("tempEndNum: "+tempEndNum);
-		System.out.println("startNum: "+startNum);
-		
-		System.out.println("startPage.getPageNumber: "+startPage.getPageNumber());
-		System.out.println("totalPageNum: "+totalPageNum);
-		
-		System.out.println("nextPage: "+nextPage);
-		System.out.println("nextPage.getPageNumber(): "+nextPage.getPageNumber());
+//		System.out.println("tempEndNum: "+tempEndNum);
+//		System.out.println("startNum: "+startNum);
+//		
+//		System.out.println("startPage.getPageNumber: "+startPage.getPageNumber());
+//		System.out.println("totalPageNum: "+totalPageNum);
+//		
+//		System.out.println("nextPage: "+nextPage);
+//		System.out.println("nextPage.getPageNumber(): "+nextPage.getPageNumber());
 	}
 }

@@ -8,8 +8,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -64,6 +66,38 @@ public class sampleController2 {
 		
 		System.out.println("pageNumber: "+pageNumber);
 		System.out.println("page size: "+voTemp.getSize());
+		
+		return "su/thymeleaf/boardMain";
+	}
+	
+	@GetMapping("/boardSampleBeta/{name}")
+	public String boardlistByCategory(@PathVariable String name,Model model) {
+		
+		if(name==null) {
+			return "/boardSampleBeta";
+		}
+		
+		Pageable pageable = PageRequest.of(0, 5, Sort.by(Direction.DESC, "board_id"));
+		List<Long> categoryID = boardcateRP.selectIDByname(name);
+		List<BoardVO> boardList = boardRP.selectBoardByIDbeta(categoryID, pageable);
+		
+		Page<BoardVO> result = new PageImpl<BoardVO>(boardList, PageRequest.of(0, 5), boardList.size());
+		
+		System.out.println("category name: "+name);
+		System.out.println();
+		
+		System.out.println("board list");
+		boardList.forEach(a->{
+			System.out.println(a);
+		});
+		System.out.println();
+		
+		
+		System.out.println("result: "+ new PageMaker(result));
+		
+		
+		model.addAttribute("result", new PageMaker(result));
+		model.addAttribute("boardList", boardList);
 		
 		return "su/thymeleaf/boardMain";
 	}

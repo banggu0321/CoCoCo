@@ -126,8 +126,8 @@ justify-content: center;
 			<nav id="boardMainNav">
 				<ul class="pagination">		
 					<li th:if="${result.prevPage}" class="page-item">
-					<input id="nextPLvalue" type="hidden" th:value="${result.prevPage.getPageNumber()}">
-					<a id="nextPLprev" class="page-link">	&#171;</a>
+					<input id="prevPLvalue" type="hidden" th:value="${result.prevPage.getPageNumber()}">
+					<a id="nextPLprev" class="page-link">&#171;</a>
 					</li>
 					
 					<li th:each="p:${result.pageList}" class="page-item"><a id="navPage" class="page-link">[[${p.pageNumber}+1]]</a></li>
@@ -138,6 +138,18 @@ justify-content: center;
 					</li>
 				</ul>
 			</nav>
+			
+			<div id="boardMainSearch">
+			<select id="searchType">
+			<option></option>
+			<option value='t'>Title</option>
+			<option value='c'>Content</option>
+			<option value='w'>Writer</option>						
+			</select>
+			
+			<input type='text' id='searchKeyword'>
+			<button id='searchBtn'>검색</button>						
+			</div>
 		</div>
 	</div>
 
@@ -194,9 +206,11 @@ justify-content: center;
 	var navPageList = document.getElementById("nextPLprev");	
 	var navPListNext = document.getElementById("nextPLnext");	
 	var navNumber = document.getElementById("nextPLvalue");
+	var prevPLvalue = document.getElementById("prevPLvalue");
 	
-	//var replyReg = document.getElementById("replyRegDate");
-	//var replyUp = document.getElementById("replyUpDate");
+	var searchBtn = document.getElementById("searchBtn");
+	var searchKW = document.getElementById("searchKeyword");
+	var searchType = document.getElementById("searchType");
 	
 	</script>
 
@@ -205,9 +219,14 @@ justify-content: center;
 			alert("form clicked");
 		}
 		
+		searchBtn.onclick=function(){
+			alert("search button clicked input value: "+searchKW.value+
+					", type:"+searchType.options[searchType.selectedIndex].value);
+		}
+		
 		if(navPageList!= null){
 			navPageList.onclick = function(){
-				let temp = navNumber.value;
+				let temp = prevPLvalue.value;
 				console.log(temp);
 				alert("next pagelist clicked: "+temp);
 				
@@ -242,9 +261,12 @@ justify-content: center;
 
 		cNameBtn.onclick = function() {
 			categoryResult = categoryName.options[categoryName.selectedIndex].text;
-			replyREST.getAllBoard("boardList/" + categoryResult, printList);
-
+			replyREST.getAllBoard("boardListBycategory/" + categoryResult, printList);
+			
 			modal.style.display = "none";
+			//alert(categoryResult);
+			
+			//location.href="/boardSampleBeta/"+categoryResult;
 		};
 
 		modalClose.onclick = function() {

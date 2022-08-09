@@ -69,7 +69,7 @@ input:focus {outline: none;}
 }
 .wrap_notice textarea {
 	width: 100%;
-	background-color: #e7ebf2;
+	background-color: fff;
 	height: 300px;
 	margin-top: 15px;
 	border: none;
@@ -93,7 +93,7 @@ textarea:focus{
 	color: #ffffff;
 }
 
-.btn {
+.btnBox {
  width: 100%;
  margin-top: 30px;
  padding: 0;
@@ -161,7 +161,7 @@ textarea:focus{
 					</ul>
 				</div>
 				
-				<div class="btn">
+				<div class="btnBox">
 					<a class="btn-style" id="btnUpdate" th:if="${session.teamUser.userRole == 'ADMIN'}" 
 					th:href="@{/notice/update(noticeId=${notice.noticeId})}">수정</a>
 					<a class="btn-style" id="btnDel" h:if="${session.teamUser.userRole == 'ADMIN'}" 

@@ -123,8 +123,7 @@ mark.current {
 								th:class="${chat.writer == session.user.userId?'left':'right'}">
 								 <span
 								th:class="${chat.writer == session.user.userId?'chat-img pull-right':'chat-img pull-left'}">
-									<img src="http://placehold.it/50/55C1E7/fff&text=U"
-									alt="User Avatar" class="img-circle" />
+									<img  class="img-circle" />
 									<span th:if="${chat.writer} == ${session.user.userId}">
 									<button type="button" class="button-del" th:data="${chat.id}">삭제</button>
 							</span>

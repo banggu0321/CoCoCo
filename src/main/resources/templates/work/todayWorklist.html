@@ -64,9 +64,9 @@
 							if(data.managerid=="none"){ //not mine
 								$(".workListBox").append(`<div class="form-control worklist" style="color:#BFBFBF"><span class="workinfo"><span class="workListTitle">${data.workTitle}</span>  <span class="workListContent">${data.workText}</span><span>${data.workStart} ~ ${data.workEnd}</span></span></div>`);
 							}else if(data.workStatus=="finish"){
-								$(".workListBox").append(`<div class="form-control worklist" style="color:black"><span class="workinfo"><span class="workListTitle">${data.workTitle}</span>  <span class="workListContent">${data.workText}</span><span>${data.workStart} ~ ${data.workEnd}</span></span><div class="btn-cococo finishStatus btn">완료</div></div>`);
+								$(".workListBox").append(`<div class="form-control worklist" style="color:black"><span class="workinfo"><span class="workListTitle">${data.workTitle}</span>  <span class="workListContent">${data.workText}</span><span>${data.workStart} ~ ${data.workEnd}</span></span><div class="btn-secondary finishStatus btn" disabled:false>완료</div></div>`);
 							}else {
-								$(".workListBox").append(`<div class="form-control worklist" style="color:tomato"><span class="workinfo"><span class="workListTitle">${data.workTitle}</span>  <span class="workListContent">${data.workText}</span><span>${data.workStart} ~ ${data.workEnd}</span></span><div class="btn-cococo statusBtn btn">버튼</div></div>`);
+								$(".workListBox").append(`<div class="form-control worklist" style="color:tomato"><span class="workinfo"><span class="workListTitle">${data.workTitle}</span>  <span class="workListContent">${data.workText}</span><span>${data.workStart} ~ ${data.workEnd}</span></span><div class="btn-danger statusBtn btn">미완료</div></div>`);
 							}
 							num += 1;
 						}else{
@@ -92,7 +92,7 @@
 <body>
 	<div class="mainWork">
 		<div class="workTitleBox">
-			<h4 class="workTitleText">오늘의 업무(<span id="today"></span>)</h4>
+			<h2 class="workTitleText">오늘의 업무(<span id="today"></span>)</h2>
 			<button class="btn btn-cococo" id="workShowBtn">더보기</button>
 		</div>
 		<div class="workListBox">

@@ -40,9 +40,6 @@ public class SecurityController {
 	  return "auth/joinForm";	
 	}
 	
-	
-	
-	
 	@PostMapping("/auth/joinProc")
 	public String register(@ModelAttribute UserVO member) {
 		System.out.println("===회원가입하기====");
@@ -51,8 +48,4 @@ public class SecurityController {
 	}
 	
 
-	@GetMapping("/auth/Xtest2X")
-	public void test() {
-		System.out.println("/auth/Xtest2X");
-	}
 }

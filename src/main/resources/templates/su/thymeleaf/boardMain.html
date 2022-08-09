@@ -98,7 +98,7 @@ width:150px;
 }
 </style>
 <meta charset="utf-8">
-<title>board main page</title>
+<title>CoCoCo | [[${session.teamUser.teamUserId.team.teamName}]]</title>
 </head>
 <body>
 
@@ -201,11 +201,13 @@ width:150px;
 
 	<script th:inline="javascript" th:src="@{'/js/RESTreply.js'}"></script>
 	<script th:inline="javascript">	
+	var teamID;
 	$(function(){
 		//세션정보 가져오기
 		var team_id = /*[[${session.teamId}]]*/'';
 		var user_id = /*[[${session.user.userId}]]*/'';
-		console.log(team_id);
+		//console.log(team_id);
+		teamID = team_id;
 	});
 	var insertName = document.getElementById("cNameInsert");
 	var insertNameBtn = document.getElementById("cNameInsertBtn");
@@ -279,7 +281,7 @@ width:150px;
 		insertNameBtn.onclick = function() {
 			alert(insertName.value);
 
-			replyREST.getAllBoard("boardList/insertName/" + insertName.value,
+			replyREST.getAllBoard("boardList/insertName/" + insertName.value+"/"+teamID,
 					printList);
 			modal.style.display = "none";
 			boardMainNav.style.display = "none";
@@ -312,7 +314,7 @@ width:150px;
 			if (categoryResult == null) {
 				alert("카테고리를 선택하세요.");
 			} else if (categoryResult != null) {
-				location.href = "/boardInsertSample2/" + categoryResult;
+				location.href = "/boardInsertSample2/" + categoryResult+"/"+teamID;
 			}
 		};
 

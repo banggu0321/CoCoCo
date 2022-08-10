@@ -18,7 +18,9 @@ import com.querydsl.core.types.Predicate;
 public interface BoardRepositoryTestSu extends CrudRepository<BoardVO, Long>, QuerydslPredicateExecutor<BoardVO> {
 	
 	
-	
+	@Query(value="select*from boards where category_team_team_id=?1", nativeQuery=true)
+	public List<BoardVO> selectBoardByteam(Long id);
+//	public List<BoardVO> selectBoardByteam(Long id,Pageable pageable);
 	
 	//native query
 	@Query(value="select*from boards where category_category_id=?1", nativeQuery = true)
@@ -40,6 +42,13 @@ public interface BoardRepositoryTestSu extends CrudRepository<BoardVO, Long>, Qu
 		}
 		
 		switch(type) {
+		
+		case "a":
+			System.out.println("board clicked");
+//			builder.and(board.boardVO.category.boardCategoryId.team.teamId.contains(keyword));
+			break;
+			
+			
 		case "t":
 			builder.and(board.boardTitle.like("%"+keyword+"%"));
 			break;

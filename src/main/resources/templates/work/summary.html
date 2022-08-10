@@ -24,7 +24,7 @@
 		        ]);
 
 		        var options = {
-				  colors:['#dedede', '#FF7F27', '#0275d8'],
+				  colors:['#dedede', '#FF7F27', '#00b3fd'],
 		          pieHole: 0.4,
 		          chartArea: {
 		        	    /* 차트크기 */
@@ -32,8 +32,8 @@
 		        	    height: 290
 		        	    },
 		        	   
-		        	    width: 300,
-		        	    height: 300,
+		        	    width: 320,
+		        	    height: 280,
 		        	    
 		        	    /* 차트에 레이블 표시 (percentage, value or label)*/
 		        	    pieSliceText: 'percentage',
@@ -71,8 +71,8 @@ text {
 			<div class="wrap_notice_title">
 			<h2 class="cococo-title-text">업무진행률</h2>
 			</div>
-			<p class="msg-null" th:if="${#lists.isEmpty(workNum)}">업무가 존재하지 않습니다.</p>
-			<div id="donutchart" th:if="${!#lists.isEmpty(workNum)}">
+			<p class="msg-null" th:if="${workNum}<=0">업무가 존재하지 않습니다.</p>
+			<div id="donutchart" th:if="${workNum}>0">
 			</div>
 		</div>
 	</div>

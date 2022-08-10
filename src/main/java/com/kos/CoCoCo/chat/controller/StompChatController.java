@@ -49,8 +49,10 @@ public class StompChatController {
     @MessageMapping(value = "/chat/message")
     public void message(ChatMessageDTO message){
     	//ChatMessageDTO chat = ChatMessageDTO.createChat(message.getRoomId(),message.getWriter(),message.getMessage());
-    	mRepo.save(message);
-        template.convertAndSend("/sub/chat/room/" + message.getTeamId(), message);
+    	ChatMessageDTO saveChat = mRepo.save(message);
+    	
+        template.convertAndSend("/sub/chat/room/" + message.getTeamId(), saveChat);
+       // return saveChat.getId();
     }
     
     @GetMapping(value = "/chat/del")

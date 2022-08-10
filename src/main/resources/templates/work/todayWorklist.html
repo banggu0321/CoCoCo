@@ -30,7 +30,7 @@
 	    var now = new Date();
 	    var year=now.getFullYear(); //연도
 	    var month=('00' + (now.getMonth()+1)).slice(-2); // 월 
-	    var date=('00' + (now.getDate()-8)).slice(-2); //일 *************************************
+	    var date=('00' + (now.getDate())).slice(-2); //일 *************************************
 	    
 	    //$("#today").text(now);
 	    $("#today").text(year+"."+month+"."+date);

@@ -101,7 +101,7 @@ body, html {
 
 .chat {
 	width: 400px;
-    height: 100vh;
+    height: 94vh;
 }
 
 /******************* cont *******************/
@@ -112,7 +112,7 @@ body, html {
     position: absolute;
     flex-direction: column;
 	bottom: 0%;
-	padding: 0px 9px;
+	padding: 10px 9px;
 }
 
 .moveTeam {

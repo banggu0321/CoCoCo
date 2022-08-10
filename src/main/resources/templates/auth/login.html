@@ -32,9 +32,7 @@ input {
 	height: 52px;
 	margin-bottom: 20px;
 	padding-left: 20px;
-	
 }
-
 </style>
 <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 <link rel="stylesheet" th:href="@{/css/login.css}" />
@@ -61,49 +59,7 @@ input {
 		}
 	}
 </script>
-<!-- 카카오 스크립트 -->
-<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
-<script>
-	Kakao.init('707d89bd38970b27612ab9e6309e7dd6'); //발급받은 키 중 javascript키를 사용해준다.
-	/* 	
-	 console.log(Kakao.isInitialized()); // sdk초기화여부판단
-	 */
 
-	//카카오로그인
-	function kakaoLogin() {
-		Kakao.Auth.login({
-			success : function(response) {
-				Kakao.API.request({
-					url : '/v2/user/me',
-					success : function(response) {
-						console.log(response)
-					},
-					fail : function(error) {
-						console.log(error)
-					},
-				})
-			},
-			fail : function(error) {
-				console.log(error)
-			},
-		})
-	}
-	//카카오로그아웃  
-	function kakaoLogout() {
-		if (Kakao.Auth.getAccessToken()) {
-			Kakao.API.request({
-				url : '/v1/user/unlink',
-				success : function(response) {
-					console.log(response)
-				},
-				fail : function(error) {
-					console.log(error)
-				},
-			})
-			Kakao.Auth.setAccessToken(undefined)
-		}
-	}
-</script>
 <meta charset="UTF-8">
 <title>로그인</title>
 </head>
@@ -129,16 +85,15 @@ input {
 					<!-- 이름변경불가  : password -->
 				</p>
 
-				
-			   <input type="hidden" th:name="${_csrf.parameterName}"
-				th:value="${_csrf.token}" /> 
-				<input type="submit" id="login_btn"   class="btn btn-outline-cococo"
-					 value="로그인" > 
 
-
+				<input type="hidden" th:name="${_csrf.parameterName}"
+					th:value="${_csrf.token}" /> <input type="submit" id="login_btn"
+					class="btn btn-outline-cococo" value="로그인">
 			</form>
 			<button class="btn btn-cococo" onclick="location.href='/auth/join'">회원가입</button>
 		</div>
+	</div>
+
 	<!-- auth_section -->
 </body>
 </html>

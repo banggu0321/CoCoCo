@@ -5,15 +5,8 @@
 	layout:decorator="~{/layout/layout1}">
 <head>
 <meta charset="UTF-8">
-<title>글 작성하기</title>
 <style>
-/* .my_menu{
- display:none;
-}
 
-.inner_content {
-  width: 1418px;
-} */
 .nav_menu2{
 	border-bottom: 3px solid tomato;
 }
@@ -89,7 +82,6 @@
 		
 	var arr= []; 
 	function delFile(fileid, obj){
-		alert(fileid);
 		arr.push(fileid);
 		console.log($(obj));
 		$(obj).parent().remove();
@@ -125,21 +117,16 @@
 			
 		});
 		
-
-	    
-		
 	});
 		
-		
-	</script>
+</script>
 </head>
 
 <body>
 
-	<div layout:fragment="my_menu">
-		<div th:replace="~{/main/teamUserList}"></div>
-	</div>
-
+<div layout:fragment="my_menu">
+	<div th:replace="~{/main/teamUserList}"></div>
+</div>
 
 <div  class="inner_content" layout:fragment="inner_content">
 	<div class="wrap_notice">

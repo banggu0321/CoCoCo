@@ -325,17 +325,10 @@ a {
 										e.preventDefault();
 										var noticeId = $(this).attr("href");
 
-										formObj
-												.attr("action",
-														"/notice/detail");
-										formObj
-												.append("<input type='hidden' name='noticeId' value='"+noticeId+"'>");
+										formObj.attr("action","/notice/detail");
+										formObj.append("<input type='hidden' name='noticeId' value='"+noticeId+"'>");
 										formObj.submit();
 									});
-					
-					
-					  
-					
 
 				});
 			</script>

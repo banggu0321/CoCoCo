@@ -164,9 +164,9 @@ public class GyWorkRestController {
 		workRepo.deleteById(work_id);
 	}
 	
-	@GetMapping("/myWorkList/{user_id}")
-	public List<WorkVO> myWork(Model model, @PathVariable String user_id) {
-		List<WorkVO> myworklist = workRepo.findByUser(user_id);
+	@GetMapping("/myWorkList/{team_id}/{user_id}")
+	public List<WorkVO> myWork(Model model, @PathVariable String team_id, @PathVariable String user_id) {
+		List<WorkVO> myworklist = workRepo.findByUser(team_id, user_id);
 		System.out.println(myworklist);
 		return myworklist;
 	}

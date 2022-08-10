@@ -62,13 +62,27 @@ window.onload = function() {
 	document.getElementById("boardUCancel").addEventListener('click',updateCancle);
 }
 
+function hello() {
+	var boardID = document.getElementById("bid").value;
+	window.location.href = "/boardDeleteBeta?bid=" + boardID;
+}
+
 function updateCancle(){
 	window.location.href = "/boardSampleBeta";
 }
 
-function hello() {
-	var boardID = document.getElementById("bid").value;
-	window.location.href = "/boardDeleteBeta?bid=" + boardID;
+function deleteReply(){
+	
+	var selectDelete = document.getElementsByName("selectDelete");
+	var replyDeleteID;
+	for(var i=0; i<selectDelete.length; i++){
+		if(selectDelete[i].checked){
+			replyDeleteID = selectDelete[i].value;
+		}
+	}
+	//alert("replyDeleteID: "+replyDeleteID);
+	
+	replyREST.getReplyAfterDelete(replyDeleteID, printList);
 }
 
 
@@ -85,11 +99,11 @@ function printList(list) {
 		
 		+"<div style=\"height:100px; width:50%; \">"
 		
-		+"<div>"+"이름"+" - "
-		+"<a href=\"#\">"+"삭제"+"</a>"+" - "
-		+"<a href=\"#\">"+"수정"+"</a>"+"</div>"+"<br>"
+		+"<div>"+"이름"+replyObj.user.userId+" - "
+		+"<input name=\"selectDelete\" type=\"checkbox\" onclick=(deleteReply())"+" value='"+replyObj.replyId+"'>"+"삭제"+"</a>"+"</div>"
+		+"<input id=\"replyDeleteID"+"\" type=\"hidden\" value=\""+replyObj.replyId+"\">"
 		
-		+"<div id=\"replyContent\">"+ "<span>"+replyObj.replyText+"</span>"+"</div>"+"<br>"
+		+"<div id=\"replyContent\">"+ "<span>"+replyObj.replyText+"</span>"+"</div>"
 		
 		+"<div>"+"<span>"+"<font size=\"2\" color=\"gray\">"+"등록일: "+formatDate(replyObj.replyUpdate)+"</font>"+"</span>"+"</div>"
 		+"</div>"+"</div>"+"<br>";

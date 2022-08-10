@@ -39,7 +39,7 @@ input:focus {outline: none;}
 .notice_info {
 	font-size: 16px;
 	padding: 5px 0;
-	border-bottom: 1px solid #aaaaaa;
+	border-bottom: 1px solid #acacac;
 }
 
 .notice_info .writer input  {
@@ -66,6 +66,7 @@ input:focus {outline: none;}
 	height: 300px;
 	margin-top: 15px;
 	border: none;
+	border-bottom: 1px solid #acacac;
 }
 
 .wrap_notice textarea:focus{
@@ -93,7 +94,7 @@ input:focus {outline: none;}
 .btn-box {
 	margin:0 auto;
 	width: 850px;
- 	margin-top: 30px;
+ 	margin-top: 10px;
  	padding: 0;
 }
 
@@ -108,9 +109,8 @@ input:focus {outline: none;}
 	float: right;
 }
 
-
-	
 </style>
+
 </head>
 
 <body>
@@ -161,8 +161,8 @@ input:focus {outline: none;}
 				<div class="btn-box">
 					<a class="btn-style" id="btnUpdate" th:if="${session.teamUser.userRole == 'ADMIN'}" 
 					th:href="@{/notice/update(noticeId=${notice.noticeId})}">수정</a>
-					<a class="btn-style" id="btnDel" th:if="${session.teamUser.userRole == 'ADMIN'}" 
-						th:href="@{/notice/delete(noticeId=${notice.noticeId})}">삭제</a>
+					<a class="btn-style" id="btnDel" th:if="${session.teamUser.userRole == 'ADMIN'}"
+					th:href="@{/notice/delete(noticeId=${notice.noticeId})}" th:onclick="if(!confirm('글을 삭제하시겠습니까?')){return false;}">삭제</a>
 					<input type="hidden" th:name="${_csrf.parameterName}"
 						th:value="${_csrf.token}" />
 					<a class="btn-style" id="btnViewList"

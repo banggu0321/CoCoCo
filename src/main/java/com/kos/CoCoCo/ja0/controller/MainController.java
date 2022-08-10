@@ -59,7 +59,10 @@ public class MainController {
 		for(TeamUserVO tu:teamList) {
 			String tInfo = tu.getTeamUserId().getTeam().getTeamInfo();
 			if(tInfo == null) continue;
-			tu.getTeamUserId().getTeam().setTeamInfo(tInfo.replaceAll("<br>", "\r\n"));
+			
+			int info = tInfo.indexOf("<br>");
+			if(info >= 0)
+				tu.getTeamUserId().getTeam().setTeamInfo(tInfo.substring(0,info)+"...");
 		}
 		
 		session.setAttribute("user", user);

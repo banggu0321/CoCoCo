@@ -7,20 +7,18 @@ import java.util.Optional;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
-import org.hibernate.internal.build.AllowSysOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kos.CoCoCo.ja0.awsS3.AwsS3;
 import com.kos.CoCoCo.ja0.repository.BoardCategoryRepositoryH;
 import com.kos.CoCoCo.ja0.repository.BoardRepositoryH;
-import com.kos.CoCoCo.ja0.repository.ChattingRepositoryH;
+import com.kos.CoCoCo.ja0.repository.MessageRepositoryH;
 import com.kos.CoCoCo.ja0.repository.NoticeRepositoryH;
 import com.kos.CoCoCo.ja0.repository.ReplyRepositoryH;
 import com.kos.CoCoCo.ja0.repository.TeamRepository;
@@ -32,7 +30,6 @@ import com.kos.CoCoCo.vo.TeamUserVO;
 import com.kos.CoCoCo.vo.UserVO;
 import com.kos.CoCoCo.vo.WorkManagerMultikey;
 import com.kos.CoCoCo.vo.WorkManagerVO;
-import com.kos.CoCoCo.vo.WorkVO;
 
 @Controller
 public class UserController {
@@ -53,9 +50,6 @@ public class UserController {
 	BoardRepositoryH bRepo;
 	
 	@Autowired
-	ChattingRepositoryH cRepo;
-	
-	@Autowired
 	NoticeRepositoryH nRepo;
 	
 	@Autowired
@@ -66,6 +60,9 @@ public class UserController {
 	
 	@Autowired
 	WorkRepositoryH wRepo;
+	
+	@Autowired
+	MessageRepositoryH mRepo;
 	
 	@Autowired
 	AwsS3 awsS3;
@@ -102,6 +99,14 @@ public class UserController {
 				//이미지 삭제
 				awsS3.delete(i.getImage()); //s3에서도 삭제
 				i.setImage(null);
+			}
+			
+			//채팅 이름도 같이 바꾸기
+			if(!user.getName().equals(i.getName())) {
+				mRepo.findByWriter(i.getUserId()).forEach(w->{
+					w.setKoreanName(user.getName());
+					mRepo.save(w);
+				});
 			}
 			
 			i.setCompany(user.getCompany());
@@ -203,9 +208,10 @@ public class UserController {
 		}
 		
 		//채팅
-		cRepo.findByUserId(userId).forEach(i->{
-			i.setUser(userNone);
-			cRepo.save(i);
+		mRepo.findByUserId(userId).forEach(i->{
+			i.setWriter(userNone.getUserId());
+			i.setKoreanName(userNone.getName());
+			mRepo.save(i);
 		});
 	}
 }

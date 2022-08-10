@@ -30,7 +30,7 @@
 	    var now = new Date();
 	    var year=now.getFullYear(); //연도
 	    var month=('00' + (now.getMonth()+1)).slice(-2); // 월 
-	    var date=('00' + (now.getDate())).slice(-2); //일 
+	    var date=('00' + (now.getDate()-8)).slice(-2); //일 *************************************
 	    
 	    //$("#today").text(now);
 	    $("#today").text(year+"."+month+"."+date);
@@ -63,10 +63,10 @@
 						if(start<=todaydate&&todaydate<=end){  //오늘날짜인 경우
 							if(data.managerid=="none"){ //not mine
 								$(".workListBox").append(`<div class="form-control worklist" style="color:#BFBFBF"><span class="workinfo"><span class="workListTitle">${data.workTitle}</span>  <span class="workListContent">${data.workText}</span><span>${data.workStart} ~ ${data.workEnd}</span></span></div>`);
-							}else if(data.workStatus=="finish"){
-								$(".workListBox").append(`<div class="form-control worklist" style="color:black"><span class="workinfo"><span class="workListTitle">${data.workTitle}</span>  <span class="workListContent">${data.workText}</span><span>${data.workStart} ~ ${data.workEnd}</span></span><div class="btn-secondary finishStatus btn" disabled:false>완료</div></div>`);
-							}else {
-								$(".workListBox").append(`<div class="form-control worklist" style="color:tomato"><span class="workinfo"><span class="workListTitle">${data.workTitle}</span>  <span class="workListContent">${data.workText}</span><span>${data.workStart} ~ ${data.workEnd}</span></span><div class="btn-danger statusBtn btn">미완료</div></div>`);
+							}else if(data.workStatus=="finish"){ //완료
+								$(".workListBox").append(`<div class="form-control worklist" style="color:#BFBFBF"><span class="workinfo"><span class="workListTitle">${data.workTitle}</span>  <span class="workListContent">${data.workText}</span><span>${data.workStart} ~ ${data.workEnd}</span></span><div class="btn-secondary btn" style="display:none;">완료</div></div>`);
+							}else { //미완료
+								$(".workListBox").append(`<div class="form-control worklist" style="color:black"><span class="workinfo"><span class="workListTitle">${data.workTitle}</span>  <span class="workListContent">${data.workText}</span><span>${data.workStart} ~ ${data.workEnd}</span></span><div class="btn-secondary btn">미완료</div></div>`);
 							}
 							num += 1;
 						}else{

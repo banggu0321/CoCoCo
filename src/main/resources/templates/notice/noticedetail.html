@@ -9,6 +9,14 @@
 <meta name="_csrf_header" th:content="${_csrf.headerName}" />
 <title>공지사항</title>
 <style>
+/* .my_menu{
+ display:none;
+}
+
+.inner_content {
+  width: 1418px;
+} */
+
 .nav_menu2{
 	border-bottom: 3px solid tomato;
 }
@@ -18,13 +26,6 @@
 	margin: 0 auto;
 	margin-top: 40px;
 }
-/* .my_menu{
- display:none;
-}
-
-.inner_content {
-  width: 1418px;
-} */
 
 input {border: none; background-color: transparent;}
 input:focus {outline: none;}
@@ -54,6 +55,11 @@ input:focus {outline: none;}
 	width: 110px;
 }
 
+.text-box {
+	width: 850px;
+	margin: 0 auto;
+}
+
 .wrap_notice textarea {
 	width: 100%;
 	background-color: transparent;
@@ -61,8 +67,6 @@ input:focus {outline: none;}
 	margin-top: 15px;
 	border: none;
 }
-
-
 
 .wrap_notice textarea:focus{
 	outline: none;
@@ -87,9 +91,15 @@ input:focus {outline: none;}
 }
 
 .btn-box {
- width: 100%;
- margin-top: 30px;
- padding: 0;
+	margin:0 auto;
+	width: 850px;
+ 	margin-top: 30px;
+ 	padding: 0;
+}
+
+.noticefiles{
+	margin:0 auto;
+	width: 850px;
 }
 
 #btnViewList {

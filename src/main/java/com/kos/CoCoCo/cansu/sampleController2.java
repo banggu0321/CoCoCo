@@ -115,14 +115,26 @@ public class sampleController2 {
 	}
 	
 	@GetMapping("/boardSampleBeta")
-	public String boardlist(PageVO vo, Model model) {	
+	public String boardlist(HttpSession session, PageVO vo, Model model) {	
 		
-		Pageable page = vo.makePageable(0, "boardId");
-		Page<BoardVO>  result = boardRP.findAll(boardRP.makePredicate(null, null), page);
+//		Pageable page = vo.makePageable(0, "boardId");
+//		Page<BoardVO>  result = boardRP.findAll(boardRP.makePredicate(null, null), page);
+//		
+//		model.addAttribute("result", new PageMaker(result));		
+//		model.addAttribute("boardList", result.getContent());
+//		
+//		return "su/thymeleaf/boardMain";
+
+		Long teamId = (Long) session.getAttribute("teamId");
+		List<BoardVO> boards = boardRP.selectBoardByteam(teamId);	
+		System.out.println("teamId: "+teamId);
 		
-		model.addAttribute("result", new PageMaker(result));		
+		Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "board_id");
+		Page<BoardVO> result = new PageImpl<BoardVO>(boards, pageable, boards.size());
+	
+		
+		model.addAttribute("result", new PageMaker(result));
 		model.addAttribute("boardList", result.getContent());
-		
 		return "su/thymeleaf/boardMain";
 	}
 		

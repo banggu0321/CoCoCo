@@ -5,6 +5,21 @@
 	layout:decorator="~{/layout/layout1}">
 <head>
 <meta charset="UTF-8">
+<script>
+$(function(){
+
+	document.getElementById("insertFrm").onsubmit = function(){
+		var title = document.insert.noticeTitle;
+		console.log("title : "+ title);
+		if(title.value==null || title.value==""){
+			alert("제목을 입력해주세요.");
+			title.focus();
+			return false;
+		};
+	}
+	
+});
+</script>
 <style>
 .nav_menu2{
 	border-bottom: 3px solid tomato;
@@ -90,7 +105,7 @@
 	<div class="wrap_notice">
 		<h1>공지사항</h1>
 		<div class="wrap_notice_insert">
-			<form action="/notice/insert" method="post" enctype="multipart/form-data">
+			<form id="insertFrm" name="insert" action="/notice/insert" method="post" enctype="multipart/form-data">
 				<div class="checklist">
 					<label>상단고정</label>
 					<input type="checkbox" name="fixedYN" value='1' class="fixed"/>
@@ -110,6 +125,7 @@
 				</div>
 				<div class="upload">
 					<input type="file" multiple="multiple" name="files">
+					<p>(Ctrl+선택 시 다중선택 가능)</p>
 				</div>
 				
 				<div class="btn-box">
@@ -122,5 +138,6 @@
 		</div>		
 	</div>
 </div>
+
 </body>
 </html>

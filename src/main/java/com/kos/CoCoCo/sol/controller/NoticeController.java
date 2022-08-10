@@ -82,8 +82,8 @@ public class NoticeController {
 		
 		model.addAttribute("noticelist", pgmaker);
 		model.addAttribute("pageVO", pageVO);
+		notice.getFile();
 		
-		//model.addAttribute("noticefile", noticeFRepo.findByNotice(notice));
 		
 		return "notice/noticelist";
 	}
@@ -119,7 +119,7 @@ public class NoticeController {
 		UserVO writer = (UserVO) session.getAttribute("user");
 		notice.setUser(writer);
 				
-		noticeService.insert(notice, files);
+		noticeService.insert(notice, files, null);
 		
 		return "redirect:/notice";
 	}
@@ -136,7 +136,7 @@ public class NoticeController {
 	
 	@Transactional
 	@PostMapping("/update")
-	public String updatePost(NoticeVO notice, MultipartFile[] files, Model model) {
+	public String updatePost(NoticeVO notice, MultipartFile[] files,String fileIds,  Model model) {
 		noticeRepo.findById(notice.getNoticeId()).ifPresentOrElse(original->{
 			
 			original.setNoticeText(notice.getNoticeText());
@@ -144,7 +144,7 @@ public class NoticeController {
 			original.setFixedYN(notice.getFixedYN());
 			
 			try {
-				noticeService.insert(original, files);
+				noticeService.insert(original, files, fileIds);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

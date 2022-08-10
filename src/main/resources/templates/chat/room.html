@@ -5,32 +5,32 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
-.chat {
+.chat-ul {
 	list-style: none;
 	margin: 0;
 	padding: 0;
 }
 
-.chat li {
+.chat-ul li {
 	margin-bottom: 10px;
 	padding-bottom: 5px;
 	border-bottom: 1px dotted #B3A9A9;
 }
 
-.chat li.left .chat-body {
-	margin-left: 130px;
+.chat-ul li.left .chat-body {
+	text-align: right;
 }
 
-.chat li.right .chat-body {
+.chat-ul li.right .chat-body {
 	margin-right: 60px;
 }
 
-.chat li .chat-body p {
+.chat-ul li .chat-body p {
 	margin: 0;
 	color: #777777;
 }
 
-.panel .slidedown .glyphicon, .chat .glyphicon {
+.panel .slidedown .glyphicon, .chat-ul .glyphicon {
 	margin-right: 5px;
 }
 
@@ -39,17 +39,17 @@
 	height: 250px;
 }
 
-::-webkit-scrollbar-track {
+.col::-webkit-scrollbar-track {
 	-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 	background-color: #F5F5F5;
 }
 
-::-webkit-scrollbar {
+.col::-webkit-scrollbar {
 	width: 12px;
 	background-color: #F5F5F5;
 }
 
-::-webkit-scrollbar-thumb {
+.col::-webkit-scrollbar-thumb {
 	-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
 	background-color: #555;
 }
@@ -60,7 +60,7 @@
 	overflow: auto;
 	overflow-x: hidden;
 	width: 500px;
-	height: 600px;
+    height: 800px;
 }
 
 .search-in-body {
@@ -110,6 +110,10 @@ mark.current {
 .pull-right {
 	float: right;
 }
+.pull-left > img{
+	margin: 0 10px 0 0;
+	
+}
 </style>
 </head>
 <body>
@@ -126,13 +130,13 @@ mark.current {
 			</div>
 			<div>
 				<div class="col">
-						<ul class="chat" id="msgArea">
+						<ul class="chat-ul" id="msgArea">
 							<li th:each="chat:${chatlist}"
 								th:class="${chat.writer == session.user.userId?'left':'right'}">
 								 <span
 								th:class="${chat.writer == session.user.userId?'chat-img pull-right':'chat-img pull-left'}">
-									<img th:if="${chat.writer} != ${session.user.userId}" th:src="@{/images/addFile.png}" width= "30px"
-									alt="User Avatar" class="img-circle" />
+									<img th:if="${chat.writer} != ${session.user.userId}" th:src="@{/images/teamImg.png}" width= "40px"
+									alt="User Avatar" class="img-circle rounded-circle" />
 									
 							</span>
 								<div class="chat-body clearfix">

@@ -4,9 +4,9 @@
 <head>
 <script type="text/javascript">
 	$(function(){
-		var work = "[[${wlist}]]";
-		console.log("work", work);
-		if(work.length>2) {
+		var workNum = "[[${workNum}]]";
+		console.log("workNum : ", workNum);
+		if(workNum>0) {
 			
 
 			 google.charts.load("current", {packages:["corechart"]});
@@ -71,8 +71,8 @@ text {
 			<div class="wrap_notice_title">
 			<h2 class="cococo-title-text">업무진행률</h2>
 			</div>
-			<p class="msg-null" th:if="${#lists.isEmpty(wlist)}">업무가 존재하지 않습니다.</p>
-			<div id="donutchart" th:if="${!#lists.isEmpty(wlist)}">
+			<p class="msg-null" th:if="${#lists.isEmpty(workNum)}">업무가 존재하지 않습니다.</p>
+			<div id="donutchart" th:if="${!#lists.isEmpty(workNum)}">
 			</div>
 		</div>
 	</div>

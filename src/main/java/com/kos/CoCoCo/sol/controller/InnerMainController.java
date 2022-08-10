@@ -70,18 +70,20 @@ public class InnerMainController {
 		
 		Long teamId = (Long)session.getAttribute("teamId");
 		TeamVO t = tRepo.findById(teamId).get();
-
-		List<WorkVO> wlist = wRepo.findByTeam(t);
-
 		work.setTeam(t);
+		
+		List<WorkVO> wlist = wRepo.findByTeam(t);
+		int workNum = wlist.size();
+		System.out.println("work의 수 : "+workNum);
+		
 		
 		int numOngoing = wRepo.numOngoing(t);
 		int numPlan = wRepo.numPlan(t);
 		int numFinish = wRepo.numFinish(t);
 			
-		Integer[] arr= { numPlan, numOngoing, numFinish};
+		Integer[] arr= { numPlan, numOngoing, numFinish };
 		model.addAttribute("arr", arr);
-		model.addAttribute("wlist", wlist);
+		model.addAttribute("workNum", workNum);
 					
 		return "work/summary";
 	}

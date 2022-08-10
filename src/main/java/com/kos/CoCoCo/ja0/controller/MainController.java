@@ -150,7 +150,10 @@ public class MainController {
 		Long teamId = (Long) session.getAttribute("teamId");
 		
 		TeamVO team = tRepo.findById(teamId).get();
-		team.setTeamInfo(team.getTeamInfo().replaceAll("<br>", "\r\n"));
+		String tInfo = team.getTeamInfo();
+		if(tInfo != null) {
+			team.setTeamInfo(tInfo.replaceAll("<br>", "\r\n"));
+		}
 		
 		TeamUserMultikey tuId = new TeamUserMultikey(team, user);
 		

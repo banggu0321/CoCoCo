@@ -56,15 +56,6 @@ public class MainController {
 		UserVO user = uRepo.findById(principal.getName()).get();
 		List<TeamUserVO> teamList = tuRepo.findByUserId(user.getUserId());
 		
-		for(TeamUserVO tu:teamList) {
-			String tInfo = tu.getTeamUserId().getTeam().getTeamInfo();
-			if(tInfo == null) continue;
-			
-			int info = tInfo.indexOf("<br>");
-			if(info >= 0)
-				tu.getTeamUserId().getTeam().setTeamInfo(tInfo.substring(0,info)+"...");
-		}
-		
 		session.setAttribute("user", user);
 		session.setAttribute("teamList", teamList);
 		
@@ -75,6 +66,16 @@ public class MainController {
 		Page<TeamUserVO> team = tuRepo.findAll(predicate, page);
 		
 		PageMaker<TeamUserVO> pgmaker = new PageMaker<>(team);
+		
+		for(TeamUserVO tu:pgmaker.getResult().getContent()) {
+			String tInfo = tu.getTeamUserId().getTeam().getTeamInfo();
+			if(tInfo == null) continue;
+			
+			int info = tInfo.indexOf("<br>");
+			if(info >= 0)
+				tu.getTeamUserId().getTeam().setTeamInfo(tInfo.substring(0,info)+" ...");
+		}
+		
 		model.addAttribute("paging", pgmaker);
 		
 		return "/main/teamList";

@@ -101,7 +101,6 @@ public class AdminController {
 	@GetMapping("/team")
 	public String team(HttpSession session, Model model, HttpServletRequest request) {
 		model.addAttribute("msg", getRedirectMsg(request));
-		
 		return "admin/adminTeam";
 	}
 	

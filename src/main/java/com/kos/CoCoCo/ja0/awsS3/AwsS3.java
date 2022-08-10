@@ -54,7 +54,6 @@ public class AwsS3 {
         
         amazonS3.putObject(request);
         
-        System.out.println("[upload file] " + key);
         return amazonS3.getUrl(bucket, key).toString();
     }
 
@@ -72,8 +71,6 @@ public class AwsS3 {
 		}
 		
     	amazonS3.deleteObject(bucket, encodeKey);
-    	
-        System.out.println("[delete file] " + encodeKey);
     }
     
     public void copy(String originalKey, String dir, String newKey){
@@ -87,22 +84,17 @@ public class AwsS3 {
     		e.printStackTrace();
     	}
     	
-    	System.out.println("[originalKey] " + encodeKey);
-    	System.out.println("[newKey] " + nKey);
-    	
     	amazonS3.copyObject(bucket, encodeKey, bucket, nKey);
     }
     
     public ResponseEntity<byte[]> download(String dir, String file) throws IOException {
     	String key = dir + file;
-    	System.out.println("[key] " + key);
     	
         S3Object o = amazonS3.getObject(new GetObjectRequest(bucket, key));
         S3ObjectInputStream objectInputStream = ((S3Object) o).getObjectContent();
         byte[] bytes = IOUtils.toByteArray(objectInputStream);
  
         String fileName = URLEncoder.encode(file, "UTF-8").replaceAll("\\+", "%20");
-        System.out.println("[download] " + fileName);
         
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);

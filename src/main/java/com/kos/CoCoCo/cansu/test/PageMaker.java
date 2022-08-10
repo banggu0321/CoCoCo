@@ -31,6 +31,12 @@ public class PageMaker {
 		this.currentPageNum = currentPage.getPageNumber()+1;
 		this.totalPageNum = result.getTotalPages();
 		this.pageList = new ArrayList<>();
+		
+		System.out.println("result: "+result);
+		System.out.println("currentPage: "+result.getPageable());
+		System.out.println("currentPageNum: "+currentPage.getPageNumber()+1);
+		System.out.println("totalPageNum: "+result.getTotalPages());
+		
 		calcPages();
 //		calcPagesBeta();
 	}

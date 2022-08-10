@@ -13,6 +13,11 @@
 	<link rel="stylesheet" th:href="@{/css/login.css}" />
 <head>
 <style>
+
+body * {
+	outline: 3px dotted tomato;
+}
+
 #userId {
 	width: 422px;
 }
@@ -21,7 +26,7 @@
 .idCheck {
 	padding: 0;
 	width: 60px;
-	height: 52px;
+
 }
 
 body {
@@ -31,7 +36,7 @@ body {
 .join_section {
 	width: 490px;
 	margin: 0 auto;
-	padding: 145px 0px 200px;
+	padding: 90px 0px 90px;
 }
 
 .join {
@@ -46,12 +51,12 @@ body {
 button {
 	width: 486px;
 	height: 52px;
-	margin-top: 20px;
 }
 
 input {
 	width: 486px;
 	height: 52px;
+	margin-bottom: 20px;
 	padding-left: 20px;
 }
 
@@ -104,12 +109,14 @@ input {
 
 			if (pw1.length == 0 || pw1 == '') {
 				$("#pwMsg").html(" ")
-			} else {
+			} else if (pw1==pw2) {
 				$("#pwMsg").html("비밀번호가 일치합니다.")
-				$("#btn").attr("value", "N")
+				$("#pwMsg").css("color", "green")
 			}
 		} else {
 				$("#pwMsg").html("비밀번호가 일치하지 않습니다.")
+				$("#pwMsg").css("color", "red")
+				$("#btn").attr("value", "N")
 		}
 	}
 

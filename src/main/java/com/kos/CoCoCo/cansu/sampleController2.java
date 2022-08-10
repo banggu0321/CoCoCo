@@ -189,8 +189,12 @@ public class sampleController2 {
 		if(rlist.isEmpty())
 		{
 			boardRP.deleteById(Long.valueOf(boardID));			
+		}else if(!rlist.isEmpty()) {
+			for(ReplyVO temp: rlist) {
+				replyRP.deleteById(temp.getReplyId());
+			}
+			boardRP.deleteById(Long.valueOf(boardID));
 		}
-		
 		return "redirect:/boardSampleBeta";
 	}
 	

@@ -55,6 +55,13 @@ public class MainController {
 		
 		UserVO user = uRepo.findById(principal.getName()).get();
 		List<TeamUserVO> teamList = tuRepo.findByUserId(user.getUserId());
+		
+		for(TeamUserVO tu:teamList) {
+			String tInfo = tu.getTeamUserId().getTeam().getTeamInfo();
+			if(tInfo == null) continue;
+			tu.getTeamUserId().getTeam().setTeamInfo(tInfo.replaceAll("<br>", "\r\n"));
+		}
+		
 		session.setAttribute("user", user);
 		session.setAttribute("teamList", teamList);
 		
@@ -76,6 +83,10 @@ public class MainController {
 			String img = awsS3.upload(teamPhoto, "uploads/teamImages/");
 			team.setTeamImg(img);
 	    }
+		
+		if(team.getTeamInfo() != null) {
+			team.setTeamInfo(team.getTeamInfo().replaceAll("\r\n", "<br>"));
+		}
 		
 		UserVO user = (UserVO) session.getAttribute("user");
 		
@@ -137,12 +148,18 @@ public class MainController {
 		
 		UserVO user = (UserVO)session.getAttribute("user");
 		Long teamId = (Long) session.getAttribute("teamId");
+		
 		TeamVO team = tRepo.findById(teamId).get();
+		String tInfo = team.getTeamInfo();
+		if(tInfo != null) {
+			team.setTeamInfo(tInfo.replaceAll("<br>", "\r\n"));
+		}
+		
 		TeamUserMultikey tuId = new TeamUserMultikey(team, user);
 		
 		session.setAttribute("teamUser", tuRepo.findById(tuId).get());
 		session.setAttribute("userList", tuRepo.findByTeamId(teamId));
-		model.addAttribute("team", team);
+		session.setAttribute("team", team);
 		
 		return "main/teamMain";
 	}

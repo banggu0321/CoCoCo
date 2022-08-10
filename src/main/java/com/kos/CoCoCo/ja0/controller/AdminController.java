@@ -82,7 +82,6 @@ public class AdminController {
 		model.addAttribute("msg", getRedirectMsg(request));
 		
 		Long teamId = (Long) session.getAttribute("teamId");
-		model.addAttribute("team", tRepo.findById(teamId).get()); //title
 		model.addAttribute("userList", tuRepo.findByTeamId(teamId));
 		
 		return "admin/adminUser";
@@ -103,16 +102,11 @@ public class AdminController {
 	public String team(HttpSession session, Model model, HttpServletRequest request) {
 		model.addAttribute("msg", getRedirectMsg(request));
 		
-		Long teamId = (Long) session.getAttribute("teamId");
-		model.addAttribute("team", tRepo.findById(teamId).get());
-		
 		return "admin/adminTeam";
 	}
 	
 	@GetMapping("/modify")
 	public String modifyForm(HttpSession session, Model model) {
-		Long teamId = (Long) session.getAttribute("teamId");
-		model.addAttribute("team", tRepo.findById(teamId).get());
 		return "admin/modifyTeam";
 	}
 	
@@ -136,10 +130,16 @@ public class AdminController {
 				i.setTeamImg(null);
 			}
 			
-			i.setTeamInfo(team.getTeamInfo());
+			if(team.getTeamInfo() != null) {
+				i.setTeamInfo(team.getTeamInfo().replaceAll("\r\n", "<br>"));
+			}
+			
 			i.setTeamName(team.getTeamName());
 			
 			tRepo.save(i);
+			
+			i.setTeamInfo(team.getTeamInfo());
+			session.setAttribute("team", i);
 		});
 		
 		UserVO user = (UserVO) session.getAttribute("user");

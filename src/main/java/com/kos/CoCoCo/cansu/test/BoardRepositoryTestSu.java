@@ -18,6 +18,8 @@ import com.querydsl.core.types.Predicate;
 public interface BoardRepositoryTestSu extends CrudRepository<BoardVO, Long>, QuerydslPredicateExecutor<BoardVO> {
 	
 	
+	
+	
 	//native query
 	@Query(value="select*from boards where category_category_id=?1", nativeQuery = true)
 	public BoardVO selectBoardByID(Long id);

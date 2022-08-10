@@ -9,12 +9,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 
 import com.kos.CoCoCo.cansu.test.BoardCategoryRepositoryTestSu;
 import com.kos.CoCoCo.cansu.test.BoardRepositoryTestSu;
+import com.kos.CoCoCo.cansu.test.PageMaker;
+import com.kos.CoCoCo.cansu.test.PageVO;
 import com.kos.CoCoCo.cansu.test.ReplyRepositoryTestSu;
 import com.kos.CoCoCo.cansu.test.TeamRepositoryTestSu;
 import com.kos.CoCoCo.cansu.test.TeamUserRepositoryTestSu;
@@ -22,11 +26,13 @@ import com.kos.CoCoCo.cansu.test.UserRepositoryTestSu;
 import com.kos.CoCoCo.vo.BoardCategoryMultikey;
 import com.kos.CoCoCo.vo.BoardCategoryVO;
 import com.kos.CoCoCo.vo.BoardVO;
+import com.kos.CoCoCo.vo.QBoardVO;
 import com.kos.CoCoCo.vo.ReplyVO;
 import com.kos.CoCoCo.vo.TeamUserMultikey;
 import com.kos.CoCoCo.vo.TeamUserVO;
 import com.kos.CoCoCo.vo.TeamVO;
 import com.kos.CoCoCo.vo.UserVO;
+import com.querydsl.core.BooleanBuilder;
 
 @SpringBootTest
 public class tableCRUDTest {
@@ -49,13 +55,40 @@ public class tableCRUDTest {
 	@Autowired
 	ReplyRepositoryTestSu replyRP;
 
+	
 	@Test
-	public void deletBoardWithReply() {
-		List<ReplyVO> reply = replyRP.findByboardBoardId(1881L);
-		reply.forEach(a->{
+	public void selectBoardByteamid() {
+		
+		
+		List<BoardVO> boards = boardRP.selectBoardByteam(1761L);
+		boards.forEach(a->{
 			System.out.println(a);
 		});
+		
+		Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "board_id");
+		Page<BoardVO> result2 = new PageImpl<BoardVO>(boards, pageable, boards.size());
+		List<BoardVO> temp = result2.getContent();
+		temp.forEach(a->{
+			System.out.println(a);
+		});
+		new PageMaker(result2);
+		
+//		PageVO vo = new PageVO();
+//		Pageable page = vo.makePageable(0, "boardId");
+//		Page<BoardVO>  result = boardRP.findAll(boardRP.makePredicate("a", "1761"), page);
+//		
+//		result.forEach(a->{
+//			System.out.println(a);
+//		});
 	}
+	
+//	@Test
+//	public void deletBoardWithReply() {
+//		List<ReplyVO> reply = replyRP.findByboardBoardId(1881L);
+//		reply.forEach(a->{
+//			System.out.println(a);
+//		});
+//	}
 	
 //	@Test
 //	public void delteReply() {

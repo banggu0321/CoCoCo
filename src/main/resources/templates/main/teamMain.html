@@ -8,7 +8,7 @@
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <link rel="stylesheet" th:href="@{/css/ja0/teamMaincss.css}" />
 
-<title>CoCoCo | [[${team.teamName}]]</title>
+<title>CoCoCo | [[${session.team.teamName}]]</title>
 <style>
 
 </style>
@@ -48,7 +48,7 @@
 	}
 	
 	function copyCode() {
-		var copyText = "[[${team.inviteCode}]]";
+		var copyText = "[[${session.team.inviteCode}]]";
 		const t = document.createElement("textarea");
 		
 		document.body.appendChild(t);
@@ -76,10 +76,10 @@
 			<button class="btn btn-outline-cococo btn-sm copyBtn">초대코드</button>
 			
 			<div id="box">
-				<img th:src="${team.teamImg}?:@{/images/teamImg.png}" th:alt="${team.teamImg}" class="rounded">
+				<img th:src="${session.team.teamImg}?:@{/images/teamImg.png}" class="rounded">
 				<div id="ttt">
-					<div id="name">[[${team.teamName}]]</div>
-					<div id="tInfo">[[${team.teamInfo}]]</div>
+					<div id="name">[[${session.team.teamName}]]</div>
+					<div id="tInfo">[[${session.team.teamInfo}]]</div>
 				</div>
 			</div>
 		</div>

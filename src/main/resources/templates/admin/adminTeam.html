@@ -8,7 +8,7 @@
 
 <link rel="stylesheet" th:href="@{/css/ja0/adminTeamcss.css}" />
 
-<title>CoCoCo | [[${team.teamName}]]</title>
+<title>CoCoCo | [[${session.team.teamName}]]</title>
 
 <style>
 </style>
@@ -50,20 +50,20 @@
 <div layout:fragment="inner_content">
 	<div class="inner_content">
 		<div id="box">
-			<img th:src="${team.teamImg}?:@{/images/teamImg.png}" class="showImg rounded" th:alt="${team.teamImg}">
+			<img th:src="${session.team.teamImg}?:@{/images/teamImg.png}" class="showImg rounded">
 			
 			<div id="teamInfo">
 				<label>WORKSPACE NAME</label>
-				<p>[[${team.teamName}]]</p>
+				<p>[[${session.team.teamName}]]</p>
 				
 				<label>WORKSPACE INFO</label>
-				<p id="info">[[${team.teamInfo}]]</p>
+				<p id="info">[[${session.team.teamInfo}]]</p>
 				
 				<label>CREATED DATE</label>
-				<p>[[${#dates.format(team.createDate,'yyyy-MM-dd')}]]</p>
+				<p>[[${#dates.format(session.team.createDate,'yyyy-MM-dd')}]]</p>
 				
 				<label>CREATOR</label>
-				<p>[[${team.user.name}]] ([[${team.user.userId}]])</p>
+				<p>[[${session.team.user.name}]] ([[${session.team.user.userId}]])</p>
 				
 				<button class="btn btn-cococo" id="modifyForm">수정</button>
 				<button class="btn btn-light" id="deleteBtn">워크스페이스 삭제</button>

@@ -208,9 +208,23 @@ public class sampleController2 {
 		System.out.println("insertFile: "+insertFile);
 		List<String> boardFileName = boardService.uploadFile(insertFile);
 		BoardVO bvo = boardRP.findById(Long.valueOf(id)).get();
-		bvo.setBoardTitle(title);
-		bvo.setBoardText(text); 
-		bvo.setBoardFile(boardFileName.get(0)); //.boardFile(boardFileName.get(0));
+		
+		int checkNum =0;
+		for(MultipartFile temp: insertFile) {
+			if(temp.getSize() != 0) {
+				checkNum += 1;
+			}
+		}
+		System.out.println("checkNum: "+checkNum);
+		
+		if(checkNum >0) {
+			bvo.setBoardTitle(title);
+			bvo.setBoardText(text); 
+			bvo.setBoardFile(boardFileName.get(0)); //.boardFile(boardFileName.get(0));
+		}else {
+			bvo.setBoardTitle(title);
+			bvo.setBoardText(text); 
+		}
 		boardRP.save(bvo);
 		
 		return "redirect:/boardSampleBeta";
@@ -256,11 +270,23 @@ public class sampleController2 {
 		//		System.out.println(bcvotemp);
 		boardcateRP.save(bcvotemp);
 
-		List<String> boardFileName = boardService.uploadFile(insertFile);
-//		String fileName = awsS3.upload(insertFile[0], "uploads/teamImages/");
-//		System.out.println("file name: "+fileName);
+		int checkNum =0;
+		for(MultipartFile temp: insertFile) {
+			if(temp.getSize() != 0) {
+				checkNum += 1;
+			}
+		}
+		System.out.println("checkNum: "+checkNum);
 		
-		BoardVO boardTemp = BoardVO.builder().category(bcvotemp).user(uservo).boardTitle(title).boardText(content).boardFile(boardFileName.get(0)).build(); 
+		BoardVO boardTemp=null;
+		if(checkNum >0) {
+			List<String> boardFileName = boardService.uploadFile(insertFile);
+//			String fileName = awsS3.upload(insertFile[0], "uploads/teamImages/");
+//			System.out.println("file name: "+fileName);
+			boardTemp = BoardVO.builder().category(bcvotemp).user(uservo).boardTitle(title).boardText(content).boardFile(boardFileName.get(0)).build(); 
+		} else{
+			boardTemp = BoardVO.builder().category(bcvotemp).user(uservo).boardTitle(title).boardText(content).build(); 
+		}
 		boardRP.save(boardTemp);
 	}
 }

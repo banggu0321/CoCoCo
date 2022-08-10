@@ -5,7 +5,9 @@
 <script type="text/javascript">
 	$(function(){
 		var work = "[[${wlist}]]";
+		console.log("work", work);
 		if(work.length>2) {
+			
 
 			 google.charts.load("current", {packages:["corechart"]});
 		      google.charts.setOnLoadCallback(drawChart);

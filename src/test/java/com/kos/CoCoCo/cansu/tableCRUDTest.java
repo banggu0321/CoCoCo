@@ -48,15 +48,23 @@ public class tableCRUDTest {
 	
 	@Autowired
 	ReplyRepositoryTestSu replyRP;
-	
+
 	@Test
-	public void delteReply() {
-	UserVO uservo = userRP.findById("su0809").get();  //log in info check delete able
-	System.out.println(uservo);
-	
-//	ReplyVO reply = replyRP.findById(47L).get();  //selected reply
-//	replyRP.delete(reply);	
+	public void deletBoardWithReply() {
+		List<ReplyVO> reply = replyRP.findByboardBoardId(1881L);
+		reply.forEach(a->{
+			System.out.println(a);
+		});
 	}
+	
+//	@Test
+//	public void delteReply() {
+//	UserVO uservo = userRP.findById("su0809").get();  //log in info check delete able
+//	System.out.println(uservo);
+//	
+////	ReplyVO reply = replyRP.findById(47L).get();  //selected reply
+////	replyRP.delete(reply);	
+//	}
 
 //	@Test
 //	public void selectBoardBycategoryID() {

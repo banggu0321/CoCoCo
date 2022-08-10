@@ -66,7 +66,7 @@
 .search-in-body {
 	display: flex;
 	flex-direction: row;
-	background-color: orange;
+	background-color: #FF7F27;
 	z-index: 999;
 }
 
@@ -82,6 +82,7 @@
 	padding: 0px 3px 0px 3px;
 	margin: 5px 3px 5px 3px;
 	border: 2px solid white;
+	background-color: #FF7F27;
 }
 
 .kwt-count {
@@ -132,42 +133,60 @@ mark.current {
 								th:class="${chat.writer == session.user.userId?'chat-img pull-right':'chat-img pull-left'}">
 									<img th:if="${chat.writer} != ${session.user.userId}" th:src="@{/images/addFile.png}" width= "30px"
 									alt="User Avatar" class="img-circle" />
-									<span th:if="${chat.writer} == ${session.user.userId}">
-									<img th:if="${chat.writer} == ${session.user.userId}" th:src="@{/images/deleteTeamImg.svg}" width= "15px"
-									alt="User Avatar" class="img-circle" />
-									<!-- <button type="button" class="button-del pull-right" th:data="${chat.id}">삭제</button> -->
-							</span>
+									
 							</span>
 								<div class="chat-body clearfix">
 									<div class="header">
 										<strong class="primary-font"> [[${chat.koreanName}]]
 										</strong>
+										<span th:if="${chat.writer} == ${session.user.userId}">
+									<img th:if="${chat.writer} == ${session.user.userId}" th:src="@{/images/deleteTeamImg.svg}" width= "15px"
+									alt="User Avatar" class="img-del" th:data="${chat.id}" style="cursor:pointer;" onclick="imgdel(this);"/>
+									<!-- <button type="button" class="button-del pull-right" th:data="${chat.id}">삭제</button> -->
+							</span>
 									</div>
 									<p>[[${chat.message}]]</p>
 								</div>
 							</li>
 						</ul>
 				</div>
-				<div class="col-6">
+				
 					<div class="input-group mb-3">
-						<input type="text" id="msg" class="form-control">
-						<div class="input-group-append">
+						<input type="text" id="msg" class="form-control" placeholder="Enter Chat Content">
+						<!-- <div class="input-group-append">
 							<button class="btn btn-outline-secondary" type="button"
 								id="button-send">전송</button>
-						</div>
+						</div> -->
 					</div>
-				</div>
+				
 			</div>
-			<div class="col-6"></div>
+			
 		</div>
 
 	</th:block>
 	<!-- </th:block> -->
 	<script th:inline="javascript">
+	var teamId = /*[[${team.teamId}]]*/'';
+	
+	function imgdel(e){
+    	var id = $(e).attr("data");
+    	
+    	location.href = "/chat/del?chatId=" + id + "&teamId=" + teamId;
+    	/*
+    	
+    	alert(id);
+    	$.ajax({
+    		url:"/chat/del",
+    		data:{chatId:id},
+    		success:function(responseData){
+    			alert(responseData);
+    		}
+    	});*/
+    };
             $(document).ready(function(){
 
                 var teamName = /*[[${team.teamName}]]*/'';
-                var teamId = /*[[${team.teamId}]]*/'';
+                
                 var username = /*[[${session.user.userId}]]*/'';
                	var koreanName = /*[[${session.user.name}]]*/'';
 
@@ -186,6 +205,7 @@ mark.current {
                    stomp.subscribe("/sub/chat/room/" + teamId, function (chat) {
                        var content = JSON.parse(chat.body);
 						
+                       var chatId = content.id;
                        var writer = content.writer;
                        var message = content.message;
                        var koreanName = content.koreanName;
@@ -194,10 +214,10 @@ mark.current {
                        if(writer === username){
                            
                            str = "<li class='left'>";
-                           str += '<button type="button" class="button-del">삭제</button>';
-                           str += "<span class='chat-img pull-right'>";
-                           str += "<img src='http://placehold.it/50/55C1E7/fff&text=U' alt='User Avatar' class='img-circle'/></span>";
-                           str += "<b> " + koreanName + " : " + message + " </b></li>";
+                           str += "<div class='chat-body clearfix'><div class='header'>";
+                           str += "<strong class='primary-font'> " + koreanName + "</strong>";
+                           str += "<img src='/images/deleteTeamImg.svg' width= '15px' alt='User Avatar' class='img-del' data= " + chatId + " style='cursor:pointer;' onclick='imgdel(this);'/>";
+                           str += "</div><p> " +  message + " </p></div></li>";
                            
                            $("#msgArea").append(str);
                            $(".col").scrollTop($(".col")[0].scrollHeight);
@@ -206,9 +226,10 @@ mark.current {
                     	   
                            str = "<li class='right'>";
                            str += "<span class='chat-img pull-left'>";
-                           str += "<img src='http://placehold.it/50/55C1E7/fff&text=U' alt='User Avatar' class='img-circle'/></span>";
-                           str += "<b> " + koreanName + " : " + message + " </b>";
-                           str += "</li>";
+                           str += "<img src='/images/addFile.png' alt='User Avatar' width= '30px' class='img-circle'/></span>";
+                           str += "<div class='chat-body clearfix'><div class='header'>";
+                           str += "<strong class='primary-font'> " + koreanName + "</strong>";
+                           str += "</div><p> " +  message + " </p></div></li>";
                            $("#msgArea").append(str);
                            $(".col").scrollTop($(".col")[0].scrollHeight);
                        }
@@ -220,37 +241,24 @@ mark.current {
                    //stomp.send('/pub/chat/enter', {}, JSON.stringify({roomId: roomId, writer: username}))
                 });
 
-                $("#button-send").on("click", function(e){
+                /* $("#button-send").on("click", function(e){
                     var msg = document.getElementById("msg");
                     console.log(username + ":" + msg.value);
                     stomp.send('/pub/chat/message', {}, JSON.stringify({teamId: teamId, message: msg.value, writer: username, koreanName: koreanName}));
                     msg.value = '';
-                });
+                }); */
                 
                 $("#msg").on("keypress",function(e){
+                	
                 	if(e.keyCode==13){
-                		
+                		if($(this).val()==="") return ;
                         console.log(username + ":" + msg.value);
-                        stomp.send('/pub/chat/message', {}, JSON.stringify({teamId: teamId, message: msg.value, writer: username, koreanName: koreanName}));
+                        stomp.send('/pub/chat/message', {}, JSON.stringify({teamId: teamId, message: msg.value, writer: username, koreanName: koreanName, id: 0}));
                         msg.value = ''; 
                 	}
                 });
                 
-                $(".button-del").on("click", function(e){
-                	var id = $(this).attr("data");
-                	
-                	location.href = "/chat/del?chatId=" + id + "&teamId=" + teamId;
-                	/*
-                	
-                	alert(id);
-                	$.ajax({
-                		url:"/chat/del",
-                		data:{chatId:id},
-                		success:function(responseData){
-                			alert(responseData);
-                		}
-                	});*/
-                });
+                
                 
                 
                 

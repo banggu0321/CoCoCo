@@ -71,8 +71,17 @@ a {
 
 .noticeTitle {
 	width: 520px;
-	
+	text-align: left;
 }
+
+.fixed {
+	text-align: center;
+}
+
+.noticeTitle img {
+	margin-left: 5px;
+}
+
 
 #regdate{
 	width:125px;
@@ -180,10 +189,10 @@ a {
 								th:title="${notice.noticeText}"><a class="noticelink"
 								th:href="${notice.noticeId}"><img
 									src="/images/pin-icon-black.png"
-									width="15" height="15" alt="fixed">[[${notice.noticeTitle}]]</a><img src="../images/attachment_icon.png" width="18px" alt="attachment"></td>
+									width="15" height="15" alt="fixed">[[${notice.noticeTitle}]]</a><img th:if="${not#lists.isEmpty(notice.file)}" src="/images/disk-icon.png" width="18px" alt="attachment"></td>
 							<td class="noticeTitle" th:if="${notice.fixedYN}!=1"
 								th:title="${notice.noticeText}"><a class="noticelink"
-								th:href="${notice.noticeId}"> [[${notice.noticeTitle}]]</a></td>
+								th:href="${notice.noticeId}"> [[${notice.noticeTitle}]]</a><img th:if="${notice.file.size()>0}" src="/images/disk-icon.png" width="18px" alt="attachment"></td>
 							<td id="writer" th:text="${notice.user.name}"></td>
 							<td id="regdate"
 								th:text="${#dates.format(notice.noticeRegDate, 'yy-MM-dd HH:mm')}"></td>

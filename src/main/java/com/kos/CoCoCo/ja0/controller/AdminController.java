@@ -23,7 +23,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 import com.kos.CoCoCo.ja0.awsS3.AwsS3;
 import com.kos.CoCoCo.ja0.repository.BoardCategoryRepositoryH;
 import com.kos.CoCoCo.ja0.repository.BoardRepositoryH;
-import com.kos.CoCoCo.ja0.repository.ChattingRepositoryH;
+import com.kos.CoCoCo.ja0.repository.MessageRepositoryH;
 import com.kos.CoCoCo.ja0.repository.NoticeFileRepositoryH;
 import com.kos.CoCoCo.ja0.repository.NoticeRepositoryH;
 import com.kos.CoCoCo.ja0.repository.ReplyRepositoryH;
@@ -57,9 +57,6 @@ public class AdminController {
 	BoardRepositoryH bRepo;
 	
 	@Autowired
-	ChattingRepositoryH cRepo;
-	
-	@Autowired
 	NoticeRepositoryH nRepo;
 	
 	@Autowired
@@ -73,6 +70,9 @@ public class AdminController {
 	
 	@Autowired
 	WorkRepositoryH wRepo;
+	
+	@Autowired
+	MessageRepositoryH mRepo;
 	
 	@Autowired
 	AwsS3 awsS3;
@@ -165,7 +165,7 @@ public class AdminController {
 	}
 	
 	private void deleteAll(Long teamId) {
-		cRepo.deleteByTeamId(teamId); //채팅
+		mRepo.deleteByTeamId(teamId); //채팅
 		
 		nRepo.findByTeamId(teamId).forEach(i -> {//공지파일
 			nfRepo.deleteByNoticeId(i.getNoticeId());

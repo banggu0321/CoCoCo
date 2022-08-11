@@ -217,16 +217,8 @@ public class sampleController2 {
 		Page<BoardVO> result = new PageImpl<BoardVO>(boardList, PageRequest.of(0, 5), boardList.size());
 		
 		System.out.println("category name: "+name);
-		System.out.println();
 		
-		System.out.println("board list");
-		boardList.forEach(a->{
-			System.out.println(a);
-		});
-		System.out.println();
-		
-		
-		System.out.println("result: "+ new PageMaker(result));
+//		System.out.println("result: "+ new PageMaker(result));
 		
 		
 		model.addAttribute("result", new PageMaker(result));
@@ -416,10 +408,14 @@ public class sampleController2 {
 		
 		BoardVO boardTemp=null;
 		if(checkNum >0) {
-			List<String> boardFileName = boardService.uploadFile(insertFile);
-//			String fileName = awsS3.upload(insertFile[0], "uploads/teamImages/");
-//			System.out.println("file name: "+fileName);
-			boardTemp = BoardVO.builder().category(bcvotemp).user(uservo).boardTitle(title).boardText(content).boardFile(boardFileName.get(0)).build(); 
+//			List<String> boardFileName = boardService.uploadFile(insertFile);
+			
+			//cloud file upload
+			String fileName = awsS3.upload(insertFile[0], "uploads/boardFile/");
+			System.out.println("file name: "+fileName);
+			
+			boardTemp = BoardVO.builder().category(bcvotemp).user(uservo).boardTitle(title).boardText(content).boardFile(fileName).build(); 
+//			boardTemp = BoardVO.builder().category(bcvotemp).user(uservo).boardTitle(title).boardText(content).boardFile(boardFileName.get(0)).build(); 
 		} else{
 			boardTemp = BoardVO.builder().category(bcvotemp).user(uservo).boardTitle(title).boardText(content).build(); 
 		}

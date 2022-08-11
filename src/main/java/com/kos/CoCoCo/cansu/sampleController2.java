@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -69,6 +71,46 @@ public class sampleController2 {
 	
 	@Autowired
 	AwsS3 awsS3;
+	
+	@GetMapping("/boardFileDown")
+	public ResponseEntity<byte[]> boardDownload(HttpServletRequest request) throws IOException{
+		
+		
+		String file = request.getParameter("fileName");
+		System.out.println("file:"+file);
+		String[] fileNames = file.split("/");
+		
+		
+		String dir = "/uploads/boardFile/";
+		String fileName = fileNames[fileNames.length-1];
+		
+		System.out.println("file : "+file);
+		System.out.println();
+		for(String temp: fileNames) {
+			System.out.println("temp: "+temp);
+		}
+		System.out.println("file name: "+fileName);
+		
+		String[] result = fileName.split("_");
+		String fResult = result[1];
+		System.out.println("fResult: "+fResult);
+		
+		String[] result2 = fResult.split(Pattern.quote("."));
+		for(String temp: result2) {
+			System.out.println("temp: "+temp);
+		}
+		
+		String fResult2 = result2[0];
+		System.out.println("fResult2: "+fResult2);
+		
+		//awsS3.copy(file.getFilename(), dir, file.getOriginFname());
+		//System.out.println("복사 성공!");
+		
+		
+		
+		return awsS3.download(fResult, dir);
+//		return null;
+	}
 	
 	@RequestMapping(value = "/boardLSearch/{key}/{value}", method = RequestMethod.GET)
 	public String selectBoardByobj(@PathVariable String key, @PathVariable String value, HttpSession session, Model model){
@@ -276,6 +318,7 @@ public class sampleController2 {
 		
 		String userid = principal.getName();
 		String boardID = request.getParameter("id");
+		System.out.println("board id: "+boardID);
 		
 //		model.addAttribute("replyInsertID", userid);
 //		System.out.println(boardID);
@@ -412,7 +455,7 @@ public class sampleController2 {
 			
 			//cloud file upload
 			String fileName = awsS3.upload(insertFile[0], "uploads/boardFile/");
-			System.out.println("file name: "+fileName);
+			System.out.println("aws - file name: "+fileName);
 			
 			boardTemp = BoardVO.builder().category(bcvotemp).user(uservo).boardTitle(title).boardText(content).boardFile(fileName).build(); 
 //			boardTemp = BoardVO.builder().category(bcvotemp).user(uservo).boardTitle(title).boardText(content).boardFile(boardFileName.get(0)).build(); 

@@ -336,7 +336,7 @@ width:150px;
 	var formObj = document.querySelectorAll("#navPage");
 	for(let i=0; i<formObj.length; i++){
 		formObj[i].addEventListener('click', ()=>{
-			//alert("a tag clicked"+formObj[i].innerText);
+			alert("a tag clicked"+formObj[i].innerText);
 			replyREST.getBoardPage(formObj[i].innerText, printList);
 		});
 	}
@@ -447,6 +447,7 @@ width:150px;
 		}
 		
 		function printList(list) {
+			
 			var str = "";
 			var replyObj;
 
@@ -458,11 +459,8 @@ width:150px;
 				for (var i = 0; i < list.length; i++) {
 					replyObj = list[i];
 
-					str += "<tr>" + "<td> "
-							+ replyObj.boardId + "</td>"
-							+ "<td>" + "<a href='/boardUDsampleBeta?id="
-							+ replyObj.boardId + "'>" + replyObj.boardTitle
-							+ "</a>" + "</td>" 
+					str += "<tr>" + "<td>" + replyObj.boardId + "</td>"
+							+ "<td>" + "<a href='/boardUDsampleBeta?id=" + replyObj.boardId + "'>" + replyObj.boardTitle + "</a>" + "</td>" 
 							+ "<td>" + replyObj.user.name + "</td>"
 							+ "<td>" + formatDate(replyObj.boardRegDate) + "</td>"
 							+ "</tr>";
@@ -472,10 +470,13 @@ width:150px;
 		}
 		function formatDate(timeValue) {
 			var date = new Date(timeValue);
+			date.setFullYear(date.getFullYear()-2000);
 			
 			return date.getFullYear() + "-" 
 			+ ( (date.getMonth() + 1)>9?(date.getMont()+1):("0"+(date.getMonth()+1)) ) + "-"
-					+ ( date.getDate()>9?date.getDate():("0"+date.getDate()));
+					+ ( date.getDate()>9?date.getDate():("0"+date.getDate()))+" "
+					+(date.getHours()>9?date.getHours():("0"+date.getHours()))+":"
+					+(date.getMinutes()>9?date.getMinutes():("0"+date.getMinutes()));
 		}
 	</script>
 </div>

@@ -54,11 +54,11 @@ public class sampleRESTController {
 	@Autowired
 	BoardRepositoryTestSu boardRP;
 	
-	@Autowired
-	BoardCategoryRepositoryTestSu categoryRP;
+	//@Autowired
+	//BoardCategoryRepositoryTestSu categoryRP;
 	
 	@Autowired
-	BoardCategoryRepositoryTestSu boardcateRP;
+	BoardCategoryRepositoryTestSu boardcateRP,categoryRP;
 	
 	@Autowired
 	ReplyRepositoryTestSu replyRP;
@@ -191,9 +191,22 @@ public class sampleRESTController {
 		return boardList;
 	}
 	
-	@GetMapping("/categoryName")
-	public List<String> categoryName(Model model){
-		return (List<String>)categoryRP.selectAllCategoryName();
+	@GetMapping("/categoryName/{teamid}")
+	public List<String> categoryName(@PathVariable String teamid, Model model){
+//		return (List<String>)categoryRP.selectAllCategoryName();
+		
+		Long result = Long.valueOf(teamid);
+		System.out.println("result: "+result);
+		
+		List<BoardCategoryVO> ctList = categoryRP.selectByTeam(result);
+//		System.out.println("ctList length: "+ctList.size());
+		
+		List<String> listResult = new ArrayList<>();
+		for(BoardCategoryVO temp: ctList) {
+//			System.out.println("temp: "+temp);
+			listResult.add(temp.getCategoryName());
+		}
+		return listResult;
 	}
 	
 	@GetMapping("/categoryList")
@@ -201,6 +214,8 @@ public class sampleRESTController {
 		return (List<BoardCategoryVO>)categoryRP.findAll();
 	}
 
+	
+	//changed
 	@GetMapping("/{bno}")
 	public List<ReplyVO> replyList(@PathVariable Long bno){
 		BoardVO board = BoardVO.builder().boardId(bno).build();

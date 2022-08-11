@@ -36,8 +36,6 @@ letter-spacing: -0.8px;
 	margin-top: 40px;
 }
 
-#boardMain1{
-}
 #boardMainSub1{
 position:relative;
 }
@@ -74,10 +72,6 @@ height: 40px;
 	text-align: center;
 }
 
-
-#replyTable {
-
-}
 
 .boardId{
 	width: 65px;
@@ -133,20 +127,23 @@ overflow:auto;
 	border-collapse: collapse;
 }
 
-
-
 #categoryTable{
 width:150px;
 }
-
-#cNameInsert{
-width:150px;
+ #cNameInsert{
+ width:150px;
+ }
+ 
+ #boardmainCategory{
+display:none;
 }
-
-
-
-
-
+#categoryList{
+list-style:none;
+}
+#cNameInsertBtn{
+position: relative;
+left:15%;
+}
 </style>
 <style>
 /* The Modal (background) */
@@ -198,17 +195,17 @@ width:150px;
 			<h5>카테고리 목록</h5>
 			<hr>
 
-			<p>카테고리 이름:</p>
+			<p>카테고리 이름 추가하기</p>
 			<input type="text" id="cNameInsert">
 			<button id="cNameInsertBtn" class="btn buttonColor">추가하기</button>
 			<hr>
 
-
-			<p>카테고리 이름:</p>
-			<select id="categoryTable"></select>
-			<button id="categoryNameBtn" class="btn buttonColor">선택</button>
-			<br>
-			<br>
+			<p>카테고리 이름 선택하기</p>
+			<div>
+			<ul id="categoryList" th:each="name:${cateName}">
+			<li><a id="catelistID" >[[${name}]]</a></li>
+			</ul>
+			</div>
 		</div>
 	</div>
 
@@ -216,7 +213,7 @@ width:150px;
 	<div id="boardMain">
 		<div id="boardMain1">
 			<div id="boardMainSub1">
-			<h2>게시판</h2>
+			<h2>게시판 <span id="boardmainCategory"></span></h2>
 			</div>
 			<div id="boardMainSub2">
 				<input id="categoryMenu" type="hidden">
@@ -309,28 +306,30 @@ width:150px;
 
 	<script th:inline="javascript" th:src="@{'/js/RESTreply.js'}"></script>
 	<script th:inline="javascript">	
+	
 	var teamID;
+	var categoryList;
 	$(function(){
 		//세션정보 가져오기
 		var team_id = /*[[${session.teamId}]]*/'';
 		var user_id = /*[[${session.user.userId}]]*/'';
 		//console.log(team_id);
 		teamID = team_id;
+		
+		replyREST.getAllCategory(teamID, printCategory);
+		
+		
+		categoryList = document.getElementById("categoryList");		
 	});	
 	var insertName = document.getElementById("cNameInsert");
 	var insertNameBtn = document.getElementById("cNameInsertBtn");
 	
-	var insertBtn = document.getElementById("insertBoard");
-	
 	var modal = document.getElementById("myModal");
 	var modalClose = document.getElementById("closeModal");
-	
-	var categoryName = document.getElementById("categoryTable");
-	var cNameBtn = document.getElementById("categoryNameBtn");
 	var cMenuname = document.getElementById("categoryMenu");
+	var categoryList = document.getElementById("categoryList");
 	
 	var formA = document.getElementById("boardFormA");
-	var categoryResult;
 	var showCategory = document.getElementById("scName");
 	
 	var formObj = document.querySelectorAll("#navPage");
@@ -340,6 +339,38 @@ width:150px;
 			replyREST.getBoardPage(formObj[i].innerText, printList);
 		});
 	}
+	
+	var boardmainCategory = document.getElementById("boardmainCategory");
+	var catelistID = document.querySelectorAll("#catelistID");
+	for(let i=0; i<catelistID.length; i++){
+		catelistID[i].addEventListener('click',()=>{
+			//alert(catelistID[i].innerText+"is clicked");
+			boardmainCategory.style.display = "inline";
+			
+			var text = catelistID[i].innerText;
+			$("#boardmainCategory").html(" - "+text);
+			
+			var categoryArr = $("#boardmainCategory").text().split(' ');
+			//alert(categoryArr[2]);	
+			
+			var categoryResult = categoryArr[2];
+			cMenuname.setAttribute("value", categoryResult);
+			replyREST.getAllBoard("boardList/" + categoryResult, printList);
+		});
+	}
+	
+	var insertBtn = document.getElementById("insertBoard");
+	insertBtn.onclick = function() {
+		if($("#boardmainCategory").text() ==""){
+			alert("카테고리를 선택하세요.");
+		} else{
+			var categoryArr = $("#boardmainCategory").text().split(' ');
+			//alert(categoryArr[2]);
+			
+			var categoryResult = categoryArr[2];			
+			location.href = "/boardInsertSample2/" + categoryResult+"/"+teamID;
+		}
+	};
 	
 	var boardMainNav = document.getElementById("boardMainNav");
 	var navPageList = document.getElementById("nextPLprev");	
@@ -388,9 +419,6 @@ width:150px;
 			}	
 		}
 		
-
-
-
 		insertNameBtn.onclick = function() {
 			//alert(insertName.value);
 
@@ -403,37 +431,23 @@ width:150px;
 			location.reload();
 		}
 
-		cNameBtn.onclick = function() {
-			categoryResult = categoryName.options[categoryName.selectedIndex].text;
-			replyREST.getAllBoard("boardList/" + categoryResult, printList);
-			
-			cMenuname.setAttribute("value", categoryResult);
-			
-			modal.style.display = "none";
-			boardMainNav.style.display = "none";
-			//alert(categoryResult);
-			
-			//location.href="/boardSampleBeta/"+categoryResult;
-		};
-
 		modalClose.onclick = function() {
 			modal.style.display = "none";
 		};
-
-		insertBtn.onclick = function() {
-
-			if (categoryResult == null) {
-				alert("카테고리를 선택하세요.");
-			} else if (categoryResult != null) {
-				location.href = "/boardInsertSample2/" + categoryResult+"/"+teamID;
-			}
-		};
-
-		$(document).ready(function() {
-			replyREST.getAllCategory("categoryName", printCategory);
-		});
+		
 	</script>
 	<script th:inline="javascript">			
+	
+	function printCategoryBeta(list) {
+		var result = "";
+		var obj;
+
+		for (var i = 0; i < list.length; i++) {
+			obj = list[i];
+			result += "<li>" + obj + "</li>"
+		}
+		$("#categoryList").html(result);
+	}
 	
 		function printCategory(list) {
 			var result = "";

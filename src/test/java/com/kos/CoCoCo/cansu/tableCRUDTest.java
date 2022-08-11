@@ -55,22 +55,34 @@ public class tableCRUDTest {
 	
 	@Autowired
 	ReplyRepositoryTestSu replyRP;
+
 	
 	@Test
-	public void selectBoardBybuildBeta() {
-		Long teamId = 1761L;
+	public void selectBoardByteam() {
 		
-		List<BoardVO> boards = boardRP.selectBoardByteam(teamId);	
-		System.out.println("boards size: "+boards.size());
-		
-		List<BoardVO> result = new ArrayList<>();
-		for(BoardVO temp:boards) {
-			if(temp.getBoardTitle().contains("hello")) {
-				result.add(temp);
-			}
-		}
-		System.out.println("result size: "+result.size());
+		Long teamid = 1761L;
+		List<BoardCategoryVO> list = boardcateRP.selectByTeam(teamid);
+		list.forEach(a->{
+			System.out.println(a);
+		});
+		System.out.println(list.size());
 	}
+	
+//	@Test
+//	public void selectBoardBybuildBeta() {
+//		Long teamId = 1761L;
+//		
+//		List<BoardVO> boards = boardRP.selectBoardByteam(teamId);	
+//		System.out.println("boards size: "+boards.size());
+//		
+//		List<BoardVO> result = new ArrayList<>();
+//		for(BoardVO temp:boards) {
+//			if(temp.getBoardTitle().contains("hello")) {
+//				result.add(temp);
+//			}
+//		}
+//		System.out.println("result size: "+result.size());
+//	}
 	
 //	@Test
 //	public void selectBoardBybuild() {

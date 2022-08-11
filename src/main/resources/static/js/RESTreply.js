@@ -36,7 +36,7 @@ var replyREST =(
 		};
 		
 		var getAllCategory = function(obj, callback){
-			$.getJSON('/BOARDrest/'+obj,callback);
+			$.getJSON('/BOARDrest/categoryName/'+obj,callback);
 		}
 		
 		var getBoardByName = function(obj, callback){

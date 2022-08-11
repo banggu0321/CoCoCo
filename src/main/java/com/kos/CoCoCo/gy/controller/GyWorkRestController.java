@@ -1,6 +1,5 @@
 package com.kos.CoCoCo.gy.controller;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kos.CoCoCo.gy.repo.GyTeamRepository;
@@ -26,7 +24,6 @@ import com.kos.CoCoCo.gy.repo.GyTeamUserRepository;
 import com.kos.CoCoCo.gy.repo.GyUserRepository;
 import com.kos.CoCoCo.gy.repo.GyWorkManagerRepository;
 import com.kos.CoCoCo.gy.repo.GyWorkRepository;
-import com.kos.CoCoCo.vo.TeamUserMultikey;
 import com.kos.CoCoCo.vo.TeamUserVO;
 import com.kos.CoCoCo.vo.TeamVO;
 import com.kos.CoCoCo.vo.UserVO;
@@ -66,56 +63,47 @@ public class GyWorkRestController {
 				arr[i] = workmanagerlist.get(i).getWorkManagerId().getUser();
 			}
 			work.setManager(arr);
-			System.out.println("*******"+work);
 		}
 		return worklist;
 	}
+	
 	@PostMapping(value="/addWork/{team_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public WorkVO addWork(@RequestBody WorkVO work , @PathVariable Long team_id) {
-		System.out.println(work);
 		TeamVO team = teamRepo.findById(team_id).get();
-		
-		log.info("Check: {}", work.toString());
-		System.out.println(work);
-		System.out.println(work.getWorkTitle());
-		
 		work.setTeam(team);
 		WorkVO insertwork = workRepo.save(work);
-		System.out.println(insertwork);
 		
 		for(String m:work.getManagerid()) {
 			UserVO user = userRepo.findById(m).get();
 			WorkManagerMultikey multikey = new WorkManagerMultikey(insertwork, user);
 			WorkManagerVO workmanager = new WorkManagerVO(multikey);
-			WorkManagerVO insertworkmanager = workManagerRepo.save(workmanager);
-			System.out.println(insertworkmanager);
+			workManagerRepo.save(workmanager);
 		}
 		return work;
 	}
+	
 	@GetMapping("/teamUserList/{team_id}")
 	public List<UserVO> workmanagerlist(Model model, @PathVariable Long team_id) {
 		List<TeamUserVO> user = teamUserRepo.findByTeam(team_id);
 		List<UserVO> teamusernamelist = new ArrayList<>();
 		
 		for(TeamUserVO teamuser:user) {
-			//System.out.println("담당자들2 : "+teamuser);
 			UserVO uservo = teamuser.getTeamUserId().getUser();
-			//System.out.println("담당자1" + uservo);
 			teamusernamelist.add(uservo);
 		}
-		System.out.println(teamusernamelist);
 		return teamusernamelist;
 	}
+	
 	@GetMapping(value="/workDetail/{work_id}")
 	public WorkVO workdetaillist(Model model, @PathVariable Long work_id) {
 		WorkVO work = workRepo.findById(work_id).get();
 		List<WorkManagerVO> workmanagerlist = workManagerRepo.findByWork(work_id);
 
-		UserVO[] arr = new UserVO[workmanagerlist.size()];
+		UserVO[] mlist = new UserVO[workmanagerlist.size()];
 		for(int i=0;i<workmanagerlist.size();i++) {
-			arr[i] = workmanagerlist.get(i).getWorkManagerId().getUser();
+			mlist[i] = workmanagerlist.get(i).getWorkManagerId().getUser();
 		}
-		work.setManager(arr);
+		work.setManager(mlist);
 		return work;
 	}
 	
@@ -125,9 +113,9 @@ public class GyWorkRestController {
 		WorkVO originalwork = workRepo.findById(work_id).get();
 		originalwork.setWorkStatus(status);
 		
-		WorkVO updatework = workRepo.save(originalwork);
-		return updatework;
+		return workRepo.save(originalwork);
 	}
+	
 	@Transactional
 	@PutMapping(value="/updateWork/{work_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public WorkVO updateWork(@RequestBody WorkVO work , @PathVariable Long work_id) {
@@ -138,21 +126,19 @@ public class GyWorkRestController {
 		originalwork.setWorkStart(work.getWorkStart());
 		originalwork.setWorkEnd(work.getWorkEnd());
 		originalwork.setWorkStatus(work.getWorkStatus());
-		originalwork.setManager(work.getManager());
+		originalwork.setManagerid(work.getManagerid());
 		
 		WorkVO updatework = workRepo.save(originalwork);
 		
-		if(work.getManager()!=null) {
+		if(work.getManagerid()!=null) {
 			workManagerRepo.workManagerDelete(work_id);
 			for(String m:updatework.getManagerid()) {
 				UserVO user = userRepo.findById(m).get();
 				WorkManagerMultikey multikey = new WorkManagerMultikey(updatework, user);
 				WorkManagerVO workmanager = new WorkManagerVO(multikey);
-				WorkManagerVO modifyworkmanager = workManagerRepo.save(workmanager);
-				System.out.println(modifyworkmanager);
+				workManagerRepo.save(workmanager);
 			}
 		}else {
-			System.out.println("Manager 변동없음");
 		}
 		return updatework;
 	}
@@ -167,7 +153,6 @@ public class GyWorkRestController {
 	@GetMapping("/myWorkList/{team_id}/{user_id}")
 	public List<WorkVO> myWork(Model model, @PathVariable String team_id, @PathVariable String user_id) {
 		List<WorkVO> myworklist = workRepo.findByUser(team_id, user_id);
-		System.out.println(myworklist);
 		return myworklist;
 	}
 	
@@ -184,7 +169,6 @@ public class GyWorkRestController {
 			}
 			work.setManagerid(arr);
 		}
-		System.out.println(worklist);
 		return worklist;
 	}
 }

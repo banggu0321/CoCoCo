@@ -7,17 +7,6 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge'>
 <title>CoCoCo | [[${session.teamUser.teamUserId.team.teamName}]]</title>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<!-- csrf 
-<meta name="_csrf" th:content="${_csrf.token}"/>
-<meta name="_csrf_header" th:content="${_csrf.headerName}"/>-->
-<!-- jquery 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>-->
-<!-- bootstrap 4
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> -->
 
 <!-- fullcalendar -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.0/main.min.css">
@@ -44,8 +33,7 @@
 	var todaydate = now.getFullYear()+"-"+('00' + (now.getMonth()+1)).slice(-2)+"-"+('00' + (now.getDate())).slice(-2);
 	
 	$(function(){
-		//my_menu hide
-		$(".my_menu").attr("style", "display:none");//display:none
+		$(".my_menu").attr("style", "display:none");
 		
 		//해당 팀의 담당자 모두 가져오기
 		$.ajax({
@@ -78,12 +66,9 @@
 		request.done(function(responseData){
 			$.each(responseData, function(index,data){
 				workmanager = [];
-				//console.log("data : "+ data.manager.length);
 				for(var index in data.manager){
 					workmanager.push(data.manager[index].userId);
-					//console.log(workmanager);
 				}
-				//console.log("원래 data : ", workmanager);
 				
 				if(workmanager.includes(user_id)){
 					workmanager = "user";
@@ -93,8 +78,7 @@
 				
 				var date_end = dateEndPlus(data.workEnd);
 				
-				//console.log("조건 결과 data : "+ data.manager);
-				if(workmanager=="none"){//not user
+				if(workmanager=="none"){
 					totaleventlist.push({
 						id: data.workId,
 						title : data.workTitle,
@@ -102,20 +86,15 @@
 						end : date_end,
 						color : '#C9C8C8'
 					});
-				}else if(data.workStatus == 'finish'){//완료
+				}else if(data.workStatus == 'finish'){
 					totaleventlist.push({
 						id: data.workId,
 						title : data.workTitle,
 						start : data.workStart,
 						end : date_end,
-						//extendedProps: {
-						//	content : data.workText,
-						//	status : data.workStatus,
-						//	manager : data.manager
-						//},
 						color : '#AAC2D8'
 					});
-				}else if(data.workStatus == 'ongoing'){//진행중
+				}else if(data.workStatus == 'ongoing'){
 					totaleventlist.push({
 						id: data.workId,
 						title : data.workTitle,
@@ -124,14 +103,14 @@
 						color : '#DAA88D',
 						groupId : data.workStatus
 					});
-				}else{//대기
+				}else{
 					totaleventlist.push({
 						id: data.workId,
 						title : data.workTitle,
 						start : data.workStart,
 						end : date_end,
 						color : '#BCDAAA',
-						groupId : data.workStatus, //plan,ongoing
+						groupId : data.workStatus,
 					});
 				}
 			});
@@ -140,12 +119,10 @@
 			//캘린더 만들기
 			var calendarEl = document.getElementById('calendar');
 			var calendar = new FullCalendar.Calendar(calendarEl, {
-				//schedulerLicenseKey : 'CC-Attribution-NonCommercial-NoDerivatives',
-				//timeZone : 'UTC+9',
 				initialView : 'dayGridMonth',
 				events : totaleventlist,
 				headerToolbar: {
-				      left: 'helpButton totalButton,myWorkButton' , //dayGridMonth,timeGridWeek,timeGridDay,list
+				      left: 'helpButton totalButton,myWorkButton' ,
 				      center: 'prev,title,next',
 				      right: 'today addEventButton'
 				    },
@@ -157,15 +134,13 @@
 						}
 					},
 					myWorkButton:{
-						text : "My Work", // 버튼 내용
-						//color: 'yellow', 
+						text : "My Work",
 						click : function() {
-							//console.log("새로 가져올거 :"+myWorklist);
-							myeventlist=[]; //myeventlist초기화
+							myeventlist=[]; //myeventlist 초기화
 							$.each(myWorklist, function(index,data){
 								var date_end = dateEndPlus(data.workEnd);
 								
-								if(data.workStatus == 'finish'){//완료
+								if(data.workStatus == 'finish'){
 									myeventlist.push({
 										id: data.workId,
 										title : data.workTitle,
@@ -173,7 +148,7 @@
 										end : date_end,
 										color : '#8FB4D1'
 									});
-								}else if(data.workStatus == 'ongoing'){//진행중
+								}else if(data.workStatus == 'ongoing'){
 									myeventlist.push({
 										id: data.workId,
 										title : data.workTitle,
@@ -182,18 +157,17 @@
 										color : '#DF926E',
 										groupId : data.workStatus,
 									});
-								}else{ //대기
+								}else{
 									myeventlist.push({
 										id: data.workId,
 										title : data.workTitle,
 										start : data.workStart,
 										end : date_end,
 										color : '#A3D38F',
-										groupId : data.workStatus, //plan,ongoing
+										groupId : data.workStatus,
 									});
 								}
 							});
-							//console.log("바뀐 event : "+myeventlist);
 							calendar.removeAllEvents(); //event 초기화
 							calendar.addEventSource(myeventlist); //event 추가
 							calendar.render(); //다시 렌더링
@@ -205,11 +179,8 @@
 						}
 					},
 					totalButton:{
-						text : "All Work", // 버튼 내용
-						//color: 'yellow', 
+						text : "All Work", 
 						click : function() {
-							//console.log("원래 event : "+totaleventlist);
-							//console.log("바뀐 event : "+myeventlist);
 							calendar.removeAllEvents(); //event 초기화
 							calendar.addEventSource(totaleventlist); //event 추가
 							calendar.render(); //다시 렌더링
@@ -221,13 +192,11 @@
 						}
 					},
 					addEventButton : {
-						text : "업무 추가", // 버튼 내용
-						//color: 'yellow', 
+						text : "업무 추가",
 						click : function() { 
-							$("#calendarAddModal").modal("show"); // modal 나타내기
+							$("#calendarAddModal").modal("show");
 							$("#calendar_start_date").val(todaydate);
 							$("#calendar_end_date").val(todaydate);
-							
 							addEvent();
 						}
 					}
@@ -254,7 +223,6 @@
 						addEvent();
 					}
 			    },
-				//이벤트 클릭시
 				eventClick : function(info){
 					var eventObj = info.event; //해당 event 정보
 					
@@ -280,11 +248,9 @@
 							}else{
 								$(".detail_workStatus").val('완료');
 							}
-							//console.log("manager 전체",workDatail.manager);
 							workmanager = [];
 							var workmanagername = [];
 							for(var index in workDatail.manager){
-								//console.log("id하나씩",workDatail.manager[index].userId);
 								workmanager.push(workDatail.manager[index].userId);
 								workmanagername.push(workDatail.manager[index].name);
 							}
@@ -292,11 +258,9 @@
 							for(i=0;i<workmanager.length;i++){
 								workmanagerfull.push(workmanagername[i]+"["+workmanager[i]+"]");
 							}
-							//console.log("Id만",workmanager);
 							$(".detail_workMannager").text(workmanagerfull);
 						}
 					});	
-					//alert(eventObj.groupId);
 					if(eventObj.groupId == "plan"){
 						$(".WorkStatusUpdateModalBtn").attr("disabled", false);
 						$(".WorkStatusUpdateModalBtn").html('->진행');
@@ -308,16 +272,9 @@
 						$(".WorkStatusUpdateModalBtn").html('완료됨');		
 					}
 				},
-				/* viewSkeletonRender: function(info) {
-			    	calendar.querySelectorAll('.fc-button').forEach((button) => {
-			    		if(button.innerText == '업무 추가') {
-			    			button.classList.add('btn-outline-cococo');
-			    		}
-			    	});
-			    } */
 			});
 			calendar.render(); //다시 렌더링
-			//$(".fc-today-button").addClass("btn-cococo");
+
 			$(".fc-totalButton-button").removeClass("fc-button-primary");
 			$(".fc-myWorkButton-button").removeClass("fc-button-primary");
 			$(".fc-addEventButton-button").removeClass("fc-button-primary");
@@ -333,23 +290,20 @@
 			$(".fc-helpButton-button").addClass("rounded-circle");			
 		});
 		
-		//응답실패시
 		request.fail(function( jqXHR, textStatus ) {
 			  alert( "Request failed: " + textStatus );
 		});
 		
-		//UpdateModalBtn()
 		$("#WorkUpdateModalBtn").on("click", function() {
-			$("#calendarUpdateModal").modal("show"); // modal 나타내기
+			$("#calendarUpdateModal").modal("show");
 			
-			//console.log("length : "+document.getElementsByClassName('manageroption').length);
 			if($(".updatemanageroption").length){
 				$(".updatemanageroption").remove();
 			}else{
 				console.log("옵션이 존재하지 않았음");
 			}
-			//option에 해당 팀의 담당자 추가
-			$.each(teamUserlist,function(index, data){//jquery로 해결하기				
+
+			$.each(teamUserlist,function(index, data){
 				if(workmanager.includes(data.userId)){ //해당 user가 포함되어 있는 경우
 					$(".update_workMannager").append(`<option class= "form-control updatemanageroption managerselected" value="${data.userId}">${data.name}[${data.userId}]</option>`); 
 				}else{ //해당 user가 포함되지 않은 경우
@@ -358,7 +312,6 @@
 			});			
 		});
 		
-		//StatusUpdateBtn
 		$(".WorkStatusUpdateModalBtn").on("click", function() {
 			var work_id = $(".detail_workId").val();
 			var status = $(".detail_workStatus").val();
@@ -367,27 +320,22 @@
 			}else{
 				status='finish';
 			}
-			//status = '대기' ? status= 'ongoing': 'finish';
-			console.log("object status", work_id, status);
 			
 			$.ajax({
-				type:'put',   //put 방식으로 전송
-				url:'/work/updateWorkStatus/'+work_id,   //데이터를 주고받을 파일 주소
-				data:status,   //위의 변수에 담긴 데이터를 전송해준다.
+				type:'put',
+				url:'/work/updateWorkStatus/'+work_id,
+				data:status,
 				contentType: "application/json; charset=utf-8",
-				beforeSend : function(xhr)
-	            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+				beforeSend : function(xhr){
 					xhr.setRequestHeader(header, token);
 	            },
-	            success : function(data){   //파일 주고받기가 성공했을 경우. data 변수 안에 값을 담아온다.
+	            success : function(data){
 					console.log("update status",data);
-					//alert("업무 상태가 수정되었습니다.");  //현재 화면 위 id="message" 영역 안에 data안에 담긴 html 코드를 넣어준다.
 					location.reload();
 				}
 			});
 		});
 		
-		//WorkUpdateBtn
 		$("#WorkUpdateBtn").on("click", function() {
 			var work_id = $(".update_workId").val();
 			var title = $(".update_workTitle").val();
@@ -404,20 +352,20 @@
 			}			
 			var manager = $(".update_workMannager").val();
 
-			//내용 입력 여부 확인
 			if (title == null || title == "") {
 				alert("제목을 입력하세요.");
 			} else if (content == null || content == "") {
 				alert("내용을 입력하세요.");
 			} else if (content.length > 120) {
-				alert("최대 입력 제한");
+				alert("최대 입력 가능한 글자수를 초과하였습니다.");
 			} else if (start_date == "" || end_date == "") {
 				alert("날짜를 입력하세요.");
-			} else if (new Date(end_date) - new Date(start_date) < 0) { // date 타입으로 변경 후 확인
+			} else if (new Date(end_date) - new Date(start_date) < 0) {
 				alert("종료일이 시작일보다 먼저입니다.");
-			}  else if (manager == "" || manager == null) { 
-				alert("업무 담당자를 입력하세요");
-			} else { // 정상적인 입력 시
+			} else {
+				if (manager == "" || manager == null) { 
+					manager = null;
+				}
 				var obj = {
 					"workTitle" : title,
 					"workText": content,
@@ -425,65 +373,51 @@
 					"workEnd" : end_date,
 					"workStatus" : status,
 					"managerid" :manager
-				}//전송할 객체 생성
-				console.log("update object", obj); //서버로 해당 객체를 전달해서 DB 연동 가능
+				}
+				console.log("update object", obj);
 				
 				$.ajax({
-					type:'put',   //put 방식으로 전송
-					url:'/work/updateWork/'+work_id,   //데이터를 주고받을 파일 주소
-					data:JSON.stringify( obj),   //위의 변수에 담긴 데이터를 전송해준다.
-					//dataType:'application/json',   //html 파일 형식으로 값을 담아온다.
+					type:'put',
+					url:'/work/updateWork/'+work_id,
+					data:JSON.stringify( obj),
 					contentType: "application/json; charset=utf-8",
-					beforeSend : function(xhr)
-		            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+					beforeSend : function(xhr){
 						xhr.setRequestHeader(header, token);
 		            },
-		            success : function(data){   //파일 주고받기가 성공했을 경우. data 변수 안에 값을 담아온다.
-						//console.log(data);
-						//alert("업무가 수정되었습니다.");  //현재 화면 위 id="message" 영역 안에 data안에 담긴 html 코드를 넣어준다.
+		            success : function(data){
 						location.reload();
 					}
 				});
 			}
 		});
 		
-		//WorkDeleteBtn
 		$("#WorkDeleteBtn").on("click", function() {
 			var work_id = $(".detail_workId").val();
 			if(confirm("해당업무[" + work_id + "]를 삭제하시겠습니까?")){
 				$.ajax({
 					type:'delete',
-					url:'/work/deleteWork/'+work_id,   //데이터를 주고받을 파일 주소
-					//data:JSON.stringify( obj),   //위의 변수에 담긴 데이터를 전송해준다.
-					//dataType:'application/json',   //html 파일 형식으로 값을 담아온다.
+					url:'/work/deleteWork/'+work_id, 
 					contentType: "application/json; charset=utf-8",
-					beforeSend : function(xhr)
-		            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+					beforeSend : function(xhr){
 						xhr.setRequestHeader(header, token);
 		            },
-		            success : function(data){   //파일 주고받기가 성공했을 경우. data 변수 안에 값을 담아온다.
-						//console.log(data);
-						//alert("업무가 삭제되었습니다.");
+		            success : function(data){
 						location.reload();
 					}
 				});
 			}else{}
 		});
 		
-		//addEvent
 		function addEvent(){
-			//console.log("length : "+document.getElementsByClassName('manageroption').length);
 			if($(".addmanageroption").length){
 				$(".addmanageroption").remove();
 			}else{
 				console.log("옵션이 존재하지 않았음");
 			}
 			
-			//option에 해당 팀의 담당자 추가
 			$.each(teamUserlist,function(index, data){
-				//console.log(data.name);
 				$("#calendar_manager").append(`<option class="form-control addmanageroption" value="${data.userId}">${data.name}[${data.userId}]</option>`); 
-				});
+			});
 			
 			// modal의 추가 버튼 클릭 시
 			$("#addWork").on("click", function() { 
@@ -494,20 +428,19 @@
 				var status = $("#calendar_status").val();
 				var manager = $("#calendar_manager").val();
 
-				//내용 입력 여부 확인
 				if (title == null || title == "") {
 					alert("제목을 입력하세요.");
 				} else if (content == null || content == "") {
 					alert("내용을 입력하세요.");
 				} else if (content.length > 120) {
-					alert("최대 입력 제한");
+					alert("최대 입력 가능한 글자수를 초과하였습니다.");
 				} else if (start_date == "" || end_date == "") {
 					alert("날짜를 입력하세요.");
-				} else if (new Date(end_date) - new Date(start_date) < 0) { // date 타입으로 변경 후 확인
+				} else if (new Date(end_date) - new Date(start_date) < 0) {
 					alert("종료일이 시작일보다 먼저입니다.");
 				}  else if (manager == "" || manager == null) {
 					alert("업무 담당자를 입력하세요");
-				} else { // 정상적인 입력 시
+				} else {
 					var obj = {
 						"workTitle" : title,
 						"workText": content,
@@ -515,24 +448,18 @@
 						"workEnd" : end_date,
 						"workStatus" : status,
 						"managerid" :manager
-					}//전송할 객체 생성
-					console.log("insert object", obj); //서버로 해당 객체를 전달해서 DB 연동 가능
-					
-					//insert work
+					}
+					console.log("insert object", obj);
+				
 					$.ajax({
-						type:'post',   //post 방식으로 전송
-						url:'/work/addWork/'+team_id,   //데이터를 주고받을 파일 주소
-						data:JSON.stringify( obj),   //위의 변수에 담긴 데이터를 전송해준다.
-						//dataType:'application/json',   //html 파일 형식으로 값을 담아오기
+						type:'post',
+						url:'/work/addWork/'+team_id,
+						data:JSON.stringify( obj),
 						contentType: "application/json; charset=utf-8",
-						//csrf token
-						beforeSend : function(xhr)
-			            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+						beforeSend : function(xhr){
 							xhr.setRequestHeader(header, token);
 			            },
-						success : function(data){   //파일 주고받기가 성공했을 경우. data 변수 안에 값을 담아온다.
-							//console.log(data);
-							alert("업무가 등록되었습니다."); 
+						success : function(data){
 							location.reload();
 						}
 					});
@@ -552,21 +479,12 @@
 			date_end2 = ('00' + date_end2).slice(-2);
 			return date_end1+date_end2;
 		}
-		/* $("body").on("click", function() {
-			$("#helpModal").hide();
-		}); */
-		/* $('.fc-helpButton-button').hover(function() {
-			$("#helpModal").show();
-		}); */
 	});
 </script>
 </head>
 <body>
 	<div layout:fragment="inner_content">
 		<div class="inner_content">
-		<!-- <div id="addButton">
-			<input type="button" id="addCalendar" value="업무추가" class="btn btn-warning">
-		</div> -->
 			<div id="helpModal">
 				<h2 class="cococo-title-text helptitle">help</h2>
 				<img th:src="@{/images/helpWorkImg.jpg}" class="">
@@ -604,9 +522,6 @@
 								<label for="taskId" class="col-form-label">일정 담당자(Ctrl클릭 후 중복선택가능)</label> 
 								<div class="workManager">
 									<select class="form-control" id="calendar_manager" name="calendar_manager" multiple="multiple" size="3">
-										<!-- <option class="form-control managers">선택하세요</option>
-										<option class="form-control">방근영2</option>
-										<option class="form-control">방3</option> -->
 									</select>
 								</div>
 							</div>
@@ -647,10 +562,9 @@
 							</div>
 						</div>
 						<div class="modal-footer">
-							<button type="button" class="btn btn-warning WorkStatusUpdateModalBtn" id="WorkStatusUpdateModalBtn" disabled>상태바꾸기</button>
+							<button type="button" class="btn btn-warning WorkStatusUpdateModalBtn" id="WorkStatusUpdateModalBtn" disabled>상태바꾸기버튼</button>
 							<button type="button" class="btn btn-warning WorkUpdateModalBtn" id="WorkUpdateModalBtn">수정</button>
-							<button type="button" class="btn btn-secondary"
-								data-dismiss="modal" id="WorkDeleteBtn">삭제</button>
+							<button type="button" class="btn btn-secondary" data-dismiss="modal" id="WorkDeleteBtn">삭제</button>
 						</div>
 					</div>
 				</div>
@@ -688,10 +602,6 @@
 								<label for="taskId" class="col-form-label">일정 담당자(Ctrl클릭 후 중복선택가능)</label> 
 								<div class="workManager">
 									<select class="form-control update_workMannager" id="update_calendar_manager" name="calendar_manager" multiple="multiple" size="3">
-										<!-- <option class="form-control managers" selected="selected">방근영2</option> -->
-										<!-- <option class="form-control managers">선택하세요</option>
-										<option class="form-control">방근영2</option>
-										<option class="form-control">방3</option> -->
 									</select>
 								</div>
 							
@@ -704,7 +614,7 @@
 						</div>
 					</div>
 				</div>
-			</div><!-- modal -->
+			</div>
 		</div>
 	</div>
 </body>

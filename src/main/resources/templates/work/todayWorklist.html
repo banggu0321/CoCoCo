@@ -2,20 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<!--
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-
- csrf 
-<meta name="_csrf" th:content="${_csrf.token}"/>
-<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
-
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
--->
 <link rel="stylesheet" th:href="@{/css/gy/mainwork.css}" />
 
 <script type="text/javascript">
@@ -28,11 +14,10 @@
 		var todaywork = 0;
 		
 	    var now = new Date();
-	    var year=now.getFullYear(); //연도
-	    var month=('00' + (now.getMonth()+1)).slice(-2); // 월 
-	    var date=('00' + (now.getDate())).slice(-2); //일 *************************************
+	    var year=now.getFullYear();
+	    var month=('00' + (now.getMonth()+1)).slice(-2);
+	    var date=('00' + (now.getDate())).slice(-2);
 	    
-	    //$("#today").text(now);
 	    $("#today").text(year+"."+month+"."+date);
 	    
 	  //해당 팀의 전체 업무 가져오기
@@ -55,11 +40,6 @@
 					var end = new Date(data.workEnd);
 					
 					if(num < 4){
-						//console.log(data.workTitle);
-						//console.log(start<=todaydate&&todaydate<=end);
-						//console.log(start);
-						//console.log(todaydate);
-						//console.log(end);
 						if(start<=todaydate&&todaydate<=end){  //오늘날짜인 경우
 							if(data.managerid=="none"){ //not mine
 								$(".workListBox").append(`<div class="form-control worklist" style="color:#BFBFBF"><span class="workinfo"><span class="workListTitle">${data.workTitle}</span>  <span class="workListContent">${data.workText}</span><span>${data.workStart} ~ ${data.workEnd}</span></span></div>`);
@@ -74,7 +54,6 @@
 					}
 					if(start<=todaydate&&todaydate<=end){
 						todaywork +=1;
-						//console.log(todaywork);
 					}
 				});	
 				$(".workTitleText").append(` - ${todaywork}건`);

@@ -71,45 +71,14 @@ public class sampleController2 {
 	
 	@Autowired
 	AwsS3 awsS3;
-	
-	@GetMapping("/boardFileDown")
-	public ResponseEntity<byte[]> boardDownload(HttpServletRequest request) throws IOException{
+
+	@GetMapping("/boardFileDown/{bno}")
+	public ResponseEntity<byte[]> boardDownload(@PathVariable Long bno) throws IOException{
+		String dir = "uploads/boardFile/";
+		BoardVO board = boardRP.findById(bno).get();
+		System.out.println(board.getBoardFile());
 		
-		
-		String file = request.getParameter("fileName");
-		System.out.println("file:"+file);
-		String[] fileNames = file.split("/");
-		
-		
-		String dir = "/uploads/boardFile/";
-		String fileName = fileNames[fileNames.length-1];
-		
-		System.out.println("file : "+file);
-		System.out.println();
-		for(String temp: fileNames) {
-			System.out.println("temp: "+temp);
-		}
-		System.out.println("file name: "+fileName);
-		
-		String[] result = fileName.split("_");
-		String fResult = result[1];
-		System.out.println("fResult: "+fResult);
-		
-		String[] result2 = fResult.split(Pattern.quote("."));
-		for(String temp: result2) {
-			System.out.println("temp: "+temp);
-		}
-		
-		String fResult2 = result2[0];
-		System.out.println("fResult2: "+fResult2);
-		
-		//awsS3.copy(file.getFilename(), dir, file.getOriginFname());
-		//System.out.println("복사 성공!");
-		
-		
-		
-		return awsS3.download(fResult, dir);
-//		return null;
+		return awsS3.download(dir, board.getBoardFile().substring(72));
 	}
 	
 	@RequestMapping(value = "/boardLSearch/{key}/{value}", method = RequestMethod.GET)
@@ -366,7 +335,7 @@ public class sampleController2 {
 	}
 	
 	@PostMapping("/postBoardUpdateBeta")
-	public String boardUpdate(HttpServletRequest request, @RequestParam("insertFile2") MultipartFile[] insertFile) throws IllegalStateException, IOException{
+	public String boardUpdate(HttpServletRequest request, @RequestParam("insertFile2") MultipartFile insertFile) throws IllegalStateException, IOException{
 		
 		String title = request.getParameter("boardTitle");
 		String text = request.getParameter("boardText");
@@ -375,27 +344,26 @@ public class sampleController2 {
 		System.out.println("post title: "+title);
 		System.out.println("post text: "+text);
 		System.out.println("post id: "+id);
-		
 		System.out.println("insertFile: "+insertFile);
-		List<String> boardFileName = boardService.uploadFile(insertFile);
+
 		BoardVO bvo = boardRP.findById(Long.valueOf(id)).get();
 		
-		int checkNum =0;
-		for(MultipartFile temp: insertFile) {
-			if(temp.getSize() != 0) {
-				checkNum += 1;
-			}
-		}
-		System.out.println("checkNum: "+checkNum);
+		System.out.println("insert"+ insertFile);
 		
-		if(checkNum >0) {
-			bvo.setBoardTitle(title);
-			bvo.setBoardText(text); 
-			bvo.setBoardFile(boardFileName.get(0)); //.boardFile(boardFileName.get(0));
+		if(insertFile.isEmpty()) {
+			System.out.println("변경없음");
+			
 		}else {
-			bvo.setBoardTitle(title);
-			bvo.setBoardText(text); 
+			awsS3.delete(bvo.getBoardFile());
+			
+			String fileName = awsS3.upload(insertFile, "uploads/boardFile/");
+			System.out.println("aws - file name: "+fileName);
+			
+			bvo.setBoardFile(fileName);
 		}
+		
+		bvo.setBoardTitle(title);
+		bvo.setBoardText(text); 
 		boardRP.save(bvo);
 		
 		return "redirect:/boardSampleBeta";

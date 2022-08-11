@@ -15,6 +15,6 @@ public interface GyWorkManagerRepository extends CrudRepository<WorkManagerVO, W
 	public List<WorkManagerVO> findByWork(Long work_id);
 	
 	@Modifying
-	@Query(value="delete from WORK_MANAGER where work_work_id=?1", nativeQuery = true)//테이블이름 써서 nativequery
+	@Query(value="delete from WORK_MANAGER where work_work_id=?1", nativeQuery = true)
 	public void workManagerDelete(Long work_id);
 }

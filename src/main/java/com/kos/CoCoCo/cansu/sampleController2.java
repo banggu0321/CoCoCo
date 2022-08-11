@@ -2,7 +2,13 @@ package com.kos.CoCoCo.cansu;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +27,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -63,7 +70,121 @@ public class sampleController2 {
 	@Autowired
 	AwsS3 awsS3;
 	
+	@RequestMapping(value = "/boardLSearch/{key}/{value}", method = RequestMethod.GET)
+	public String selectBoardByobj(@PathVariable String key, @PathVariable String value, HttpSession session, Model model){
+		
+		String rIndex = key;
+		String rValue = value;
+		Long teamId = (Long) session.getAttribute("teamId");
+		
+		System.out.println("index: "+rIndex);
+		System.out.println("value: "+rValue);
+		System.out.println("team id: "+teamId);
+		
+		List<BoardVO> boardList = new ArrayList<>();
+		switch(rIndex) {
+		case "t":
+			boardList = searchByTitle(teamId, rValue);
+			break;
+		case "w":
+			boardList = searchByWriter(teamId,rValue);
+			break;
+		case "c":
+			boardList = searchByContent(teamId,rValue);
+			break;
+		case "d":
+			boardList = searchByDay(teamId,rValue);
+			break;	
+		}
+
+		model.addAttribute("boardList", boardList);
+		
+//		Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "board_id");
+//		Page<BoardVO> result = new PageImpl<BoardVO>(boardList, pageable, boardList.size());
+//		//PageMaker<BoardVO> resultPage = new PageMaker<>(result);
+//					
+//		model.addAttribute("result", new PageMaker(result));		
+		return "su/thymeleaf/boardMainBeta";
+	}
 	
+	
+	private List<BoardVO> searchByDay(Long teamId, String rValue) {
+		List<BoardVO> result = new ArrayList<>();
+		List<BoardVO> boards = boardRP.selectBoardByteam(teamId);	
+//		System.out.println("boards size: "+boards.size());
+		
+		String dateValue = "20220101";
+		if(rValue.length() == 4) {
+			dateValue = "2022"+rValue;
+		} 		
+		
+//		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat formatr = new SimpleDateFormat("yyyyMMdd");
+		try {
+			Date date = formatr.parse(dateValue);
+			
+			for(BoardVO temp:boards) {
+//				System.out.println(temp.getBoardRegDate());
+				if(temp.getBoardRegDate().after(date) ) {
+						result.add(temp);
+				}
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+
+
+	private List<BoardVO> searchByContent(Long teamId, String rValue) {
+		
+
+		List<BoardVO> boards = boardRP.selectBoardByteam(teamId);	
+		System.out.println("boards size: "+boards.size());
+		
+		List<BoardVO> result = new ArrayList<>();
+		for(BoardVO temp:boards) {
+			System.out.println(temp.getBoardText());
+			if((temp.getBoardText() != null)&&(temp.getBoardText().contains(rValue))) {
+					result.add(temp);
+			}
+		}
+		return result;
+	}
+
+
+	private List<BoardVO> searchByWriter(Long teamId, String rValue) {
+		
+		List<BoardVO> boards = boardRP.selectBoardByteam(teamId);	
+		System.out.println("boards size: "+boards.size());
+		
+		List<BoardVO> result = new ArrayList<>();
+		for(BoardVO temp:boards) {
+			if(temp.getUser().getName().equals(rValue)) {
+				result.add(temp);
+			}
+		}
+		return result;
+	}
+
+
+	private List<BoardVO> searchByTitle(Long team, String rValue) {
+		Long teamId = team;
+		
+		List<BoardVO> boards = boardRP.selectBoardByteam(teamId);	
+		System.out.println("boards size: "+boards.size());
+		
+		List<BoardVO> result = new ArrayList<>();
+		for(BoardVO temp:boards) {
+			if(temp.getBoardTitle().contains(rValue)) {
+				result.add(temp);
+			}
+		}
+		return result;		
+	}
+
+
 	@GetMapping("/getNext/{pageNumber}")
 	public String boardMainNavByPageNum(@PathVariable String pageNumber, Model model){
 		
@@ -131,10 +252,12 @@ public class sampleController2 {
 		
 		Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "board_id");
 		Page<BoardVO> result = new PageImpl<BoardVO>(boards, pageable, boards.size());
-	
+			
+		List<BoardVO> boardList = boardRP.selectBoardByteamBeta(teamId, pageable);
+//		PageMaker<BoardVO> resultPage = new PageMaker<>(result);
 		
 		model.addAttribute("result", new PageMaker(result));
-		model.addAttribute("boardList", result.getContent());
+		model.addAttribute("boardList", boardList);
 		return "su/thymeleaf/boardMain";
 	}
 		
@@ -162,10 +285,7 @@ public class sampleController2 {
 		String userid = principal.getName();
 		String boardID = request.getParameter("id");
 		
-		
 //		model.addAttribute("replyInsertID", userid);
-		
-		
 //		System.out.println(boardID);
 		
 		BoardVO bvo = boardRP.findById(Long.valueOf(boardID)).get();

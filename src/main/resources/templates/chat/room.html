@@ -122,7 +122,7 @@ mark.current {
 <body>
 	<!-- <th:block th:replace="~{/layout/basic :: setContent(~{this :: content})}"> -->
 	<th:block th:fragment="content">
-
+ 
 		<div class="container">
 			<div class="search-in-body">
 				<input type="search" class="search-box" placeholder="채팅 찾기">
@@ -138,7 +138,8 @@ mark.current {
 								th:class="${chat.writer == session.user.userId?'left':'right'}">
 								 <span
 								th:class="${chat.writer == session.user.userId?'chat-img pull-right':'chat-img pull-left'}">
-									<img th:if="${chat.writer} != ${session.user.userId}" th:src="@{/images/teamImg.png}" width= "40px"
+								
+									<img th:if="${chat.writer} != ${session.user.userId}" th:src="${chat.writerImg}?:@{/images/userImg.svg}" width= "40px"
 									alt="User Avatar" class="img-circle rounded-circle" />
 									
 							</span>
@@ -193,9 +194,9 @@ mark.current {
             $(document).ready(function(){
 
                 var teamName = /*[[${team.teamName}]]*/'';
-                
                 var username = /*[[${session.user.userId}]]*/'';
                	var koreanName = /*[[${session.user.name}]]*/'';
+               	var writerImg = /*[[${session.user.image}]]*/'';
 
                 console.log(teamName + ", " + teamId + ", " + username);
                 $(".col").scrollTop($(".col")[0].scrollHeight);
@@ -216,6 +217,7 @@ mark.current {
                        var writer = content.writer;
                        var message = content.message;
                        var koreanName = content.koreanName;
+                       var writerImg = content.writerImg == null ? '/images/userImg.svg' : content.writerImg;
                        var str = '';
                  
                        if(writer === username){
@@ -233,7 +235,7 @@ mark.current {
                     	   
                            str = "<li class='right'>";
                            str += "<span class='chat-img pull-left'>";
-                           str += "<img src='/images/addFile.png' alt='User Avatar' width= '30px' class='img-circle'/></span>";
+                           str += "<img src='" + writerImg + "' alt='User Avatar' width= '40px' class='img-circle rounded-circle'/></span>";
                            str += "<div class='chat-body clearfix'><div class='header'>";
                            str += "<strong class='primary-font'> " + koreanName + "</strong>";
                            str += "</div><p> " +  message + " </p></div></li>";
@@ -260,7 +262,7 @@ mark.current {
                 	if(e.keyCode==13){
                 		if($(this).val()==="") return ;
                         console.log(username + ":" + msg.value);
-                        stomp.send('/pub/chat/message', {}, JSON.stringify({teamId: teamId, message: msg.value, writer: username, koreanName: koreanName, id: 0}));
+                        stomp.send('/pub/chat/message', {}, JSON.stringify({teamId: teamId, message: msg.value, writer: username, koreanName: koreanName, id: 0, writerImg:writerImg}));
                         msg.value = ''; 
                 	}
                 });

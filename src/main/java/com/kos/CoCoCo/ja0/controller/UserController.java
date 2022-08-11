@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.kos.CoCoCo.ja0.awsS3.AwsS3;
 import com.kos.CoCoCo.ja0.repository.BoardCategoryRepositoryH;
 import com.kos.CoCoCo.ja0.repository.BoardRepositoryH;
+import com.kos.CoCoCo.ja0.repository.KakaoUserRepository;
 import com.kos.CoCoCo.ja0.repository.MessageRepositoryH;
 import com.kos.CoCoCo.ja0.repository.NoticeRepositoryH;
 import com.kos.CoCoCo.ja0.repository.ReplyRepositoryH;
@@ -63,6 +64,9 @@ public class UserController {
 	
 	@Autowired
 	MessageRepositoryH mRepo;
+	
+	@Autowired
+	KakaoUserRepository kRepo;
 	
 	@Autowired
 	AwsS3 awsS3;
@@ -142,6 +146,7 @@ public class UserController {
 		
 		awsS3.delete(user.getImage()); //탈퇴회원 이미지 삭제
 		uRepo.deleteById(user.getUserId());
+		kRepo.deleteByEmail(user.getUserId());
 		
 		return "redirect:/logout";
 	}

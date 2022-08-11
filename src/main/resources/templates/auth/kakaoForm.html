@@ -13,6 +13,7 @@
 <style>
 #email {
 	width: 422px;
+	border-radius: 5px;
 }
 
 /* 아이디 중복체크 */
@@ -36,10 +37,6 @@ body {
 	margin-bottom: 20px;
 }
 
-.join_btn {
-	margin: 0 0 0 4px;
-}
-
 button {
 	width: 486px;
 	height: 52px;
@@ -50,6 +47,10 @@ input {
 	height: 52px;
 	margin-bottom: 20px;
 	padding-left: 20px;
+}
+
+#intro{
+	text-align: center;
 }
 </style>
 
@@ -65,34 +66,27 @@ function idCheckFunc() {
 		alert("이메일을 입력하세요");
 		return;
 	} 
-	//ajax csrf//		
+	
 	var token = $("meta[name='_csrf']").attr("content");
 	var header = $("meta[name='_csrf_header']").attr("content");
 
 	$.ajax({
-		url : '/auth/idCheck', //Controller에서 인식할 주소
-		type : 'post', //POST 방식으로 전달
+		url : '/auth/idCheck', 
+		type : 'post', 
 		data : {
 			"userId" : id
 		},
-
-		//ajax csrf//
-		beforeSend : function(xhr) { /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+		beforeSend : function(xhr) { 
 			xhr.setRequestHeader(header, token);
 		},
-
 		success : function(data) {
 			if (data == 1) {
 				alert("이미 사용중인 아이디 입니다.")
 				$("#idCheckBtn").attr("value", "N")
-				console.log("N")
-
 			} else if (data == 0) {
 				$("#idCheckBtn").attr("value", "Y");
 				alert("사용 가능한 아이디 입니다.");
-				console.log("Y")
 			}
-
 		}
 	})
 }
@@ -101,36 +95,42 @@ function final_Check() {
 	var id = $("#email").val();
 	var idCheck = $("#idCheckBtn").val();
 
-	/* 아이디 유효성검사 */
 	if (id.length == 0 || id == '') {
-		alert("이메일을 입력하세요")
+		alert("이메일을 입력하세요");
+		return false;
 
 	} else if (idCheck == "N") {
-		alert("이메일을 확인해주세요.")
+		alert("이메일을 확인해주세요.");
+		return false;
 
-	} else {
-		$("form").submit();
 	}
-
+	
+	$("form").submit();
+	
 }
 </script>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>KAKAO LOGIN</title>
 </head>
 <body>
 
+			
 <div class="join_section">
 		<div class=pannel-body>
-			<h2 class="join">EMAIL을 입력해주세요!</h2>
+			<div id="intro">
+				<img src="/images/cococo-logo.png" alt="COCOCO">
+				<p>업무관리 워크스페이스, 코코코</p>
+			</div>
+			<h3 class="join">EMAIL을 입력해주세요!</h3>
 			<form method="post" action="/kakao/getEmail">
-				<input type="text" id="email" class="id_input" name="email" placeholder="이메일">
-				<button id="idCheckBtn" type="button" class="idCheck btn-outline-cococo" onclick="idCheckFunc();" value="N">중복확인</button>
+				<input type="text" id="email" class="id_input" name="email" placeholder="EMAIL">
+				<button id="idCheckBtn" type="button" class="idCheck btn btn-outline-cococo" onclick="idCheckFunc();" value="N">중복확인</button>
 
 				<input type="hidden" name="name" th:value="${kakaoUser.name}"/>
 				<input type="hidden" name="img" th:value="${kakaoUser.img}"/>
 				<input type="hidden" name="id" th:value="${kakaoUser.id}"/>
 				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-				<button id="btn" type="submit" class="join_btn btn-cococo" value="N">가입</button>
+				<button id="btn" type="submit" class="join_btn btn btn-cococo" value="N">가입</button>
 			</form>
 		</div>
 	</div>

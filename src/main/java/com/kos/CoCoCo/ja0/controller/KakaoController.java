@@ -63,41 +63,6 @@ public class KakaoController {
 	@Value("http://localhost:7777/kakao/loginTest")
 	String redirectUri;
 	
-	//@GetMapping(value="/login")
-	public String kakaoLogin() throws Exception {
-		return "/XXkakaoXX/kakaoLogin";
-	}
-//
-//	@GetMapping(value="/logout")
-//	public String kakaoLogout(HttpSession session) throws IOException {
-//		String accessToken = (String) session.getAttribute("accessToken");
-//		
-//		String reqURL = "https://kapi.kakao.com/v1/user/logout";
-//        try {
-//            URL url = new URL(reqURL);
-//            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//            conn.setRequestMethod("POST");
-//            conn.setRequestProperty("Authorization", "Bearer " + accessToken);
-//
-//            int responseCode = conn.getResponseCode();
-//
-//            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-//
-//            String result = "";
-//            String line = "";
-//
-//            while ((line = br.readLine()) != null) {
-//                result += line;
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        
-//        System.out.println("로그아웃,,,");
-//        
-//        return "redirect:/kakao/login";
-//	}
-	
     @GetMapping(value="/login")
     public String kakaoConnect() {
     	String url = "https://kauth.kakao.com/oauth/authorize?client_id=" + clientId
@@ -108,13 +73,10 @@ public class KakaoController {
     
     @PostMapping(value="/getEmail")
     public String getEmail(KakaoUser kakaoUser) {
-    	System.out.println("[getEmail] "+ kakaoUser);
-    	
     	UserVO user = join(kakaoUser);
     	
     	// 강제 로그인 처리
         login(user);
-        System.out.println("insert email and kakaoLogin!!");
         
     	return "redirect:/CoCoCo";
     }
@@ -126,18 +88,14 @@ public class KakaoController {
     	
     	// 2. JsonNode 가져오기 
     	JsonNode jsonNode = getJsonNode(accessToken);
-    	System.out.println(jsonNode);
     	
     	// 3. user 정보 가져오기
     	KakaoUser kakaoUser = getKakaoUser(jsonNode);
     	
     	if(kakaoUser.getEmail() == null) { 
-    		System.out.println("email null!");
     		model.addAttribute("kakaoUser", kakaoUser);
     		return "/auth/kakaoForm";
     	}
-    	
-    	System.out.println(kakaoUser);
     	
         // 4. 가입정보 없으면 회원가입
         UserVO user = uRepo.findById(kakaoUser.getEmail()).orElse(null);
@@ -145,7 +103,6 @@ public class KakaoController {
 
         // 5. 강제 로그인 처리
         login(user);
-        System.out.println("kakaoLogin!!");
         
     	return "redirect:/CoCoCo";
     	
@@ -222,13 +179,11 @@ public class KakaoController {
         
         boolean hasEmail = jsonNode.get("kakao_account").has("email");
         
-        System.out.println(hasEmail);
-        
+        // 이메일 동의했을 때만 정보 가져오도록
         String email = null;
         if(hasEmail) email = jsonNode.get("kakao_account").get("email").asText();
         
         KakaoUser user = new KakaoUser(id, nickname, email, img);
-        System.out.println(user);
         
         return user;
     }

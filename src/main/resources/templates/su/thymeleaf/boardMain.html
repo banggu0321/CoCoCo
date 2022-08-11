@@ -240,7 +240,7 @@ width:150px;
 				<tbody id="replyTable">
 					<tr th:each="board:${boardList}">
 						<td th:text="${board.boardId}"></td>
-						<td><a th:href="@{/boardUDsampleBeta(id=${board.boardId})}">[[${board.boardTitle}]]</a></td>
+						<td ><a th:href="@{/boardUDsampleBeta(id=${board.boardId})}">[[${board.boardTitle}]]</a></td>
 						<td>[[${board.user.name}]]</td>
 						<td th:text="${#dates.format(board.boardRegDate, 'yy-MM-dd HH:mm')}"></td>
 					</tr>				
@@ -316,7 +316,7 @@ width:150px;
 		var user_id = /*[[${session.user.userId}]]*/'';
 		//console.log(team_id);
 		teamID = team_id;
-	});
+	});	
 	var insertName = document.getElementById("cNameInsert");
 	var insertNameBtn = document.getElementById("cNameInsertBtn");
 	
@@ -336,7 +336,7 @@ width:150px;
 	var formObj = document.querySelectorAll("#navPage");
 	for(let i=0; i<formObj.length; i++){
 		formObj[i].addEventListener('click', ()=>{
-			alert("a tag clicked"+formObj[i].innerText);
+			//alert("a tag clicked"+formObj[i].innerText);
 			replyREST.getBoardPage(formObj[i].innerText, printList);
 		});
 	}
@@ -452,7 +452,7 @@ width:150px;
 			var replyObj;
 
 			if (list.length == 0) {
-				alert("list is null");
+				//alert("list is null");
 				str += "<tr>"+"<td colspan='4'>"+"<center>"+"만든 게시글 없습니다."+"</center>"+"</td>"+"</tr>";
 			} else if (list.length != 0) {
 
@@ -460,7 +460,7 @@ width:150px;
 					replyObj = list[i];
 
 					str += "<tr>" + "<td>" + replyObj.boardId + "</td>"
-							+ "<td>" + "<a href='/boardUDsampleBeta?id=" + replyObj.boardId + "'>" + replyObj.boardTitle + "</a>" + "</td>" 
+							+ "<td onclick='rowClick(" +replyObj.boardId+ ")'>" + replyObj.boardTitle + "</a>" + "</td>" 
 							+ "<td>" + replyObj.user.name + "</td>"
 							+ "<td>" + formatDate(replyObj.boardRegDate) + "</td>"
 							+ "</tr>";
@@ -477,6 +477,10 @@ width:150px;
 					+ ( date.getDate()>9?date.getDate():("0"+date.getDate()))+" "
 					+(date.getHours()>9?date.getHours():("0"+date.getHours()))+":"
 					+(date.getMinutes()>9?date.getMinutes():("0"+date.getMinutes()));
+		}
+		function rowClick(e){
+			//alert(e);			
+			location.href="/boardUDsampleBeta?id="+e;
 		}
 	</script>
 </div>

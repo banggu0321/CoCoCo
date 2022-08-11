@@ -21,6 +21,4 @@ public class Controller {
  
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, confirm));
     }*/
-
-
 }

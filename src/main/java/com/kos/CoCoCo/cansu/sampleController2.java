@@ -7,9 +7,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
@@ -64,52 +66,21 @@ public class sampleController2 {
 	TeamRepositoryTestSu teamRP;
 	
 	@Autowired
-	BoardCategoryRepositoryTestSu boardcateRP;
+	BoardCategoryRepositoryTestSu boardcateRP,categoryRP;
 	
 	@Autowired
 	boardUDFileService boardService;
 	
 	@Autowired
 	AwsS3 awsS3;
-	
-	@GetMapping("/boardFileDown")
-	public ResponseEntity<byte[]> boardDownload(HttpServletRequest request) throws IOException{
+
+	@GetMapping("/boardFileDown/{bno}")
+	public ResponseEntity<byte[]> boardDownload(@PathVariable Long bno) throws IOException{
+		String dir = "uploads/boardFile/";
+		BoardVO board = boardRP.findById(bno).get();
+		System.out.println(board.getBoardFile());
 		
-		
-		String file = request.getParameter("fileName");
-		System.out.println("file:"+file);
-		String[] fileNames = file.split("/");
-		
-		
-		String dir = "/uploads/boardFile/";
-		String fileName = fileNames[fileNames.length-1];
-		
-		System.out.println("file : "+file);
-		System.out.println();
-		for(String temp: fileNames) {
-			System.out.println("temp: "+temp);
-		}
-		System.out.println("file name: "+fileName);
-		
-		String[] result = fileName.split("_");
-		String fResult = result[1];
-		System.out.println("fResult: "+fResult);
-		
-		String[] result2 = fResult.split(Pattern.quote("."));
-		for(String temp: result2) {
-			System.out.println("temp: "+temp);
-		}
-		
-		String fResult2 = result2[0];
-		System.out.println("fResult2: "+fResult2);
-		
-		//awsS3.copy(file.getFilename(), dir, file.getOriginFname());
-		//System.out.println("복사 성공!");
-		
-		
-		
-		return awsS3.download(fResult, dir);
-//		return null;
+		return awsS3.download(dir, board.getBoardFile().substring(72));
 	}
 	
 	@RequestMapping(value = "/boardLSearch/{key}/{value}", method = RequestMethod.GET)
@@ -246,10 +217,20 @@ public class sampleController2 {
 	}
 	
 	@GetMapping("/boardSampleBeta/{name}")
-	public String boardlistByCategory(@PathVariable String name,Model model) {
+	public String boardlistByCategory(@PathVariable String name,Model model, HttpSession session) {
 		
 		if(name==null) {
 			return "/boardSampleBeta";
+		}
+		
+		Long teamId = (Long) session.getAttribute("teamId");
+		System.out.println("result: "+teamId);
+		
+		List<BoardCategoryVO> ctList = categoryRP.selectByTeam(teamId);
+		List<String> listResult = new ArrayList<>();
+		for(BoardCategoryVO temp: ctList) {
+//			System.out.println("temp: "+temp);
+				listResult.add(temp.getCategoryName());
 		}
 		
 		Pageable pageable = PageRequest.of(0, 5, Sort.by(Direction.DESC, "board_id"));
@@ -260,9 +241,8 @@ public class sampleController2 {
 		
 		System.out.println("category name: "+name);
 		
-//		System.out.println("result: "+ new PageMaker(result));
-		
-		
+		Set<String> setResult = new HashSet<String>(listResult);
+		model.addAttribute("cateName", setResult);
 		model.addAttribute("result", new PageMaker(result));
 		model.addAttribute("boardList", boardList);
 		
@@ -271,18 +251,19 @@ public class sampleController2 {
 	
 	@GetMapping("/boardSampleBeta")
 	public String boardlist(HttpSession session, PageVO vo, Model model) {	
-		
-//		Pageable page = vo.makePageable(0, "boardId");
-//		Page<BoardVO>  result = boardRP.findAll(boardRP.makePredicate(null, null), page);
-//		
-//		model.addAttribute("result", new PageMaker(result));		
-//		model.addAttribute("boardList", result.getContent());
-//		
-//		return "su/thymeleaf/boardMain";
-
 		Long teamId = (Long) session.getAttribute("teamId");
+		System.out.println("result: "+teamId);
+		
+		List<BoardCategoryVO> ctList = categoryRP.selectByTeam(teamId);
+//		System.out.println("ctList length: "+ctList.size());
+		
+		List<String> listResult = new ArrayList<>();
+		for(BoardCategoryVO temp: ctList) {
+//			System.out.println("temp: "+temp);
+				listResult.add(temp.getCategoryName());
+		}
+	
 		List<BoardVO> boards = boardRP.selectBoardByteam(teamId);	
-		System.out.println("teamId: "+teamId);
 		
 		Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "board_id");
 		Page<BoardVO> result = new PageImpl<BoardVO>(boards, pageable, boards.size());
@@ -290,6 +271,8 @@ public class sampleController2 {
 		List<BoardVO> boardList = boardRP.selectBoardByteamBeta(teamId, pageable);
 //		PageMaker<BoardVO> resultPage = new PageMaker<>(result);
 		
+		Set<String> setResult = new HashSet<String>(listResult);
+		model.addAttribute("cateName", setResult);
 		model.addAttribute("result", new PageMaker(result));
 		model.addAttribute("boardList", boardList);
 		return "su/thymeleaf/boardMain";
@@ -324,9 +307,9 @@ public class sampleController2 {
 //		System.out.println(boardID);
 		
 		BoardVO bvo = boardRP.findById(Long.valueOf(boardID)).get();
-		model.addAttribute("boardDetail", bvo);
-		
 		List<ReplyVO> rlist = replyRP.selectByboardID(Integer.valueOf(boardID));
+		
+		model.addAttribute("boardDetail", bvo);
 		model.addAttribute("replyList", rlist);
 		
 		System.out.println("userid: "+userid);
@@ -342,6 +325,15 @@ public class sampleController2 {
 	
 	@GetMapping("/boardInsertSample2/{name}/{teamid}")
 	public String boardInsertBeta(@PathVariable String teamid, @PathVariable String name, Model model) {
+		
+		List<BoardCategoryVO> ctList = categoryRP.selectByTeam(Long.valueOf(teamid));
+		List<String> listResult = new ArrayList<>();
+		for(BoardCategoryVO temp: ctList) {
+				listResult.add(temp.getCategoryName());
+		}
+		Set<String> setResult = new HashSet<String>(listResult);
+		
+		model.addAttribute("cateName", setResult);		
 		model.addAttribute("categoryName", name);
 		model.addAttribute("teamid", teamid);
 		return "su/thymeleaf/boardInsert";
@@ -366,7 +358,7 @@ public class sampleController2 {
 	}
 	
 	@PostMapping("/postBoardUpdateBeta")
-	public String boardUpdate(HttpServletRequest request, @RequestParam("insertFile2") MultipartFile[] insertFile) throws IllegalStateException, IOException{
+	public String boardUpdate(HttpServletRequest request, @RequestParam("insertFile2") MultipartFile insertFile) throws IllegalStateException, IOException{
 		
 		String title = request.getParameter("boardTitle");
 		String text = request.getParameter("boardText");
@@ -375,27 +367,26 @@ public class sampleController2 {
 		System.out.println("post title: "+title);
 		System.out.println("post text: "+text);
 		System.out.println("post id: "+id);
-		
 		System.out.println("insertFile: "+insertFile);
-		List<String> boardFileName = boardService.uploadFile(insertFile);
+
 		BoardVO bvo = boardRP.findById(Long.valueOf(id)).get();
 		
-		int checkNum =0;
-		for(MultipartFile temp: insertFile) {
-			if(temp.getSize() != 0) {
-				checkNum += 1;
-			}
-		}
-		System.out.println("checkNum: "+checkNum);
+		System.out.println("insert"+ insertFile);
 		
-		if(checkNum >0) {
-			bvo.setBoardTitle(title);
-			bvo.setBoardText(text); 
-			bvo.setBoardFile(boardFileName.get(0)); //.boardFile(boardFileName.get(0));
+		if(insertFile.isEmpty()) {
+			System.out.println("변경없음");
+			
 		}else {
-			bvo.setBoardTitle(title);
-			bvo.setBoardText(text); 
+			awsS3.delete(bvo.getBoardFile());
+			
+			String fileName = awsS3.upload(insertFile, "uploads/boardFile/");
+			System.out.println("aws - file name: "+fileName);
+			
+			bvo.setBoardFile(fileName);
 		}
+		
+		bvo.setBoardTitle(title);
+		bvo.setBoardText(text); 
 		boardRP.save(bvo);
 		
 		return "redirect:/boardSampleBeta";
@@ -418,7 +409,7 @@ public class sampleController2 {
 		
 		makeBoardSample(teamid, title, content,category,userID, insertFile);
 
-		return "redirect:/boardSampleBeta";
+		return "redirect:/boardSampleBeta/"+category;
 	}
 	private void makeBoardSample(String teamid, String title, String content, String category, String userID, MultipartFile[] insertFile) throws IllegalStateException, IOException {
 		long gnrTemp =  new Random().nextLong();

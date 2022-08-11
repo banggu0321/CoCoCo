@@ -28,23 +28,38 @@ color: white;
 position: relative;
 left: 10%;
 }
+#categoryList{
+list-style:none;
+}
 </style>
 
 </head>
 <body>
 
 	<div layout:fragment="my_menu" class="my_menu">
-			<div th:replace="~{/main/teamUserList}"></div>
+					<div id="myMenuArea">
+			<h5>카테고리 목록</h5>
+			<hr>
+			
+			<p>이름 선택하기</p>
+			<div>
+			<ul id="categoryList" th:each="name:${cateName}">
+			<li><a id="catelistID" >[[${name}]]</a></li>
+			</ul>
+			</div>
+		</div>
 	</div>
 
 	<div layout:fragment="inner_content" class="inner_content">
-<div id="boardInsert">
-<form method="post" action="/postBoardInsertSample2" enctype="multipart/form-data" class="form-group">
+	<div id="boardInsert">
+	<form method="post" action="/postBoardInsertSample2" enctype="multipart/form-data" class="form-group">
 
 	<input type="hidden" name="teamid" th:value="${teamid}">
 
-
     <div class="form-group">
+    	<div>
+			<p>카테고리 - [[${categoryName}]]</p>
+		</div>
       <label>title</label>
       <div>
       	<input name="category" type="hidden" th:value="${categoryName}">
@@ -72,6 +87,25 @@ left: 10%;
 
 <script th:inline="javascript" th:src="@{'/js/RESTreply.js'}"></script>
 <script th:inline="javascript">	
+var teamID;
+$(function(){
+	//세션정보 가져오기
+	var team_id = /*[[${session.teamId}]]*/'';
+	var user_id = /*[[${session.user.userId}]]*/'';
+	//console.log(team_id);
+	teamID = team_id;	
+	var categoryList = document.getElementById("categoryList");			
+})
+
+var catelistID = document.querySelectorAll("#catelistID");
+	for(let i=0; i<catelistID.length; i++){
+		catelistID[i].addEventListener('click',()=>{
+			//alert(catelistID[i].innerText+"is clicked");
+			var text = catelistID[i].innerText;
+			location.href="/boardInsertSample2/"+text+"/"+teamID;
+		});
+	}
+
 var cancelBtn = document.getElementById("insertCancel");
 cancelBtn.onclick=function(){
 	location.href="/boardSampleBeta";

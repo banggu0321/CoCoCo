@@ -26,9 +26,8 @@ public class NoticeService {
 	private AwsS3 awsS3;
 		
 	public void insert(NoticeVO notice, MultipartFile[] files, String fileIds) throws Exception {
-        //입력 
-		
-		NoticeVO newNotice = noticeRepo.save(notice); //수정 
+        
+		NoticeVO newNotice = noticeRepo.save(notice); 
 		
 		for(MultipartFile file:files) {
 			
@@ -43,13 +42,12 @@ public class NoticeService {
 						.notice(newNotice)
 						.build();
 
-				noticeFRepo.save(noticefile);//항상파일추가 
+				noticeFRepo.save(noticefile);
 		    }
-			
 		}
 		
 		if(fileIds!=null) {
-			////10,20,30...
+			
 			String[] arr = fileIds.split(",");
 			for(String id : arr) {
 				noticeFRepo.deleteById(Long.valueOf(id));

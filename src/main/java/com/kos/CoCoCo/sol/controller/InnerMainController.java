@@ -74,9 +74,7 @@ public class InnerMainController {
 		
 		List<WorkVO> wlist = wRepo.findByTeam(t);
 		int workNum = wlist.size();
-		System.out.println("work의 수 : "+workNum);
-		
-		
+
 		int numOngoing = wRepo.numOngoing(t);
 		int numPlan = wRepo.numPlan(t);
 		int numFinish = wRepo.numFinish(t);

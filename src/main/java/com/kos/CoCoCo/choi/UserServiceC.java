@@ -6,4 +6,6 @@ public interface UserServiceC {
 	// 아이디 중복확인
 	public UserVO idCheck(String id);
 
+	public UserVO pwCheck(String pw);
+	
 }

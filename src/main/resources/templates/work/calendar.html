@@ -92,7 +92,8 @@
 						title : data.workTitle,
 						start : data.workStart,
 						end : date_end,
-						color : '#AAC2D8'
+						color : '#AAC2D8',
+						groupId : data.workStatus,
 					});
 				}else if(data.workStatus == 'ongoing'){
 					totaleventlist.push({
@@ -119,8 +120,8 @@
 			//캘린더 만들기
 			var calendarEl = document.getElementById('calendar');
 			var calendar = new FullCalendar.Calendar(calendarEl, {
-				initialView : 'dayGridMonth',
-				events : totaleventlist,
+				initialView : 'dayGridMonth', //캘린더 형식
+				events : totaleventlist, //표시할 업무 events
 				headerToolbar: {
 				      left: 'helpButton totalButton,myWorkButton' ,
 				      center: 'prev,title,next',
@@ -146,7 +147,8 @@
 										title : data.workTitle,
 										start : data.workStart,
 										end : date_end,
-										color : '#8FB4D1'
+										color : '#8FB4D1',
+										groupId : data.workStatus,
 									});
 								}else if(data.workStatus == 'ongoing'){
 									myeventlist.push({
@@ -204,7 +206,8 @@
 				editable : false, // false로 변경 시 draggable 작동 x 
 				displayEventTime : false, // 시간 표시 x
 				//navLinks : true, //달력상의 날짜를 클릭할 수 있는지 여부, 클릭시 일달력/주달력으로 넘어감
-				dayMaxEventRows: true, // for all non-TimeGrid views(more) 행길이 설정 가능->contentHeight로 설정
+				dayMaxEventRows: true, // 요일셀의 높이로 이벤트 수를 제한, 나머지는 팝오버에 표시
+										// for all non-TimeGrid views(more) 행길이 설정 가능->contentHeight로 설정
 				//dayMaxEvents:4, //X
 				//contentHeight: 600, //행 길이
 				//height: "auto",
@@ -214,8 +217,6 @@
 				select: function(info) {
 					var date_end = dateEndMinus(info.endStr);
 					if(confirm("[" + info.startStr + ' ~ ' + date_end + "]업무를 추가하시겠습니까?")){
-						//alert('selected ' + info.startStr + ' to ' + date_end);
-				    	
 				    	$("#calendarAddModal").modal("show");
 						$("#calendar_start_date").val(info.startStr);
 						$("#calendar_end_date").val(date_end);
@@ -267,13 +268,15 @@
 					}else if(eventObj.groupId == "ongoing"){
 						$(".WorkStatusUpdateModalBtn").attr("disabled", false);		
 						$(".WorkStatusUpdateModalBtn").html('->완료');				
-					}else{
+					}else if(eventObj.groupId == "finish"){
 						$(".WorkStatusUpdateModalBtn").attr("disabled", true);
 						$(".WorkStatusUpdateModalBtn").html('완료됨');		
+					}else{
+						$(".WorkStatusUpdateModalBtn").attr("style", "display : none");
 					}
 				},
 			});
-			calendar.render(); //다시 렌더링
+			calendar.render(); //캘린더 렌더링
 
 			$(".fc-totalButton-button").removeClass("fc-button-primary");
 			$(".fc-myWorkButton-button").removeClass("fc-button-primary");
@@ -300,14 +303,19 @@
 			if($(".updatemanageroption").length){
 				$(".updatemanageroption").remove();
 			}else{
-				console.log("옵션이 존재하지 않았음");
 			}
 
 			$.each(teamUserlist,function(index, data){
 				if(workmanager.includes(data.userId)){ //해당 user가 포함되어 있는 경우
-					$(".update_workMannager").append(`<option class= "form-control updatemanageroption managerselected" value="${data.userId}">${data.name}[${data.userId}]</option>`); 
+					$(".update_workMannager").append(
+							`<option class= "form-control updatemanageroption managerselected" value="${data.userId}">
+								${data.name}[${data.userId}]
+							</option>`); 
 				}else{ //해당 user가 포함되지 않은 경우
-					$(".update_workMannager").append(`<option class= "form-control updatemanageroption" value="${data.userId}">${data.name}[${data.userId}]</option>`); 
+					$(".update_workMannager").append(
+							`<option class= "form-control updatemanageroption" value="${data.userId}">
+								${data.name}[${data.userId}]
+							</option>`); 
 				}
 			});			
 		});
@@ -416,7 +424,10 @@
 			}
 			
 			$.each(teamUserlist,function(index, data){
-				$("#calendar_manager").append(`<option class="form-control addmanageroption" value="${data.userId}">${data.name}[${data.userId}]</option>`); 
+				$("#calendar_manager").append(
+						`<option class="form-control addmanageroption" value="${data.userId}">
+							${data.name}[${data.userId}]
+						</option>`); 
 			});
 			
 			// modal의 추가 버튼 클릭 시
@@ -498,17 +509,17 @@
 				<div class="modal-dialog" role="document">
 					<div class="modal-content">
 						<div class="modal-header">
-							<h5 class="modal-title" id="exampleModalLabel">일정을 입력하세요.</h5>
+							<h5 class="modal-title" id="exampleModalLabel">업무추가</h5>
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 								<span aria-hidden="true">&times;</span>
 							</button>
 						</div>
 						<div class="modal-body">
 							<div class="form-group">
-								<label for="taskId" class="col-form-label">일정 제목</label> 
-								<input type="text" class="form-control" id="calendar_title" name="calendar_title" value="제목"> 
-								<label for="taskId" class="col-form-label">일정 내용</label> 
-								<input type="text" class="form-control" id="calendar_content" name="calendar_content" value="내용"> 
+								<label for="taskId" class="col-form-label">업무 제목</label> 
+								<input type="text" class="form-control" id="calendar_title" name="calendar_title"> 
+								<label for="taskId" class="col-form-label">업무 내용</label> 
+								<input type="text" class="form-control" id="calendar_content" name="calendar_content"> 
 								<label for="taskId" class="col-form-label">시작 날짜</label> 
 								<input type="date" class="form-control" id="calendar_start_date" name="calendar_start_date"> 
 								<label for="taskId" class="col-form-label">종료 날짜</label> 
@@ -519,7 +530,7 @@
 									<option class="form-control" value="ongoing" >진행</option>
 									<option class="form-control" value="finish">완료</option>
 								</select>
-								<label for="taskId" class="col-form-label">일정 담당자(Ctrl클릭 후 중복선택가능)</label> 
+								<label for="taskId" class="col-form-label">업무 담당자(Ctrl클릭 후 중복선택가능)</label> 
 								<div class="workManager">
 									<select class="form-control" id="calendar_manager" name="calendar_manager" multiple="multiple" size="3">
 									</select>

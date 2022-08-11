@@ -21,8 +21,8 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 
 @Repository
-public interface NoticeRepository extends JpaRepository<NoticeVO, Long>, PagingAndSortingRepository<NoticeVO, Long>,
- QuerydslPredicateExecutor<NoticeVO> {
+public interface NoticeRepository extends JpaRepository<NoticeVO, Long>,
+	PagingAndSortingRepository<NoticeVO, Long>, QuerydslPredicateExecutor<NoticeVO> {
 	
 	public List<NoticeVO> findByTeamOrderByNoticeRegDateDesc(TeamVO team);
 	
@@ -55,10 +55,8 @@ public interface NoticeRepository extends JpaRepository<NoticeVO, Long>, PagingA
 			sdate = convertDate(keyword);
 			edate = convertDate(keyword2);
 			builder.and(notice.noticeRegDate.between(sdate, edate)); break;
-			
 		default: break;
 		}
-		System.out.println(builder);
 		return builder;
 		}
 	
@@ -73,7 +71,7 @@ public interface NoticeRepository extends JpaRepository<NoticeVO, Long>, PagingA
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return ts;
 		
 	}

@@ -43,8 +43,10 @@ left: 10%;
 
 	<input type="hidden" name="teamid" th:value="${teamid}">
 
-
     <div class="form-group">
+    	<div>
+			<p>카테고리 - [[${categoryName}]]</p>
+		</div>
       <label>title</label>
       <div>
       	<input name="category" type="hidden" th:value="${categoryName}">

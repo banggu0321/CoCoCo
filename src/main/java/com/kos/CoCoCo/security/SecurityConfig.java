@@ -52,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		// hasRole : 특정권한을 가진 사람만 접근가능하다는 의미
 		// http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
 		http.authorizeRequests() // HttpServletRequest에 따라 접근(access)을 제한
-				.antMatchers( "/auth/**", "/login/**", "/oauth2/**",  "/index").permitAll() // 로그인없이 허용																								
+				.antMatchers( "/auth/**", "/login/**", "/oauth2/**",  "/index", "/kakao/**").permitAll() // 로그인없이 허용																								
 				.anyRequest().authenticated().and() // anyRequest() 나머지요청은 authenticated() : 인증된 사용자만 접근가능(반드시 로그인을 해야한다.),
 				// anonymous():인증되지않은 사용자가 접근가능
 				.formLogin() // form 기반으로 인증을 하도록 한다. 로그인 정보는 기본적으로 HttpSession을 이용

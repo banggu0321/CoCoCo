@@ -12,7 +12,6 @@ import lombok.extern.java.Log;
 
 @Getter
 @ToString(exclude = "pageList")
-@Log
 public class PageMaker<T> {
 
 	private Page<T> result;
@@ -44,9 +43,6 @@ public class PageMaker<T> {
 		}
 		
 		this.prevPage = startPage.getPageNumber()<=0?null:startPage.previousOrFirst();
-		
-//		log.info("tempEndNum:" + tempEndNum);
-//		log.info("totalPageNum:" + totalPageNum);
 		
 		if(this.totalPageNum<tempEndNum) {
 			tempEndNum = this.totalPageNum;

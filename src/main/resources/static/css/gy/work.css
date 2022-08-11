@@ -85,10 +85,6 @@
     border-color: #303D4E !important;
 }
 
-.fc-helpButton-button:hover #helpModal {
-	display: block;
-}
-
 #helpModal {
 	position: absolute;
 	display: none;

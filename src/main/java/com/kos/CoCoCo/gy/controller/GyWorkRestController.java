@@ -58,11 +58,11 @@ public class GyWorkRestController {
 		
 		for(WorkVO work:worklist) {
 			List<WorkManagerVO> workmanagerlist = workManagerRepo.findByWork(work.getWorkId());
-			UserVO[] arr = new UserVO[workmanagerlist.size()];
+			UserVO[] mlist = new UserVO[workmanagerlist.size()];
 			for(int i=0;i<workmanagerlist.size();i++) {
-				arr[i] = workmanagerlist.get(i).getWorkManagerId().getUser();
+				mlist[i] = workmanagerlist.get(i).getWorkManagerId().getUser();
 			}
-			work.setManager(arr);
+			work.setManager(mlist);
 		}
 		return worklist;
 	}
@@ -163,11 +163,11 @@ public class GyWorkRestController {
 		
 		for(WorkVO work:worklist) {
 			List<WorkManagerVO> workmanagerlist = workManagerRepo.findByWork(work.getWorkId());
-			String[] arr = new String[workmanagerlist.size()];
+			String[] mlist = new String[workmanagerlist.size()];
 			for(int i=0;i<workmanagerlist.size();i++) {
-				arr[i] = workmanagerlist.get(i).getWorkManagerId().getUser().getUserId();
+				mlist[i] = workmanagerlist.get(i).getWorkManagerId().getUser().getUserId();
 			}
-			work.setManagerid(arr);
+			work.setManagerid(mlist);
 		}
 		return worklist;
 	}

@@ -33,6 +33,15 @@ body {
 	margin-bottom: 20px;
 }
 
+#cacao-login-btn {
+	
+	background-image: url("/images/kakao_login_medium_wide.png");
+	background-repeat: no-repeat;
+
+}
+
+
+
 button {
 	width: 486px;
 	height: 52px;
@@ -132,7 +141,9 @@ input {
 					th:value="${_csrf.token}" /> <input type="submit" id="login_btn"
 					class="btn btn-outline-cococo" value="로그인">
 			</form>
+			<button id="cacao-login-btn" class="btn"></button><br>
 			<button class="btn btn-cococo" onclick="location.href='/auth/join'">회원가입</button>
+			
 		</div>
 	</div>
 

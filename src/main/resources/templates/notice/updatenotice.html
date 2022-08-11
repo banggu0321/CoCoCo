@@ -83,7 +83,6 @@
 	var arr= []; 
 	function delFile(fileid, obj){
 		arr.push(fileid);
-		console.log($(obj));
 		$(obj).parent().remove();
 	}
 	
@@ -97,7 +96,6 @@
 			$("#fileIds").val(files);
 			
 			var title = document.update.noticeTitle;
-			console.log("제목의 길이 : " + title.length);
 			if( title.value == null || title.value == "" ){
 				alert("제목을 입력해주세요.");
 				title.focus();

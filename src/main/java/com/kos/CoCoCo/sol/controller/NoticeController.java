@@ -126,17 +126,17 @@ public class NoticeController {
 	
 	
 	@GetMapping("/update")
-	public String updateGet(NoticePageVO pageVO, NoticeFile noticefile, NoticeVO notice, Long noticeId, HttpSession session, Model model ) {
+	public String updateGet(NoticeFile noticefile, NoticeVO notice, Long noticeId,
+			HttpSession session, Model model ) {
 		model.addAttribute("notice", noticeRepo.findById(noticeId).get());
 		model.addAttribute("noticefile", noticeFRepo.findByNotice(notice));
 		List<NoticeFile> nflist = noticeFRepo.findByNotice(notice);
 		model.addAttribute("nflist", nflist);
 		return "notice/updatenotice";
 	}
-	
 	@Transactional
 	@PostMapping("/update")
-	public String updatePost(NoticeVO notice, MultipartFile[] files,String fileIds,  Model model) {
+	public String updatePost(NoticeVO notice, MultipartFile[] files, String fileIds, Model model) {
 		noticeRepo.findById(notice.getNoticeId()).ifPresentOrElse(original->{
 			
 			original.setNoticeText(notice.getNoticeText());
@@ -178,8 +178,7 @@ public class NoticeController {
 		NoticeFile file = noticeFRepo.findById(fileId).get();
 		
 		aws.copy(file.getFilename(), dir, file.getOriginFname());
-		System.out.println("복사 성공!");
-		
+
 		return aws.download(dir, file.getOriginFname());
 	}
 		

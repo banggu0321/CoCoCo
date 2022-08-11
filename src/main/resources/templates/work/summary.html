@@ -5,17 +5,10 @@
 <script type="text/javascript">
 	$(function(){
 		var workNum = "[[${workNum}]]";
-		console.log("workNum : ", workNum);
 		if(workNum>0) {
-			
-
 			 google.charts.load("current", {packages:["corechart"]});
 		      google.charts.setOnLoadCallback(drawChart);
 		      function drawChart() {
-		    	var arr1 = "[[${arr[0]}]]";
-		    	var arr2 = "[[${arr[1]}]]";
-		    	var arr3 = "[[${arr[2]}]]";
-		    	 
 		        var data = google.visualization.arrayToDataTable([
 		          ['업무상태', '%'],
 		          ['대기', Number("[[${arr[0]}]]")],
@@ -41,15 +34,11 @@
 		        	    /* 꼬리표 제거 */
 		        	    legend: 'display'    
 		        };
-
 		        var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
 		        chart.draw(data, options);
 		      }
 		}
-		
-		
 	});
-     
 </script>
 <style>
 #donutchart {

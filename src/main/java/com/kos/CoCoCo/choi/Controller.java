@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 public class Controller {
-	
+
 	/*@PostMapping("/emailConfirm")
     @ApiOperation(value = "회원 가입시 이메인 인증", notes = "기존사용하고 있는 이메일을 통해 인증")
     @ApiResponses({
@@ -21,5 +21,4 @@ public class Controller {
  
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, confirm));
     }*/
-
 }

@@ -52,5 +52,7 @@ public class NoticeVO {
 	private Integer fixedYN;
 	
 	@OneToMany(mappedBy ="notice")
-	List<NoticeFile> file;
+	private List<NoticeFile> file;
 }
+
+

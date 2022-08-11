@@ -110,11 +110,9 @@ a {
 
 .notice_table_head {
 	background-color: #ffffff;
+	border-top: 1px solid #dee2e6;
 	border-bottom: 2px solid #dee2e6;
 }
-
-
-
 
 
 #paging {
@@ -135,6 +133,13 @@ a {
 	padding: 0.1rem 0.5rem;
 	border: #acacac;
 }
+.paging-div {
+  padding: 15px 0 5px 10px;
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
 
 
 #input_search {
@@ -145,6 +150,7 @@ a {
 	flex-direction: column;
 	flex-wrap: wrap;
 }
+
 #input_search > input {
 	flex: 1;
 }
@@ -164,18 +170,6 @@ a {
 	border: 1px solid #acacac;
 	border-collapse: collapse;
 }
-
-
-.paging-div {
-  padding: 15px 0 5px 10px;
-  display: table;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-}
-
-
-
 </style>
 
 </head>
@@ -189,7 +183,7 @@ a {
 			<h1>공지사항</h1>
 			<a th:if="${session.teamUser.userRole == 'ADMIN'}" href="/notice/insert" id="insertnotice">작성하기</a>
 			<div class="wrap_noticelist">
-				<table class="notice_table" th:with="noticelist=${noticelist}">
+				<table class="notice_table table-hover" th:with="noticelist=${noticelist}">
 					<thead>
 						<tr class="notice_table_head">
 							<th>글번호</th>
@@ -208,10 +202,14 @@ a {
 								th:title="${notice.noticeText}"><a class="noticelink"
 								th:href="${notice.noticeId}"><img
 									src="/images/pin-icon-black.png"
-									width="15" height="15" alt="fixed">[[${notice.noticeTitle}]]</a><img th:if="${not#lists.isEmpty(notice.file)}" src="/images/disk-icon.png" width="18px" alt="attachment"></td>
+									width="15" height="15" alt="fixed">[[${notice.noticeTitle}]]</a>
+									<img th:if="${not#lists.isEmpty(notice.file)}" src="/images/disk-icon.png"
+									width="18px" alt="attachment"></td>
 							<td class="noticeTitle" th:if="${notice.fixedYN}!=1"
 								th:title="${notice.noticeText}"><a class="noticelink"
-								th:href="${notice.noticeId}"> [[${notice.noticeTitle}]]</a><img th:if="${notice.file.size()>0}" src="/images/disk-icon.png" width="18px" alt="attachment"></td>
+								th:href="${notice.noticeId}"> [[${notice.noticeTitle}]]</a>
+								<img th:if="${notice.file.size()>0}" src="/images/disk-icon.png"
+								width="18px" alt="attachment"></td>
 							<td id="writer" th:text="${notice.user.name}"></td>
 							<td id="regdate"
 								th:text="${#dates.format(notice.noticeRegDate, 'yy-MM-dd HH:mm')}"></td>
@@ -220,23 +218,20 @@ a {
 				</table>
 			</div>
 			<div id="paging">
-				
-					<div class="paging-div">
-						<ul class="pagination">
-							<li class="page-item" th:if="${noticelist.prevPage}"><a
-								th:href="${noticelist.prevPage.pageNumber}+1" class="page-link">PREV
-									[[${noticelist.prevPage.pageNumber}+1]]</a></li>
-							<li class="page-item"
-								th:classappend="${p.pageNumber==noticelist.currentPageNum-1}?active:''"
-								th:each="p:${noticelist.pageList}"><a
-								th:href="${p.pageNumber}+1" class="page-link">[[${p.pageNumber}+1]]</a></li>
-							<li class="page-item" th:if="${noticelist.nextPage}"><a
-								th:href="${noticelist.nextPage.pageNumber}+1"  class="page-link">NEXT
-									[[${noticelist.nextPage.pageNumber}+1]]</a></li>
-						</ul>
-					</div>
-				
-
+				<div class="paging-div">
+					<ul class="pagination">
+						<li class="page-item" th:if="${noticelist.prevPage}"><a
+							th:href="${noticelist.prevPage.pageNumber}+1" class="page-link">&#171;
+								[[${noticelist.prevPage.pageNumber}+1]]</a></li>
+						<li class="page-item"
+							th:classappend="${p.pageNumber==noticelist.currentPageNum-1}?active:''"
+							th:each="p:${noticelist.pageList}"><a
+							th:href="${p.pageNumber}+1" class="page-link">[[${p.pageNumber}+1]]</a></li>
+						<li class="page-item" th:if="${noticelist.nextPage}"><a
+							th:href="${noticelist.nextPage.pageNumber}+1"  class="page-link">&#187;
+								[[${noticelist.nextPage.pageNumber}+1]]</a></li>
+					</ul>
+				</div>
 			</div>
 
 			<div id="input_search">
@@ -249,7 +244,6 @@ a {
 						type="hidden" name="keyword" th:value="${pageVO.keyword}">
 					<input type="hidden" name="keyword2" th:value="${pageVO.keyword2}">
 				</form>
-				
 				<select id="searchType" onchange="changeInput()">
 					<option value="noticeTitleAndText"
 						th:selected="${pageVO.type=='noticeTitleAndText'}">전체</option>

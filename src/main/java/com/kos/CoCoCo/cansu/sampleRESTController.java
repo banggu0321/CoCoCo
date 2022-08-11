@@ -38,8 +38,8 @@ import com.kos.CoCoCo.vo.UserVO;
 import lombok.extern.java.Log;
 
 @Log
-@RestController
-@RequestMapping("/BOARDrest/*")
+//@RestController
+//@RequestMapping("/BOARDrest/*")
 public class sampleRESTController {
 	
 	@Autowired

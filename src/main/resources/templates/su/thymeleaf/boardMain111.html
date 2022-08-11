@@ -6,6 +6,9 @@
 <head>
 <style>
 
+#myMenuArea{
+padding: 5% 2%;
+}
 
 #searchDate{
 display:none;
@@ -34,18 +37,15 @@ letter-spacing: -0.8px;
 }
 
 #boardMainSub1{
-	position:relative;
-	width: 850px;
-	margin: 0 auto;
-	margin-top: 40px;
-
+position:relative;
 }
-#boardMainSub1 h1 {
-	font-family: "LeferiPoint-WhiteObliqueA", sans-serif;
+#boardMainSub1 h2{
+	font-size: 2.5rem;
+    font-family: "LeferiPoint-WhiteObliqueA", sans-serif;
     font-weight: 600;
     letter-spacing: -2px;
-	margin-bottom: 30px;
 }
+
 #boardMainSub2{
 float: right;
 }
@@ -137,7 +137,9 @@ width:150px;
  #boardmainCategory{
 display:none;
 }
-
+#categoryList{
+list-style:none;
+}
 #cNameInsertBtn{
 position: relative;
 left:15%;
@@ -188,14 +190,30 @@ left:15%;
 <body>
 
 	<div layout:fragment="my_menu" class="my_menu">
-		<div th:replace="~{su/thymeleaf/boardSide}"></div>
+
+		<div id="myMenuArea">
+			<h5>카테고리 목록</h5>
+			<hr>
+
+			<p>이름 추가하기</p>
+			<input type="text" id="cNameInsert">
+			<button id="cNameInsertBtn" class="btn buttonColor">추가하기</button>
+			<hr>
+
+			<p>이름 선택하기</p>
+			<div>
+			<ul id="categoryList" th:each="name:${cateName}">
+			<li><a id="catelistID" >[[${name}]]</a></li>
+			</ul>
+			</div>
+		</div>
 	</div>
 
 	<div layout:fragment="inner_content"  class="inner_content">
 	<div id="boardMain">
 		<div id="boardMain1">
 			<div id="boardMainSub1">
-				<h1>게시판 <span id="boardmainCategory"></span></h1>
+			<h2>게시판 <span id="boardmainCategory"></span></h2>
 			</div>
 			<div id="boardMainSub2">
 				<input id="categoryMenu" type="hidden">
@@ -245,9 +263,11 @@ left:15%;
 			
 			<div id="boardMainSearch">
 				<select id="searchType">
+				<option>검색옵션</option>
 				<option value='t'>제목</option>
 				<option value='c'>내용</option>
 				<option value='w'>작성자</option>	
+				<option value='d'>날짜</option>							
 				</select>
 				
 				
@@ -296,20 +316,7 @@ left:15%;
 		//console.log(team_id);
 		teamID = team_id;	
 		
-		categoryList = document.getElementById("categoryList");	
-		
-		$("#addCategory").show();
-		
-		$(".catelistID").click(function() {
-			var text = $(this).html();
-			$("#boardmainCategory").attr("style", "display:inline");
-			$("#boardmainCategory").html(" - "+text);
-			
-			var cId = $(this).attr("category-data");
-			$("#insertBoard").attr("categoryId", cId);
-			replyREST.getAllBoard("boardList/" + cId, printList);
-		})
-		
+		categoryList = document.getElementById("categoryList");		
 	});	
 	var insertName = document.getElementById("cNameInsert");
 	var insertNameBtn = document.getElementById("cNameInsertBtn");
@@ -330,13 +337,35 @@ left:15%;
 		});
 	}
 	
+	var boardmainCategory = document.getElementById("boardmainCategory");
+	var catelistID = document.querySelectorAll("#catelistID");
+	for(let i=0; i<catelistID.length; i++){
+		catelistID[i].addEventListener('click',()=>{
+			//alert(catelistID[i].innerText+"is clicked");
+			boardmainCategory.style.display = "inline";
+			
+			var text = catelistID[i].innerText;
+			$("#boardmainCategory").html(" - "+text);
+			
+			var categoryArr = $("#boardmainCategory").text().split(' ');
+			//alert(categoryArr[2]);	
+			
+			var categoryResult = categoryArr[2];
+			cMenuname.setAttribute("value", categoryResult);
+			replyREST.getAllBoard("boardList/" + categoryResult, printList);
+		});
+	}
+	
 	var insertBtn = document.getElementById("insertBoard");
 	insertBtn.onclick = function() {
 		if($("#boardmainCategory").text() ==""){
 			alert("카테고리를 선택하세요.");
 		} else{
-			var categoryId = $("#insertBoard").attr("categoryId");
-			location.href = "/boardInsertSample2/" + categoryId;
+			var categoryArr = $("#boardmainCategory").text().split(' ');
+			//alert(categoryArr[2]);
+			
+			var categoryResult = categoryArr[2];			
+			location.href = "/boardInsertSample2/" + categoryResult+"/"+teamID;
 		}
 	};
 	
@@ -355,8 +384,6 @@ left:15%;
 
 	<script th:inline="javascript">		
 		searchBtn.onclick=function(){
-			var key = $("#searchKeyword").val();
-			if(key == null || key == '') return;
 			
 			var obj ={
 					"index" : searchType.options[searchType.selectedIndex].value, 
@@ -387,10 +414,13 @@ left:15%;
 		
 		insertNameBtn.onclick = function() {
 			//alert(insertName.value);
-			replyREST.getAllBoard("boardList/insertName/" + insertName.value+"/"+teamID, aaa);
-		}
-		
-		function aaa(res) {
+
+			replyREST.getAllBoard("boardList/insertName/" + insertName.value+"/"+teamID,
+					printList);
+			modal.style.display = "none";
+			boardMainNav.style.display = "none";
+			
+			//replyREST.getAllCategory("categoryName", printCategory);
 			location.reload();
 		}
 

@@ -5,6 +5,11 @@
 >
 <head>
 <style>
+#boardDetail {
+	width: 850px;
+	margin: 0 auto;
+}
+
 .buttonColor{
 background-color: #FF7637;
 color: white;
@@ -43,6 +48,20 @@ width: 900px;
 height: 250px;
 overflow:auto;
 }
+
+#boardMainSub1{
+	position:relative;
+	width: 850px;
+	margin: 0 auto;
+	margin-top: 40px;
+
+}
+#boardMainSub1 h1 {
+	font-family: "LeferiPoint-WhiteObliqueA", sans-serif;
+    font-weight: 600;
+    letter-spacing: -2px;
+	margin-bottom: 30px;
+}
 </style>
 
 <meta charset="utf-8">
@@ -78,6 +97,7 @@ function updateCancle(){
 }
 
 function printList(list) {
+	var userId = /*[[${session.user.userId}]]*/'';
 	var str = "<div id='replyListRange'>";
 	var replyObj;
 
@@ -90,9 +110,16 @@ function printList(list) {
 		
 		+"<div style=\"height:100px; width:50%; \">"
 		
-		+"<div>"+"이름: "+replyObj.user.userId+" - "
-		+"<input name=\"selectDelete\" type=\"checkbox\" onclick=(deleteReply())"+" value='"+replyObj.replyId+"'>"+"삭제"+"</a>"+"</div>"
-		+"<input id=\"replyDeleteID"+"\" type=\"hidden\" value=\""+replyObj.replyId+"\">"
+		+"<div>"+replyObj.user.name+" - ";
+		
+		console.log(userId);
+		if(replyObj.user.userId == userId) {
+			str +=  "<input name=\"selectDelete\" type=\"checkbox\" onclick=(deleteReply())"+" value='"+replyObj.replyId+"'>"+"삭제"
+		}
+		
+		str +="</div>" 
+		
+		+ "<input id=\"replyDeleteID"+"\" type=\"hidden\" value=\""+replyObj.replyId+"\">"
 		
 		+"<div id=\"replyContent\">"+ "<span>"+replyObj.replyText+"</span>"+"</div>"+"<br>"
 		
@@ -112,11 +139,15 @@ function formatDate(timeValue) {
 <body>
 
 	<div layout:fragment="my_menu" class="my_menu">
-			<div th:replace="~{/main/teamUserList}"></div>
+		<div th:replace="~{su/thymeleaf/boardSide}"></div>
 	</div>
 
 <div layout:fragment="inner_content" class="inner_content">
 
+<div id="boardMainSub1">
+<h1>게시판</h1>
+</div>
+			
 <div id="boardDetail">
 		<div id="boardUpdate">
 			<form method="post" action="/postBoardUpdateBeta" class="form-group" enctype="multipart/form-data">
@@ -133,7 +164,7 @@ function formatDate(timeValue) {
 				<textarea name="boardText" th:text="${boardDetail.boardText}" class="form-control" rows="5" readonly></textarea> 
 				</div>
 				
-				<span>(첨부파일 이름: [[${boardDetail.boardFile}]])</span><br>
+				<span>(첨부파일 이름: <a th:href="@{/boardFileDown/}+${boardDetail.boardId}">[[${boardDetail.boardFile}?${boardDetail.boardFile.substring(109)}:null]]</a>)</span><br>
 				<input type="file" name="insertFile2" value="첨부파일" disabled>
 				<hr>
 				

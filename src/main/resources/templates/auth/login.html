@@ -98,7 +98,6 @@ input {
 		}
 	}
 
-	/* 로그인 확인 */
 	function idCheckFunc() {
 		//ajax csrf//		
 		var token = $("meta[name='_csrf']").attr("content");
@@ -119,7 +118,30 @@ input {
 			success : function(data) {
 				if (data == 0) {
 					$("#login_btn").attr("value", "N");
-					alert("로그인 정보를 확인해주세요.")
+					alert("아이디를 확인해주세요.")
+					console.log("N")
+ 
+				} 
+
+			}
+		})
+
+		$.ajax({
+			url : '/auth/pwCheck', //Controller에서 인식할 주소
+			type : 'post', //POST 방식으로 전달
+			data : {
+				"pw" : $("#pw").val()
+			},
+
+			//ajax csrf//
+			beforeSend : function(xhr) { /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+				xhr.setRequestHeader(header, token);
+			},
+
+			success : function(data) {
+				if (data == 0) {
+					$("#login_btn").attr("value", "N");
+					alert("비밀번호를 확인해주세요.")
 					console.log("N")
  
 				} 

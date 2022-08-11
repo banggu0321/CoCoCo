@@ -143,7 +143,7 @@ function formatDate(timeValue) {
 				<textarea name="boardText" th:text="${boardDetail.boardText}" class="form-control" rows="5"></textarea> 
 				</div>
 				
-				<span>(첨부파일 이름: <a th:href="@{/boardFileDown/}+${boardDetail.boardId}">[[${boardDetail.boardFile.substring(109)}]]</a>)</span><br>
+				<span>(첨부파일 이름: <a th:href="@{/boardFileDown/}+${boardDetail.boardId}">[[${boardDetail.boardFile}?${boardDetail.boardFile.substring(109)}:null]]</a>)</span><br>
 				<input type="file" name="insertFile2" value="첨부파일">
 				<hr>
 				

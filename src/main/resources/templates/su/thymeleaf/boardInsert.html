@@ -7,9 +7,10 @@
 <meta charset="utf-8">
 <title>board insert</title>
 <style>
-.my_menu{
-display:none;
+#myMenuArea{
+padding: 5% 2%;
 }
+
 .buttonColor{
 background-color: #FF7637;
 color: white;
@@ -23,18 +24,25 @@ color: white;
 	padding: 1%;
 	background:white;
 }
+#categoryNameBtn{
+position: relative;
+left: 10%;
+}
 </style>
 
 </head>
 <body>
 
-<div layout:fragment="inner_content" class="inner_content">
+	<div layout:fragment="my_menu" class="my_menu">
+			<div th:replace="~{/main/teamUserList}"></div>
+	</div>
+
+	<div layout:fragment="inner_content" class="inner_content">
 <div id="boardInsert">
 <form method="post" action="/postBoardInsertSample2" enctype="multipart/form-data" class="form-group">
 
 	<input type="hidden" name="teamid" th:value="${teamid}">
-	<p>카테고리: [[${categoryName}]]<p>
-	<hr>
+
 
     <div class="form-group">
       <label>title</label>
@@ -62,17 +70,12 @@ color: white;
 </form>
 </div>
 
-<script>
+<script th:inline="javascript" th:src="@{'/js/RESTreply.js'}"></script>
+<script th:inline="javascript">	
 var cancelBtn = document.getElementById("insertCancel");
 cancelBtn.onclick=function(){
 	location.href="/boardSampleBeta";
 }
-
-//var insertFile = document.getElementById("insertFile");
-//insertFile.onclick = function(){
-//	alert("insert file clicked");
-//}
-
 </script>
 
 </div>

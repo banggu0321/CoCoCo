@@ -12,9 +12,8 @@
 				<div class="nav_menu2"><a href="/notice"><span class="cococo-title-text">공지</span></a></div>
 				<div class="nav_menu3"><a href="/boardSampleBeta"><span class="cococo-title-text">게시판</span></a></div>
 				<div class="nav_menu4"><a href="/work/work"><span class="cococo-title-text">업무</span></a></div>
-				<div class="nav_menu5">
-					<a th:if="${session.teamUser.userRole == 'ADMIN'}" href="/admin/team"><span class="cococo-title-text">관리자</span></a>
-					<span th:if="${session.teamUser.userRole != 'ADMIN'}"></span>
+				<div th:if="${session.teamUser.userRole == 'ADMIN'}" class="nav_menu5">
+					<a href="/admin/team"><span class="cococo-title-text">관리자</span></a>
 				</div>
 			</div><!-- .nav -->
 			

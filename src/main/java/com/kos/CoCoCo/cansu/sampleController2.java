@@ -325,6 +325,15 @@ public class sampleController2 {
 	
 	@GetMapping("/boardInsertSample2/{name}/{teamid}")
 	public String boardInsertBeta(@PathVariable String teamid, @PathVariable String name, Model model) {
+		
+		List<BoardCategoryVO> ctList = categoryRP.selectByTeam(Long.valueOf(teamid));
+		List<String> listResult = new ArrayList<>();
+		for(BoardCategoryVO temp: ctList) {
+				listResult.add(temp.getCategoryName());
+		}
+		Set<String> setResult = new HashSet<String>(listResult);
+		
+		model.addAttribute("cateName", setResult);		
 		model.addAttribute("categoryName", name);
 		model.addAttribute("teamid", teamid);
 		return "su/thymeleaf/boardInsert";

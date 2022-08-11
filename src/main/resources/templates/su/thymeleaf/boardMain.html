@@ -195,12 +195,12 @@ left:15%;
 			<h5>카테고리 목록</h5>
 			<hr>
 
-			<p>카테고리 이름 추가하기</p>
+			<p>이름 추가하기</p>
 			<input type="text" id="cNameInsert">
 			<button id="cNameInsertBtn" class="btn buttonColor">추가하기</button>
 			<hr>
 
-			<p>카테고리 이름 선택하기</p>
+			<p>이름 선택하기</p>
 			<div>
 			<ul id="categoryList" th:each="name:${cateName}">
 			<li><a id="catelistID" >[[${name}]]</a></li>
@@ -314,10 +314,7 @@ left:15%;
 		var team_id = /*[[${session.teamId}]]*/'';
 		var user_id = /*[[${session.user.userId}]]*/'';
 		//console.log(team_id);
-		teamID = team_id;
-		
-		replyREST.getAllCategory(teamID, printCategory);
-		
+		teamID = team_id;	
 		
 		categoryList = document.getElementById("categoryList");		
 	});	
@@ -392,11 +389,7 @@ left:15%;
 					"index" : searchType.options[searchType.selectedIndex].value, 
 					"value" : searchKW.value
 			};
-			//alert("obj.index: "+obj.index+" obj.value: "+obj.value);
-			if(obj.index == 'd'){
-				alert("click d "+searchDate.value);
-			}
-			
+			//alert("obj.index: "+obj.index+" obj.value: "+obj.value);			
 			location.href="/boardLSearch/"+obj.index+"/"+obj.value;
 		}
 		

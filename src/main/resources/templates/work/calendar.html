@@ -145,11 +145,17 @@
 				initialView : 'dayGridMonth',
 				events : totaleventlist,
 				headerToolbar: {
-				      left: 'totalButton,myWorkButton' , //dayGridMonth,timeGridWeek,timeGridDay,list
+				      left: 'helpButton totalButton,myWorkButton' , //dayGridMonth,timeGridWeek,timeGridDay,list
 				      center: 'prev,title,next',
 				      right: 'today addEventButton'
 				    },
 				customButtons : {
+					helpButton:{
+						text : "?", 
+						click : function(){
+							$("#helpModal").show();
+						}
+					},
 					myWorkButton:{
 						text : "My Work", // 버튼 내용
 						//color: 'yellow', 
@@ -312,11 +318,19 @@
 			});
 			calendar.render(); //다시 렌더링
 			//$(".fc-today-button").addClass("btn-cococo");
+			$(".fc-totalButton-button").removeClass("fc-button-primary");
+			$(".fc-myWorkButton-button").removeClass("fc-button-primary");
+			$(".fc-addEventButton-button").removeClass("fc-button-primary");
+			$(".fc-prev-button").removeClass("fc-button-primary");
+			$(".fc-next-button").removeClass("fc-button-primary");
+			$(".fc-helpButton-button").removeClass("fc-button-primary");
+			
 			$(".fc-totalButton-button").addClass("btn-cococo");
 			$(".fc-myWorkButton-button").addClass("btn-outline-cococo");
 			$(".fc-addEventButton-button").addClass("btn-outline-cococo");
 			$(".fc-prev-button").addClass("btn-chevron");
 			$(".fc-next-button").addClass("btn-chevron");
+			$(".fc-helpButton-button").addClass("rounded-circle");			
 		});
 		
 		//응답실패시
@@ -367,7 +381,7 @@
 	            },
 	            success : function(data){   //파일 주고받기가 성공했을 경우. data 변수 안에 값을 담아온다.
 					console.log("update status",data);
-					alert("업무 상태가 수정되었습니다.");  //현재 화면 위 id="message" 영역 안에 data안에 담긴 html 코드를 넣어준다.
+					//alert("업무 상태가 수정되었습니다.");  //현재 화면 위 id="message" 영역 안에 data안에 담긴 html 코드를 넣어준다.
 					location.reload();
 				}
 			});
@@ -426,7 +440,7 @@
 		            },
 		            success : function(data){   //파일 주고받기가 성공했을 경우. data 변수 안에 값을 담아온다.
 						//console.log(data);
-						alert("업무가 수정되었습니다.");  //현재 화면 위 id="message" 영역 안에 data안에 담긴 html 코드를 넣어준다.
+						//alert("업무가 수정되었습니다.");  //현재 화면 위 id="message" 영역 안에 data안에 담긴 html 코드를 넣어준다.
 						location.reload();
 					}
 				});
@@ -538,6 +552,12 @@
 			date_end2 = ('00' + date_end2).slice(-2);
 			return date_end1+date_end2;
 		}
+		/* $("body").on("click", function() {
+			$("#helpModal").hide();
+		}); */
+		/* $('.fc-helpButton-button').hover(function() {
+			$("#helpModal").show();
+		}); */
 	});
 </script>
 </head>
@@ -547,6 +567,10 @@
 		<!-- <div id="addButton">
 			<input type="button" id="addCalendar" value="업무추가" class="btn btn-warning">
 		</div> -->
+			<div id="helpModal">
+				<h2 class="cococo-title-text helptitle">help</h2>
+				<img th:src="@{/images/helpWorkImg.jpg}" class="">
+			</div>
 			<div id="calendarBox">
 				<div id="calendar"></div>
 			</div>

@@ -192,15 +192,11 @@ public class sampleRESTController {
 	}
 	
 	@GetMapping("/categoryName/{teamid}")
-	public List<String> categoryName(@PathVariable String teamid, Model model){
-//		return (List<String>)categoryRP.selectAllCategoryName();
-		
+	public List<String> categoryName(@PathVariable String teamid, Model model){		
 		Long result = Long.valueOf(teamid);
 		System.out.println("result: "+result);
 		
-		List<BoardCategoryVO> ctList = categoryRP.selectByTeam(result);
-//		System.out.println("ctList length: "+ctList.size());
-		
+		List<BoardCategoryVO> ctList = categoryRP.selectByTeam(result);		
 		List<String> listResult = new ArrayList<>();
 		for(BoardCategoryVO temp: ctList) {
 //			System.out.println("temp: "+temp);

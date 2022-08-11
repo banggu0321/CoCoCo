@@ -101,6 +101,8 @@ public class sampleRESTController {
 	@GetMapping("/getBoardPage/{pageNumber}")
 	public List<BoardVO> boardlistByPageNum(@PathVariable String pageNumber, Model model, Principal principal){
 		
+		System.out.println("page number: "+pageNumber);
+		
 		System.out.println("principal.getName():" + principal.getName());
 		String userID = principal.getName();  //login -> id
 		System.out.println("page number: "+pageNumber);
@@ -113,7 +115,9 @@ public class sampleRESTController {
 		Page<BoardVO> result = boardRP.findAll(boardRP.makePredicate(null, null), pageable);
 		
 		List<BoardVO> boardList = result.getContent();
-		System.out.println("board list: "+boardList);
+		boardList.forEach(a->{
+			System.out.println(a);
+		});
 		
 		return boardList;
 	}

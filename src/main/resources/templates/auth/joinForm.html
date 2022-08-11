@@ -13,10 +13,8 @@
 <link rel="stylesheet" th:href="@{/css/login.css}" />
 <head>
 <style>
-
 #pw2 {
 	margin: 0;
-	
 }
 
 #pwMsg {
@@ -113,7 +111,7 @@ input {
 			if (pw1.length == 0 || pw1 == '') {
 				$("#pwMsg").html("비어있음")
 				$("#pwMsg").css("color", "white")
-				
+
 			} else if (pw1 == pw2) {
 				$("#pwMsg").html("비밀번호가 일치합니다.")
 				$("#pwMsg").css("color", "green")
@@ -158,6 +156,7 @@ input {
 			}
 		})
 	}
+	
 </script>
 <title>회원가입 페이지</title>
 <meta charset="utf-8" />
@@ -193,7 +192,8 @@ input {
 
 				<p>
 					<label for="pw2"></label> <input type="password" class="pw2_input"
-						id="pw2" name="pw2" placeholder="비밀번호 확인" /><br><span id="pwMsg">　　　　</span>
+						id="pw2" name="pw2" placeholder="비밀번호 확인" /><br> <span
+						id="pwMsg"> </span>
 				</p>
 
 				<input type="hidden" th:name="${_csrf.parameterName}"

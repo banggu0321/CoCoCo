@@ -44,7 +44,8 @@ public class MemberService implements UserDetailsService{
 		UserDetails member = mrepo.findById(mid)
 				.filter(m -> m != null).map(m -> new SecurityUser(m)).get();
 		System.out.println("UserDetails member:" + member);
-		httpSession.setAttribute("user", member);
+		System.out.println( mrepo.findById(mid).get());
+		httpSession.setAttribute("user", mrepo.findById(mid).get());
 		return member;
 	}
 

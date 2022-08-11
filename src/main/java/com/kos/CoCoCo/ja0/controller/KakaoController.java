@@ -3,6 +3,7 @@ package com.kos.CoCoCo.ja0.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
@@ -28,14 +29,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kos.CoCoCo.ja0.VO.KakaoUser;
+import com.kos.CoCoCo.ja0.repository.KakaoUserRepository;
 import com.kos.CoCoCo.ja0.repository.UserRepositoryH;
 import com.kos.CoCoCo.security.MemberService;
 import com.kos.CoCoCo.vo.UserVO;
@@ -46,6 +50,9 @@ public class KakaoController {
 	
 	@Autowired
 	UserRepositoryH uRepo;
+	
+	@Autowired
+	KakaoUserRepository kRepo;
 	
 	@Autowired
 	MemberService mservice;
@@ -99,31 +106,47 @@ public class KakaoController {
         return "redirect:" + url;
     }
     
+    @PostMapping(value="/getEmail")
+    public String getEmail(KakaoUser kakaoUser) {
+    	System.out.println("[getEmail] "+ kakaoUser);
+    	
+    	UserVO user = join(kakaoUser);
+    	
+    	// 강제 로그인 처리
+        login(user);
+        System.out.println("insert email and kakaoLogin!!");
+        
+    	return "redirect:/CoCoCo";
+    }
+    
     @GetMapping(value="/loginTest", produces="application/json")
     public String kakaoLogin(@RequestParam("code") String code, HttpSession session, Model model)throws IOException {
     	// 1. "액세스 토큰" 요청
     	String accessToken = getAccessToken(code);
     	
-    	// 2. 토큰으로 카카오 API 호출
-    	KakaoUser kakaoUser = getKakaoUser(accessToken);
+    	// 2. JsonNode 가져오기 
+    	JsonNode jsonNode = getJsonNode(accessToken);
+    	System.out.println(jsonNode);
     	
-        // 3. 가입정보 없으면 회원가입
+    	// 3. user 정보 가져오기
+    	KakaoUser kakaoUser = getKakaoUser(jsonNode);
+    	
+    	if(kakaoUser.getEmail() == null) { 
+    		System.out.println("email null!");
+    		model.addAttribute("kakaoUser", kakaoUser);
+    		return "/auth/kakaoForm";
+    	}
+    	
+    	System.out.println(kakaoUser);
+    	
+        // 4. 가입정보 없으면 회원가입
         UserVO user = uRepo.findById(kakaoUser.getEmail()).orElse(null);
-        
-        if (user == null) {
-        	user = UserVO.builder()
-        			.image(kakaoUser.getImg())
-        			.name(kakaoUser.getName())
-        			.pw(UUID.randomUUID().toString())
-        			.userId(kakaoUser.getEmail())
-        			.build();
-        			
-        	mservice.joinUser(user);
-        }
+        if (user == null) user = join(kakaoUser);
 
-        // 4. 강제 로그인 처리
+        // 5. 강제 로그인 처리
         login(user);
-        System.out.println(user);
+        System.out.println("kakaoLogin!!");
+        
     	return "redirect:/CoCoCo";
     	
     }
@@ -160,38 +183,69 @@ public class KakaoController {
         return returnNode.get("access_token").asText();
     }
     
-    private KakaoUser getKakaoUser(String accessToken) throws JsonProcessingException {
-        // HTTP Header 생성
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + accessToken);
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-
-        // HTTP 요청 보내기
-        HttpEntity<MultiValueMap<String, String>> kakaoRequest = new HttpEntity<>(headers);
-        RestTemplate rt = new RestTemplate();
-        
-        // Http 요청하기 - Post방식으로 - 그리고 response 변수의 응답 받음.
-        ResponseEntity<String> response = rt.exchange(
-                "https://kapi.kakao.com/v2/user/me",
-                HttpMethod.POST,
-                kakaoRequest,
-                String.class
-        );
-        
-        //사용자 정보가 json으로 오는데 바디에서 빼준다.
-        String responseBody = response.getBody();
-        
-        //필요한 부분을 빼기 위해 ObjectMapper을 사용
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonNode = objectMapper.readTree(responseBody);
-        
+    private JsonNode getJsonNode(String accessToken) throws JsonProcessingException{
+    	// HTTP Header 생성
+    	HttpHeaders headers = new HttpHeaders();
+    	headers.add("Authorization", "Bearer " + accessToken);
+    	headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+    	
+    	// HTTP 요청 보내기
+    	HttpEntity<MultiValueMap<String, String>> kakaoRequest = new HttpEntity<>(headers);
+    	RestTemplate rt = new RestTemplate();
+    	
+    	// Http 요청하기 - Post방식으로 - 그리고 response 변수의 응답 받음.
+    	ResponseEntity<String> response = rt.exchange(
+    			"https://kapi.kakao.com/v2/user/me",
+    			HttpMethod.POST,
+    			kakaoRequest,
+    			String.class
+    			);
+    	
+    	//사용자 정보가 json으로 오는데 바디에서 빼준다.
+    	String responseBody = response.getBody();
+    	
+    	//필요한 부분을 빼기 위해 ObjectMapper을 사용
+    	ObjectMapper objectMapper = new ObjectMapper();
+    	JsonNode jsonNode = objectMapper.readTree(responseBody);
+    	
+    	return jsonNode;
+    }
+    
+    private KakaoUser getKakaoUser(JsonNode jsonNode) {
         Long id = jsonNode.get("id").asLong();
+        
+        Optional<KakaoUser> kakaoUser = kRepo.findById(id);
+        if(kakaoUser.isPresent()) return kakaoUser.get();
+        
         String nickname = jsonNode.get("properties").get("nickname").asText();
-        String email = jsonNode.get("kakao_account").get("email").asText();
         String img = jsonNode.get("properties").get("profile_image").asText();
         
+        boolean hasEmail = jsonNode.get("kakao_account").has("email");
+        
+        System.out.println(hasEmail);
+        
+        String email = null;
+        if(hasEmail) email = jsonNode.get("kakao_account").get("email").asText();
+        
         KakaoUser user = new KakaoUser(id, nickname, email, img);
+        System.out.println(user);
+        
         return user;
+    }
+    
+    private UserVO join(KakaoUser kakaoUser) {
+    	// kakaoUser 저장
+    	kRepo.save(kakaoUser);
+    	
+    	UserVO user = UserVO.builder()
+    			.image(kakaoUser.getImg())
+    			.name(kakaoUser.getName())
+    			.pw(UUID.randomUUID().toString())
+    			.userId(kakaoUser.getEmail())
+    			.build();
+    			
+    	UserVO newUser = mservice.joinUser(user);
+    	return newUser;
     }
 
     private void login(UserVO kakaoUser) {

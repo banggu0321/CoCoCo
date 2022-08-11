@@ -1,5 +1,16 @@
 var replyREST =(
 	function(){
+		var getBoardAfterSearch = function(obj, callback){
+			$.ajax({
+				type:'POST',
+				url: '/BOARDrest/boardLSearch/',
+				data: JSON.stringify(obj),
+				dataType:"json",
+				contentType: "application/json",
+				success:callback
+			});
+		}
+		
 		var getReplyAfterDelete = function(obj, callback){
 			$.getJSON('/BOARDrest/replyDeleteByID/'+obj,callback);
 		}
@@ -39,7 +50,8 @@ var replyREST =(
 			getBoardPage: getBoardPage,
 			getFirstBoardByPageable:getFirstBoardByPageable,
 			getPageNumber:getPageNumber,
-			getReplyAfterDelete:getReplyAfterDelete
+			getReplyAfterDelete:getReplyAfterDelete,
+			getBoardAfterSearch:getBoardAfterSearch
 		}
 	}
 )();

@@ -33,6 +33,7 @@ import com.kos.CoCoCo.vo.TeamUserVO;
 import com.kos.CoCoCo.vo.TeamVO;
 import com.kos.CoCoCo.vo.UserVO;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Predicate;
 
 @SpringBootTest
 public class tableCRUDTest {
@@ -54,33 +55,89 @@ public class tableCRUDTest {
 	
 	@Autowired
 	ReplyRepositoryTestSu replyRP;
-
 	
 	@Test
-	public void selectBoardByteamid() {
+	public void selectBoardBybuildBeta() {
+		Long teamId = 1761L;
 		
+		List<BoardVO> boards = boardRP.selectBoardByteam(teamId);	
+		System.out.println("boards size: "+boards.size());
 		
-		List<BoardVO> boards = boardRP.selectBoardByteam(1761L);
-		boards.forEach(a->{
-			System.out.println(a);
-		});
+		List<BoardVO> result = new ArrayList<>();
+		for(BoardVO temp:boards) {
+			if(temp.getBoardTitle().contains("hello")) {
+				result.add(temp);
+			}
+		}
+		System.out.println("result size: "+result.size());
+	}
+	
+//	@Test
+//	public void selectBoardBybuild() {
 		
-		Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "board_id");
-		Page<BoardVO> result2 = new PageImpl<BoardVO>(boards, pageable, boards.size());
-		List<BoardVO> temp = result2.getContent();
-		temp.forEach(a->{
-			System.out.println(a);
-		});
-		new PageMaker(result2);
-		
-//		PageVO vo = new PageVO();
-//		Pageable page = vo.makePageable(0, "boardId");
-//		Page<BoardVO>  result = boardRP.findAll(boardRP.makePredicate("a", "1761"), page);
+//		String title = "hello";
+//		Long id=1761L;
 //		
-//		result.forEach(a->{
+//		List<BoardVO> board = boardRP.selectBoardByTitle(title);
+//		System.out.println("board.size: "+board.size());
+//		
+//		BooleanBuilder builder = new BooleanBuilder();		
+//		QBoardVO qboard = QBoardVO.boardVO;	
+//		builder.and(qboard.boardTitle.contains(title));
+//		builder.and(qboard.category.boardCategoryId.categoryId(id)); // error
+//		Predicate predicate = builder;
+//		
+//		List<BoardVO> boards = (List<BoardVO>) boardRP.findAll(predicate);
+//		System.out.println("size: "+boards.size());
+		
+		
+//		System.out.println("test start");
+//		List<BoardVO> boardList = boardRP.findByBoardTitleContainingAndBoardCategoryVOEquals(title, bcVO);
+//		System.out.println("boardList: "+boardList.size());
+//		boardList.forEach(a->{
 //			System.out.println(a);
 //		});
-	}
+		
+//		Pageable page = PageRequest.of(0, 5);
+//		Page<BoardVO> boards = boardRP.findAll(predicate, page);
+//		List<BoardVO> boardList = boards.getContent();
+		
+//		Predicate predicate = boardRP.makePredicate("t", "hello");		
+//		List<BoardVO> boardList = (List<BoardVO>) boardRP.findAll(predicate);
+//		
+//		System.out.println("test start");
+//		System.out.println("board list length: "+boardList.size());
+//		boardList.forEach(a->{
+//			System.out.println(a);
+//		});
+//	}
+
+	
+//	@Test
+//	public void selectBoardByteamid() {
+//		
+//		
+//		List<BoardVO> boards = boardRP.selectBoardByteam(1761L);
+//		boards.forEach(a->{
+//			System.out.println(a);
+//		});
+//		
+//		Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "board_id");
+//		Page<BoardVO> result2 = new PageImpl<BoardVO>(boards, pageable, boards.size());
+//		List<BoardVO> temp = result2.getContent();
+//		temp.forEach(a->{
+//			System.out.println(a);
+//		});
+//		new PageMaker(result2);
+//		
+////		PageVO vo = new PageVO();
+////		Pageable page = vo.makePageable(0, "boardId");
+////		Page<BoardVO>  result = boardRP.findAll(boardRP.makePredicate("a", "1761"), page);
+////		
+////		result.forEach(a->{
+////			System.out.println(a);
+////		});
+//	}
 	
 //	@Test
 //	public void deletBoardWithReply() {

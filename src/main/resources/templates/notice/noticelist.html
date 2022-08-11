@@ -6,6 +6,7 @@
 <head>
 <title>CoCoCo | [[${session.teamUser.teamUserId.team.teamName}]]</title>
 <meta charset="UTF-8">
+
 <style>
 .nav_menu2{
 	border-bottom: 3px solid tomato;
@@ -124,12 +125,29 @@ a {
 	display: inline;
 }
 
+.page-item.active .page-link {
+	background-color: #FF7637;
+	border-color: #FF7637;
+	
+}
+.page-link {
+	color: #acacac;
+	padding: 0.1rem 0.5rem;
+	border: #acacac;
+}
+
+
 #input_search {
 	width: 340px;
 	height: 30px;
 	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
 }
-
+#input_search > input {
+	flex: 1;
+}
 #searchType {
 	height: 35px;
 	border: 1px solid #acacac;
@@ -141,7 +159,8 @@ a {
 }
 #searchBtn {
 	box-sizing: content-box;
-	height: 27px;
+	width: 45px;
+	height: 31px;
 	border: 1px solid #acacac;
 	border-collapse: collapse;
 }
@@ -201,22 +220,22 @@ a {
 				</table>
 			</div>
 			<div id="paging">
-				<nav>
+				
 					<div class="paging-div">
 						<ul class="pagination">
 							<li class="page-item" th:if="${noticelist.prevPage}"><a
-								th:href="${noticelist.prevPage.pageNumber}+1">PREV
+								th:href="${noticelist.prevPage.pageNumber}+1" class="page-link">PREV
 									[[${noticelist.prevPage.pageNumber}+1]]</a></li>
 							<li class="page-item"
 								th:classappend="${p.pageNumber==noticelist.currentPageNum-1}?active:''"
 								th:each="p:${noticelist.pageList}"><a
-								th:href="${p.pageNumber}+1">[[${p.pageNumber}+1]]</a></li>
+								th:href="${p.pageNumber}+1" class="page-link">[[${p.pageNumber}+1]]</a></li>
 							<li class="page-item" th:if="${noticelist.nextPage}"><a
-								th:href="${noticelist.nextPage.pageNumber}+1">NEXT
+								th:href="${noticelist.nextPage.pageNumber}+1"  class="page-link">NEXT
 									[[${noticelist.nextPage.pageNumber}+1]]</a></li>
 						</ul>
 					</div>
-				</nav>
+				
 
 			</div>
 
@@ -306,17 +325,10 @@ a {
 										e.preventDefault();
 										var noticeId = $(this).attr("href");
 
-										formObj
-												.attr("action",
-														"/notice/detail");
-										formObj
-												.append("<input type='hidden' name='noticeId' value='"+noticeId+"'>");
+										formObj.attr("action","/notice/detail");
+										formObj.append("<input type='hidden' name='noticeId' value='"+noticeId+"'>");
 										formObj.submit();
 									});
-					
-					
-					  
-					
 
 				});
 			</script>

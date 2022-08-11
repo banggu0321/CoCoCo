@@ -4,7 +4,7 @@
 <div th:fragment = "side" class="side_list">
 	<div id="teamList">
 		<div th:each="tu:${session.teamList}" class="moveTeam" th:team-data="${tu.teamUserId.team.teamId}">
-			<img th:src="${tu.teamUserId.team.teamImg}?:@{/images/teamImg.png}" class="rounded">
+			<img th:src="${tu.teamUserId.team.teamImg}?:@{/images/teamImg.png}" class="rounded-radius-small">
 			<span id="teamName" th:text="${tu.teamUserId.team.teamName}"></span>
 		</div>
 	</div>

@@ -8,10 +8,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import groovy.transform.ToString;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,6 +21,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "Message")
@@ -36,14 +39,15 @@ public class ChatMessageDTO {
     private String message;
     
     private String KoreanName;
+    
+    @Transient
+    private String writerImg;
 
 	@Override
 	public String toString() {
-		return "ChatMessageDTO [id=" + id + ", roomId=" + teamId + ", writer=" + writer + ", message=" + message + "]";
+		return "ChatMessageDTO [id=" + id + ", teamId=" + teamId + ", writer=" + writer + ", message=" + message
+				+ ", KoreanName=" + KoreanName + ", writerImg=" + writerImg + "]";
 	}
-   
-    
-    
     
     
 }

@@ -56,7 +56,7 @@ public class KakaoController {
 	@Value("http://localhost:7777/kakao/loginTest")
 	String redirectUri;
 	
-	@GetMapping(value="/login")
+	//@GetMapping(value="/login")
 	public String kakaoLogin() throws Exception {
 		return "/XXkakaoXX/kakaoLogin";
 	}
@@ -91,7 +91,7 @@ public class KakaoController {
 //        return "redirect:/kakao/login";
 //	}
 	
-    @GetMapping(value="/oauth")
+    @GetMapping(value="/login")
     public String kakaoConnect() {
     	String url = "https://kauth.kakao.com/oauth/authorize?client_id=" + clientId
     				+"&redirect_uri="+ redirectUri +"&response_type=code";
@@ -101,15 +101,13 @@ public class KakaoController {
     
     @GetMapping(value="/loginTest", produces="application/json")
     public String kakaoLogin(@RequestParam("code") String code, HttpSession session, Model model)throws IOException {
-    	//System.out.println("[code] "+code);
-    	
     	// 1. "액세스 토큰" 요청
     	String accessToken = getAccessToken(code);
     	
     	// 2. 토큰으로 카카오 API 호출
     	KakaoUser kakaoUser = getKakaoUser(accessToken);
     	
-        // 3. 필요시에 회원가입
+        // 3. 가입정보 없으면 회원가입
         UserVO user = uRepo.findById(kakaoUser.getEmail()).orElse(null);
         
         if (user == null) {

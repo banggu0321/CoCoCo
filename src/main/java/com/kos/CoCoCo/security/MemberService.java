@@ -23,6 +23,14 @@ public class MemberService implements UserDetailsService{
 	
 	@Autowired
 	PasswordEncoder passwordEncoder; // security config에서 Bean생성
+	
+	
+	public  boolean passwordCompare(CharSequence pw, UserVO user) {
+
+		return  passwordEncoder.matches(pw, user.getPw());
+	}
+	
+	
 	// 회원가입
 	@Transactional
 	public UserVO joinUser(UserVO member) {

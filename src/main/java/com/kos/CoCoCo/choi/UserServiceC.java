@@ -6,7 +6,7 @@ public interface UserServiceC {
 	// 아이디 체크
 	public UserVO idCheck(String id);
 	
-	// 비밀번호 체크
-	public int pwCheck(String pw, String userId);
-	
+	// 아이디,비밀번호 일치여부 체크
+	public boolean pwCheck(String id, String pw);
+
 }

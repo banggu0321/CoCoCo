@@ -24,11 +24,14 @@ public class UserControllerC {
 		return user == null ? 0 : 1;
 	}
 
-// 비밀번호 체크
+	// 체크
 	@PostMapping("/auth/pwCheck")
 	@ResponseBody
-	public int pwCheck(@RequestParam("pw") String pw, @RequestParam("userId") String userId) {
-		int result = userService.pwCheck(pw, userId);
-		return result;
+	public int pwCheck(@RequestParam("userId") String userId, @RequestParam("pw") String pw) {
+		System.out.println("pw" + pw);
+		boolean result = userService.pwCheck(userId, pw);
+		return result ? 1 : 0;
 	}
+
+	
 }

@@ -5,7 +5,10 @@
 >
 <head>
 <style>
-
+#boardDetail {
+	width: 850px;
+	margin: 0 auto;
+}
 .buttonColor{
 background-color: #FF7637;
 color: white;
@@ -44,6 +47,20 @@ padding-top: 2%;
 width: 900px;
 height: 150px;
 overflow:auto;
+}
+
+#boardMainSub1{
+	position:relative;
+	width: 850px;
+	margin: 0 auto;
+	margin-top: 40px;
+
+}
+#boardMainSub1 h1 {
+	font-family: "LeferiPoint-WhiteObliqueA", sans-serif;
+    font-weight: 600;
+    letter-spacing: -2px;
+	margin-bottom: 30px;
 }
 </style>
 
@@ -89,6 +106,7 @@ function deleteReply(){
 
 
 function printList(list) {
+	var userId = /*[[${session.user.userId}]]*/'';
 	var str = "<div id='replyListRange'>";
 	var replyObj;
 
@@ -101,18 +119,28 @@ function printList(list) {
 		
 		+"<div style=\"height:100px; width:50%; \">"
 		
-		+"<div>"+"이름: "+replyObj.user.userId+" - "
-		+"<input name=\"selectDelete\" type=\"checkbox\" onclick=(deleteReply())"+" value='"+replyObj.replyId+"'>"+"삭제"+"</a>"+"</div>"
+		+"<div>"+replyObj.user.name+" - "
+		
+		if(replyObj.user.userId == userId) {
+			str +=  "<input name=\"selectDelete\" type=\"checkbox\" onclick=(deleteReply())"+" value='"+replyObj.replyId+"'>"+"삭제"
+		}
+		
+		str +="</div>"
+		
 		+"<input id=\"replyDeleteID"+"\" type=\"hidden\" value=\""+replyObj.replyId+"\">"
 		
 		+"<div id=\"replyContent\">"+ "<span>"+replyObj.replyText+"</span>"+"</div>"
 		
 		+"<div>"+"<span>"+"<font size=\"2\" color=\"gray\">"+"등록일: "+formatDate(replyObj.replyUpdate)+"</font>"+"</span>"+"</div>"
+		
 		+"</div>"+"</div>"+"<br>";
 	}
+	
 	str +="</div>";
+	
 	$("#replyTable").html(str);
 }
+
 function formatDate(timeValue) {
 	var date = new Date(timeValue);
 	return date.getFullYear() + "-" + (date.getMonth() + 1) + "-"
@@ -122,11 +150,14 @@ function formatDate(timeValue) {
 </head>
 <body>
 	<div layout:fragment="my_menu" class="my_menu">
-			<div th:replace="~{/main/teamUserList}"></div>
+		<div th:replace="~{su/thymeleaf/boardSide}"></div>
 	</div>
 
 <div layout:fragment="inner_content" class="inner_content">
-
+<div id="boardMainSub1">
+<h1>게시판</h1>
+</div>
+			
 <div id="boardDetail">
 		<div id="boardUpdate">
 			<form method="post" action="/postBoardUpdateBeta" class="form-group" enctype="multipart/form-data">

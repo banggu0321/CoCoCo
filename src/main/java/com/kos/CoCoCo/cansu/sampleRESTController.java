@@ -3,8 +3,9 @@ package com.kos.CoCoCo.cansu;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,15 +16,12 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kos.CoCoCo.cansu.test.BoardCategoryRepositoryTestSu;
 import com.kos.CoCoCo.cansu.test.BoardRepositoryTestSu;
-import com.kos.CoCoCo.cansu.test.PageMaker;
+import com.kos.CoCoCo.cansu.test.BoardCategoryRepositoryTestSu;
 import com.kos.CoCoCo.cansu.test.PageVO;
 import com.kos.CoCoCo.cansu.test.ReplyRepositoryTestSu;
 import com.kos.CoCoCo.cansu.test.TeamRepositoryTestSu;
@@ -33,7 +31,6 @@ import com.kos.CoCoCo.vo.BoardCategoryVO;
 import com.kos.CoCoCo.vo.BoardVO;
 import com.kos.CoCoCo.vo.ReplyVO;
 import com.kos.CoCoCo.vo.TeamVO;
-import com.kos.CoCoCo.vo.UserVO;
 
 import lombok.extern.java.Log;
 
@@ -121,35 +118,18 @@ public class sampleRESTController {
 		
 		return boardList;
 	}
-	
+
 	@GetMapping("/boardList/insertName/{name}/{teamid}")
-	public List<BoardVO> categoryNameInsertFromBLBeta(@PathVariable String teamid, @PathVariable String name,Model model, Principal principal) {
-		
-		System.out.println("principal.getName():" + principal.getName());
-		String userID = principal.getName(); //user_id
-		String teamID = teamid;
-		
-		System.out.println("team id: "+teamID);
-		System.out.println("category name: "+name);
-		
-		if(name==null) {
-			return (List<BoardVO>)boardRP.findAll();
-		}
-		
+	public BoardCategoryVO categoryNameInsertFromBLBeta(@PathVariable Long teamid, @PathVariable String name,Model model, HttpSession session) {
 		List<Long>categoryID = boardcateRP.selectIDByname(name);
+		
+		BoardCategoryVO bc = null;
 		if(categoryID.isEmpty()) {
-			categoryNameInsert(teamID, name, userID, boardcateRP);
+			bc = categoryNameInsert(teamid, name, boardcateRP);
 		}
 		
-		List<BoardVO> boardList = new ArrayList<>();
-		categoryID.forEach(a->{
-			BoardVO temp = boardRP.selectBoardByID(a);
-			if(temp != null) {
-				boardList.add(temp);
-			}
-		});
-		
-		return boardList;
+		session.setAttribute("cateName", boardcateRP.selectByTeam(teamid));
+		return bc;
 	}
 	
 	@GetMapping("/boardListBycategory/{name}")
@@ -172,23 +152,13 @@ public class sampleRESTController {
 		return boardList;
 	}
 	
-	@GetMapping("/boardList/{name}")
-	public List<BoardVO> boardlistbeta(@PathVariable String name,Model model) {
-		
-		if(name==null) {
+	@GetMapping("/boardList/{categoryId}")
+	public List<BoardVO> boardlistbeta(@PathVariable Long categoryId,Model model) {
+		if(categoryId==null) {
 			return (List<BoardVO>)boardRP.findAll();
 		}
 		
-		List<Long>categoryID = boardcateRP.selectIDByname(name);
-		List<BoardVO> boardList = new ArrayList<>();
-		categoryID.forEach(a->{
-			BoardVO temp = boardRP.selectBoardByID(a);
-			if(temp != null) {
-				boardList.add(temp);
-			}
-		});
-		
-		return boardList;
+		return boardRP.selectBoardByCategory(categoryId);
 	}
 	
 	@GetMapping("/categoryName/{teamid}")
@@ -224,7 +194,7 @@ public class sampleRESTController {
 		return (List<BoardVO>)boardRP.findAll();
 	}
 	
-	private void categoryNameInsert(String teamID, String categoryName, String userID, BoardCategoryRepositoryTestSu boardcateRP2) {
+	private BoardCategoryVO categoryNameInsert(Long teamID, String categoryName, BoardCategoryRepositoryTestSu boardcateRP2) {
 		//BoardCategoryMultikey -> generateValue not work
 		long gnrTemp =  new Random().nextLong();
 		if(gnrTemp <0) {
@@ -233,13 +203,12 @@ public class sampleRESTController {
 		long gnrValue = Long.valueOf(String.valueOf(gnrTemp).substring(0, 6));
 //		System.out.println(gnrValue);
 		
-		UserVO uservo = userRP.findById(userID).get();
-//		TeamVO teamvo =  teamRP.selectByUserID(uservo.getUserId());
-		TeamVO teamvo = teamRP.findById(Long.valueOf(teamID)).get();
+		TeamVO teamvo = teamRP.findById(teamID).get();
 		System.out.println(teamvo);
 		
 		BoardCategoryMultikey bcMultikey = BoardCategoryMultikey.builder().categoryId(gnrValue).team(teamvo).build();
 		BoardCategoryVO bcTemp = BoardCategoryVO.builder().boardCategoryId(bcMultikey).categoryName(categoryName).build();
-		boardcateRP.save(bcTemp);
+		BoardCategoryVO bc =  boardcateRP.save(bcTemp);
+		return bc;
 	}
 }

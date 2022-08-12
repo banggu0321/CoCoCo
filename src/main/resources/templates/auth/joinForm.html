@@ -25,7 +25,6 @@
 	width: 422px;
 }
 
-/* 아이디 중복체크 */
 .idCheck {
 	padding: 0;
 	width: 60px;
@@ -67,50 +66,27 @@ input {
 		$("#pw").on("keyup", checkPW);
 		$("#pw2").on("keyup", checkPW);
 		$("#btn").click(final_Check);
-
-		$('#mail-Check-Btn').click(function() {
-			console.log("버튼클릭 확인")
-			const eamil = $('#userEmail1').val() + $('#userEmail2').val(); // 이메일 주소값 얻어오기!
-			console.log('완성된 이메일 : ' + eamil); // 이메일 오는지 확인
-			const checkInput = $('.mail-check-input') // 인증번호 입력하는곳 
-
-			$.ajax({
-				type : 'get',
-				url : '/auth/emailConfirm?email=' + eamil, // GET방식이라 Url 뒤에 email
-				success : function(data) {
-					console.log("data : " + data);
-					checkInput.attr('disabled', false);
-					code = data;
-					alert('인증번호가 전송되었습니다.')
-				}
-			}); // end ajax
-		}); // end send eamil
-
 	});
 
 	function final_Check() {
-		var id = $(".id_input").val(); // id 입력란
-		var pw1 = $(".pw_input").val(); // pw 입력란
-		var pw2 = $(".pw2_input").val(); // pw 확인 입력란
-		var name = $(".name_input").val(); // 이름 입력란
+		var id = $(".id_input").val();
+		var pw1 = $(".pw_input").val();
+		var pw2 = $(".pw2_input").val();
+		var name = $(".name_input").val();
 		var idCheck = $("#idCheckBtn").val();
 
-		/* 아이디 유효성검사 */
 		if (id.length == 0 || id == '') {
 			alert("아이디를 입력하세요")
 
 		} else if (idCheck == "N") {
 			alert("아이디를 확인해주세요.")
 
-			/* 이름 유효성검사 */
 		} else if (name.length == 0 || name == '') {
 			alert("이름을 입력하세요")
 
-			/* 비밀번호 유효성검사 */
 		} else if (pw.length == 0 || pw == '') {
 			alert("비밀번호를 입력하세요")
 
-			/* 비밀번호 확인 유효성검사 */
 		} else if (pw1 != pw2) {
 			alert("비밀번호를 확인하세요")
 
@@ -120,7 +96,6 @@ input {
 
 	}
 
-	/* 비밀번호 확인 */
 	function checkPW() {
 		var pw1 = $("#pw").val();
 		var pw2 = $("#pw2").val();
@@ -142,20 +117,18 @@ input {
 		}
 	}
 
-	/* 아이디 중복확인 */
 	function idCheckFunc() {
 		//ajax csrf//		
 		var token = $("meta[name='_csrf']").attr("content");
 		var header = $("meta[name='_csrf_header']").attr("content");
 
 		$.ajax({
-			url : '/auth/idCheck', //Controller에서 인식할 주소
-			type : 'post', //POST 방식으로 전달
+			url : '/auth/idCheck',
+			type : 'post',
 			data : {
 				"userId" : $("#userId").val()
 			},
 
-			//ajax csrf//
 			beforeSend : function(xhr) { /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
 				xhr.setRequestHeader(header, token);
 			},
@@ -171,7 +144,6 @@ input {
 					alert("사용 가능한 아이디 입니다.");
 					console.log("Y")
 				}
-
 			}
 		})
 	}

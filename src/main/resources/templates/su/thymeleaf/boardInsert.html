@@ -31,58 +31,66 @@ left: 10%;
 #categoryList{
 list-style:none;
 }
+
+#boardMainSub1{
+	position:relative;
+	width: 850px;
+	margin: 0 auto;
+	margin-top: 40px;
+
+}
+#boardMainSub1 h1 {
+	font-family: "LeferiPoint-WhiteObliqueA", sans-serif;
+    font-weight: 600;
+    letter-spacing: -2px;
+	margin-bottom: 30px;
+}
 </style>
 
 </head>
 <body>
 
 	<div layout:fragment="my_menu" class="my_menu">
-					<div id="myMenuArea">
+		<div id="myMenuArea">
 			<h5>카테고리 목록</h5>
 			<hr>
-			
-			<p>이름 선택하기</p>
 			<div>
-			<ul id="categoryList" th:each="name:${cateName}">
-			<li><a id="catelistID" >[[${name}]]</a></li>
+			<ul id="categoryList" th:each="name:${session.cateName}">
+			<li><a id="catelistID" class="catelistID" th:category-data="${name.boardCategoryId.categoryId}">[[${name.categoryName}]]</a></li>
 			</ul>
 			</div>
 		</div>
 	</div>
 
 	<div layout:fragment="inner_content" class="inner_content">
+		<div id="boardMainSub1">
+			<h1>게시판 - [[${category.categoryName}]]</h1>
+		</div>
 	<div id="boardInsert">
 	<form method="post" action="/postBoardInsertSample2" enctype="multipart/form-data" class="form-group">
-
-	<input type="hidden" name="teamid" th:value="${teamid}">
-
-    <div class="form-group">
-    	<div>
-			<p>카테고리 - [[${categoryName}]]</p>
-		</div>
-      <label>title</label>
-      <div>
-      	<input name="category" type="hidden" th:value="${categoryName}">
-        <input name="title" class="form-control" type="text">
-      </div>
-    </div>
-    
-    
-    <div class="form-group">
-      <label>content</label>
-      <div>
-        <textarea name="content" class="form-control" rows="5"></textarea>
-      </div>
-    </div>
-    
-    <input name="insertFile" type="file" value="첨부파일"><br><hr>
-
-
-<input type="submit" value="등록" class="btn buttonColor">
-<input type="button" id="insertCancel" value="취소" class="btn buttonColor">
-
-<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-</form>
+	    <div class="form-group">
+	      <label>title</label>
+	      <div>
+	      	<input name="categoryId" type="hidden" th:value="${category.boardCategoryId.categoryId}">
+	        <input name="boardTitle" class="form-control" type="text">
+	      </div>
+	    </div>
+	    
+	    
+	    <div class="form-group">
+	      <label>content</label>
+	      <div>
+	        <textarea name="boardText" class="form-control" rows="5"></textarea>
+	      </div>
+	    </div>
+	    
+	    <input name="insertFile" type="file" value="첨부파일"><br><hr>
+	
+		<input type="submit" value="등록" class="btn buttonColor">
+		<input type="button" id="insertCancel" value="취소" class="btn buttonColor">
+		
+		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+	</form>
 </div>
 
 <script th:inline="javascript" th:src="@{'/js/RESTreply.js'}"></script>
@@ -94,17 +102,14 @@ $(function(){
 	var user_id = /*[[${session.user.userId}]]*/'';
 	//console.log(team_id);
 	teamID = team_id;	
-	var categoryList = document.getElementById("categoryList");			
+	var categoryList = document.getElementById("categoryList");
+	
+	$(".catelistID").click(function() {
+		var cId = $(this).attr("category-data");
+		$("#insertBoard").attr("categoryId", cId);
+		location.href="/boardInsertSample2/"+cId;
+	});
 })
-
-var catelistID = document.querySelectorAll("#catelistID");
-	for(let i=0; i<catelistID.length; i++){
-		catelistID[i].addEventListener('click',()=>{
-			//alert(catelistID[i].innerText+"is clicked");
-			var text = catelistID[i].innerText;
-			location.href="/boardInsertSample2/"+text+"/"+teamID;
-		});
-	}
 
 var cancelBtn = document.getElementById("insertCancel");
 cancelBtn.onclick=function(){

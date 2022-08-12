@@ -2,17 +2,14 @@ package com.kos.CoCoCo.cansu;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -272,7 +269,7 @@ public class sampleController2 {
 //		PageMaker<BoardVO> resultPage = new PageMaker<>(result);
 		
 		Set<String> setResult = new HashSet<String>(listResult);
-		model.addAttribute("cateName", setResult);
+		session.setAttribute("cateName", ctList);
 		model.addAttribute("result", new PageMaker(result));
 		model.addAttribute("boardList", boardList);
 		return "su/thymeleaf/boardMain";
@@ -323,19 +320,9 @@ public class sampleController2 {
 		}
 	}
 	
-	@GetMapping("/boardInsertSample2/{name}/{teamid}")
-	public String boardInsertBeta(@PathVariable String teamid, @PathVariable String name, Model model) {
-		
-		List<BoardCategoryVO> ctList = categoryRP.selectByTeam(Long.valueOf(teamid));
-		List<String> listResult = new ArrayList<>();
-		for(BoardCategoryVO temp: ctList) {
-				listResult.add(temp.getCategoryName());
-		}
-		Set<String> setResult = new HashSet<String>(listResult);
-		
-		model.addAttribute("cateName", setResult);		
-		model.addAttribute("categoryName", name);
-		model.addAttribute("teamid", teamid);
+	@GetMapping("/boardInsertSample2/{categoryId}")
+	public String boardInsertBeta(@PathVariable Long categoryId, Model model) {
+		model.addAttribute("category", boardcateRP.selectByCategoryId(categoryId));
 		return "su/thymeleaf/boardInsert";
 	}
 	
@@ -393,66 +380,23 @@ public class sampleController2 {
 	}
 
 	@PostMapping("/postBoardInsertSample2")
-	public String boardInsertPostBeta(HttpServletRequest request, Principal principal, MultipartFile[] insertFile) throws IllegalStateException, IOException {
-
-		String title = request.getParameter("title");
-		String content =request.getParameter("content");
-		String category = request.getParameter("category");
-		String userID = principal.getName();
-		String teamid = request.getParameter("teamid");
+	public String boardInsertPostBeta(BoardVO board, Long categoryId, HttpSession session, HttpServletRequest request, MultipartFile insertFile) throws IllegalStateException, IOException {
+		UserVO user = (UserVO) session.getAttribute("user");
+		Long teamId = (Long) session.getAttribute("teamId");
 		
-		System.out.println("title: "+title);
-		System.out.println("content: "+content);
-		System.out.println("category: "+category);
-		System.out.println("userID: "+userID);
-		System.out.println("team id: "+teamid);
+		makeBoardSample(board, categoryId, user.getUserId(), teamId, insertFile);
 		
-		makeBoardSample(teamid, title, content,category,userID, insertFile);
-
-		return "redirect:/boardSampleBeta/"+category;
+		return "redirect:/boardSampleBeta";
 	}
-	private void makeBoardSample(String teamid, String title, String content, String category, String userID, MultipartFile[] insertFile) throws IllegalStateException, IOException {
-		long gnrTemp =  new Random().nextLong();
-		if(gnrTemp <0) {
-			gnrTemp = -1*gnrTemp;
-		}
-		long gnrValue = Long.valueOf(String.valueOf(gnrTemp).substring(0, 6));
-		//		System.out.println(gnrValue);
-
-		//(log in info)user->team
-		UserVO uservo = userRP.findById(userID).get();  
-//		TeamVO teamvo =  teamRP.selectByUserID(uservo.getUserId());
-		TeamVO teamvo = teamRP.findById(Long.valueOf(teamid)).get();
-		System.out.println(teamvo);
-
-		//categoryName 
-		String categoryName = category;
-		BoardCategoryMultikey bctemp = BoardCategoryMultikey.builder().categoryId(gnrValue).team(teamvo).build();
-		BoardCategoryVO bcvotemp = BoardCategoryVO.builder().boardCategoryId(bctemp).categoryName(categoryName).build();
-		//		System.out.println(bcvotemp);
-		boardcateRP.save(bcvotemp);
-
-		int checkNum =0;
-		for(MultipartFile temp: insertFile) {
-			if(temp.getSize() != 0) {
-				checkNum += 1;
-			}
-		}
-		System.out.println("checkNum: "+checkNum);
+	private BoardVO makeBoardSample(BoardVO board, Long categoryId, String userID, Long teamId,  MultipartFile insertFile) throws IllegalStateException, IOException {
+		board.setCategory(boardcateRP.selectByCategoryId(categoryId));
+		board.setUser(userRP.findById(userID).get());
 		
-		BoardVO boardTemp=null;
-		if(checkNum >0) {
-//			List<String> boardFileName = boardService.uploadFile(insertFile);
-			
-			//cloud file upload
-			String fileName = awsS3.upload(insertFile[0], "uploads/boardFile/");
-			System.out.println("aws - file name: "+fileName);
-			
-			boardTemp = BoardVO.builder().category(bcvotemp).user(uservo).boardTitle(title).boardText(content).boardFile(fileName).build(); 
-//			boardTemp = BoardVO.builder().category(bcvotemp).user(uservo).boardTitle(title).boardText(content).boardFile(boardFileName.get(0)).build(); 
-		} else{
-			boardTemp = BoardVO.builder().category(bcvotemp).user(uservo).boardTitle(title).boardText(content).build(); 
+		if(!insertFile.isEmpty()) {
+			String fileName = awsS3.upload(insertFile, "uploads/boardFile/");
+			board.setBoardFile(fileName);
 		}
-		boardRP.save(boardTemp);
+		
+		return boardRP.save(board);
 	}
 }

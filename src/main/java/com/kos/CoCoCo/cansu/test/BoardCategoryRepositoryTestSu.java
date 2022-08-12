@@ -11,6 +11,8 @@ import com.kos.CoCoCo.vo.TeamVO;
 
 public interface BoardCategoryRepositoryTestSu extends CrudRepository<BoardCategoryVO, BoardCategoryMultikey> {
 
+	@Query(value="select * from board_category where category_id =?1", nativeQuery = true)
+	public BoardCategoryVO selectByCategoryId(Long categoryId);
 	
 	@Query(value="select * from board_category where team_team_id=?1", nativeQuery = true)
 	public List<BoardCategoryVO> selectByTeam(Long team_id);
@@ -21,4 +23,5 @@ public interface BoardCategoryRepositoryTestSu extends CrudRepository<BoardCateg
 	
 	@Query(value="select*from board_category where category_name=?1", nativeQuery = true)
 	public List<Long> selectIDByname(String name);
+
 }

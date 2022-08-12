@@ -17,12 +17,15 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 
 public interface BoardRepositoryTestSu extends CrudRepository<BoardVO, Long>, QuerydslPredicateExecutor<BoardVO> {
-	
 	@Query(value="select*from boards where category_team_team_id=?1", nativeQuery=true)
 	public List<BoardVO> selectBoardByteam(Long id);
 	
 	@Query(value="select*from boards where category_team_team_id=?1", nativeQuery=true)
 	public List<BoardVO> selectBoardByteamBeta(Long id,Pageable pageable);
+	
+	//자영 추가!!!!!
+	@Query(value="select*from boards where category_category_id=?1", nativeQuery = true)
+	public List<BoardVO> selectBoardByCategory(Long id);
 	
 	//native query
 	@Query(value="select*from boards where category_category_id=?1", nativeQuery = true)

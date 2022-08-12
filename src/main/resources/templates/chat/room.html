@@ -120,7 +120,7 @@ mark.current {
 </style>
 </head>
 <body>
-	<!-- <th:block th:replace="~{/layout/basic :: setContent(~{this :: content})}"> -->
+	
 	<th:block th:fragment="content">
  
 		<div class="container">
@@ -128,7 +128,7 @@ mark.current {
 				<input type="search" class="search-box" placeholder="채팅 찾기">
 				<button data-search="next" class="next-btn">∨</button>
 				<button data-search="prev" class="prev-btn">∧</button>
-				<!-- <button data-search="clear" class="clear-btn">Ⅹ</button> -->
+				
 				<span class="kwt-count">-</span>
 			</div>
 			<div>
@@ -139,8 +139,8 @@ mark.current {
 								 <span
 								th:class="${chat.writer == session.user.userId?'chat-img pull-right':'chat-img pull-left'}">
 								
-									<img th:if="${chat.writer} != ${session.user.userId}" th:src="${chat.writerImg}?:@{/images/userImg.svg}" width= "40px"
-									alt="User Avatar" class="img-circle rounded-circle" />
+									<img th:if="${chat.writer} != ${session.user.userId}" th:src="${chat.writerImg}?:@{/images/userImg.svg}" 
+									width= "40px" alt="User Avatar" class="img-circle rounded-circle" />
 									
 							</span>
 								<div class="chat-body clearfix">
@@ -150,7 +150,7 @@ mark.current {
 										<span th:if="${chat.writer} == ${session.user.userId}">
 									<img th:if="${chat.writer} == ${session.user.userId}" th:src="@{/images/deleteTeamImg.svg}" width= "15px"
 									alt="User Avatar" class="img-del" th:data="${chat.id}" style="cursor:pointer;" onclick="imgdel(this);"/>
-									<!-- <button type="button" class="button-del pull-right" th:data="${chat.id}">삭제</button> -->
+						
 							</span>
 									</div>
 									<p>[[${chat.message}]]</p>
@@ -161,10 +161,6 @@ mark.current {
 				
 					<div class="input-group mb-3">
 						<input type="text" id="msg" class="form-control" placeholder="Enter Chat Content">
-						<!-- <div class="input-group-append">
-							<button class="btn btn-outline-secondary" type="button"
-								id="button-send">전송</button>
-						</div> -->
 					</div>
 				
 			</div>
@@ -172,7 +168,6 @@ mark.current {
 		</div>
 
 	</th:block>
-	<!-- </th:block> -->
 	<script th:inline="javascript">
 	var teamId = /*[[${team.teamId}]]*/'';
 	
@@ -180,16 +175,6 @@ mark.current {
     	var id = $(e).attr("data");
     	
     	location.href = "/chat/del?chatId=" + id + "&teamId=" + teamId;
-    	/*
-    	
-    	alert(id);
-    	$.ajax({
-    		url:"/chat/del",
-    		data:{chatId:id},
-    		success:function(responseData){
-    			alert(responseData);
-    		}
-    	});*/
     };
             $(document).ready(function(){
 
@@ -202,14 +187,13 @@ mark.current {
                 $(".col").scrollTop($(".col")[0].scrollHeight);
 
                 var sockJs = new SockJS("/stomp/chat");
-                //1. SockJS를 내부에 들고있는 stomp를 내어줌
+                
                 var stomp = Stomp.over(sockJs);
 
-                //2. connection이 맺어지면 실행
+                
                 stomp.connect({}, function (){
                    console.log("STOMP Connection")
-
-                   //4. subscribe(path, callback)으로 메세지를 받을 수 있음
+                   
                    stomp.subscribe("/sub/chat/room/" + teamId, function (chat) {
                        var content = JSON.parse(chat.body);
 						
@@ -262,7 +246,8 @@ mark.current {
                 	if(e.keyCode==13){
                 		if($(this).val()==="") return ;
                         console.log(username + ":" + msg.value);
-                        stomp.send('/pub/chat/message', {}, JSON.stringify({teamId: teamId, message: msg.value, writer: username, koreanName: koreanName, id: 0, writerImg:writerImg}));
+                        stomp.send('/pub/chat/message', {}, JSON.stringify({teamId: teamId, message: msg.value, writer: username, 
+                        	koreanName: koreanName, id: 0, writerImg:writerImg}));
                         msg.value = ''; 
                 	}
                 });

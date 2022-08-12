@@ -62,7 +62,6 @@ public class StompChatController {
     }
     
     @GetMapping(value = "/chat/del")
-    //@ResponseBody
     public String chatdel(Long chatId,Long teamId,HttpSession session, Model model) {
     	System.out.println("삭제 : " + chatId);
     	UserVO user = (UserVO)session.getAttribute("user");
@@ -75,6 +74,5 @@ public class StompChatController {
 		model.addAttribute("userList", tuRepo.findByTeamId(teamId));
 		
 		return "main/teamMain";
-    	//return "ok";
     }
 }

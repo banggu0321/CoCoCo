@@ -106,6 +106,7 @@ function deleteReply(){
 
 
 function printList(list) {
+	var userId = /*[[${session.user.userId}]]*/'';
 	var str = "<div id='replyListRange'>";
 	var replyObj;
 
@@ -119,17 +120,27 @@ function printList(list) {
 		+"<div style=\"height:100px; width:50%; \">"
 		
 		+"<div>"+replyObj.user.name+" - "
-		+"<input name=\"selectDelete\" type=\"checkbox\" onclick=(deleteReply())"+" value='"+replyObj.replyId+"'>"+"삭제"+"</a>"+"</div>"
+		
+		if(replyObj.user.userId == userId) {
+			str +=  "<input name=\"selectDelete\" type=\"checkbox\" onclick=(deleteReply())"+" value='"+replyObj.replyId+"'>"+"삭제"
+		}
+		
+		str +="</div>"
+		
 		+"<input id=\"replyDeleteID"+"\" type=\"hidden\" value=\""+replyObj.replyId+"\">"
 		
 		+"<div id=\"replyContent\">"+ "<span>"+replyObj.replyText+"</span>"+"</div>"
 		
 		+"<div>"+"<span>"+"<font size=\"2\" color=\"gray\">"+"등록일: "+formatDate(replyObj.replyUpdate)+"</font>"+"</span>"+"</div>"
+		
 		+"</div>"+"</div>"+"<br>";
 	}
+	
 	str +="</div>";
+	
 	$("#replyTable").html(str);
 }
+
 function formatDate(timeValue) {
 	var date = new Date(timeValue);
 	return date.getFullYear() + "-" + (date.getMonth() + 1) + "-"

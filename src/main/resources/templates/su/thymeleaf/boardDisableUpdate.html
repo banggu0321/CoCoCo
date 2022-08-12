@@ -112,7 +112,6 @@ function printList(list) {
 		
 		+"<div>"+replyObj.user.name+" - ";
 		
-		console.log(userId);
 		if(replyObj.user.userId == userId) {
 			str +=  "<input name=\"selectDelete\" type=\"checkbox\" onclick=(deleteReply())"+" value='"+replyObj.replyId+"'>"+"삭제"
 		}
@@ -124,11 +123,15 @@ function printList(list) {
 		+"<div id=\"replyContent\">"+ "<span>"+replyObj.replyText+"</span>"+"</div>"+"<br>"
 		
 		+"<div>"+"<span>"+"<font size=\"2\" color=\"gray\">"+"등록일: "+formatDate(replyObj.replyUpdate)+"</font>"+"</span>"+"</div>"
+		
 		+"</div>"+"</div>"+"<br>";
 	}
+	
 	str +="</div>";
+	
 	$("#replyTable").html(str);
 }
+
 function formatDate(timeValue) {
 	var date = new Date(timeValue);
 	return date.getFullYear() + "-" + (date.getMonth() + 1) + "-"

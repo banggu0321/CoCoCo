@@ -41,12 +41,25 @@
 					
 					if(num < 4){
 						if(start<=todaydate&&todaydate<=end){  //오늘날짜인 경우
-							if(data.managerid=="none"){ //not mine
-								$(".workListBox").append(`<div class="form-control worklist" style="color:#BFBFBF"><span class="workinfo"><span class="workListTitle">${data.workTitle}</span>  <span class="workListContent">${data.workText}</span><span>${data.workStart} ~ ${data.workEnd}</span></span></div>`);
-							}else if(data.workStatus=="finish"){ //완료
-								$(".workListBox").append(`<div class="form-control worklist" style="color:#BFBFBF"><span class="workinfo"><span class="workListTitle">${data.workTitle}</span>  <span class="workListContent">${data.workText}</span><span>${data.workStart} ~ ${data.workEnd}</span></span><div class="btn-secondary btn" style="display:none;">완료</div></div>`);
+							if(data.managerid=="none" || data.workStatus=="finish"){ //not mine
+								$(".workListBox").append(
+										`<div class="form-control worklist" style="color:#BFBFBF">
+											<span class="workinfo">
+												<span class="workListTitle">${data.workTitle}</span>  
+												<span class="workListContent">${data.workText}</span>
+												<span>${data.workStart} ~ ${data.workEnd}</span>
+											</span>
+										</div>`);
 							}else { //미완료
-								$(".workListBox").append(`<div class="form-control worklist" style="color:black"><span class="workinfo"><span class="workListTitle">${data.workTitle}</span>  <span class="workListContent">${data.workText}</span><span>${data.workStart} ~ ${data.workEnd}</span></span><div class="btn-secondary btn">미완료</div></div>`);
+								$(".workListBox").append(
+										`<div class="form-control worklist" style="color:black">
+											<span class="workinfo">
+												<span class="workListTitle">${data.workTitle}</span>
+												<span class="workListContent">${data.workText}</span>
+												<span>${data.workStart} ~ ${data.workEnd}</span>
+											</span>
+											<div class="btn-secondary btn">미완료</div>
+										</div>`);
 							}
 							num += 1;
 						}else{
@@ -58,7 +71,8 @@
 				});	
 				$(".workTitleText").append(` - ${todaywork}건`);
 				if(num==0){
-					$(".workListBox").append(`<div class="form-control workNoneText" style="color:gray" >업무가 존재하지 않습니다</div>`);
+					$(".workListBox").append(
+							`<div class="form-control workNoneText" style="color:gray" >업무가 존재하지 않습니다</div>`);
 				}
 			}
 		});

@@ -16,7 +16,6 @@ public class UserControllerC {
 	@Qualifier("userService")
 	private UserServiceC userService;
 
-	// 아이디 체크
 	@PostMapping("/auth/idCheck")
 	@ResponseBody
 	public int idCheck(@RequestParam("userId") String userId) {
@@ -24,14 +23,11 @@ public class UserControllerC {
 		return user == null ? 0 : 1;
 	}
 
-	// 체크
 	@PostMapping("/auth/pwCheck")
 	@ResponseBody
 	public int pwCheck(@RequestParam("userId") String userId, @RequestParam("pw") String pw) {
 		System.out.println("pw" + pw);
 		boolean result = userService.pwCheck(userId, pw);
 		return result ? 1 : 0;
-	}
-
-	
+	}	
 }

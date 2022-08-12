@@ -48,6 +48,7 @@ body, html {
 
 .nav a {
 	display: inline-block;
+	width: 160px;
 	height: 64px;
 	color: #000;
 	cursor: pointer;
